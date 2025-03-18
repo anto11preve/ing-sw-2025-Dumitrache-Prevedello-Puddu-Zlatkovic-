@@ -7,10 +7,10 @@ class CondensedShip {
     private List<Cabin> cabins;
     private List<BatteryCompartment> batteryCompartments;
     private List<CargoHold> cargoHolds;
-    private int[2]engines;
-    private int[2]aliens;
+    private int[] engines;
+    private int[] aliens;
     private List<Cannon> cannons;
-    private int[4]shields;
+    private int[] shields;
 
     public CondensedShip() {
         this.cabins = new ArrayList<>();
@@ -70,9 +70,7 @@ class CondensedShip {
         cannons.remove(cannon);
     }
 
-    public int[2]
-
-    getEngines() {
+    public int[] getEngines() {
         return engines;
     }
 
@@ -80,15 +78,12 @@ class CondensedShip {
         engines[index] = value;
     }
 
-    public int[4]
-
-    getShields() {
+    public int[] getShields() {
         return shields;
     }
 
     public void setShield(int index, int value) {
         shields[index] = value;
     }
-
 
 }

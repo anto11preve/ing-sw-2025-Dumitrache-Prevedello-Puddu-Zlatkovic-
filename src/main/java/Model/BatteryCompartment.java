@@ -12,7 +12,7 @@ class BatteryCompartment extends SpaceshipComponent {
         return batteries;
     }
 
-    public void removeBattery() {
+    public void removeBattery() throws IllegalStateException{
         if (batteries > 0) {
             batteries--;
         } else {

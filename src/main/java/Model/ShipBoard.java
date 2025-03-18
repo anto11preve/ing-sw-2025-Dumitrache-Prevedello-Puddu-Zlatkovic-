@@ -43,9 +43,7 @@ class ShipBoard {
         //to do
     }
 
-    public int[2]
-
-    getIndex(SpaceshipComponent goalComponent) {
+    public int[] getIndex(SpaceshipComponent goalComponent) {
         //to do
         return new int[2];
     }

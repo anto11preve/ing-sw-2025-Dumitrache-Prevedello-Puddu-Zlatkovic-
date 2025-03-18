@@ -7,9 +7,6 @@ class Cannon extends SpaceshipComponent {
         this.isDouble = isDouble;
     }
 
-    public void rotate() {
-    }
-
     public boolean doubleCannon() {
         return isDouble;
     }

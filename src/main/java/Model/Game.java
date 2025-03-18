@@ -11,7 +11,7 @@ class Game {
     private Flightboard flightboard;
 
     public Game() {
-        this.players = new ArrayList<>();
+        this.players = new Player[4];
         this.hiddenComponents = new ArrayList<>();
         this.visibleComponents = new ArrayList<>();
         this.flightboard = new Flightboard();
@@ -21,7 +21,7 @@ class Game {
     }
 
     public Player[] getPlayers() {
-        return players.toArray(new Player[0]);
+        return players;
     }
 
     public int rollDice() {
