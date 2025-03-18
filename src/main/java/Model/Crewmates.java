@@ -1,0 +1,5 @@
+package Model;
+
+enum Crewmates {
+    DOUBLEHUMAN, SINGLEHUMAN, PURPLEALIEN, GREENALIEN
+}
