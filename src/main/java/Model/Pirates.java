@@ -4,14 +4,14 @@ import java.util.List;
 
 class Pirates extends AdventureCard {
     private int firePower;
-    private List<Cannonata> cannonate;
+    private List<CannonShot> cannonShots;
     private int credits;
     private int daysLost;
 
-    public Pirates(int firePower, List<Cannonata> cannonate, int credits, int daysLost) {
-        super("Pirates", "Pirates attack");
+    public Pirates(int id, CardLevel level, int firePower, List<CannonShot> cannonShots, int credits, int daysLost) {
+        super(id, level);
         this.firePower = firePower;
-        this.cannonate = cannonate;
+        this.cannonShots = cannonShots;
         this.credits = credits;
         this.daysLost = daysLost;
     }
@@ -20,8 +20,8 @@ class Pirates extends AdventureCard {
         return firePower;
     }
 
-    public List<Cannonata> getCannonate() {
-        return cannonate;
+    public List<CannonShot> getCannonShots() {
+        return cannonShots;
     }
 
     public int getCredits() {
@@ -31,4 +31,5 @@ class Pirates extends AdventureCard {
     public int getDaysLost() {
         return daysLost;
     }
+
 }

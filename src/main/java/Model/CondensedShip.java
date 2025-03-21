@@ -25,11 +25,9 @@ class CondensedShip {
     public void addCabin(Cabin cabin) {
         cabins.add(cabin);
     }
-
     public List<Cabin> getCabins() {
         return cabins;
     }
-
     public void removeCabin(Cabin cabin) {
         cabins.remove(cabin);
     }
@@ -37,11 +35,9 @@ class CondensedShip {
     public void addBatteryCompartment(BatteryCompartment batteryCompartment) {
         batteryCompartments.add(batteryCompartment);
     }
-
     public List<BatteryCompartment> getBatteryCompartments() {
         return batteryCompartments;
     }
-
     public void removeBatteryCompartment(BatteryCompartment batteryCompartment) {
         batteryCompartments.remove(batteryCompartment);
     }
@@ -49,11 +45,9 @@ class CondensedShip {
     public void addCargoHold(CargoHold cargoHold) {
         cargoHolds.add(cargoHold);
     }
-
     public List<CargoHold> getCargoHolds() {
         return cargoHolds;
     }
-
     public void removeCargoHold(CargoHold cargoHold) {
         cargoHolds.remove(cargoHold);
     }
@@ -61,11 +55,9 @@ class CondensedShip {
     public List<Cannon> getCannons() {
         return cannons;
     }
-
     public void addCannon(Cannon cannon) {
         cannons.add(cannon);
     }
-
     public void removeCannon(Cannon cannon) {
         cannons.remove(cannon);
     }
@@ -73,7 +65,6 @@ class CondensedShip {
     public int[] getEngines() {
         return engines;
     }
-
     public void setEngine(int index, int value) {
         engines[index] = value;
     }
@@ -81,7 +72,6 @@ class CondensedShip {
     public int[] getShields() {
         return shields;
     }
-
     public void setShield(int index, int value) {
         shields[index] = value;
     }

@@ -1,0 +1,17 @@
+package Model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MeteorSwarm extends AdventureCard{
+    private List<Meteor> meteors;
+
+    public MeteorSwarm(int id, CardLevel level) {
+        super(id, level);
+        this.meteors = new ArrayList<>();
+    }
+
+    public List<Meteor> getMeteors() {
+        return meteors;
+    }
+}

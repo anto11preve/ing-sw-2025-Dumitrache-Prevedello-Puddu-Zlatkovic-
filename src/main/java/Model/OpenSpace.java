@@ -1,11 +1,9 @@
 package Model;
 
 class OpenSpace extends AdventureCard {
-    public OpenSpace() {
-        super("Open Space", "No events");
+
+    public OpenSpace(int id, CardLevel level) {
+        super(id, level);
     }
 
-    public void calculateMovement(Player player) {
-        //to do
-    }
 }

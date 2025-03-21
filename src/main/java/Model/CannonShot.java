@@ -1,6 +1,6 @@
 package Model;
 
-class Cannonata {
+class CannonShot {
     private Side side;
     private int size;
 

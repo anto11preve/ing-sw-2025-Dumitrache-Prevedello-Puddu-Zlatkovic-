@@ -6,8 +6,8 @@ class Slavers extends AdventureCard {
     private int credits;
     private int daysLost;
 
-    public Slavers(int firePower, int crewLost, int credits, int daysLost) {
-        super("Slavers", "Slavers attack");
+    public Slavers(int id, CardLevel level, int firePower, int crewLost, int credits, int daysLost) {
+        super(id, level);
         this.firePower = firePower;
         this.crewLost = crewLost;
         this.credits = credits;
