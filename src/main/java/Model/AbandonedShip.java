@@ -1,9 +1,9 @@
 package Model;
 
 public class AbandonedShip extends AdventureCard {
-    private Crewmates crew;
-    private int credits;
-    private int days;
+    private final Crewmates crew;
+    private final int credits;
+    private final int days;
 
     public AbandonedShip(int id, CardLevel level, Crewmates crew, int credits, int days) {
         super(id, level);

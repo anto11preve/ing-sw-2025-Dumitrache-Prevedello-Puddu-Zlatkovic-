@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeteorSwarm extends AdventureCard{
-    private List<Meteor> meteors;
+    private final List<Meteor> meteors;
 
     public MeteorSwarm(int id, CardLevel level) {
         super(id, level);

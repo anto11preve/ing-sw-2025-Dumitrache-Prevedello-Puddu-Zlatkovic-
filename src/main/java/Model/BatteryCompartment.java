@@ -1,7 +1,7 @@
 package Model;
 
 class BatteryCompartment extends SpaceshipComponent {
-    private int capacity;
+    private final int capacity;
     private int batteries;
 
     public BatteryCompartment(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, int capacity) {

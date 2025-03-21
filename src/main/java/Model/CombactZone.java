@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CombactZone extends AdventureCard {
-    private int penalty;
-    private List<CannonShot> cannonShots;
-    private int days;
+    private final int penalty;
+    private final List<CannonShot> cannonShots;
+    private final int days;
 
-    public CombactZone(int id, CardLevel level, int penalty, int days) {
+    public CombactZone(int id, CardLevel level, int penalty, int days, List<CannonShot> cannonShots) {
         super(id, level);
         this.penalty = penalty;
         this.days = days;
-        this.cannonShots = new ArrayList<>();
+        this.cannonShots = cannonShots;
     }
 
     public int getPenalty() {

@@ -2,7 +2,7 @@ package Model;
 
 // Classe astratta per componenti della nave spaziale
 abstract class SpaceshipComponent {
-    private /*final*/ Card type;
+    private final Card type;
     private ConnectorType frontConnector;
     private ConnectorType rearConnector;
     private ConnectorType leftConnector;

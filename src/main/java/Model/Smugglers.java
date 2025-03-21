@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Smugglers extends AdventureCard{
-    private int firePower;
-    private List<Good> goods;
-    private int LostGoods;
-    private int daysLost;
+    private final int firePower;
+    private final List<Good> goods;
+    private final int LostGoods;
+    private final int daysLost;
 
     public Smugglers(int id, CardLevel level, int firePower, int LostGoods, int daysLost, List<Good> goods) {
         super(id, level);

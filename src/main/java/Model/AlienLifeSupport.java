@@ -1,7 +1,7 @@
 package Model;
 
 class AlienLifeSupport extends SpaceshipComponent {
-    private int color;
+    private final int color;
 
     public AlienLifeSupport(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, int color) {
         super(Type, front, rear, left, right);

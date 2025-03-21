@@ -3,10 +3,10 @@ package Model;
 import java.util.List;
 
 class Pirates extends AdventureCard {
-    private int firePower;
-    private List<CannonShot> cannonShots;
-    private int credits;
-    private int daysLost;
+    private final int firePower;
+    private final List<CannonShot> cannonShots;
+    private final int credits;
+    private final int daysLost;
 
     public Pirates(int id, CardLevel level, int firePower, List<CannonShot> cannonShots, int credits, int daysLost) {
         super(id, level);
