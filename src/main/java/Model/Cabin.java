@@ -5,9 +5,10 @@ class Cabin extends SpaceshipComponent {
 
     public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants) {
         super(Type, front, rear, left, right);
-        this.occupants = occupants;
+        this.occupants = Crewmates.EMPTY;
     }
 
+    //si possono implementare nel model?
     public boolean canContainBrown() {;
         //to do
         return true;

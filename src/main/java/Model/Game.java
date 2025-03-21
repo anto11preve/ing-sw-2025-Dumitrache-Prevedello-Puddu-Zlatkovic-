@@ -29,19 +29,21 @@ class Game {
     }
 
     public SpaceshipComponent pickHiddenComponent() {
-        return null;
+        SpaceshipComponent choosenComponent = hiddenComponents.get(0);
+        hiddenComponents.remove(0);
+        return choosenComponent;
     }
 
     public void addVisibleComponent(SpaceshipComponent component) {
         visibleComponents.add(component);
     }
 
-    public SpaceshipComponent viewVisibleComponents() {
-        return null;
-    } //to do
+    public List<SpaceshipComponent> viewVisibleComponents() {
+        return visibleComponents;
+    }
 
     public void pickVisibleComponent(SpaceshipComponent component) {
-        //to do
+        visibleComponents.remove(component);
     }
 
     public Flightboard getFlightboard() {
