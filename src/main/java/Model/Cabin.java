@@ -2,20 +2,26 @@ package Model;
 
 class Cabin extends SpaceshipComponent {
     private Crewmates occupants;
+    private boolean canContainBrown;
+    private boolean canContainPurple;
 
     public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants) {
         super(Type, front, rear, left, right);
         this.occupants = Crewmates.EMPTY;
     }
 
-    //si possono implementare nel model?
-    public boolean canContainBrown() {;
-        //to do
-        return true;
+    public boolean getCanContainBrown() {;
+        return canContainBrown;
     }
-    private boolean canContainPurple() {;
-        //to do
-        return true;
+    private boolean getCanContainPurple() {;
+        return canContainPurple;
+    }
+
+    public void setCanContainBrown(boolean canContainBrown) {
+        this.canContainBrown = canContainBrown;
+    }
+    public void setCanContainPurple(boolean canContainPurple) {
+        this.canContainPurple = canContainPurple;
     }
 
     public void setOccupants(Crewmates occupants) {
