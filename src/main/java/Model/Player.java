@@ -1,10 +1,9 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import Model.Ship.ShipBoard;
 
 // Classe principale del giocatore
-class Player {
+public class Player {
     private final String name;
     private ShipBoard shipBoard;
     private int credits;

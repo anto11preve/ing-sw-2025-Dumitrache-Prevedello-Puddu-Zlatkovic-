@@ -1,5 +1,8 @@
 package Model;
 
+import Model.Board.Flightboard;
+import Model.Ship.Components.SpaceshipComponent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
