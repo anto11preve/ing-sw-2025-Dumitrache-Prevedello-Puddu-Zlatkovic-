@@ -1,19 +1,16 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // Classe ShipBoard che rappresenta la nave del giocatore
 class ShipBoard {
     private SpaceshipComponent[][] components;
     private SpaceshipComponent activeComponent;
-    private List<SpaceshipComponent> reservedComponents;
+    private SpaceshipComponent[] reservedComponents;
     private CondensedShip condensedShip;
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[5][7];
         this.activeComponent = null;
-        this.reservedComponents = new ArrayList<>();
+        this.reservedComponents = new SpaceshipComponent[2];
         this.condensedShip = new CondensedShip();
     }
 
@@ -40,23 +37,40 @@ class ShipBoard {
     }
 
     public void setActiveComponent(SpaceshipComponent component) {
-        //to do
+        activeComponent = component;
     }
 
     public int[] getIndex(SpaceshipComponent goalComponent) {
-        //to do
-        return new int[2];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (components[i][j] == goalComponent) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return null;
     }
 
-    public void reserveComponent(SpaceshipComponent component) {
-        //to do
+    public boolean reserveComponent(SpaceshipComponent component) {
+        for( int i = 0; i < reservedComponents.length; i++) {
+            if (reservedComponents[i] == null) {
+                reservedComponents[i] = component;
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeReservedComponent(SpaceshipComponent component) {
-        //to do
+        for( int i = 0; i < reservedComponents.length; i++) {
+            if (reservedComponents[i] == component) {
+                reservedComponents[i] = null;
+                return;
+            }
+        }
     }
 
-    public List<SpaceshipComponent> getReservedComponents() {
+    public SpaceshipComponent[] getReservedComponents() {
         return reservedComponents;
     }
 
