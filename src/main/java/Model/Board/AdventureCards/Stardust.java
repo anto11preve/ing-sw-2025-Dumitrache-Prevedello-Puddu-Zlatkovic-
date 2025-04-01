@@ -1,7 +1,6 @@
-package Model.Ship.Components;
+package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
-import Model.Board.AdventureCards.AdventureCard;
 
 public class Stardust extends AdventureCard {
 
