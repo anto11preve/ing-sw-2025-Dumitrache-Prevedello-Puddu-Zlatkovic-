@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-class Game {
+public class Game {
     private Player[] players;
     private List<SpaceshipComponent> hiddenComponents;
     private List<SpaceshipComponent> visibleComponents;
@@ -21,6 +21,12 @@ class Game {
     }
 
     public void addPlayer(String name) {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == null) {
+                players[i] = new Player(name);
+                break;
+            }
+        }
     }
 
     public Player[] getPlayers() {

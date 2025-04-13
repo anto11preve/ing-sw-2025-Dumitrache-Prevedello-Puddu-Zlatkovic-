@@ -4,7 +4,7 @@ import Model.Enums.CardLevel;
 
 import java.util.List;
 
-class Pirates extends AdventureCard {
+public class Pirates extends AdventureCard {
     private final int firePower;
     private final List<CannonShot> cannonShots;
     private final int credits;

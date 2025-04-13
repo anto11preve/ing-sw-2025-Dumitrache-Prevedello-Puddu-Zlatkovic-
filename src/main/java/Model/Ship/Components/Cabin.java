@@ -17,7 +17,7 @@ public class Cabin extends SpaceshipComponent {
     public boolean getCanContainBrown() {;
         return canContainBrown;
     }
-    private boolean getCanContainPurple() {;
+    public boolean getCanContainPurple() {;
         return canContainPurple;
     }
 

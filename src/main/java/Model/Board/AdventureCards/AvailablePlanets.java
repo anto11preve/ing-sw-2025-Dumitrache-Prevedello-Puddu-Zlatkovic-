@@ -4,7 +4,7 @@ import Model.Enums.CardLevel;
 
 import java.util.List;
 
-class AvailablePlanets extends AdventureCard {
+public class AvailablePlanets extends AdventureCard {
     private final List<Planet> planetList;
     private final int landingPenalty;
 

@@ -12,10 +12,10 @@ class CondensedShip {
     private List<Cabin> cabins;
     private List<BatteryCompartment> batteryCompartments;
     private List<CargoHold> cargoHolds;
-    private int[] engines;
-    private int[] aliens;
+    private int[] engines;  //contiene al primo indice i motori singoli, il secondo quelli doppi
+    private int[] aliens;   //contiene al primo indice alieni marroni, il secondo quelli viola
     private List<Cannon> cannons;
-    private int[] shields;
+    private int[] shields;  //contiene il numero di scudi che proteggono i versanti Nord(0), Ovest(1), Sud(2), Est(3)
 
     public CondensedShip() {
         this.cabins = new ArrayList<>();

@@ -2,16 +2,17 @@ package Model.Ship.Components;
 
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Enums.AlienColor;
 
 public class AlienLifeSupport extends SpaceshipComponent {
-    private final int color;
+    private final AlienColor color; //
 
-    public AlienLifeSupport(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, int color) {
+    public AlienLifeSupport(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, AlienColor color) {
         super(Type, front, rear, left, right);
         this.color = color;
     }
 
-    public int getColor() {
+    public AlienColor getColor() {
         return color;
     }
 

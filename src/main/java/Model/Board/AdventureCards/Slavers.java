@@ -2,7 +2,7 @@ package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
 
-class Slavers extends AdventureCard {
+public class Slavers extends AdventureCard {
     private final int firePower;
     private final int crewLost;
     private final int credits;
