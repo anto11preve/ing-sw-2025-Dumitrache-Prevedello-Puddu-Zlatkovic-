@@ -1,5 +1,8 @@
 package Model;
 
-enum ConnectorType {
-    SINGLE, DOUBLE, UNIVERSAL
+public enum ConnectorType {
+    UNIVERSAL,
+    STANDARD,
+    DOUBLE,
+    NONE
 }
