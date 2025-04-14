@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 class Game {
     private List<Player> players;
     private List<SpaceshipComponent> hiddenComponents;
