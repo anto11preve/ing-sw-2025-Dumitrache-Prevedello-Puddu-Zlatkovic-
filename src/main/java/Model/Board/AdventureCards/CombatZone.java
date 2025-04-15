@@ -1,32 +1,28 @@
 package Model.Board.AdventureCards;
 
+import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Enums.CardLevel;
-import Model.Board.AdventureCards.Projectiles.CannonShot;
 
 import java.util.List;
 
 public class CombatZone extends AdventureCard {
-    private final int penalty;
-    private final List<CannonShot> cannonShots;
-    private final int days;
+    private int lastLine;
+    private final List<CombatZoneLine> lines;
 
-    public CombatZone(int id, CardLevel level, int penalty, int days, List<CannonShot> cannonShots) {
+    public CombatZone(int id, CardLevel level, List<CombatZoneLine> lines) {
         super(id, level);
-        this.penalty = penalty;
-        this.days = days;
-        this.cannonShots = cannonShots;
+        this.lastLine = -1;
+        this.lines = lines;
     }
 
-    public int getPenalty() {
-        return penalty;
-    }
+    public CombatZoneLine getNextLine() {
+        if (lastLine + 1 >= lines.size()) {
+            return null;
+        }
 
-    public int getDays() {
-        return days;
-    }
+        lastLine++;
 
-    public List<CannonShot> getCannonShots() {
-        return cannonShots;
+        return lines.get(lastLine);
     }
 
     @Override
