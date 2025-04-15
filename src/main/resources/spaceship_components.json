@@ -1,0 +1,122 @@
+[
+  {
+    "id": "engine_01",
+    "type": "ENGINE",
+    "connectors": {
+      "front": "NONE",
+      "rear": "UNIVERSAL",
+      "left": "NONE",
+      "right": "NONE"
+    },
+    "direction": "REAR_ONLY",
+    "enginePower": 2,
+    "energyCost": 0,
+    "cargoCapacity": 0,
+    "crewCapacity": 0,
+    "cannonStrength": 0,
+    "isDoubleCannon": false,
+    "isAlienCompatible": false,
+    "canHoldRedGoods": false,
+    "requiresBattery": false,
+    "grantsShieldBonus": false,
+    "imagePath": "assets/components/engine_01.png",
+    "animationPath": "assets/animations/engine_fire_01.gif",
+    "abilities": []
+  },
+  {
+    "id": "cannon_02",
+    "type": "CANNON",
+    "connectors": {
+      "front": "UNIVERSAL",
+      "rear": "NONE",
+      "left": "NONE",
+      "right": "NONE"
+    },
+    "direction": "FORWARD_ONLY",
+    "enginePower": 0,
+    "energyCost": 1,
+    "cargoCapacity": 0,
+    "crewCapacity": 0,
+    "cannonStrength": 2,
+    "isDoubleCannon": true,
+    "isAlienCompatible": false,
+    "canHoldRedGoods": false,
+    "requiresBattery": true,
+    "grantsShieldBonus": false,
+    "imagePath": "assets/components/cannon_double.png",
+    "animationPath": "assets/animations/cannon_shoot.gif",
+    "abilities": ["double_shot", "requires_battery"]
+  },
+  {
+    "id": "cabin_02",
+    "type": "CABIN",
+    "connectors": {
+      "front": "STANDARD",
+      "rear": "STANDARD",
+      "left": "NONE",
+      "right": "NONE"
+    },
+    "direction": "ALL",
+    "enginePower": 0,
+    "energyCost": 0,
+    "cargoCapacity": 0,
+    "crewCapacity": 2,
+    "cannonStrength": 0,
+    "isDoubleCannon": false,
+    "isAlienCompatible": true,
+    "canHoldRedGoods": false,
+    "requiresBattery": false,
+    "grantsShieldBonus": false,
+    "imagePath": "assets/components/cabin_alien.png",
+    "animationPath": "assets/animations/cabin_blink.gif",
+    "abilities": ["can_host_alien"]
+  },
+  {
+    "id": "shield_02",
+    "type": "SHIELD_GENERATOR",
+    "connectors": {
+      "front": "STANDARD",
+      "rear": "NONE",
+      "left": "NONE",
+      "right": "STANDARD"
+    },
+    "direction": "ALL",
+    "enginePower": 0,
+    "energyCost": 2,
+    "cargoCapacity": 0,
+    "crewCapacity": 0,
+    "cannonStrength": 0,
+    "isDoubleCannon": false,
+    "isAlienCompatible": false,
+    "canHoldRedGoods": false,
+    "requiresBattery": true,
+    "grantsShieldBonus": true,
+    "imagePath": "assets/components/shield_02.png",
+    "animationPath": "assets/animations/shield_charge.gif",
+    "abilities": ["reflect_small_meteors"]
+  },
+  {
+    "id": "cargo_02",
+    "type": "CARGO_HOLD",
+    "connectors": {
+      "front": "NONE",
+      "rear": "STANDARD",
+      "left": "STANDARD",
+      "right": "STANDARD"
+    },
+    "direction": "ALL",
+    "enginePower": 0,
+    "energyCost": 0,
+    "cargoCapacity": 4,
+    "crewCapacity": 0,
+    "cannonStrength": 0,
+    "isDoubleCannon": false,
+    "isAlienCompatible": false,
+    "canHoldRedGoods": true,
+    "requiresBattery": false,
+    "grantsShieldBonus": false,
+    "imagePath": "assets/components/cargo_02.png",
+    "animationPath": "assets/animations/cargo_open.gif",
+    "abilities": ["hold_red_goods"]
+  }
+]
