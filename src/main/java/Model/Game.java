@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-class Game {
+public class Game {
     private List<Player> players;
     private List<SpaceshipComponent> hiddenComponents;
     private List<SpaceshipComponent> visibleComponents;
@@ -20,7 +20,7 @@ class Game {
         this.flightboard = new Flightboard();
     }
 
-    public Player getplayer(String name){
+    public Player getPlayer(String name){
         for (Player p : players) {
             if (p.getName().equals(name)) {
                 return p;
@@ -34,7 +34,7 @@ class Game {
     }
 
     public void removePlayer(String name) {
-        players.remove(getplayer(name));
+        players.remove(getPlayer(name));
     }
 
     public List<Player> getPlayers() {
