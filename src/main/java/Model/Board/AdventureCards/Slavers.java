@@ -31,4 +31,14 @@ public class Slavers extends AdventureCard {
     public int getDaysLost() {
         return daysLost;
     }
+
+    @Override
+    public String getName() {
+        return "Schiavisti";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

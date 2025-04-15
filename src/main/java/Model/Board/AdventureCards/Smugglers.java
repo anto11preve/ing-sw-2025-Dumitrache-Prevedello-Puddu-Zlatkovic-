@@ -5,7 +5,7 @@ import Model.Enums.Good;
 
 import java.util.List;
 
-public class Smugglers extends AdventureCard{
+public class Smugglers extends AdventureCard {
     private final int firePower;
     private final List<Good> goods;
     private final int LostGoods;
@@ -35,4 +35,13 @@ public class Smugglers extends AdventureCard{
         return goods;
     }
 
+    @Override
+    public String getName() {
+        return "Contrabbandieri";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

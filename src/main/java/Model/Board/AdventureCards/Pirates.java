@@ -1,6 +1,7 @@
 package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
+import Model.Board.AdventureCards.Projectiles.CannonShot;
 
 import java.util.List;
 
@@ -34,4 +35,13 @@ public class Pirates extends AdventureCard {
         return daysLost;
     }
 
+    @Override
+    public String getName() {
+        return "Pirati";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

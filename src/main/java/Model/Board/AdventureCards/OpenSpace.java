@@ -8,4 +8,13 @@ public class OpenSpace extends AdventureCard {
         super(id, level);
     }
 
+    @Override
+    public String getName() {
+        return "Spazio Aperto";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

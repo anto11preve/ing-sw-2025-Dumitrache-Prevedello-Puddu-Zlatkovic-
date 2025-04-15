@@ -12,12 +12,16 @@ public abstract class AdventureCard {
         this.level = level;
     }
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public CardLevel getLevel() {
+    public final CardLevel getLevel() {
         return level;
     }
+
+    public abstract String getName();
+
+    public abstract String getDescription();
 
 }

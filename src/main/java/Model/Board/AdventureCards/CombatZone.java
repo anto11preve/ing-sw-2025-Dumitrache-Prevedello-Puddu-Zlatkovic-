@@ -1,15 +1,16 @@
 package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
+import Model.Board.AdventureCards.Projectiles.CannonShot;
 
 import java.util.List;
 
-public class CombactZone extends AdventureCard {
+public class CombatZone extends AdventureCard {
     private final int penalty;
     private final List<CannonShot> cannonShots;
     private final int days;
 
-    public CombactZone(int id, CardLevel level, int penalty, int days, List<CannonShot> cannonShots) {
+    public CombatZone(int id, CardLevel level, int penalty, int days, List<CannonShot> cannonShots) {
         super(id, level);
         this.penalty = penalty;
         this.days = days;
@@ -28,4 +29,13 @@ public class CombactZone extends AdventureCard {
         return cannonShots;
     }
 
+    @Override
+    public String getName() {
+        return "Zona di Guerra";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }
