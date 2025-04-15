@@ -1,26 +1,43 @@
 package Model;
 
+import Model.Board.Flightboard;
+import Model.Ship.Components.SpaceshipComponent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 class Game {
-    private Player[] players;
+    private List<Player> players;
     private List<SpaceshipComponent> hiddenComponents;
     private List<SpaceshipComponent> visibleComponents;
     private Flightboard flightboard;
 
     public Game() {
-        this.players = new Player[4];
+        this.players = new ArrayList<>();
         this.hiddenComponents = new ArrayList<>();
         this.visibleComponents = new ArrayList<>();
         this.flightboard = new Flightboard();
     }
 
+    public Player getplayer(String name){
+        for (Player p : players) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
     public void addPlayer(String name) {
+        players.add(new Player(name));
     }
 
-    public Player[] getPlayers() {
+    public void removePlayer(String name) {
+        players.remove(getplayer(name));
+    }
+
+    public List<Player> getPlayers() {
         return players;
     }
 
