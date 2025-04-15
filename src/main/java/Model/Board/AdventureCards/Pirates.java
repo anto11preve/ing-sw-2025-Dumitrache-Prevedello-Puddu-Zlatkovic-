@@ -1,47 +1,35 @@
 package Model.Board.AdventureCards;
 
+import Model.Board.AdventureCards.Penalties.CannonShotPenalty;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
 
 import java.util.List;
 
-public class Pirates extends AdventureCard {
-    private final int firePower;
-    private final List<CannonShot> cannonShots;
-    private final int credits;
-    private final int daysLost;
+public class Pirates extends Enemy {
 
-    public Pirates(int id, CardLevel level, int firePower, List<CannonShot> cannonShots, int credits, int daysLost) {
-        super(id, level);
-        this.firePower = firePower;
-        this.cannonShots = cannonShots;
-        this.credits = credits;
-        this.daysLost = daysLost;
-    }
-
-    public int getFirePower() {
-        return firePower;
-    }
-
-    public List<CannonShot> getCannonShots() {
-        return cannonShots;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public int getDaysLost() {
-        return daysLost;
+    public Pirates(int id, CardLevel level, int power, List<CannonShot> cannonShots, int days, int credits) {
+        super(id, level, power, new CannonShotPenalty(cannonShots), days, new Credits(credits));
     }
 
     @Override
-    public String getName() {
+    public final CannonShotPenalty getLossPenalty() {
+        return (CannonShotPenalty) super.getLossPenalty();
+    }
+
+    @Override
+    public final Credits getWinReward() {
+        return (Credits) super.getWinReward();
+    }
+
+    @Override
+    public final String getName() {
         return "Pirati";
     }
 
     @Override
-    public String getDescription() {
+    public final String getDescription() {
         return "";
     }
 }

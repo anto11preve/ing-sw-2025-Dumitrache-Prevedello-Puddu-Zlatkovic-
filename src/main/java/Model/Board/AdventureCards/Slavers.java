@@ -1,44 +1,31 @@
 package Model.Board.AdventureCards;
 
+import Model.Board.AdventureCards.Penalties.CrewPenalty;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
 
-public class Slavers extends AdventureCard {
-    private final int firePower;
-    private final int crewLost;
-    private final int credits;
-    private final int daysLost;
-
-    public Slavers(int id, CardLevel level, int firePower, int crewLost, int credits, int daysLost) {
-        super(id, level);
-        this.firePower = firePower;
-        this.crewLost = crewLost;
-        this.credits = credits;
-        this.daysLost = daysLost;
-    }
-
-    public int getFirePower() {
-        return firePower;
-    }
-
-    public int getCrew() {
-        return crewLost;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public int getDaysLost() {
-        return daysLost;
+public class Slavers extends Enemy {
+    public Slavers(int id, CardLevel level, int power, int crew, int days, int credits) {
+        super(id, level, power, new CrewPenalty(crew), days, new Credits(credits));
     }
 
     @Override
-    public String getName() {
+    public final CrewPenalty getLossPenalty() {
+        return (CrewPenalty) super.getLossPenalty();
+    }
+
+    @Override
+    public final Credits getWinReward() {
+        return (Credits) super.getWinReward();
+    }
+
+    @Override
+    public final String getName() {
         return "Schiavisti";
     }
 
     @Override
-    public String getDescription() {
+    public final String getDescription() {
         return "";
     }
 }
