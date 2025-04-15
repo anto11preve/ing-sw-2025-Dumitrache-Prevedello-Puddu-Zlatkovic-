@@ -1,6 +1,6 @@
 package Model;
 
-import Model.Board.Flightboard;
+import Model.Board.FlightBoard;
 import Model.Ship.Components.SpaceshipComponent;
 
 import java.util.ArrayList;
@@ -11,13 +11,13 @@ public class Game {
     private Player[] players;
     private List<SpaceshipComponent> hiddenComponents;
     private List<SpaceshipComponent> visibleComponents;
-    private Flightboard flightboard;
+    private FlightBoard flightBoard;
 
     public Game() {
         this.players = new Player[4];
         this.hiddenComponents = new ArrayList<>();
         this.visibleComponents = new ArrayList<>();
-        this.flightboard = new Flightboard();
+        this.flightBoard = new FlightBoard();
     }
 
     public void addPlayer(String name) {
@@ -55,7 +55,7 @@ public class Game {
         visibleComponents.remove(component);
     }
 
-    public Flightboard getFlightboard() {
-        return flightboard;
+    public FlightBoard getFlightBoard() {
+        return flightBoard;
     }
 }

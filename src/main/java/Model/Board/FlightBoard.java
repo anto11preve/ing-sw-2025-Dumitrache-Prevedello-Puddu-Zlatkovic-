@@ -9,14 +9,14 @@ import java.util.Map;
 
 
 //we're missing the 4 piles of cards
-public class Flightboard {
+public class FlightBoard {
     Timer timer;
     List<CardDeck> peekableCardDecks;
     CardDeck hiddenCardDeck;
     CardDeck upcomingCardDeck;
     private Map<Player, Integer> playerPositions;
 
-    public Flightboard() {
+    public FlightBoard() {
         this.timer = new Timer();
         this.peekableCardDecks = List.of(new CardDeck(), new CardDeck(), new CardDeck());
         this.hiddenCardDeck = new CardDeck();
