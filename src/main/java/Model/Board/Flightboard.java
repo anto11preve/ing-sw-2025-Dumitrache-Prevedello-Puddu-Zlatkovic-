@@ -1,7 +1,6 @@
 package Model.Board;
 
 import Model.Board.AdventureCards.AdventureCard;
-import Model.Enums.TimerPhase;
 import Model.Player;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class Flightboard {
     private Map<Player, Integer> playerPositions;
 
     public Flightboard() {
-        this.timer = new Timer(TimerPhase.NOT_USED);
+        this.timer = new Timer();
         this.peekableCardDecks = List.of(new CardDeck(), new CardDeck(), new CardDeck());
         this.hiddenCardDeck = new CardDeck();
         this.upcomingCardDeck = new CardDeck();
@@ -32,6 +31,7 @@ public class Flightboard {
     public CardDeck getPeekableCardDeck(int index) {
         return peekableCardDecks.get(index);
     }
+
     public CardDeck getHiddenCardDeck() {
         return hiddenCardDeck;
     }
@@ -40,7 +40,7 @@ public class Flightboard {
         return upcomingCardDeck;
     }
 
-    public void setUpcomingCardDeck(){
+    public void setUpcomingCardDeck() {
         // Aggiungi le carte dei peekableCardDecks
         for (CardDeck deck : peekableCardDecks) {
             for (AdventureCard card : deck.peekCards()) {

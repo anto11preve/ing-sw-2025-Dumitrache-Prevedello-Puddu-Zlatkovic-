@@ -4,40 +4,50 @@ import Model.Enums.TimerPhase;
 
 public class Timer {
     private TimerPhase phase;
-    private float timeLeft;
+    private long targetTime;
 
-    public Timer(TimerPhase Phase) {
+    public Timer() {
         this.phase = TimerPhase.NOT_USED;
-        this.timeLeft = 0;
+        this.targetTime = 0;
     }
 
     public TimerPhase getPhase() {
         return phase;
     }
-    public boolean nextPhase(TimerPhase phase) {
+
+    public boolean nextPhase() {
+        if (getTimeLeft() != 0.0f) {
+            return false;
+        }
+
         switch (phase) {
             case NOT_USED:
                 this.phase = TimerPhase.START_PHASE;
-                return true;
+                break;
             case START_PHASE:
                 this.phase = TimerPhase.MIDDLE_PHASE;
-                return true;
+                break;
             case MIDDLE_PHASE:
                 this.phase = TimerPhase.LAST_PHASE;
-                return true;
-            case LAST_PHASE:
-                this.phase = TimerPhase.NOT_USED;
-                return true;
+                break;
             default:
                 return false;
         }
+
+        //TODO: change 30k to actual time it takes for timer to run out
+        targetTime = System.currentTimeMillis() + 30000;
+
+        return true;
     }
 
     public float getTimeLeft() {
-        return timeLeft;
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime > targetTime) {
+            return 0.0f;
+        }
+
+        return (targetTime - currentTime) * 0.001f;
     }
 
-    public void setTimeLeft(float timeLeft) {
-        this.timeLeft = timeLeft;
-    }
 }
