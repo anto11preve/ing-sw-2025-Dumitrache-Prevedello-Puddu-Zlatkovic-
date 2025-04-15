@@ -1,33 +1,34 @@
 package Model.Board.AdventureCards;
 
+import Model.Board.AdventureCards.Penalties.DaysPenalty;
+import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.CardLevel;
-import Model.Enums.Crewmates;
 import Model.Enums.Good;
 
 import java.util.List;
 
 public class AbandonedStation extends AdventureCard {
     private final int crew;
-    private final List<Good> goods;
-    private final int lostDays;
+    private final Goods landingReward;
+    private final DaysPenalty landingPenalty;
 
-    public AbandonedStation(int id, CardLevel level, int crew, int lostDays, List<Good> goods) {
+    public AbandonedStation(int id, CardLevel level, int crew, List<Good> goods, int days) {
         super(id, level);
         this.crew = crew;
-        this.lostDays = lostDays;
-        this.goods = goods;
+        this.landingPenalty = new DaysPenalty(days);
+        this.landingReward = new Goods(goods);
     }
 
     public int getCrew() {
         return crew;
     }
 
-    public int getLostDays() {
-        return lostDays;
+    public DaysPenalty getLandingPenalty() {
+        return landingPenalty;
     }
 
-    public List<Good> getGoods() {
-        return goods;
+    public Goods getLandingReward(){
+        return landingReward;
     }
 
     @Override

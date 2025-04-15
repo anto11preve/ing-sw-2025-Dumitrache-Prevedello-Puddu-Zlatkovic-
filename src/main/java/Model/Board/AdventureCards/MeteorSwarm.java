@@ -7,15 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeteorSwarm extends AdventureCard {
+    private int lastMeteor;
     private final List<Meteor> meteors;
 
-    public MeteorSwarm(int id, CardLevel level) {
+    public MeteorSwarm(int id, CardLevel level, List<Meteor> meteors) {
         super(id, level);
-        this.meteors = new ArrayList<>();
+        lastMeteor = -1;
+        this.meteors = meteors;
     }
 
-    public List<Meteor> getMeteors() {
-        return meteors;
+    public Meteor getNextMeteor(){
+        if(lastMeteor + 1 >= meteors.size()){
+            return null;
+        }
+
+        lastMeteor++;
+        
+        return meteors.get(lastMeteor);
     }
 
     @Override
