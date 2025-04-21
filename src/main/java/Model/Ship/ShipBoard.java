@@ -2,7 +2,16 @@ package Model.Ship;
 
 import java.util.ArrayList;
 import java.util.List;
+import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.Components.ShieldGenerator;
+import Model.Enums.ConnectorType;
+import Model.Enums.Direction;
+import Model.Enums.Card;
 
+/**
+ * Rappresenta la plancia della nave spaziale come griglia 5x7.
+ * Gestisce posizionamento, connessioni e validazione dei componenti.
+ */
 public class ShipBoard {
     private static final int ROWS = 5;
     private static final int COLS = 7;
@@ -19,6 +28,9 @@ public class ShipBoard {
         this.condensedShip = new CondensedShip();
     }
 
+    /**
+     * Aggiunge un componente in una determinata posizione se possibile.
+     */
     public boolean addComponent(SpaceshipComponent component, int x, int y) {
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return false;
         if (components[x][y] == null && isConnectedToExistingComponent(component, x, y)) {
@@ -28,6 +40,9 @@ public class ShipBoard {
         return false;
     }
 
+    /**
+     * Verifica se un modulo è connesso ad almeno un altro modulo adiacente compatibile.
+     */
     private boolean isConnectedToExistingComponent(SpaceshipComponent component, int x, int y) {
         int[][] directions = {{-1,0},{1,0},{0,-1},{0,1}};
         for (int[] dir : directions) {
@@ -44,12 +59,18 @@ public class ShipBoard {
         return false;
     }
 
+    /**
+     * Verifica la compatibilità tra due connettori.
+     */
     private boolean areConnectorsCompatible(ConnectorType a, ConnectorType b) {
         if (a == ConnectorType.NONE || b == ConnectorType.NONE) return false;
         if (a == ConnectorType.UNIVERSAL || b == ConnectorType.UNIVERSAL) return true;
         return a == b;
     }
 
+    /**
+     * Verifica se tutti i moduli sono connessi in un'unica componente connessa.
+     */
     public boolean checkIntegrity() {
         boolean[][] visited = new boolean[ROWS][COLS];
         int total = 0;
@@ -73,6 +94,9 @@ public class ShipBoard {
         return visitedCount == total;
     }
 
+    /**
+     * Visita ricorsiva DFS per verificare la connettività dei moduli.
+     */
     private int dfs(int x, int y, boolean[][] visited) {
         if (x < 0 || y < 0 || x >= ROWS || y >= COLS) return 0;
         if (visited[x][y] || components[x][y] == null) return 0;
@@ -86,6 +110,9 @@ public class ShipBoard {
         return count;
     }
 
+    /**
+     * Calcola i limiti attuali della nave (prima e ultima riga e colonna occupata).
+     */
     public int[] getShipBoundaries() {
         int minRow = ROWS, maxRow = -1, minCol = COLS, maxCol = -1;
         for (int i = 0; i < ROWS; i++) {
@@ -102,11 +129,17 @@ public class ShipBoard {
         return new int[]{minRow, maxRow, minCol, maxCol};
     }
 
+    /**
+     * Restituisce il componente alla posizione (x, y).
+     */
     public SpaceshipComponent getComponent(int x, int y) {
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
         return components[x][y];
     }
 
+    /**
+     * Restituisce la posizione di un determinato componente.
+     */
     public int[] getIndex(SpaceshipComponent goalComponent) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
@@ -118,6 +151,9 @@ public class ShipBoard {
         return new int[]{-1, -1};
     }
 
+    /**
+     * Stampa una matrice che mostra quali celle della plancia sono occupate.
+     */
     public void printOccupiedMatrix() {
         int[] bounds = getShipBoundaries();
         if (bounds == null) {
@@ -133,6 +169,9 @@ public class ShipBoard {
         }
     }
 
+    /**
+     * Valida la nave secondo le regole di Galaxy Trucker.
+     */
     public boolean validateShip() {
         for (int x = 0; x < ROWS; x++) {
             for (int y = 0; y < COLS; y++) {
