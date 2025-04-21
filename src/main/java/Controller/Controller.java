@@ -10,6 +10,7 @@ public class Controller extends UnicastRemoteObject implements ControllerInterfa
     private Game model;
     private State state;
 
+
     public static void main(String[] args)
             throws RemoteException, AlreadyBoundException {
         System.out.println("Constructing server implementation...");
