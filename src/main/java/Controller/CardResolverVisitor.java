@@ -1,0 +1,175 @@
+package Controller;
+
+import Controller.AbandonedShip.AbandonedShipState;
+import Controller.AbandonedStation.AbandonedStationState;
+import Controller.Enemy.PiratesStatePowerDeclaration;
+import Controller.Enemy.SlaversStatePowerDeclaration;
+import Controller.Enemy.SmugglersStatePowerDeclaration;
+import Controller.OpenSpace.OpenSpaceState;
+import Controller.Planets.PlanetsState;
+import Model.Board.AdventureCards.*;
+import Model.Enums.Crewmates;
+import Model.Player;
+import Model.Ship.Components.Cabin;
+import Model.Ship.Components.SpaceshipComponent;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class CardResolverVisitor {
+
+    public CardResolverVisitor() {}
+
+    public void visit(AbandonedShip card, Controller controller) {
+        /*
+        si fa uno alla volta, fino a che qualcuno effettivamente la svolge, in ordine di rotta
+        può rinunciare a tot quipaggio per dei crediti e perdere giorni di volo
+         */
+        controller.setState(new AbandonedShipState(controller, card));
+    }
+
+    public void visit(AbandonedStation card, Controller controller) {
+        /*
+        si fa uno alla volta, fino a che qualcuno effettivamente la svolge, in ordine di rotta
+        se il giocatore ha abbastanza equipaggio, può caricare le merci dove vuole e ridistribuirle
+        il giocatore perde giorni di volo
+         */
+        controller.setState(new AbandonedStationState(controller, card));
+    }
+
+    public void visit( AvailablePlanets card, Controller controller) {
+        /*
+
+         */
+        controller.setState(new PlanetsState(controller, card));
+    }
+
+    public void visit(CombactZone card, Controller controller) {
+        /*
+        1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
+        2. si calcola il giocatore con meno potenza motrice e si perdono delle merci
+           le merci vanno tolte le più preziose (penso che a parità si faccia decidere al giocatore)
+        3. si calcola il giocatore con meno equipaggio e si gestiscono le cannonate
+           le cannonate piccole si parano solo con gli scudi, quelle grandi si prega
+        in caso di parità, il più avanti nella rotta sconta la penalità
+         */
+    }
+
+    public void visit( Epidemic card, Controller controller) {
+        /*
+        si scorrono le cabine, e se essa è adiacente a un'altra cabina, si rimuove un membro dell'equipaggio (alieno o umano)
+         */
+        for(Player p : controller.getModel().getFlightboard().getTurnOrder()){
+            Set<Cabin> processed = new HashSet<>();
+            for(int i=4; i<10; i++){{
+                for(int j=4; j<9; j++){
+                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(i,j))){
+                    SpaceshipComponent c = p.getShipBoard().getComponent(i,j);  //come faccio a dire che è una cabina?
+                        int [][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+                        for(int [] d : directions){
+                            int newRow = i + d[0];
+                            int newColumn = j + d[1];
+
+                            if(p.getShipBoard().getComponent(newRow,newColumn) != null){
+                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(newRow,newColumn);  //come faccio a dire che è una cabina?
+                                if( !processed.contains(adjacent) && p.getShipBoard().getCondensedShip().getCabins().contains(adjacent)){   //da rivedere
+                                    Crewmates firstCabin = c.getOccupants();
+                                    Crewmates secondCabin = (Cabin) adjacent.getOccupants();    //da rivedere
+                                    switch(firstCabin){
+                                        case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
+                                            c.setOccupants(Crewmates.EMPTY);
+                                            break;
+                                        case DOUBLE_HUMAN:
+                                            c.setOccupants(Crewmates.SINGLE_HUMAN);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    switch(secondCabin){
+                                        case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
+                                            adjacent.setOccupants(Crewmates.EMPTY);
+                                            break;
+                                        case DOUBLE_HUMAN:
+                                            adjacent.setOccupants(Crewmates.SINGLE_HUMAN);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    processed.add(c);
+                                    processed.add(adjacent);
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            }
+        }
+
+        controller.setState(new FlightPhase());
+    }
+
+    public void visit(MeteorSwarm card, Controller controller) {
+        /*
+        il leader tira due dadi e determina riga e colonna che vengono colpite
+        si controlla se ogni giocatore viene colpito
+        se è un piccolo meteorite, si controlla il side dove colpisce: se è esposto è un problema
+        il giocatore può nel caso decidere se usare lo scudo o no (-1 batteria)
+        se si rompe il componente, aggiungere al Junk un pezzo
+        fare la check integrity della nave
+        Per il grosso meteorite si controllano eventuali cannoni che possono sparare ( se è doppio -1 batteria)
+
+
+         */
+    }
+
+    public void visit( OpenSpace card, Controller controller) {
+        /*
+        deve ricevere in qualche modo il numero di batterie che ciascun giocatore vuole usare
+        poi semplicemente si calcola la potenza motrice di ciascun giocatore e si muove la nave sulla flighboard
+        */
+        controller.setState(new OpenSpaceState(controller, card));
+    }
+
+    public void visit( Pirates card, Controller controller) {
+        /*
+        come i controabbandieri
+        si vincono crediti e se si perde si ricevono cannonate
+         */
+
+        controller.setState(new PiratesStatePowerDeclaration(controller, card));
+    }
+
+    public void visit( Slavers card, Controller controller) {
+        /*
+        come i controabbandieri
+        si vincono crediti e di perde equipaggio
+         */
+
+        controller.setState(new SlaversStatePowerDeclaration(controller, card));
+    }
+
+    public void visit( Smugglers card, Controller controller) {
+        /*
+        in ordine di rotta, si decide se il giocatore vince/perde o si va avanti, in base alla potenza di fuoco
+        1. se vince, il nemico è sconfitto, il giocatore può reclamare le merci e spostarle anche, perdendo giorni di volo
+        2. se perde, si paga la penalità e si passa al giocatore dopo
+         */
+
+        controller.setState(new SmugglersStatePowerDeclaration(controller, card));
+    }
+
+    public void visit( Stardust card, Controller controller) {
+        /*
+        in ordine inverso di rotta si scorre per vedere se un giocatore ha connettori esposti, e
+        in base al loro tipo si perdono giorni di rotta
+         */
+    }
+
+}
