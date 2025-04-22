@@ -108,6 +108,15 @@ public class Engine extends SpaceshipComponent {
         System.out.println("Engine removed → clearing power.");
         // TODO: togli bonus o decrementa potenza
     }
+
+    public boolean requiresBattery() {
+        return this.requiresBattery;
+    }
+
+    public int getEnginePower() {
+        return this.enginePower;
+    }
+}
 /*
     @Override
     public void accept(Visitor visitor) {
