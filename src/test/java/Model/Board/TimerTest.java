@@ -1,45 +1,52 @@
 package Model.Board;
 
-import Model.Enums.TimerPhase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 class TimerTest {
 
-	private Timer timer;
+    private Timer timer;
 
-	@BeforeEach
-	void setUp() {
-		timer = new Timer();
-	}
+    @BeforeEach
+    void setUp() {
+        timer = new Timer();
+    }
 
-	@Test
-	void getPhase() {
-		assertEquals(TimerPhase.NOT_USED, timer.getPhase());
-	}
+    @Test
+    void getPhase() {
+        assertEquals(Timer.Phase.NOT_USED, timer.getPhase());
+    }
 
-	@Test
-	void nextPhase() {
-		while (timer.getPhase() != TimerPhase.LAST_PHASE){
-			System.out.println("Phase: " + timer.getPhase());
-			while (timer.getTimeLeft() != 0.0f) {
-				assertEquals(false, timer.nextPhase());
-				System.out.print("\rTime left: " + timer.getTimeLeft());
-			}
-			assertEquals(true, timer.nextPhase());
-		}
-	}
+    @Test
+    void nextPhase() {
+        while (timer.getPhase() != Timer.Phase.LAST_PHASE){
+            System.out.println("Phase: " + timer.getPhase());
+            while (timer.getTimeLeft() != 0.0f) {
+                assertFalse(timer.nextPhase());
+                System.out.println("Time left: " + timer.getTimeLeft());
+            }
+            assertTrue(timer.nextPhase());
+        }
+        System.out.println("Phase: " + timer.getPhase());
+        while(timer.getTimeLeft() != 0.0f) {
+            assertFalse(timer.nextPhase());
+            System.out.println("Time left: " + timer.getTimeLeft());
+        }
 
-	@Test
-	void getTimeLeft() {
-		assertEquals(TimerPhase.NOT_USED, timer.getPhase());
+        assertFalse(timer.nextPhase());
+        System.out.println("Final Phase: " + timer.getPhase());
+    }
 
-		assertEquals(true, timer.nextPhase());
+    @Test
+    void getTimeLeft() {
+        assertEquals(Timer.Phase.NOT_USED, timer.getPhase());
 
-		assertEquals(TimerPhase.START_PHASE, timer.getPhase());
+        assertTrue(timer.nextPhase());
+
+        assertEquals(Timer.Phase.START_PHASE, timer.getPhase());
 
 
-		System.out.println("Time left: " + timer.getTimeLeft());
-	}
+        System.out.println("Time left: " + timer.getTimeLeft());
+    }
 }
