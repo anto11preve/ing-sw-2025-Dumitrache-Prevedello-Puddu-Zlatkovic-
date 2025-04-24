@@ -5,13 +5,17 @@ import Model.Board.AdventureCards.Penalties.Penalty;
 import Model.Board.AdventureCards.Rewards.Reward;
 import Model.Enums.CardLevel;
 
-public abstract class Enemy extends AdventureCard{
+/**
+ * @param <P> Penalty inflicted upon the player if the card is not beaten
+ * @param <R> Reward given to the player if the card is beaten
+ */
+public abstract class Enemy<P extends Penalty, R extends Reward> extends AdventureCard {
     private final int power;
-    private final Penalty lossPenalty;
+    private final P lossPenalty;
     private final DaysPenalty winPenalty;
-    private final Reward winReward;
+    private final R winReward;
 
-    public Enemy(int id, CardLevel level, int power, Penalty lossPenalty, int days, Reward winReward) {
+    public Enemy(int id, CardLevel level, int power, P lossPenalty, int days, R winReward) {
         super(id, level);
         this.power = power;
         this.lossPenalty = lossPenalty;
@@ -23,7 +27,7 @@ public abstract class Enemy extends AdventureCard{
         return power;
     }
 
-    public Penalty getLossPenalty() {
+    public final P getLossPenalty() {
         return lossPenalty;
     }
 
@@ -31,7 +35,7 @@ public abstract class Enemy extends AdventureCard{
         return winPenalty;
     }
 
-    public Reward getWinReward() {
+    public final R getWinReward() {
         return winReward;
     }
 }

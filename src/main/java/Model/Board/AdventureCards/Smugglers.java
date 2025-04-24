@@ -7,20 +7,10 @@ import Model.Enums.Good;
 
 import java.util.List;
 
-public class Smugglers extends Enemy {
+public class Smugglers extends Enemy<GoodsPenalty, Goods> {
 
     public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, List<Good> goods) {
         super(id, level, power, new GoodsPenalty(lostGoods), days, new Goods(goods));
-    }
-
-    @Override
-    public final GoodsPenalty getLossPenalty() {
-        return (GoodsPenalty) super.getLossPenalty();
-    }
-
-    @Override
-    public Goods getWinReward() {
-        return (Goods) super.getWinReward();
     }
 
     @Override
