@@ -1,5 +1,8 @@
 package Model.Ship;
 
+import Model.Enums.ConnectorType;
+import Model.Ship.Components.SpaceshipComponent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,15 +110,15 @@ public class ShipBoard {
         return components[x][y];
     }
 
-    public int[] getIndex(SpaceshipComponent goalComponent) {
+    public Coordinates getIndex(SpaceshipComponent goalComponent) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if (components[i][j] == goalComponent) {
-                    return new int[]{i, j};
+                    return new Coordinates(i, j);
                 }
             }
         }
-        return new int[]{-1, -1};
+        return new Coordinates(-1, -1);
     }
 
     public void printOccupiedMatrix() {

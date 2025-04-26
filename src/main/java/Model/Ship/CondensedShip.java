@@ -58,10 +58,13 @@ class CondensedShip {
         int frontCannons = 0;
         int otherCannons = 0;
         for (Cannon cannon : cannons) {
-            if(cannon.getOrientation()==0){
-                frontCannons++;
-            } else {
-                otherCannons++;
+
+            if (cannon.doubleCannon()) {
+                if(cannon.getOrientation()==0){
+                    frontCannons++;
+                } else {
+                    otherCannons++;
+                }
             }
         }
         return new DoubleCannonsCounter(frontCannons, otherCannons);
