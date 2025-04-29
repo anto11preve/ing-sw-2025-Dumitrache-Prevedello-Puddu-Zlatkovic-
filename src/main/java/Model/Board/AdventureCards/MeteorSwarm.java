@@ -6,7 +6,7 @@ import Model.Enums.CardLevel;
 import java.util.Iterator;
 import java.util.List;
 
-public class MeteorSwarm extends AdventureCard implements Iterable<Meteor> {
+public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> {
     private final List<Meteor> meteors;
 
     public MeteorSwarm(int id, CardLevel level, List<Meteor> meteors) {

@@ -5,7 +5,7 @@ import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
 
-public class AbandonedShip extends AdventureCard {
+public class AbandonedShip extends AdventureCardFilip {
     private final CrewPenalty winPenalty;
     private final Credits landingReward;
     private final DaysPenalty landingPenalty;

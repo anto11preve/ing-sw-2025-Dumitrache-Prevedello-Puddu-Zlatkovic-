@@ -1,6 +1,6 @@
 package Model.Board;
 
-import Model.Board.AdventureCards.AdventureCard;
+import Model.Board.AdventureCards.AdventureCardFilip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,16 +23,16 @@ import java.util.List;
  * behave the same way).
  *
  * @see List
- * @see AdventureCard
+ * @see AdventureCardFilip
  */
-public class CardDeck implements Iterable<AdventureCard> {
+public class CardDeck implements Iterable<AdventureCardFilip> {
     /**
      * {@code List} of {@code AdventureCard}
      *
      * @see List
-     * @see AdventureCard
+     * @see AdventureCardFilip
      */
-    private final List<AdventureCard> cards;
+    private final List<AdventureCardFilip> cards;
 
     /**
      * Default {@code CardDeck} constructor.
@@ -54,7 +54,7 @@ public class CardDeck implements Iterable<AdventureCard> {
      * @param cards {@code List} of {@code AdventureCards}
      *              to be copied
      */
-    public CardDeck(List<AdventureCard> cards) {
+    public CardDeck(List<AdventureCardFilip> cards) {
         this();
 
         this.cards.addAll(cards);
@@ -70,7 +70,7 @@ public class CardDeck implements Iterable<AdventureCard> {
      * @param cards {@code Array} of {@code AventureCard}s
      *              to be copied
      */
-    public CardDeck(AdventureCard[] cards) {
+    public CardDeck(AdventureCardFilip[] cards) {
         this(Arrays.asList(cards));
     }
 
@@ -98,7 +98,7 @@ public class CardDeck implements Iterable<AdventureCard> {
      * @return card {@code AdventureCard} that
      * was on top of the deck
      */
-    public AdventureCard popCard() {
+    public AdventureCardFilip popCard() {
         return cards.removeFirst();
     }
 
@@ -111,7 +111,7 @@ public class CardDeck implements Iterable<AdventureCard> {
      *
      * @param card Card to be placed on top of the deck
      */
-    public void pushCard(AdventureCard card) {
+    public void pushCard(AdventureCardFilip card) {
         cards.addFirst(card);
     }
 
@@ -122,10 +122,10 @@ public class CardDeck implements Iterable<AdventureCard> {
      *
      * @return copy of {@code this.cards} list
      */
-    public List<AdventureCard> peekCards() {
-        ArrayList<AdventureCard> cards = new ArrayList<>();
+    public List<AdventureCardFilip> peekCards() {
+        ArrayList<AdventureCardFilip> cards = new ArrayList<>();
 
-        for (AdventureCard card : this.cards) {
+        for (AdventureCardFilip card : this.cards) {
             cards.add(card);
         }
 
@@ -133,7 +133,7 @@ public class CardDeck implements Iterable<AdventureCard> {
     }
 
     @Override
-    public Iterator<AdventureCard> iterator() {
+    public Iterator<AdventureCardFilip> iterator() {
         return peekCards().iterator();
     }
 }

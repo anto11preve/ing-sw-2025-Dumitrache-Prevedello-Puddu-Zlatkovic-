@@ -2,7 +2,7 @@ package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
 
-public class Epidemic extends AdventureCard {
+public class Epidemic extends AdventureCardFilip {
 
     public Epidemic(int id, CardLevel level) {
         super(id, level);

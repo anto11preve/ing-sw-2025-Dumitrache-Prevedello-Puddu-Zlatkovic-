@@ -1,6 +1,6 @@
 package Model.Board;
 
-import Model.Board.AdventureCards.AdventureCard;
+import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Enums.CardLevel;
 import Model.Player;
 
@@ -71,7 +71,7 @@ public class FlightBoard {
      * @see CardDeck
      * @see AssertionError
      */
-    public FlightBoard(AdventureCard[] hiddenCards) throws AssertionError {
+    public FlightBoard(AdventureCardFilip[] hiddenCards) throws AssertionError {
         this.cellNumber = 18;
         this.timer = null;
         this.peekableCardDecks = null;
@@ -80,7 +80,7 @@ public class FlightBoard {
 
         assert (this.hiddenCardDeck.peekCards().size() == 8);
 
-        for (AdventureCard card : this.hiddenCardDeck) {
+        for (AdventureCardFilip card : this.hiddenCardDeck) {
             assert (card.getLevel() == CardLevel.LEARNER);
         }
 
@@ -88,7 +88,7 @@ public class FlightBoard {
         this.playerPositions = new HashMap<>();
     }
 
-    public FlightBoard(AdventureCard[] hiddenCardDeck, List<CardDeck> peekableCardDecks) {
+    public FlightBoard(AdventureCardFilip[] hiddenCardDeck, List<CardDeck> peekableCardDecks) {
         this.cellNumber = 24;
         this.timer = new Timer();
 
@@ -129,7 +129,7 @@ public class FlightBoard {
         if (timer == null || !(timer.getPhase() == Timer.Phase.LAST_PHASE && timer.getTimeLeft() == 0.0f)) {
             return false;
         }
-        List<AdventureCard> cards = new ArrayList<>();
+        List<AdventureCardFilip> cards = new ArrayList<>();
         upcomingCardDeck = new CardDeck();
         // Aggiungi le carte dei peekableCardDecks
         for (CardDeck deck : peekableCardDecks) {

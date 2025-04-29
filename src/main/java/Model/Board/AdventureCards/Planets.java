@@ -7,7 +7,7 @@ import Model.Enums.CardLevel;
 import java.util.Iterator;
 import java.util.List;
 
-public class Planets extends AdventureCard implements Iterable<Planet>{
+public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     private final List<Planet> planetList;
     private final DaysPenalty landingPenalty;
 

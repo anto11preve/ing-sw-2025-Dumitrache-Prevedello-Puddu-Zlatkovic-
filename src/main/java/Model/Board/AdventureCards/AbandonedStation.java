@@ -7,7 +7,7 @@ import Model.Enums.Good;
 
 import java.util.List;
 
-public class AbandonedStation extends AdventureCard {
+public class AbandonedStation extends AdventureCardFilip {
     private final int crew;
     private final Goods landingReward;
     private final DaysPenalty landingPenalty;

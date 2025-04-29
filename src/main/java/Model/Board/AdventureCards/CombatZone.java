@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CombatZone extends AdventureCard implements Iterable<CombatZoneLine> {
+public class CombatZone extends AdventureCardFilip implements Iterable<CombatZoneLine> {
     private final List<CombatZoneLine> lines;
 
     public CombatZone(int id, CardLevel level, List<CombatZoneLine> lines) {

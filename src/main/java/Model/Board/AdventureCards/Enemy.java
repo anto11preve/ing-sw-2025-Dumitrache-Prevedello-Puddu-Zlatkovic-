@@ -9,7 +9,7 @@ import Model.Enums.CardLevel;
  * @param <P> Penalty inflicted upon the player if the card is not beaten
  * @param <R> Reward given to the player if the card is beaten
  */
-public abstract class Enemy<P extends Penalty, R extends Reward> extends AdventureCard {
+public abstract class Enemy<P extends Penalty, R extends Reward> extends AdventureCardFilip {
     private final int power;
     private final P lossPenalty;
     private final DaysPenalty winPenalty;
