@@ -13,10 +13,10 @@ public class CombatZoneLine {
     }
 
     public final Criteria getOrderingCriteria() {
-        return orderingCriteria;
+        return this.orderingCriteria;
     }
 
     public final Penalty getPenalty() {
-        return penalty;
+        return this.penalty;
     }
 }

@@ -3,26 +3,16 @@ package Model.Board.AdventureCards;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Enums.CardLevel;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class CombatZone extends AdventureCard {
-    private int lastLine;
+public class CombatZone extends AdventureCard implements Iterable<CombatZoneLine> {
     private final List<CombatZoneLine> lines;
 
     public CombatZone(int id, CardLevel level, List<CombatZoneLine> lines) {
         super(id, level);
-        this.lastLine = -1;
         this.lines = lines;
-    }
-
-    public CombatZoneLine getNextLine() {
-        if (lastLine + 1 >= lines.size()) {
-            return null;
-        }
-
-        lastLine++;
-
-        return lines.get(lastLine);
     }
 
     @Override
@@ -33,5 +23,12 @@ public class CombatZone extends AdventureCard {
     @Override
     public String getDescription() {
         return "";
+    }
+
+    @Override
+    public Iterator<CombatZoneLine> iterator() {
+        List<CombatZoneLine> lines = new ArrayList<>(this.lines);
+
+        return lines.iterator();
     }
 }

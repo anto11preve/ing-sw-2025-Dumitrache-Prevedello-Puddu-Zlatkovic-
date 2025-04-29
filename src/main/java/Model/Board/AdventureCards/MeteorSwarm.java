@@ -3,27 +3,16 @@ package Model.Board.AdventureCards;
 import Model.Board.AdventureCards.Projectiles.Meteor;
 import Model.Enums.CardLevel;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class MeteorSwarm extends AdventureCard {
-    private int lastMeteor;
+public class MeteorSwarm extends AdventureCard implements Iterable<Meteor> {
     private final List<Meteor> meteors;
 
     public MeteorSwarm(int id, CardLevel level, List<Meteor> meteors) {
         super(id, level);
-        lastMeteor = -1;
+
         this.meteors = meteors;
-    }
-
-    public Meteor getNextMeteor(){
-        if(lastMeteor + 1 >= meteors.size()){
-            return null;
-        }
-
-        lastMeteor++;
-        
-        return meteors.get(lastMeteor);
     }
 
     @Override
@@ -34,5 +23,10 @@ public class MeteorSwarm extends AdventureCard {
     @Override
     public String getDescription() {
         return "";
+    }
+
+    @Override
+    public Iterator<Meteor> iterator() {
+        return meteors.iterator();
     }
 }
