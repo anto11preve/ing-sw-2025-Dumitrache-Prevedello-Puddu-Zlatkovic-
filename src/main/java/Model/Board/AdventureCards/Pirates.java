@@ -1,37 +1,25 @@
 package Model.Board.AdventureCards;
 
+import Model.Board.AdventureCards.Penalties.CannonShotPenalty;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
+import Model.Board.AdventureCards.Projectiles.CannonShot;
 
 import java.util.List;
 
-public class Pirates extends AdventureCard {
-    private final int firePower;
-    private final List<CannonShot> cannonShots;
-    private final int credits;
-    private final int daysLost;
+public class Pirates extends Enemy<CannonShotPenalty, Credits> {
 
-    public Pirates(int id, CardLevel level, int firePower, List<CannonShot> cannonShots, int credits, int daysLost) {
-        super(id, level);
-        this.firePower = firePower;
-        this.cannonShots = cannonShots;
-        this.credits = credits;
-        this.daysLost = daysLost;
+    public Pirates(int id, CardLevel level, int power, List<CannonShot> cannonShots, int days, int credits) {
+        super(id, level, power, new CannonShotPenalty(cannonShots), days, new Credits(credits));
     }
 
-    public int getFirePower() {
-        return firePower;
+    @Override
+    public final String getName() {
+        return "Pirati";
     }
 
-    public List<CannonShot> getCannonShots() {
-        return cannonShots;
+    @Override
+    public final String getDescription() {
+        return "";
     }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public int getDaysLost() {
-        return daysLost;
-    }
-
 }

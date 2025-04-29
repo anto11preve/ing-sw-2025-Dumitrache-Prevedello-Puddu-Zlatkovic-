@@ -1,43 +1,42 @@
 package Model.Board;
 
-import Model.Enums.TimerPhase;
-
 public class Timer {
-    private TimerPhase phase;
-    private float timeLeft;
+    private Phase phase;
+    private long targetTime;
 
-    public Timer(TimerPhase Phase) {
-        this.phase = TimerPhase.NOT_USED;
-        this.timeLeft = 0;
+    public Timer() {
+        this.phase = Phase.NOT_USED;
+        this.targetTime = 0;
     }
 
-    public TimerPhase getPhase() {
+    public Phase getPhase() {
         return phase;
     }
-    public boolean nextPhase(TimerPhase phase) {
-        switch (phase) {
-            case NOT_USED:
-                this.phase = TimerPhase.START_PHASE;
-                return true;
-            case START_PHASE:
-                this.phase = TimerPhase.MIDDLE_PHASE;
-                return true;
-            case MIDDLE_PHASE:
-                this.phase = TimerPhase.LAST_PHASE;
-                return true;
-            case LAST_PHASE:
-                this.phase = TimerPhase.NOT_USED;
-                return true;
-            default:
-                return false;
+
+    public boolean nextPhase() {
+        if (getTimeLeft() != 0.0f || this.phase == Phase.LAST_PHASE) {
+            return false;
         }
+
+        this.phase = Phase.values()[this.phase.ordinal() + 1];
+
+        //TODO: change 30k to actual time it takes for timer to run out
+        targetTime = System.currentTimeMillis() + 30000;
+
+        return true;
     }
 
     public float getTimeLeft() {
-        return timeLeft;
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime > targetTime) {
+            return 0.0f;
+        }
+
+        return (targetTime - currentTime) * 0.001f;
     }
 
-    public void setTimeLeft(float timeLeft) {
-        this.timeLeft = timeLeft;
+    public enum Phase {
+        NOT_USED, START_PHASE, MIDDLE_PHASE, LAST_PHASE
     }
 }
