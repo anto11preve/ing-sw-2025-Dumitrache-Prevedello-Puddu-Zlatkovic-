@@ -49,10 +49,10 @@ public class PiratesStateBatteryRemoved extends State {
                     if(batteriesRequired > 0){  //se devo selezionare un altro compartment
                         controller.setState(new PiratesStateBatteryRemoved(controller, card, penalizedPlayers, declaredPower, batteriesRequired));
                     } else {
-                        if (declaredPower > card.getFirePower()) {  //se vinci
+                        if (declaredPower > card.getPower()) {  //se vinci
                             controller.setState(new LandState(controller, card, players.getFirst()));
                         } else {    //se non vinci
-                            if (declaredPower < card.getFirePower()) {  //se perdi
+                            if (declaredPower < card.getPower()) {  //se perdi
                                 penalizedPlayers.add(players.getFirst());
 
                             }
