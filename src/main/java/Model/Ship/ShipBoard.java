@@ -1,55 +1,70 @@
 package Model.Ship;
 
-import java.util.ArrayList;
-import java.util.List;
-import Model.Ship.Components.*;
-import Model.Enums.*;
+import Model.Enums.ConnectorType;
+import Model.Enums.Direction;
+import Model.Enums.Side;
+import Model.Ship.Components.Cannon;
+import Model.Ship.Components.Engine;
+import Model.Ship.Components.ShieldGenerator;
+import Model.Ship.Components.SpaceshipComponent;
 import Model.Utils.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Represents the spaceship board as a 5x7 grid.
- * Manages placement, connections, validation, and power calculations.
+ * Full-featured ShipBoard for Galaxy Trucker.
+ * Manages placement, connections, rotations, integrity, firepower, thrust, shields, and damage.
  */
 public class ShipBoard {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
-    private SpaceshipComponent[][] components;
-    private SpaceshipComponent activeComponent;
-    private List<SpaceshipComponent> reservedComponents;
-    private final CondensedShip condensedShip;
+    private final SpaceshipComponent[][] components;
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
-        this.activeComponent = null;
-        this.reservedComponents = new ArrayList<>();
-        this.condensedShip = new CondensedShip();
     }
 
-    /**
-     * Adds a component to the board at position (x, y) if the placement is valid.
-     */
-    public boolean addComponent(SpaceshipComponent component, int x, int y) {
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return false;
-        if (components[x][y] == null && isConnectedToExistingComponent(component, x, y)) {
-            components[x][y] = component;
-            return true;
+    public boolean addComponent(SpaceshipComponent component, int row, int col) {
+        if (!isValidPosition(row, col)) return false;
+        if (components[row][col] != null) return false;
+        if (!isConnectedToExistingComponents(component, row, col) && !isEmpty()) return false;
+        components[row][col] = component;
+        component.setShipBoard(this);
+        return true;
+    }
+
+    public void rotateComponent(int row, int col) {
+        if (isValidPosition(row, col) && components[row][col] != null) {
+            components[row][col].rotate();
         }
-        return false;
     }
 
-    /**
-     * Checks whether a component is connected to an existing component with compatible connectors.
-     */
-    private boolean isConnectedToExistingComponent(SpaceshipComponent component, int x, int y) {
-        int[][] directions = {{-1,0},{1,0},{0,-1},{0,1}};
-        for (int[] dir : directions) {
-            int nx = x + dir[0];
-            int ny = y + dir[1];
-            if (nx >= 0 && nx < ROWS && ny >= 0 && ny < COLS && components[nx][ny] != null) {
-                ConnectorType neighborConnector = components[nx][ny].getConnectorType((dir[0] == -1 ? 1 : dir[0] == 1 ? 0 : dir[1] == -1 ? 3 : 2));
-                ConnectorType currentConnector = component.getConnectorType((dir[0] == -1 ? 0 : dir[0] == 1 ? 1 : dir[1] == -1 ? 2 : 3));
-                if (areConnectorsCompatible(currentConnector, neighborConnector)) {
+    private boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < ROWS && col >= 0 && col < COLS;
+    }
+
+    private boolean isEmpty() {
+        for (SpaceshipComponent[] row : components) {
+            for (SpaceshipComponent c : row) {
+                if (c != null) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isConnectedToExistingComponents(SpaceshipComponent component, int row, int col) {
+        for (Side side : Side.values()) {
+            int[] offset = getOffset(side);
+            int adjRow = row + offset[0];
+            int adjCol = col + offset[1];
+            if (isValidPosition(adjRow, adjCol) && components[adjRow][adjCol] != null) {
+                SpaceshipComponent neighbor = components[adjRow][adjCol];
+                if (connectorsAreCompatible(
+                        component.getConnectorAt(side),
+                        neighbor.getConnectorAt(getOppositeSide(side))
+                )) {
                     return true;
                 }
             }
@@ -57,130 +72,82 @@ public class ShipBoard {
         return false;
     }
 
-    /**
-     * Determines if two connectors are compatible.
-     */
-    private boolean areConnectorsCompatible(ConnectorType a, ConnectorType b) {
+    private int[] getOffset(Side side) {
+        switch (side) {
+            case FRONT: return new int[]{-1, 0};
+            case REAR: return new int[]{1, 0};
+            case LEFT: return new int[]{0, -1};
+            case RIGHT: return new int[]{0, 1};
+            default: return new int[]{0, 0};
+        }
+    }
+
+    private Side getOppositeSide(Side side) {
+        switch (side) {
+            case FRONT: return Side.REAR;
+            case REAR: return Side.FRONT;
+            case LEFT: return Side.RIGHT;
+            case RIGHT: return Side.LEFT;
+            default: return side;
+        }
+    }
+
+    private boolean connectorsAreCompatible(ConnectorType a, ConnectorType b) {
         if (a == ConnectorType.NONE || b == ConnectorType.NONE) return false;
         if (a == ConnectorType.UNIVERSAL || b == ConnectorType.UNIVERSAL) return true;
         return a == b;
     }
 
-    /**
-     * Performs a DFS traversal to check if all components are part of a single connected structure.
-     */
     public boolean checkIntegrity() {
         boolean[][] visited = new boolean[ROWS][COLS];
-        int total = 0;
-        int startX = -1, startY = -1;
+        int totalComponents = 0;
+        int startRow = -1, startCol = -1;
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if (components[i][j] != null) {
-                    total++;
-                    if (startX == -1) {
-                        startX = i;
-                        startY = j;
+                    totalComponents++;
+                    if (startRow == -1) {
+                        startRow = i;
+                        startCol = j;
                     }
                 }
             }
         }
 
-        if (total == 0) return true;
+        if (totalComponents == 0) return true;
 
-        int visitedCount = dfs(startX, startY, visited);
-        return visitedCount == total;
+        int visitedComponents = dfs(startRow, startCol, visited);
+        return visitedComponents == totalComponents;
     }
 
-    private int dfs(int x, int y, boolean[][] visited) {
-        if (x < 0 || y < 0 || x >= ROWS || y >= COLS) return 0;
-        if (visited[x][y] || components[x][y] == null) return 0;
+    private int dfs(int row, int col, boolean[][] visited) {
+        if (!isValidPosition(row, col)) return 0;
+        if (visited[row][col] || components[row][col] == null) return 0;
 
-        visited[x][y] = true;
+        visited[row][col] = true;
         int count = 1;
-        count += dfs(x + 1, y, visited);
-        count += dfs(x - 1, y, visited);
-        count += dfs(x, y + 1, visited);
-        count += dfs(x, y - 1, visited);
+        count += dfs(row + 1, col, visited);
+        count += dfs(row - 1, col, visited);
+        count += dfs(row, col + 1, visited);
+        count += dfs(row, col - 1, visited);
         return count;
     }
 
-    /**
-     * Returns a list of all components on the ship.
-     */
     public List<SpaceshipComponent> getAllComponents() {
-        List<SpaceshipComponent> result = new ArrayList<>();
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                if (components[i][j] != null) {
-                    result.add(components[i][j]);
-                }
+        List<SpaceshipComponent> list = new ArrayList<>();
+        for (SpaceshipComponent[] row : components) {
+            for (SpaceshipComponent c : row) {
+                if (c != null) list.add(c);
             }
         }
-        return result;
+        return list;
     }
 
-    /**
-     * Returns a list of exposed component positions (with no neighbors on any side).
-     */
-    public List<Position> getExposedComponentPositions() {
-        List<Position> exposed = new ArrayList<>();
-        for (int x = 0; x < ROWS; x++) {
-            for (int y = 0; y < COLS; y++) {
-                if (components[x][y] != null) {
-                    boolean exposedFlag = false;
-                    int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}};
-                    for (int[] d : dirs) {
-                        int nx = x + d[0];
-                        int ny = y + d[1];
-                        if (nx < 0 || nx >= ROWS || ny < 0 || ny >= COLS || components[nx][ny] == null) {
-                            exposedFlag = true;
-                            break;
-                        }
-                    }
-                    if (exposedFlag) {
-                        exposed.add(new Position(x, y));
-                    }
-                }
-            }
-        }
-        return exposed;
+    public SpaceshipComponent getComponent(int row, int col) {
+        if (!isValidPosition(row, col)) return null;
+        return components[row][col];
     }
-
-    /**
-     * Destroys a component at a given position.
-     */
-    public void destroyComponentAt(Position pos) {
-        int x = pos.getX();
-        int y = pos.getY();
-        if (x >= 0 && x < ROWS && y >= 0 && y < COLS) {
-            components[x][y] = null;
-        }
-    }
-
-    /**
-     * Checks if a component at a given position is protected by a shield generator facing the direction.
-     */
-    public boolean hasActiveShieldFacing(Position pos) {
-        int x = pos.getX();
-        int y = pos.getY();
-        int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}};
-        Direction[] directions = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT};
-
-        for (int i = 0; i < dirs.length; i++) {
-            int nx = x + dirs[i][0];
-            int ny = y + dirs[i][1];
-            if (nx >= 0 && nx < ROWS && ny >= 0 && ny < COLS) {
-                SpaceshipComponent c = components[nx][ny];
-                if (c instanceof ShieldGenerator sg && sg.getDirection() == directions[i]) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    // The rest of the previously present methods remain unchanged below...
 
     public void printOccupiedMatrix() {
         for (int i = 0; i < ROWS; i++) {
@@ -191,93 +158,76 @@ public class ShipBoard {
         }
     }
 
-    public boolean validateShip() {
-        return checkIntegrity();
-    }
-
-    public int calculateEnginePower() {
-        int total = 0;
-        for (int x = 0; x < ROWS; x++) {
-            for (int y = 0; y < COLS; y++) {
-                SpaceshipComponent c = components[x][y];
-                if (c instanceof Engine engine && !engine.requiresBattery()) {
-                    total += engine.getEnginePower();
-                }
-                if (c instanceof Cabin cabin && cabin.hasEngineAlien()) {
-                    total += 1;
+    /**
+     * Calculates total firepower considering orientation and cannon type.
+     */
+    public int calculateFirepower(Direction shipForward) {
+        int firepower = 0;
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                SpaceshipComponent component = components[row][col];
+                if (component instanceof Cannon cannon) {
+                    firepower += cannon.getEffectivePower(shipForward);
                 }
             }
         }
-        return total;
+        return firepower;
     }
 
-    public int calculateFirePower() {
-        int total = 0;
-        for (int x = 0; x < ROWS; x++) {
-            for (int y = 0; y < COLS; y++) {
-                SpaceshipComponent c = components[x][y];
-                if (c instanceof Cannon cannon && !cannon.requiresBattery()) {
-                    Direction dir = cannon.getDirection();
-                    int basePower = cannon.getCannonStrength();
-                    if (dir == Direction.UP) {
-                        total += basePower;
-                    } else if (dir == Direction.SIDE) {
-                        total += basePower / 2;
+    /**
+     * Calculates total thrust considering engine orientation.
+     */
+    public int calculateThrust(Direction shipRear) {
+        int thrust = 0;
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                SpaceshipComponent component = components[row][col];
+                if (component instanceof Engine engine) {
+                    if (engine.isCorrectlyOriented(shipRear)) {
+                        thrust += engine.getEnginePower();
                     }
                 }
-                if (c instanceof Cabin cabin && cabin.hasCannonAlien()) {
-                    total += 2;
+            }
+        }
+        return thrust;
+    }
+
+    /**
+     * Checks if a component at a given position is protected by an active shield facing a direction.
+     */
+    public boolean isProtectedByShield(Position pos, Side incomingSide) {
+        int row = pos.getX();
+        int col = pos.getY();
+        if (!isValidPosition(row, col)) return false;
+
+        for (Side side : Side.values()) {
+            int[] offset = getOffset(side);
+            int adjRow = row + offset[0];
+            int adjCol = col + offset[1];
+            if (isValidPosition(adjRow, adjCol)) {
+                SpaceshipComponent neighbor = components[adjRow][adjCol];
+                if (neighbor instanceof ShieldGenerator shield) {
+                    if (shield.getDirection() == incomingSide) {
+                        return true;
+                    }
                 }
             }
         }
-        return total;
+        return false;
     }
 
-    public void reserveComponent(SpaceshipComponent component) {
-        reservedComponents.add(component);
-    }
+    /**
+     * Applies damage to a given position if it is not protected by a shield.
+     */
+    public void applyDamage(Position pos, Side incomingSide) {
+        int row = pos.getX();
+        int col = pos.getY();
+        if (!isValidPosition(row, col)) return;
 
-    public void removeReservedComponent(SpaceshipComponent component) {
-        reservedComponents.remove(component);
-    }
-
-    public List<SpaceshipComponent> getReservedComponents() {
-        return reservedComponents;
-    }
-
-    public CondensedShip getCondensedShip() {
-        return condensedShip;
-    }
-
-    public SpaceshipComponent getComponent(int x, int y) {
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
-        return components[x][y];
-    }
-
-    public int[] getIndex(SpaceshipComponent goalComponent) {
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                if (components[i][j] == goalComponent) {
-                    return new int[]{i, j};
-                }
+        if (components[row][col] != null) {
+            if (!isProtectedByShield(pos, incomingSide)) {
+                components[row][col] = null;
             }
         }
-        return new int[]{-1, -1};
-    }
-
-    public int[] getShipBoundaries() {
-        int minRow = ROWS, maxRow = -1, minCol = COLS, maxCol = -1;
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                if (components[i][j] != null) {
-                    if (i < minRow) minRow = i;
-                    if (i > maxRow) maxRow = i;
-                    if (j < minCol) minCol = j;
-                    if (j > maxCol) maxCol = j;
-                }
-            }
-        }
-        if (maxRow == -1) return null;
-        return new int[]{minRow, maxRow, minCol, maxCol};
     }
 }
