@@ -365,4 +365,14 @@ public class ShipBoard {
 
         return exposedConnectors;
     }
+
+    public void resolveStardust() {
+        Map<Position, List<Side>> exposedConnectors = getExposedConnectors();
+        for (Position pos : exposedConnectors.keySet()) {
+            int row = pos.getX();
+            int col = pos.getY();
+            components[row][col] = null;
+        }
+    }
 }
+
