@@ -75,21 +75,31 @@ public class ShipBoard {
 
     private int[] getOffset(Side side) {
         switch (side) {
-            case FRONT: return new int[]{-1, 0};
-            case REAR: return new int[]{1, 0};
-            case LEFT: return new int[]{0, -1};
-            case RIGHT: return new int[]{0, 1};
-            default: return new int[]{0, 0};
+            case FRONT:
+                return new int[]{-1, 0};
+            case REAR:
+                return new int[]{1, 0};
+            case LEFT:
+                return new int[]{0, -1};
+            case RIGHT:
+                return new int[]{0, 1};
+            default:
+                return new int[]{0, 0};
         }
     }
 
     private Side getOppositeSide(Side side) {
         switch (side) {
-            case FRONT: return Side.REAR;
-            case REAR: return Side.FRONT;
-            case LEFT: return Side.RIGHT;
-            case RIGHT: return Side.LEFT;
-            default: return side;
+            case FRONT:
+                return Side.REAR;
+            case REAR:
+                return Side.FRONT;
+            case LEFT:
+                return Side.RIGHT;
+            case RIGHT:
+                return Side.LEFT;
+            default:
+                return side;
         }
     }
 
@@ -225,7 +235,6 @@ public class ShipBoard {
     }
 
 
-
     /**
      * Applies damage to a given position if it is not protected by a shield.
      */
@@ -243,6 +252,7 @@ public class ShipBoard {
 
     /**
      * Checks if there is at least one Engine with an alien onboard.
+     *
      * @return true if any Engine has an alien.
      */
     public boolean hasEngineAlien() {
@@ -258,6 +268,7 @@ public class ShipBoard {
 
     /**
      * Checks if there is at least one Cannon with an alien onboard.
+     *
      * @return true if any Cannon has an alien.
      */
     public boolean hasCannonAlien() {
@@ -278,11 +289,45 @@ public class ShipBoard {
      */
     public Map<Position, List<Side>> getExposedConnectors() {
         Map<Position, List<Side>> exposedConnectors = new HashMap<>();
+        boolean[][] externalReachable = new boolean[ROWS][COLS];
+
+        // Step 1: flood fill from borders to mark reachable empty spaces
+        Queue<Position> queue = new LinkedList<>();
+        for (int i = 0; i < ROWS; i++) {
+            if (components[i][0] == null) queue.add(new Position(i, 0));
+            if (components[i][COLS - 1] == null) queue.add(new Position(i, COLS - 1));
+        }
+        for (int j = 0; j < COLS; j++) {
+            if (components[0][j] == null) queue.add(new Position(0, j));
+            if (components[ROWS - 1][j] == null) queue.add(new Position(ROWS - 1, j));
+        }
+
+        while (!queue.isEmpty()) {
+            Position pos = queue.poll();
+            int row = pos.getX();
+            int col = pos.getY();
+            if (!isValidPosition(row, col)) continue;
+            if (externalReachable[row][col]) continue;
+            externalReachable[row][col] = true;
+
+            // Add adjacent empty cells
+            int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+            for (int[] d : dirs) {
+                int newRow = row + d[0];
+                int newCol = col + d[1];
+                if (isValidPosition(newRow, newCol) && components[newRow][newCol] == null) {
+                    queue.add(new Position(newRow, newCol));
+                }
+            }
+        }
+
+        // Step 2: for each component, check exposed connectors
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 SpaceshipComponent comp = components[row][col];
                 if (comp == null) continue;
                 List<Side> exposed = new ArrayList<>();
+
                 for (Side side : Side.values()) {
                     ConnectorType connector = comp.getConnectorAt(side);
                     if (connector == ConnectorType.NONE) continue;
@@ -293,26 +338,31 @@ public class ShipBoard {
 
                     boolean isExposed = false;
                     if (!isValidPosition(adjRow, adjCol)) {
-                        isExposed = true;
-                    } else {
-                        SpaceshipComponent neighbor = components[adjRow][adjCol];
-                        if (neighbor == null) {
+                        isExposed = true; // out of bounds = exposed
+                    } else if (components[adjRow][adjCol] == null) {
+                        if (!externalReachable[adjRow][adjCol]) {
+                            // It's an internal hole → counts as exposed
                             isExposed = true;
                         } else {
-                            ConnectorType neighborConnector = neighbor.getConnectorAt(getOppositeSide(side));
-                            isExposed = !connectorsAreCompatible(connector, neighborConnector);
+                            // It's connected to exterior → not an internal hole
+                            isExposed = true;
                         }
+                    } else {
+                        ConnectorType neighborConnector = components[adjRow][adjCol].getConnectorAt(getOppositeSide(side));
+                        isExposed = !connectorsAreCompatible(connector, neighborConnector);
                     }
 
                     if (isExposed) {
                         exposed.add(side);
                     }
                 }
+
                 if (!exposed.isEmpty()) {
                     exposedConnectors.put(new Position(row, col), exposed);
                 }
             }
         }
+
         return exposedConnectors;
     }
 }
