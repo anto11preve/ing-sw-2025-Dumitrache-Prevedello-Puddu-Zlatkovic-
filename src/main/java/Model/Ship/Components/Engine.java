@@ -12,28 +12,31 @@ import java.util.List;
 /**
  * Class representing an engine module for the spaceship.
  * Supports loading from JSON and logical management of installation/removal.
+ * Handles double engine activation via battery.
  */
 public class Engine extends SpaceshipComponent {
 
     private final boolean isDouble;
-    private final int enginePower;
+    private final int baseEnginePower;
     private final int energyCost;
     private final boolean requiresBattery;
     private final String imagePath;
     private final String animationPath;
     private final List<String> abilities;
-    private boolean hasAlien; // ✅ NEW FIELD
+    private boolean hasAlien;
+    private boolean activated; // ✅ NEW: whether the engine has been activated with a battery
 
     public Engine(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
         this.isDouble = isDouble;
-        this.enginePower = isDouble ? 2 : 1;
+        this.baseEnginePower = isDouble ? 2 : 1;
         this.energyCost = 0;
-        this.requiresBattery = false;
+        this.requiresBattery = isDouble;
         this.imagePath = "";
         this.animationPath = "";
         this.abilities = new ArrayList<>();
-        this.hasAlien = false; // default no alien
+        this.hasAlien = false;
+        this.activated = !isDouble; // single engines are always "activated"
     }
 
     public Engine(JsonObject json) {
@@ -46,34 +49,64 @@ public class Engine extends SpaceshipComponent {
         );
 
         this.isDouble = json.has("isDoubleEngine") && json.get("isDoubleEngine").getAsBoolean();
-        this.enginePower = json.get("enginePower").getAsInt();
+        this.baseEnginePower = json.get("enginePower").getAsInt();
         this.energyCost = json.get("energyCost").getAsInt();
         this.requiresBattery = json.get("requiresBattery").getAsBoolean();
         this.imagePath = json.get("imagePath").getAsString();
         this.animationPath = json.get("animationPath").getAsString();
-
         this.abilities = new ArrayList<>();
         for (JsonElement e : json.getAsJsonArray("abilities")) {
             abilities.add(e.getAsString());
         }
-
-        this.hasAlien = false; // default no alien
+        this.hasAlien = false;
+        this.activated = !isDouble; // single engines default to active
     }
 
-    // === State methods ===
     public boolean isDoubleEngine() {
         return isDouble;
     }
 
-    public int getEnginePower() {
-        return enginePower;
+    /**
+     * Activates this engine using a battery (needed for double engines).
+     */
+    public void activate() {
+        if (isDouble) {
+            this.activated = true;
+        }
     }
 
     /**
-     * Returns the effective engine power considering an alien onboard.
+     * Deactivates this engine (e.g., if battery is lost).
+     */
+    public void deactivate() {
+        if (isDouble) {
+            this.activated = false;
+        }
+    }
+
+    /**
+     * Returns whether this engine has been activated (only matters for double engines).
+     */
+    public boolean isActivated() {
+        return activated;
+    }
+
+    /**
+     * Returns the base engine power (without alien bonus).
+     */
+    public int getEnginePower() {
+        return baseEnginePower;
+    }
+
+    /**
+     * Returns the effective engine power considering activation and alien bonus.
+     * Double engines return 0 if not activated.
      */
     public int getEffectiveEnginePower() {
-        return hasAlien ? enginePower + 1 : enginePower;
+        if (isDouble && !activated) {
+            return 0;
+        }
+        return hasAlien ? baseEnginePower + 1 : baseEnginePower;
     }
 
     public int getEnergyCost() {
@@ -112,10 +145,9 @@ public class Engine extends SpaceshipComponent {
         this.hasAlien = hasAlien;
     }
 
-    // === Lifecycle hooks ===
     @Override
     public void added() {
-        System.out.println("Engine added → Power: " + enginePower + ", orientation: " + getOrientation());
+        System.out.println("Engine added → Power: " + baseEnginePower + ", orientation: " + getOrientation());
     }
 
     @Override
