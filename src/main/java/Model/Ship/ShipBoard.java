@@ -8,13 +8,14 @@ import Model.Ship.Components.Engine;
 import Model.Ship.Components.ShieldGenerator;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Utils.Position;
+import Model.Utils.DirectionSideUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * Full-featured ShipBoard for Galaxy Trucker.
- * Manages placement, connections, rotations, integrity, firepower, thrust, shields, and damage.
+ * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
  */
 public class ShipBoard {
     private static final int ROWS = 5;
@@ -195,10 +196,16 @@ public class ShipBoard {
     /**
      * Checks if a component at a given position is protected by an active shield facing a direction.
      */
+    /**
+     * Checks if a component at a given position is protected by an active shield facing a direction.
+     * Accepts incoming side (FRONT, REAR, LEFT, RIGHT) and converts it to Direction internally.
+     */
     public boolean isProtectedByShield(Position pos, Side incomingSide) {
         int row = pos.getX();
         int col = pos.getY();
         if (!isValidPosition(row, col)) return false;
+
+        Direction incomingDirection = DirectionSideUtils.convertSideToDirection(incomingSide);
 
         for (Side side : Side.values()) {
             int[] offset = getOffset(side);
@@ -207,7 +214,8 @@ public class ShipBoard {
             if (isValidPosition(adjRow, adjCol)) {
                 SpaceshipComponent neighbor = components[adjRow][adjCol];
                 if (neighbor instanceof ShieldGenerator shield) {
-                    if (shield.getDirection() == incomingSide) {
+                    Model.Enums.Direction shieldDir = shield.getDirection();
+                    if (shieldDir == incomingDirection) {
                         return true;
                     }
                 }
@@ -215,6 +223,8 @@ public class ShipBoard {
         }
         return false;
     }
+
+
 
     /**
      * Applies damage to a given position if it is not protected by a shield.
@@ -229,5 +239,80 @@ public class ShipBoard {
                 components[row][col] = null;
             }
         }
+    }
+
+    /**
+     * Checks if there is at least one Engine with an alien onboard.
+     * @return true if any Engine has an alien.
+     */
+    public boolean hasEngineAlien() {
+        for (SpaceshipComponent[] row : components) {
+            for (SpaceshipComponent comp : row) {
+                if (comp instanceof Engine engine && engine.hasAlien()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if there is at least one Cannon with an alien onboard.
+     * @return true if any Cannon has an alien.
+     */
+    public boolean hasCannonAlien() {
+        for (SpaceshipComponent[] row : components) {
+            for (SpaceshipComponent comp : row) {
+                if (comp instanceof Cannon cannon && cannon.hasAlien()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Returns a map of exposed connectors for each component.
+     * Each entry maps a Position to a list of exposed Sides.
+     */
+    public Map<Position, List<Side>> getExposedConnectors() {
+        Map<Position, List<Side>> exposedConnectors = new HashMap<>();
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                SpaceshipComponent comp = components[row][col];
+                if (comp == null) continue;
+                List<Side> exposed = new ArrayList<>();
+                for (Side side : Side.values()) {
+                    ConnectorType connector = comp.getConnectorAt(side);
+                    if (connector == ConnectorType.NONE) continue;
+
+                    int[] offset = getOffset(side);
+                    int adjRow = row + offset[0];
+                    int adjCol = col + offset[1];
+
+                    boolean isExposed = false;
+                    if (!isValidPosition(adjRow, adjCol)) {
+                        isExposed = true;
+                    } else {
+                        SpaceshipComponent neighbor = components[adjRow][adjCol];
+                        if (neighbor == null) {
+                            isExposed = true;
+                        } else {
+                            ConnectorType neighborConnector = neighbor.getConnectorAt(getOppositeSide(side));
+                            isExposed = !connectorsAreCompatible(connector, neighborConnector);
+                        }
+                    }
+
+                    if (isExposed) {
+                        exposed.add(side);
+                    }
+                }
+                if (!exposed.isEmpty()) {
+                    exposedConnectors.put(new Position(row, col), exposed);
+                }
+            }
+        }
+        return exposedConnectors;
     }
 }

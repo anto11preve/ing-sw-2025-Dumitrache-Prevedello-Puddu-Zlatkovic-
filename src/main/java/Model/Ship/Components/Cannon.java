@@ -17,6 +17,7 @@ public class Cannon extends SpaceshipComponent {
     private final boolean requiresBattery;
     private final int basePower;
     private Direction orientation;
+    private boolean hasAlien; // ✅ indicates if an alien is onboard
 
     public Cannon(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
@@ -24,6 +25,7 @@ public class Cannon extends SpaceshipComponent {
         this.requiresBattery = isDouble;
         this.basePower = isDouble ? 2 : 1;
         this.orientation = Direction.UP;
+        this.hasAlien = false; // default no alien
     }
 
     public Cannon(JsonObject json) {
@@ -38,12 +40,12 @@ public class Cannon extends SpaceshipComponent {
         this.requiresBattery = json.get("requiresBattery").getAsBoolean();
         this.basePower = json.get("cannonStrength").getAsInt();
         this.orientation = Direction.UP;
+        this.hasAlien = false; // default no alien
     }
 
     public void setOrientation(Direction dir) {
         this.orientation = dir;
     }
-
 
     public boolean isDouble() {
         return isDouble;
@@ -53,8 +55,18 @@ public class Cannon extends SpaceshipComponent {
         return requiresBattery;
     }
 
+    /**
+     * Returns base cannon strength (without alien bonus).
+     */
     public int getCannonStrength() {
         return basePower;
+    }
+
+    /**
+     * Returns base cannon strength plus alien bonus if present.
+     */
+    public int getEffectiveCannonStrength() {
+        return hasAlien ? basePower + 1 : basePower;
     }
 
     /**
@@ -71,14 +83,32 @@ public class Cannon extends SpaceshipComponent {
     }
 
     /**
-     * Computes effective power in a specific direction.
+     * Computes effective power in a specific direction, considering alien bonus.
      * - If firing forward (matching orientation), and it's double, stronger.
-     * - Otherwise, normal power.
+     * - Adds +1 power if an alien is onboard.
      */
     public int getEffectivePower(Direction fireDirection) {
         if (getFiringDirections().contains(fireDirection)) {
-            return (isDouble && fireDirection == orientation) ? 2 : 1;
+            int power = (isDouble && fireDirection == orientation) ? 2 : 1;
+            if (hasAlien) {
+                power += 1;
+            }
+            return power;
         }
         return 0;
+    }
+
+    /**
+     * Returns whether this cannon has an alien onboard.
+     */
+    public boolean hasAlien() {
+        return hasAlien;
+    }
+
+    /**
+     * Sets whether this cannon has an alien onboard.
+     */
+    public void setAlien(boolean hasAlien) {
+        this.hasAlien = hasAlien;
     }
 }

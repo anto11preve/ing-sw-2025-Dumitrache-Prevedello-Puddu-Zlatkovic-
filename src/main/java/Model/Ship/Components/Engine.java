@@ -22,6 +22,7 @@ public class Engine extends SpaceshipComponent {
     private final String imagePath;
     private final String animationPath;
     private final List<String> abilities;
+    private boolean hasAlien; // ✅ NEW FIELD
 
     public Engine(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
@@ -32,6 +33,7 @@ public class Engine extends SpaceshipComponent {
         this.imagePath = "";
         this.animationPath = "";
         this.abilities = new ArrayList<>();
+        this.hasAlien = false; // default no alien
     }
 
     public Engine(JsonObject json) {
@@ -54,6 +56,8 @@ public class Engine extends SpaceshipComponent {
         for (JsonElement e : json.getAsJsonArray("abilities")) {
             abilities.add(e.getAsString());
         }
+
+        this.hasAlien = false; // default no alien
     }
 
     // === State methods ===
@@ -63,6 +67,13 @@ public class Engine extends SpaceshipComponent {
 
     public int getEnginePower() {
         return enginePower;
+    }
+
+    /**
+     * Returns the effective engine power considering an alien onboard.
+     */
+    public int getEffectiveEnginePower() {
+        return hasAlien ? enginePower + 1 : enginePower;
     }
 
     public int getEnergyCost() {
@@ -85,30 +96,30 @@ public class Engine extends SpaceshipComponent {
         return abilities;
     }
 
-    /**
-     * Returns the current thrust direction of the engine based on its orientation.
-     */
     public Direction getThrustDirection() {
         return getOrientation();
     }
 
-    /**
-     * Checks whether the engine is correctly oriented to push toward the rear of the ship.
-     */
     public boolean isCorrectlyOriented(Direction shipRear) {
         return getThrustDirection() == shipRear;
+    }
+
+    public boolean hasAlien() {
+        return hasAlien;
+    }
+
+    public void setAlien(boolean hasAlien) {
+        this.hasAlien = hasAlien;
     }
 
     // === Lifecycle hooks ===
     @Override
     public void added() {
         System.out.println("Engine added → Power: " + enginePower + ", orientation: " + getOrientation());
-        // TODO: Register the engine with the ship system
     }
 
     @Override
     public void removed() {
         System.out.println("Engine removed → Clearing thrust contribution.");
-        // TODO: Deregister or reduce ship's thrust power
     }
 }
