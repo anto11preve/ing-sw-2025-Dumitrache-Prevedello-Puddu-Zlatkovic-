@@ -7,6 +7,7 @@ import Controller.Enemy.SlaversStatePowerDeclaration;
 import Controller.Enemy.SmugglersStatePowerDeclaration;
 import Controller.OpenSpace.OpenSpaceState;
 import Controller.Planets.PlanetsState;
+import Controller.SubStates.DecidingState;
 import Model.Board.AdventureCards.*;
 import Model.Enums.Crewmates;
 import Model.Player;
@@ -26,6 +27,7 @@ public class CardResolverVisitor {
         può rinunciare a tot quipaggio per dei crediti e perdere giorni di volo
          */
         controller.setState(new AbandonedShipState(controller, card));
+        controller.getState().setSubState(new DecidingState());
     }
 
     public void visit(AbandonedStation card, Controller controller) {

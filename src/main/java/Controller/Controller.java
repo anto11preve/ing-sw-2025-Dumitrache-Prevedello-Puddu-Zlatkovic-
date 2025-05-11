@@ -36,7 +36,18 @@ public class Controller extends UnicastRemoteObject implements ControllerInterfa
         this.state = phase;
     }
 
+    public State getState() {
+        return state;
+    }
+
     public void send(Map<String, Object> command) {state.execute(command, this);}
 
+
+
+
+
+    public void DrawCard{
+        state.drawCard(this);
+    }
 
 }

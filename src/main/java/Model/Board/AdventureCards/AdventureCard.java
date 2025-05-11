@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Model.AdventureCardOption;
+
 import java.util.List;
 
 public class AdventureCard {
