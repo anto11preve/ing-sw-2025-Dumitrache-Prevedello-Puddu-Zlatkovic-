@@ -1,4 +1,4 @@
-package Controller.States.Exceptions;
+package Controller.Exceptions;
 
 public class InvalidCommand extends RuntimeException {
   public InvalidCommand(String message) {
