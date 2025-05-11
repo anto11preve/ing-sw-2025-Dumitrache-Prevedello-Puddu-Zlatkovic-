@@ -13,6 +13,7 @@ import Model.Utils.DirectionSideUtils;
 
 import java.util.*;
 
+
 /**
  * Full-featured ShipBoard for Galaxy Trucker.
  * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
