@@ -13,6 +13,9 @@ public abstract class SpaceshipComponent {
     private ConnectorType rightConnector;
     private int orientation;    //0 standard, 1 girato a destra, 2 girato a 180°, 3 girato a sinistra
     private ShipBoard shipBoard;
+    private boolean isVisible;
+
+
 
     public SpaceshipComponent( Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
         this.type = Type;
@@ -21,7 +24,16 @@ public abstract class SpaceshipComponent {
         this.leftConnector = left;
         this.rightConnector = right;
         this.orientation = 0;
+        this.isVisible = false;
         //this.shipBoard = ???
+    }
+
+    public void setVisible(){
+        this.isVisible = true;
+    }
+
+    public boolean isVisible(){
+        return isVisible;
     }
 
     public Card getType() {

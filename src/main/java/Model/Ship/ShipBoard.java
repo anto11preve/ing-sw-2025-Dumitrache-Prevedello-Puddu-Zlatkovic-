@@ -1,6 +1,7 @@
 package Model.Ship;
 
 import Model.Enums.ConnectorType;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Components.SpaceshipComponent;
 
 import java.util.ArrayList;
@@ -22,7 +23,10 @@ public class ShipBoard {
         this.condensedShip = new CondensedShip();
     }
 
-    public boolean addComponent(SpaceshipComponent component, int x, int y) {
+    public boolean addComponent(SpaceshipComponent component, Coordinates coordinates) {
+        int x = coordinates.getX();
+        int y = coordinates.getY();
+
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return false;
         if (components[x][y] == null && isConnectedToExistingComponent(component, x, y)) {
             components[x][y] = component;
@@ -51,6 +55,13 @@ public class ShipBoard {
         if (a == ConnectorType.NONE || b == ConnectorType.NONE) return false;
         if (a == ConnectorType.UNIVERSAL || b == ConnectorType.UNIVERSAL) return true;
         return a == b;
+    }
+
+    public void setActiveComponent(SpaceshipComponent component) {
+        this.activeComponent = component;
+    }
+    public SpaceshipComponent getActiveComponent() {
+        return activeComponent;
     }
 
     public boolean checkIntegrity() {
@@ -230,8 +241,14 @@ public class ShipBoard {
         return true;
     }
 
-    public void reserveComponent(SpaceshipComponent component) {
-        reservedComponents.add(component);
+    public void reserveComponent(SpaceshipComponent component) throws InvalidMethodParameters {
+
+        if (reservedComponents.size()<3) {
+            reservedComponents.add(component);
+        }
+        else {
+            throw new InvalidMethodParameters("There are already 2 reserved components");
+        }
     }
 
     public void removeReservedComponent(SpaceshipComponent component) {
