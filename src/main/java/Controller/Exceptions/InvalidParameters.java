@@ -1,6 +1,6 @@
 package Controller.Exceptions;
 
-public class InvalidParameters extends RuntimeException {
+public class InvalidParameters extends Exception {
 
     public InvalidParameters(String message) {
         super(message);

@@ -2,12 +2,10 @@ package Model.Board;
 
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Enums.CardLevel;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * FlightBoard: it holds all the good stuff you
@@ -170,6 +168,110 @@ public class FlightBoard {
     public void updatePosition(Player player, int position) {
         playerPositions.put(player, position);
     }
+
+
+    /**
+     * Sets the starting positions of the players.
+     * @param player
+     * @param position
+     * @throws InvalidMethodParameters
+     */
+    public void setStartingPositions(Player player, int position) throws InvalidMethodParameters {
+        if(this.getCellNumber()==18){
+            if(position==4){playerPositions.put(player, 0);}
+            else if (position==3) {playerPositions.put(player, 1);}
+            else if (position==2) {playerPositions.put(player, 2);}
+            else if (position==1) {playerPositions.put(player, 4);}
+            else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and 4");}
+
+
+        } else if (this.getCellNumber() == 24) {
+
+            if(position==4){playerPositions.put(player, 0);}
+            else if (position==3) {playerPositions.put(player, 1);}
+            else if (position==2) {playerPositions.put(player, 3);}
+            else if (position==1) {playerPositions.put(player, 5);}
+            else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and 4");}
+
+
+        } else {
+            throw new IllegalStateException("Invalid cell number: " + this.getCellNumber());
+
+        }
+
+    }
+
+
+    /**
+     * Moves the player by the specified number of days.
+     * If the number of days is negative, the player moves backwards.
+     * If the number of days is positive, the player moves forwards.
+     *
+     * @param player the player to move
+     * @param deltaDays the number of days to move
+     * @throws InvalidMethodParameters if the player is not found in the flight board
+     */
+    public void deltaFlightDays(Player player, int deltaDays) throws InvalidMethodParameters {
+
+        /*
+        The main idea is that recoursively, the position of the player is updated,
+        the number of players between the current position and the new position is counted, and the funzion is called again
+         */
+        if (!playerPositions.containsKey(player)) {
+            throw new InvalidMethodParameters("Player not found in flight board");
+        }
+
+
+        int currentPosition = playerPositions.get(player);
+        int newPosition = (currentPosition + deltaDays) % cellNumber;
+        int new_delta=0;
+
+
+
+        Collection<Integer> allPositions=playerPositions.values();
+        if (deltaDays > 0) {
+
+            if(newPosition<currentPosition){
+                //this means that the player has passed the end of the board,
+                //so we don't need to count the players that are between the current position and the new position
+                //instead we need to count the players between the start of the table and the new position
+                //and the players between the current position and the end of the table
+                for (Integer position : allPositions) {
+                    if (position <= newPosition || position > currentPosition) {
+                        new_delta++;
+                    }
+                }
+            }else{
+                for (Integer position : allPositions) {
+                    if (position <= newPosition && position > currentPosition) {
+                        new_delta++;
+                    }
+                }
+            }
+            playerPositions.put(player, newPosition);
+            deltaFlightDays(player, new_delta);
+        }else if(deltaDays<0){
+
+            if(newPosition>currentPosition){
+                for (Integer position : allPositions) {
+                    if (position >= newPosition || position < currentPosition) {
+                        new_delta++;
+                    }
+                }
+            }else{
+                for (Integer position : allPositions) {
+                    if (position >= newPosition && position < currentPosition) {
+                        new_delta++;
+                    }
+                }
+            }
+            playerPositions.put(player, newPosition);
+            deltaFlightDays(player, -new_delta);
+        }
+
+    }
+
+
 
     public Player[] getTurnOrder() {
         return playerPositions.entrySet().stream()

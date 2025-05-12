@@ -36,8 +36,8 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
 
 
     public Controller(MatchLevel matchLevel, int GameID/*, Smistatore smistatore*/) throws RemoteException {
-        this.model = new Game();
-        this.state = new LobbyPhase();
+        this.model = new Game(matchLevel);
+        this.state = new LogInState(this);
         this.matchLevel = matchLevel;
         this.gameID = GameID;
         //this.smistatatore=smistatatore;
@@ -70,10 +70,10 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     */
 
 
-    public void login(String name, int gameID) throws InvalidCommand, InvalidParameters {
-        state.login(name, gameID);
+    public void login(String name) throws InvalidCommand, InvalidParameters {
+        state.login(name);
     }
-    public void logout(String name) throws InvalidCommand {
+    public void logout(String name) throws InvalidCommand, InvalidParameters {
         state.logout(name);
     }
     public void startGame(String name) throws InvalidCommand, InvalidParameters {

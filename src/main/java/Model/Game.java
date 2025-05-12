@@ -2,6 +2,7 @@ package Model;
 
 import Model.Board.FlightBoard;
 import Model.Ship.Components.SpaceshipComponent;
+import Controller.Enums.MatchLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,15 @@ public class Game {
     private List<SpaceshipComponent> visibleComponents;
     private FlightBoard flightBoard;
 
-    public Game() {
+    public Game(MatchLevel matchLevel) {
         this.players = new ArrayList<>();
         this.hiddenComponents = new ArrayList<>();
         this.visibleComponents = new ArrayList<>();
-        this.flightBoard = new FlightBoard();
+        if(matchLevel==MatchLevel.TRIAL){
+            this.flightBoard = new FlightBoard();
+        } else if (matchLevel==MatchLevel.LEVEL2) {
+            this.flightBoard = new FlightBoard();
+        }
     }
 
     public Player getPlayer(String name){

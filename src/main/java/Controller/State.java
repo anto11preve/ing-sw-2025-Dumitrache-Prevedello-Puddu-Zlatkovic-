@@ -18,10 +18,10 @@ public abstract class State {
         this.controller = controller;
     }
 
-    public void login(String name, int gameID) throws InvalidCommand, InvalidParameters{
+    public void login(String name) throws InvalidCommand, InvalidParameters{
         throw new InvalidCommand("Invalid command: login");
     }
-    public void logout(String name) throws InvalidCommand {
+    public void logout(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: logout");
     }
     public void startGame(String Name) throws InvalidCommand, InvalidParameters{
