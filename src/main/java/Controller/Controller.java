@@ -65,6 +65,8 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
         return commandQueue.poll();
     }
 
+    public MatchLevel getMatchLevel() {return matchLevel;}
+
 
     /*
     public void send(Map<String, Object> command) {state.execute(this);}

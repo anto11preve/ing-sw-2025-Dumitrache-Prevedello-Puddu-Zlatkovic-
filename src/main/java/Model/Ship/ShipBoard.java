@@ -24,12 +24,12 @@ public class ShipBoard {
     }
 
     public boolean addComponent(SpaceshipComponent component, Coordinates coordinates) {
-        int x = coordinates.getX();
-        int y = coordinates.getY();
+        int x = coordinates.getX()-4;
+        int y = coordinates.getY()-5;
 
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return false;
-        if (components[x][y] == null && isConnectedToExistingComponent(component, x, y)) {
-            components[x][y] = component;
+        if (components[y][x]== null && isConnectedToExistingComponent(component, x, y)) {
+            components[y][x] = component;
             return true;
         }
         return false;
@@ -116,16 +116,18 @@ public class ShipBoard {
         return new int[]{minRow, maxRow, minCol, maxCol};
     }
 
-    public SpaceshipComponent getComponent(int x, int y) {
+    public SpaceshipComponent getComponent(Coordinates coordinates) {
+        int x = coordinates.getX()-4;
+        int y = coordinates.getY()-5;
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
-        return components[x][y];
+        return components[y][x];
     }
 
     public Coordinates getIndex(SpaceshipComponent goalComponent) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if (components[i][j] == goalComponent) {
-                    return new Coordinates(i, j);
+                    return new Coordinates(j+4, i+5);
                 }
             }
         }

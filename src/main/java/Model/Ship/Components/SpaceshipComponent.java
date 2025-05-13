@@ -50,6 +50,12 @@ public abstract class SpaceshipComponent {
         orientation = (orientation + 1) % 4;
     }
 
+    public void setOrientation(int orientation) {
+        while (this.orientation != orientation) {
+            rotate();
+        }
+    }
+
     public int getOrientation() {
         return orientation;
     }
