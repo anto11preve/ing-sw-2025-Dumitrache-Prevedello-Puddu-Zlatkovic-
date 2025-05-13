@@ -1,7 +1,9 @@
-package Controller;
+package Controller.GamePhases;
 
 import java.util.Map;
 
+import Controller.Controller;
+import Controller.State;
 import Model.Game;
 
 public class LobbyPhase extends State {

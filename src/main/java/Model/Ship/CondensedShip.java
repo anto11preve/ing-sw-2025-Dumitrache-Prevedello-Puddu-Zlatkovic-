@@ -1,15 +1,18 @@
 package Model.Ship;
 
 import Model.Enums.Crewmates;
+import Model.Enums.Good;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.CargoHold;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-class CondensedShip {
+public class CondensedShip {
     private List<Cabin> cabins;
     private List<BatteryCompartment> batteryCompartments;
     private List<CargoHold> cargoHolds;
@@ -68,6 +71,52 @@ class CondensedShip {
             }
         }
         return new DoubleCannonsCounter(frontCannons, otherCannons);
+    }
+
+    public GoodCounter goodToDiscard(int num){
+        List<Good> allGoods = cargoHolds.stream()
+                .flatMap(cargo -> Arrays.stream(cargo.getGoods()))
+                .collect(Collectors.toList());
+        GoodCounter counter = new GoodCounter();
+        for(Good g : allGoods){
+            if(num== 0)
+                return counter;
+            if(g == Good.RED){
+                counter.addGood(g);
+                num--;
+            }
+        }
+        if(num > 0){
+            for(Good g : allGoods){
+                if(num== 0)
+                    return counter;
+                if(g == Good.YELLOW){
+                    counter.addGood(g);
+                    num--;
+                }
+            }
+        }
+        if(num > 0){
+            for(Good g : allGoods){
+                if(num== 0)
+                    return counter;
+                if(g == Good.GREEN){
+                    counter.addGood(g);
+                    num--;
+                }
+            }
+        }
+        if(num > 0){
+            for(Good g : allGoods){
+                if(num== 0)
+                    return counter;
+                if(g == Good.BLUE){
+                    counter.addGood(g);
+                    num--;
+                }
+            }
+        }
+        return counter;
     }
 
 

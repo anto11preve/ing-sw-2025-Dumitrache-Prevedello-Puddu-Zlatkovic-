@@ -230,6 +230,14 @@ public class ShipBoard {
         return true;
     }
 
+    public void removeComponent(Coordinates coordinates) {
+        int x = coordinates.getX();
+        int y = coordinates.getY();
+
+        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return;
+        components[x][y] = null;
+    }
+
     public void reserveComponent(SpaceshipComponent component) {
         reservedComponents.add(component);
     }

@@ -1,4 +1,7 @@
-package Controller;
+package Controller.GamePhases;
+
+import Controller.Controller;
+import Controller.State;
 
 import java.util.Map;
 

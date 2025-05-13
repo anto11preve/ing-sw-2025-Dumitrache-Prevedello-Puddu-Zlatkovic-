@@ -24,17 +24,19 @@ public class CargoHold extends SpaceshipComponent {
         return goods;
     }
 
-    public boolean addGood(Good good) {
+    public boolean addGood(Good good, int index) {
         if (good == Good.RED && !isSpecial) {
             return false;
         }
-        for (int i = 0; i < goods.length; i++) {
-            if (goods[i] == null) {
-                goods[i] = good;
+        if (index >= 0 && index < goods.length) {
+            if (goods[index] == null) {
+                goods[index] = good;
                 return true;
+            } else {
+                // Slot is already occupied
+                return false;
             }
         }
-        return false;
     }
 
     public void removeGood(int index) {
