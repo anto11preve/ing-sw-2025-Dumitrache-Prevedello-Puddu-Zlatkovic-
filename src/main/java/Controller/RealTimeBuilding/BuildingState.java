@@ -11,6 +11,7 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Board.Timer;
+import Controller.FlightPhase;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -78,9 +79,12 @@ public class BuildingState extends State {
     }
 
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
+        if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
+            throw new InvalidCommand("Trial deck");
+        }
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -107,7 +111,7 @@ public class BuildingState extends State {
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         Game model= this.getController().getModel();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -123,6 +127,7 @@ public class BuildingState extends State {
             if(currentPlayer.getShipBoard().getComponent(coordinates)!=null){
                 throw new InvalidParameters("Coordinates already occupied");
             }
+            if ()
 
 
 
@@ -178,20 +183,24 @@ public class BuildingState extends State {
             activeTile.setOrientation(orientation);
             activeTile.setShipBoard(currentPlayer.getShipBoard());
             activeTile.added();
-            currentPlayer.getShipBoard().addComponent(activeTile, coordinates);
+            try {
+                currentPlayer.getShipBoard().addComponent(activeTile, coordinates);
+            } catch (InvalidMethodParameters e) {
+                throw new RuntimeException("Either the map of ship valid position or the convertion between board and matrix coordinates failed, Strange bug!!!");
+            }
 
         }
     }
     public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {
 
+        index-=1;
         if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
             throw new InvalidCommand("Trial deck");
         }
-
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -201,12 +210,20 @@ public class BuildingState extends State {
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
+            if(currentPlayer.getShipBoard().isEmpty()){
+                throw new InvalidCommand("No tiles placed yet");
+            }
+            if(index < 0 || index >= 3) {
+                throw new InvalidParameters("Invalid index");
+            }
+
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
             model.addComponent(oldTile);
             currentPlayer.getShipBoard().setActiveComponent(null);
 
 
 
+            //manca l'implementazione
 
 
 
@@ -221,8 +238,8 @@ public class BuildingState extends State {
 
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
-        if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+        if(timer!=null && timer.getPhase()==Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -230,9 +247,11 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Player not found");
             }
 
-            SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
-            model.addComponent(oldTile);
-            currentPlayer.getShipBoard().setActiveComponent(null);
+//            SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
+//            model.addComponent(oldTile);
+//            currentPlayer.getShipBoard().setActiveComponent(null);
+
+            assert timer!=null: "Timer is null in Level2 error in FlightBoard builder";
 
             if(timer.getTimeLeft()!=0.0f){
 
@@ -253,7 +272,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController()));
+            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -263,13 +282,25 @@ public class BuildingState extends State {
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
+            if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
+                if(!currentPlayer.getShipBoard().validateShip()){
+                    throw new InvalidCommand("Ship not valid");
+                }
+            }
+            if(finishedPlayers.containsKey(position)){
+                throw new InvalidParameters("Position already occupied");
+            }
+
+            try {
+                model.getFlightBoard().setStartingPositions(currentPlayer, position);
+            } catch (InvalidMethodParameters e) {
+                throw new InvalidParameters("Invalid starting position, must be btween 1 and 4");
+            }
+
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
             model.addComponent(oldTile);
             currentPlayer.getShipBoard().setActiveComponent(null);
 
-            if(finishedPlayers.containsKey(position)){
-                throw new InvalidParameters("Position already occupied");
-            }
 
 
             int penalty=currentPlayer.getShipBoard().getReservedComponents().size();
@@ -278,15 +309,22 @@ public class BuildingState extends State {
             }
 
             finishedPlayers.put(position, currentPlayer);
-            try {
-                model.getFlightBoard().setStartingPositions(currentPlayer, position);
-            } catch (InvalidMethodParameters e) {
-                throw new InvalidParameters("Invalid starting position, must be btween 1 and 4");
-            }
 
             if(finishedPlayers.size()==model.getPlayers().size()){
-                this.getController().setState(new PlaceAlienState(this.getController()));
+                MatchLevel matchLevel=this.getController().getMatchLevel();
+
+                if (matchLevel == MatchLevel.TRIAL) {
+                    this.getController().setState(new PlaceAlienState(this.getController()));
+                    this.getController().setState(new FlightPhase(this.getController()));
+                } else {
+                    this.getController().setState(new FixShipState(this.getController()));
+                }
+
             }
+            //if it's a trial game set at frist PlaceAlienState that will populate cabins autonomously
+            // then, skip FixShipState, since you cannot finish building unless your ship is valid.
+
+
 
 
         }

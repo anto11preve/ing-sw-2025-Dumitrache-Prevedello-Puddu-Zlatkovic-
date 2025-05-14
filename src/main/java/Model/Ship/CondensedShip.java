@@ -9,7 +9,7 @@ import Model.Ship.Components.CargoHold;
 import java.util.ArrayList;
 import java.util.List;
 
-class CondensedShip {
+public class CondensedShip {
     private List<Cabin> cabins;
     private List<BatteryCompartment> batteryCompartments;
     private List<CargoHold> cargoHolds;
@@ -120,5 +120,23 @@ class CondensedShip {
     }
 
     public AlienCounter getAliens() {return aliens;}
+
+    public boolean canContainBrown(){
+        for (Cabin cabin : cabins) {
+            if (cabin.getCanContainBrown()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canContainPurple(){
+        for (Cabin cabin : cabins) {
+            if (cabin.getCanContainPurple()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

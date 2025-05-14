@@ -23,19 +23,30 @@ public class ShipBoard {
         this.condensedShip = new CondensedShip();
     }
 
-    public boolean addComponent(SpaceshipComponent component, Coordinates coordinates) {
+    public void addComponent(SpaceshipComponent component, Coordinates coordinates) throws InvalidMethodParameters {
         int x = coordinates.getX()-4;
         int y = coordinates.getY()-5;
 
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return false;
-        if (components[y][x]== null && isConnectedToExistingComponent(component, x, y)) {
+        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[y][x] != null) throw new InvalidMethodParameters("Position already occupied");
+        if (isConnectedToExistingComponent(component, x, y)) {
             components[y][x] = component;
-            return true;
+        }else{
+            throw new InvalidMethodParameters("Component not connected to existing components");
         }
-        return false;
     }
 
-    private boolean isConnectedToExistingComponent(SpaceshipComponent component, int x, int y) {
+    public void removeComponent(Coordinates coordinates) throws InvalidMethodParameters {
+        int x = coordinates.getX()-4;
+        int y = coordinates.getY()-5;
+
+        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[y][x] != null) {
+            components[y][x] = null;
+        }
+    }
+
+    public boolean isConnectedToExistingComponent(SpaceshipComponent component, int x, int y) {
         int[][] directions = {{-1,0},{1,0},{0,-1},{0,1}};
         for (int[] dir : directions) {
             int nx = x + dir[0];
@@ -50,6 +61,8 @@ public class ShipBoard {
         }
         return false;
     }
+
+
 
     private boolean areConnectorsCompatible(ConnectorType a, ConnectorType b) {
         if (a == ConnectorType.NONE || b == ConnectorType.NONE) return false;
