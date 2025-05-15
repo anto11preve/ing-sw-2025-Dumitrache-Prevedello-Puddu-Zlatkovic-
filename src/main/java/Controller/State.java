@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Enums.*;
 import Controller.Exceptions.*;
+import Model.Enums.Direction;
 import Model.Ship.Coordinates;
 
 //import java.util.Map;
@@ -34,7 +35,7 @@ public abstract class State {
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: reserveComponent");
     }
-    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, int orientation) throws InvalidCommand, InvalidParameters {
+    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: placeComponent");
     }
     public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {

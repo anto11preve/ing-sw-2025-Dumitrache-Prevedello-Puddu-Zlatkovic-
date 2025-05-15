@@ -5,6 +5,7 @@ import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
 // Import del modello e delle librerie per RMI
+import Model.Enums.Direction;
 import Model.Game;
 import Model.Ship.Components.ComponentsLoader;
 import Model.Ship.Components.SpaceshipComponent;
@@ -93,7 +94,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
         state.reserveComponent(name);
     }
-    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, int orientation) throws InvalidCommand, InvalidParameters {
+    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
         state.placeComponent(name, origin, coordinates, orientation);
     }
     public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {

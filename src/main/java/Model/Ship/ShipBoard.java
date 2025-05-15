@@ -71,7 +71,8 @@ public class ShipBoard {
         return true;
     }
 
-    private boolean isConnectedToExistingComponents(SpaceshipComponent component, int row, int col) {
+
+    public boolean isConnectedToExistingComponents(SpaceshipComponent component, int row, int col) {
         for (Side side : Side.values()) {
             int[] offset = getOffset(side);
             int adjRow = row + offset[0];

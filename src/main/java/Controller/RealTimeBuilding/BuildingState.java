@@ -5,6 +5,7 @@ import Controller.Enums.ComponentOrigin;
 import Controller.Enums.MatchLevel;
 import Controller.Exceptions.*;
 import Controller.State;
+import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
 import Model.Player;
@@ -78,6 +79,7 @@ public class BuildingState extends State {
 
     }
 
+    @Override
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
         if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
             throw new InvalidCommand("Trial deck");
@@ -107,7 +109,8 @@ public class BuildingState extends State {
         }
     }
 
-    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, int orientation) throws InvalidCommand, InvalidParameters {
+    @Override
+    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         Game model= this.getController().getModel();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
@@ -127,7 +130,9 @@ public class BuildingState extends State {
             if(currentPlayer.getShipBoard().getComponent(coordinates)!=null){
                 throw new InvalidParameters("Coordinates already occupied");
             }
-            if ()
+            //if the component is not near a tile already placed it's not valid
+
+
 
 
 
@@ -146,6 +151,9 @@ public class BuildingState extends State {
                     if (activeTile == null) {
                         throw new InvalidCommand("No active component");
                     }
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+                    }
                     currentPlayer.getShipBoard().setActiveComponent(null);
                     break;
 
@@ -155,6 +163,9 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().getFirst();
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+                    }
                     currentPlayer.getShipBoard().removeReservedComponent(activeTile);
 
                     model.addComponent(activeComponent);
@@ -168,6 +179,9 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().get(1);
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+                    }
                     currentPlayer.getShipBoard().removeReservedComponent(activeTile);
 
                     model.addComponent(activeComponent);
