@@ -23,9 +23,9 @@ public class ShipBoard {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
-    private SpaceshipComponent[][] components;
+    private final SpaceshipComponent[][] components;
     private SpaceshipComponent activeComponent;
-    private List<SpaceshipComponent> reservedComponents;
+    private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
 
     public ShipBoard() {
