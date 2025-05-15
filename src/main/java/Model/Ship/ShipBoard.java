@@ -90,33 +90,21 @@ public class ShipBoard {
     }
 
     private int[] getOffset(Side side) {
-        switch (side) {
-            case FRONT:
-                return new int[]{-1, 0};
-            case REAR:
-                return new int[]{1, 0};
-            case LEFT:
-                return new int[]{0, -1};
-            case RIGHT:
-                return new int[]{0, 1};
-            default:
-                return new int[]{0, 0};
-        }
+        return switch (side) {
+            case FRONT -> new int[]{-1, 0};
+            case REAR -> new int[]{1, 0};
+            case LEFT -> new int[]{0, -1};
+            case RIGHT -> new int[]{0, 1};
+        };
     }
 
     private Side getOppositeSide(Side side) {
-        switch (side) {
-            case FRONT:
-                return Side.REAR;
-            case REAR:
-                return Side.FRONT;
-            case LEFT:
-                return Side.RIGHT;
-            case RIGHT:
-                return Side.LEFT;
-            default:
-                return side;
-        }
+        return switch (side) {
+            case FRONT -> Side.REAR;
+            case REAR -> Side.FRONT;
+            case LEFT -> Side.RIGHT;
+            case RIGHT -> Side.LEFT;
+        };
     }
 
     private boolean connectorsAreCompatible(ConnectorType a, ConnectorType b) {
@@ -261,9 +249,7 @@ public class ShipBoard {
         return thrust;
     }
 
-    /**
-     * Checks if a component at a given position is protected by an active shield facing a direction.
-     */
+
     /**
      * Checks if a component at a given position is protected by an active shield facing a direction.
      * Accepts incoming side (FRONT, REAR, LEFT, RIGHT) and converts it to Direction internally.
@@ -421,7 +407,9 @@ public class ShipBoard {
     public CondensedShip getCondensedShip() {
         return condensedShip;
     }
-}
+
+
+
 
 /**
  * Checks if there is at least one Engine with an alien onboard.
@@ -518,7 +506,7 @@ public Map<Position, List<Side>> getExposedConnectors() {
                         isExposed = true;
                     } else {
                         // It's connected to exterior → not an internal hole
-                        isExposed = true;
+                        isExposed = true   //qua va un false???????
                     }
                 } else {
                     ConnectorType neighborConnector = components[adjRow][adjCol].getConnectorAt(getOppositeSide(side));
