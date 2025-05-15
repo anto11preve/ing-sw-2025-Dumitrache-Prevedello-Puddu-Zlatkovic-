@@ -35,6 +35,14 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
+    public boolean hasEngineAlien() {
+        return this.hasEngineAlien;
+    }
+
+    public boolean hasCannonAlien() {
+        return this.hasCannonAlien;
+    }
+
     /*
     public void added() {
         //to do

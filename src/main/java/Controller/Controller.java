@@ -4,7 +4,11 @@ import Controller.Commands.Command;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
+// Import del modello e delle librerie per RMI
 import Model.Game;
+import Model.Ship.Components.ComponentsLoader;
+import Model.Ship.Components.SpaceshipComponent;
+
 import Model.Ship.Coordinates;
 
 import java.rmi.*;
@@ -21,19 +25,19 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     //placeholder per lo smistatore di comandi per eliminarsi da lista game attivi quando la partita finisce
 
 
+    /*
+    public static void main(String[] args)
+            throws RemoteException, AlreadyBoundException {
+        System.out.println("Constructing server implementation...");
+        Controller controller = new Controller();
 
+        System.out.println("Binding server implementation to registry...");
+        Registry registry = LocateRegistry.getRegistry();
+        registry.bind("Game_Controller", controller);
+        System.out.println("Waiting for invocations from clients...");
 
-//    public static void main(String[] args)
-//            throws RemoteException, AlreadyBoundException {
-//        System.out.println("Constructing server implementation...");
-//        Controller controller = new Controller();
-//
-//        System.out.println("Binding server implementation to registry...");
-//        Registry registry = LocateRegistry.getRegistry();
-//        registry.bind("Game_Controller", controller);
-//        System.out.println("Waiting for invocations from clients...");
-//
-//    }
+   }
+   */
 
 
     public Controller(MatchLevel matchLevel, int GameID/*, Smistatore smistatore*/) throws RemoteException {
@@ -45,6 +49,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
 
     }
 
+    // Getter for game model
     public Game getModel() {
         return model;
     }
