@@ -77,9 +77,9 @@ public abstract class SpaceshipComponent {
     }
 
 
-    public void setOrientation(Direction orientation) {
-        this.orientation = orientation;
-    }
+//    public void setOrientation(Direction orientation) {
+//        this.orientation = orientation;
+//    }
 
     /**
      * Returns the connector type at a given side considering current orientation.

@@ -46,9 +46,10 @@ public class Cannon extends SpaceshipComponent {
         this.activated = !isDouble; // single cannons default to active
     }
 
-    public void setOrientation(Direction dir) {
-        this.orientation = dir;
-    }
+
+//    public void setOrientation(Direction dir) {
+//        this.orientation = dir;
+//    }
 
     public boolean isDouble() {
         return isDouble;

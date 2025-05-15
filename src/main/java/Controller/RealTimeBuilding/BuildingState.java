@@ -195,6 +195,7 @@ public class BuildingState extends State {
 
             }
             activeTile.setOrientation(orientation);
+
             activeTile.setShipBoard(currentPlayer.getShipBoard());
             activeTile.added();
             try {
