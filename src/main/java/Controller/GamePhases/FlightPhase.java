@@ -25,4 +25,12 @@ public class FlightPhase extends State {
             card.accept(new CardResolverVisitor(), controller);
         }
     }
+
+    @Override
+    public void leaveRace(String playerName){
+        Controller controller = this.getController();
+        controller.getModel().removePlayer(playerName);
+
+        //
+    }
 }

@@ -1,7 +1,7 @@
 package Controller;
 
 import Controller.Enums.*;
-import Controller.Exceptions.*;
+import Controller.States.Exceptions.*;
 import Model.Ship.Coordinates;
 import Model.Enums.Good;
 

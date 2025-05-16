@@ -2,6 +2,7 @@ package Model.Ship.Components;
 
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 
 // Classe astratta per componenti della nave spaziale
@@ -64,7 +65,7 @@ public abstract class SpaceshipComponent {
         this.shipBoard = ship;
     }
 
-    /*
+
     public ConnectorType getSide(Side side) {
         switch (side) {
             case Side.FRONT:
@@ -79,7 +80,7 @@ public abstract class SpaceshipComponent {
                 return null;
         }
     }
-    */
+
 
     public void added() {
         //to do

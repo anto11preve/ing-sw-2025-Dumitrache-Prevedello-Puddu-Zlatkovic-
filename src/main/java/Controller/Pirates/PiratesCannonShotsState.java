@@ -25,18 +25,18 @@ public class PiratesCannonShotsState extends State{
             return; // Handle the case where it's not the player's turn
         }
         Random rand = new Random();
-        int dado1 = rand.nextInt(6) + 1; // numero tra 1 e 6
-        int dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
+        int dado1 = controller.getModel().rollDice(); // numero tra 1 e 6
+        int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int row = dado1 + dado2;
 
-        dado1 = rand.nextInt(6) + 1; // numero tra 1 e 6
-        dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
+        dado1 = controller.getModel().rollDice(); // numero tra 1 e 6
+        dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int column = dado1 + dado2;
 
         for(Player p : controller.getModel().getPlayers()){
             context.addSpecialPlayer(p);
         }
-        controller.setState(new PiratesManageShotState(context, row, column));
+        controller.setState(new PiratesManageShotState(context, row, column, 0));
 
     }
 }

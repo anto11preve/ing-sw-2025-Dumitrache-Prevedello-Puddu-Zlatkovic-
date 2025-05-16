@@ -2,7 +2,6 @@ package Controller.MeteorsSwarm;
 
 import Controller.Context;
 import Controller.Controller;
-import Controller.Pirates.PiratesManageShotState;
 import Controller.State;
 import Model.Player;
 
@@ -17,7 +16,7 @@ public class MeteorsState extends State {
 
     @Override
     public void throwDices(String playerName) {
-        if(context.getProjectiles.isEmpty()) {
+        if(context.getProjectiles().isEmpty()) {
             return; // Handle the case where there are no projectiles
         }
         Controller controller = context.getController();
@@ -37,7 +36,7 @@ public class MeteorsState extends State {
         for(Player p : controller.getModel().getPlayers()){
             context.addSpecialPlayer(p);
         }
-        controller.setState(new ManageMeteorState(context, row, column));
+        controller.setState(new ManageMeteorState(context, row, column, 0));
 
     }
 }

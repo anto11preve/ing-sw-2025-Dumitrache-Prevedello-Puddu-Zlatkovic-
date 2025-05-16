@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.AdventureCardOption;
 
 import java.util.List;
@@ -75,5 +77,9 @@ public class AdventureCard {
 
     public List<AdventureCardOption> getOptions() {
         return options;
+    }
+
+    public void accept(CardResolverVisitor visitor, Controller controller) {
+        visitor.visit( this, controller);
     }
 }
