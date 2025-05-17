@@ -353,7 +353,7 @@ public class ShipBoard {
         return firepower;
     }
 
-    /**
+    /*
      * Calculates total thrust considering engine orientation.
      */
     /**
@@ -379,7 +379,7 @@ public class ShipBoard {
     }
 
 
-    /**
+    /*
      * Checks if a component at a given position is protected by an active shield facing a direction.
      * Accepts incoming side (FRONT, REAR, LEFT, RIGHT) and converts it to Direction internally.
      */
@@ -415,9 +415,7 @@ public class ShipBoard {
         }
         return false;
     }
-    /**
-     * Applies damage to a given position if it is not protected by a shield.
-     */
+
     /**
      * Applies damage to the component at the given position.
      * If the component is not protected by a shield in the incoming direction, it is removed (set to null).
@@ -623,4 +621,53 @@ public class ShipBoard {
         }
         return exposedConnectors;
     }
+
+    public void reserveComponent(SpaceshipComponent component) throws InvalidMethodParameters {
+
+        if (reservedComponents.size()<3) {
+            reservedComponents.add(component);
+        }
+        else {
+            throw new InvalidMethodParameters("There are already 2 reserved components");
+        }
+    }
+
+    public void removeReservedComponent(SpaceshipComponent component) {
+        reservedComponents.remove(component);
+    }
+
+    public List<SpaceshipComponent> getReservedComponents() {
+        return reservedComponents;
+    }
+
+    public CondensedShip getCondensedShip() {
+        return condensedShip;
+    }
+
+//    public boolean hasEngineAlien() {
+//        for (SpaceshipComponent[] row : components) {
+//            for (SpaceshipComponent comp : row) {
+//                if (comp instanceof Engine engine && engine.hasAlien()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * Checks if there is at least one Cannon with an alien onboard.
+//     *
+//     * @return true if any Cannon has an alien.
+//     */
+//    public boolean hasCannonAlien() {
+//        for (SpaceshipComponent[] row : components) {
+//            for (SpaceshipComponent comp : row) {
+//                if (comp instanceof Cannon cannon && cannon.hasAlien()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 }
