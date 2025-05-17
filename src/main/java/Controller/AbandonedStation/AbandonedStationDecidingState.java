@@ -7,15 +7,37 @@ import Controller.State;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
-
+/**
+ * Represents the state in which players decide whether to accept or skip the reward
+ * from encountering an abandoned station during the flight phase.
+ *
+ * <p>Players take turns deciding whether to accept a reward of type {@code GOODS}.
+ * If all players skip the reward, the game resumes the normal flight phase.
+ * If a player accepts the reward, they receive credits, lose days and the game transitions
+ * to the {@link AbandonedStationLandState} where additional consequences may occur.</p>
+ */
 public class AbandonedStationDecidingState extends State {
+    /** The shared context containing game state and references. */
     private Context context;
 
+    /**
+     * Constructs the state with the given context.
+     *
+     * @param context the game context used to access controller and shared state.
+     */
     public AbandonedStationDecidingState(Context context) {
         this.context = context;
     }
 
-
+    /**
+     * Called when a player chooses to skip the abandoned station reward.
+     *
+     * <p>If it is the current player's turn, they are removed from the decision pool.
+     * If all players skip, the game returns to the {@link FlightPhase}.
+     * Otherwise, the decision process continues with the next player.</p>
+     *
+     * @param playerName the name of the player who skips the reward
+     */
     @Override
     public void skipReward(String playerName){
         Controller controller = context.getController();
@@ -33,18 +55,37 @@ public class AbandonedStationDecidingState extends State {
 
     }
 
-    //caso AbandonedShip
+    /**
+     * Called when a player chooses to accept the reward from the abandoned station.
+     *
+     * <p>If the reward type is {@code GOODS} and the player has enough total crew members
+     * to claim it, the player receives credits, lose days and the game transitions to the
+     * {@link AbandonedStationLandState}.</p>
+     *
+     * <p>If it's not the player's turn, or if the player lacks sufficient crew members,
+     * the reward is not granted and an error should be displayed.</p>
+     *
+     * @param playerName the name of the player accepting the reward
+     * @param rewardType the type of reward selected; must be {@code GOODS} to be processed
+     */
     @Override
     public void getReward(String playerName, RewardType rewardType) {
 
-        //aggiungere controllo rewardtype
-
+        if(rewardType != RewardType.GOODS){
+            return; // Handle the situation where the reward type is not goods
+        }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player == controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
-        player.deltaCredits(context.getCredits());
-        //parentState.getController().getModel().getFlightBoard() --> perdi giorni di volo
-        controller.setState(new AbandonedStationLandState(context));
+        if(player.getShipBoard().getCondensedShip().getTotalCrew() >= context.getCrewmates()){
+            player.deltaCredits(context.getCredits());
+
+            // TODO: Implement the logic to remove days from the player
+
+            controller.setState(new AbandonedStationLandState(context));
+        } else {
+            // Handle the case where the player doesn't have enough crew members
+        }
     }
 }

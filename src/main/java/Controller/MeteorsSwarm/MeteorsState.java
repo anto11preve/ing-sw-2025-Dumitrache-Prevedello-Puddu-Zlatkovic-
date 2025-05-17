@@ -7,6 +7,13 @@ import Model.Player;
 
 import java.util.Random;
 
+/**
+ * Represents the game state where a meteor storm is initiated.
+ *
+ * <p>During this state, a player rolls dice to determine the row or column for a meteor event.
+ * All players are marked as involved in the special event, and the game transitions
+ * to {@link ManageMeteorState} to handle the meteor impact resolution.</p>
+ */
 public class MeteorsState extends State {
     Context context;
 
@@ -27,16 +34,12 @@ public class MeteorsState extends State {
         Random rand = new Random();
         int dado1 = rand.nextInt(6) + 1; // numero tra 1 e 6
         int dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
-        int row = dado1 + dado2;
-
-        dado1 = rand.nextInt(6) + 1; // numero tra 1 e 6
-        dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
-        int column = dado1 + dado2;
+        int number = dado1 + dado2;
 
         for(Player p : controller.getModel().getPlayers()){
             context.addSpecialPlayer(p);
         }
-        controller.setState(new ManageMeteorState(context, row, column, 0));
+        controller.setState(new ManageMeteorState(context, number));
 
     }
 }
