@@ -54,7 +54,7 @@ public class SmugglersLandState extends State{
             return; // Handle the case where the good index is out of bounds
         }
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
             return;
         CargoHold cargoHold = (CargoHold) component;
@@ -63,7 +63,7 @@ public class SmugglersLandState extends State{
             return; // Handle the case where the good is not found
         }
 
-        boolean done = cargoHold.addGood(selectedGood, CargoHoldIndex);
+        boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the cargo hold
         }
@@ -87,8 +87,8 @@ public class SmugglersLandState extends State{
         Player player = controller.getModel().getPlayer(name);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
-        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates.getX(), oldCoordinates.getY());
-        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates.getX(), newCoordinates.getY());
+        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
+        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
@@ -100,7 +100,7 @@ public class SmugglersLandState extends State{
         if(selectedGood == null) {
             return; // Handle the case where the good is not found
         }
-        boolean done = newCargoHold.addGood(selectedGood, newIndex);
+        boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the new cargo hold
         }
@@ -121,7 +121,7 @@ public class SmugglersLandState extends State{
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
         if(context.getSpecialPlayers().isEmpty()){
-            controller.setState(new FlightPhase());
+            controller.setState(new FlightPhase(controller));
         }else{
             controller.setState(new SmugglersGoodsRemovalState(context)); //manca qualcuno da gestire
         }

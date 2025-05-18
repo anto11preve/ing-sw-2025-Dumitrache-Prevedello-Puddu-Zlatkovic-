@@ -132,5 +132,6 @@ public abstract class SpaceshipComponent {
     public void reserved() {
         // to be implemented if needed
     }
+
 }
 

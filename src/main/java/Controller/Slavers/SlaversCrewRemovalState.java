@@ -59,7 +59,7 @@ public class SlaversCrewRemovalState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(player == controller.getModel().getFlightBoard().getTurnOrder()[0]){
             if(context.getCrewmates() > 0){
-                Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+                Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
                 switch (cabin.getOccupants()){
                     case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
                         cabin.setOccupants(Crewmates.EMPTY);
@@ -77,7 +77,7 @@ public class SlaversCrewRemovalState extends State {
             else{
                 context.removeSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.setState(new FlightPhase()); //tutti i giocatori gestiti
+                    controller.setState(new FlightPhase(controller)); //tutti i giocatori gestiti
                 }
                 else{       //manca qualcuno da gestire
                     controller.setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire

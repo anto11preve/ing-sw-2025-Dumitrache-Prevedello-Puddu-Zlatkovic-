@@ -15,6 +15,7 @@ import Model.Enums.Crewmates;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.Coordinates;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -71,16 +72,16 @@ public class CardResolverVisitor {
             Set<Cabin> processed = new HashSet<>();
             for(int i=4; i<10; i++){{
                 for(int j=4; j<9; j++){
-                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(i,j))){
-                    SpaceshipComponent c = p.getShipBoard().getComponent(i,j);  //come faccio a dire che è una cabina?
+                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(new Coordinates(i,j)))){
+                    SpaceshipComponent c = p.getShipBoard().getComponent(new Coordinates(i,j));  //come faccio a dire che è una cabina?
                         int [][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
 
                         for(int [] d : directions){
                             int newRow = i + d[0];
                             int newColumn = j + d[1];
 
-                            if(p.getShipBoard().getComponent(newRow,newColumn) != null){
-                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(newRow,newColumn);  //come faccio a dire che è una cabina?
+                            if(p.getShipBoard().getComponent(new Coordinates(newRow,newColumn)) != null){
+                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(new Coordinates(newRow,newColumn));  //come faccio a dire che è una cabina?
                                 if( !processed.contains(adjacent) && p.getShipBoard().getCondensedShip().getCabins().contains(adjacent)){   //da rivedere
                                     Cabin cNew = (Cabin) c;
                                     Crewmates firstCabin = cNew.getOccupants();
@@ -122,7 +123,7 @@ public class CardResolverVisitor {
             }
         }
 
-        controller.setState(new FlightPhase());
+        controller.setState(new FlightPhase(controller));
     }
 
     public void visit(MeteorSwarm card, Controller controller) {

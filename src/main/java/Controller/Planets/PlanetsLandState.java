@@ -59,7 +59,7 @@ public class PlanetsLandState extends State {
             return; // Handle the case where it's not the player's turn
         if(context.getSpecialPlayers().getFirst() != player)
             return; // Handle the case where the player is not the first special player
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
             return;
         CargoHold cargoHold = (CargoHold) component;
@@ -77,7 +77,7 @@ public class PlanetsLandState extends State {
             return; // Handle the case where the good is not found
         }
 
-        boolean done = cargoHold.addGood(selectedGood, CargoHoldIndex);
+        boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the cargo hold
         }
@@ -87,7 +87,7 @@ public class PlanetsLandState extends State {
             chosenPlanets.remove(0);
             context.removeSpecialPlayer(player);
             if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {      //dovrei controllare anche le non conformità delle due liste
-                controller.setState(new FlightPhase());     //finiti pianeti occupati
+                controller.setState(new FlightPhase(controller));     //finiti pianeti occupati
             } else {
                 controller.setState(new PlanetsLandState(context, chosenPlanets));
             }
@@ -113,8 +113,8 @@ public class PlanetsLandState extends State {
         Player player = controller.getModel().getPlayer(name);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
-        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates.getX(), oldCoordinates.getY());
-        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates.getX(), newCoordinates.getY());
+        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
+        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
@@ -126,7 +126,7 @@ public class PlanetsLandState extends State {
         if(selectedGood == null) {
             return; // Handle the case where the good is not found
         }
-        boolean done = newCargoHold.addGood(selectedGood, newIndex);
+        boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the new cargo hold
         }
@@ -146,6 +146,6 @@ public class PlanetsLandState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
-        controller.setState(new FlightPhase());
+        controller.setState(new FlightPhase(controller));
     }
 }

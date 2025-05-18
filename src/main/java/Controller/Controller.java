@@ -1,14 +1,11 @@
 package Controller;
 
-import Controller.Commands.Command;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
 // Import del modello e delle librerie per RMI
 import Model.Enums.Direction;
 import Model.Game;
-import Model.Ship.Components.ComponentsLoader;
-import Model.Ship.Components.SpaceshipComponent;
 
 import Model.Ship.Coordinates;
 
@@ -123,86 +120,10 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters {
         state.getReward(name, rewardType);
     }
-    public void moveGoods(String name) throws InvalidCommand, InvalidParameters {
-        state.moveGoods(name);
-    }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates, int amount) throws InvalidCommand, InvalidParameters {
-        state.useItem(name, itemType, coordinates, amount);
-    }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
-        state.declaresDouble(name, doubleType, amount);
-    }
-    public void defend(String name) throws InvalidCommand, InvalidParameters {
-        state.defend(name);
-    }
-
-
-    public int getGameID() {
-        return gameID;
-    }
-
-    public void enqueueCommand(Command command) {
-        commandQueue.add(command);
-    }
-
-    public Command dequeueCommand() {
-        return commandQueue.poll();
-    }
-
-
-    /*
-    public void send(Map<String, Object> command) {state.execute(this);}
-    */
-
-
-    public void login(String name, int gameID) throws InvalidCommand, InvalidParameters {
-        state.login(name, gameID);
-    }
-    public void logout(String name) throws InvalidCommand {
-        state.logout(name);
-    }
-    public void startGame(String name) throws InvalidCommand, InvalidParameters {
-        state.startGame(name);
-    }
-    public void getComponent(String name, int index) throws InvalidCommand, InvalidParameters {
-        state.getComponent(name, index);
-    }
-    public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
-        state.reserveComponent(name);
-    }
-    public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, int orientation) throws InvalidCommand, InvalidParameters {
-        state.placeComponent(name, origin, coordinates, orientation);
-    }
-    public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {
-        state.lookDeck(name, index);
-    }
-    public void flipHourGlass(String name) throws InvalidCommand, InvalidParameters {
-        state.flipHourGlass(name);
-    }
-    public void finishBuilding(String name, int position) throws InvalidCommand, InvalidParameters {
-        state.finishBuilding(name, position);
-    }
-    public void placeCrew(String name, Coordinates coordinates, CrewType type) throws InvalidCommand, InvalidParameters {
-        state.placeCrew(name, coordinates, type);
-    }
-
-    // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters {
-        state.pickNextCard(name);
-    }
-    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
-        state.deleteComponent(name, coordinates);
-    }
-    public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
-        state.leaveRace(name);
-    }
-    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters {
-        state.getReward(name, rewardType);
-    }
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
         state.moveGood(name, oldCoordinates, newCoordinates, oldIndex, newIndex);
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates, int amount) throws InvalidCommand, InvalidParameters {
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
         state.useItem(name, itemType, coordinates);
     }
     public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
@@ -212,22 +133,20 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
         state.defend(name);
     }
     public void end(String name) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: end");
+        state.end(name);
     }
-
     public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: choosePlanet");
+        state.choosePlanet(name, planetName);
     }
     public void skipReward(String name) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: skipReward");
+        state.skipReward(name);
     }
     public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: getGood");
+        state.getGood(name, goodIndex, coordinates, CargoHoldIndex);
     }
     public void throwDices(String playerName) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: throwDices");
+        state.throwDices(playerName);
     }
-
 
 
 

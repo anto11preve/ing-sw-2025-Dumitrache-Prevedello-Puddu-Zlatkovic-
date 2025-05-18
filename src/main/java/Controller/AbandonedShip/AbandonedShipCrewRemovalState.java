@@ -59,7 +59,7 @@ public class AbandonedShipCrewRemovalState extends State {
                 return; //handle the situation where the player doesn't have enough crew
             }
             if(context.getCrewmates() > 0){
-                Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+                Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
                 switch (cabin.getOccupants()){
                     case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
                         cabin.setOccupants(Crewmates.EMPTY);
@@ -75,7 +75,7 @@ public class AbandonedShipCrewRemovalState extends State {
                 controller.setState(new AbandonedShipCrewRemovalState(context));
             }
             else{
-                controller.setState(new FlightPhase());
+                controller.setState(new FlightPhase(controller));
             }
         }
     }

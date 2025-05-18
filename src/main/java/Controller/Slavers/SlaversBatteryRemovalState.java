@@ -75,7 +75,7 @@ public class SlaversBatteryRemovalState extends State{
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
             return;
 

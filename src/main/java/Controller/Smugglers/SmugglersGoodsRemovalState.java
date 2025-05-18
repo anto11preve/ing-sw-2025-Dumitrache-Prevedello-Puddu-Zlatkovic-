@@ -92,7 +92,7 @@ public class SmugglersGoodsRemovalState extends State{
             } else {    //se no non gli succede niente
                 context.removeSpecialPlayer(player);
                 if(context.getSpecialPlayers().isEmpty()){
-                    controller.setState(new FlightPhase());
+                    controller.setState(new FlightPhase(controller));
                 } else {
                     controller.setState(new SmugglersGoodsRemovalState(context));
                 }
@@ -100,7 +100,7 @@ public class SmugglersGoodsRemovalState extends State{
             return;
         }
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(oldCoordinates.getX(), oldCoordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(oldCoordinates);
 
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
             return; // Handle the case where the components are not cargo holds
@@ -119,7 +119,7 @@ public class SmugglersGoodsRemovalState extends State{
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
-                controller.setState(new FlightPhase());
+                controller.setState(new FlightPhase(controller));
             } else {
                 controller.setState(new SmugglersGoodsRemovalState(context));
             }

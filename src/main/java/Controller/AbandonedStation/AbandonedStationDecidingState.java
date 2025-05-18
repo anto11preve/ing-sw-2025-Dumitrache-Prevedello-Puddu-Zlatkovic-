@@ -45,7 +45,7 @@ public class AbandonedStationDecidingState extends State {
         if(currentPlayer == controller.getModel().getFlightBoard().getTurnOrder()[0]){  //se è il suo turno
             context.removePlayer(currentPlayer);
             if(context.getPlayers().isEmpty()){         //se skippano tutti....
-                controller.setState(new FlightPhase());
+                controller.setState(new FlightPhase(controller));
             }
             else{
                 controller.setState(new AbandonedStationDecidingState(context));

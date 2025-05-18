@@ -57,7 +57,7 @@ public class SecondSmugglersBatteryRemovalState extends State{
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
             return;
         BatteryCompartment compartment = (BatteryCompartment) component;
@@ -66,7 +66,7 @@ public class SecondSmugglersBatteryRemovalState extends State{
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
-                controller.setState(new FlightPhase());
+                controller.setState(new FlightPhase(controller));
             } else {
                 controller.setState(new SmugglersGoodsRemovalState(context));
             }

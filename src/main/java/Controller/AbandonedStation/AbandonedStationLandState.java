@@ -49,7 +49,7 @@ public class AbandonedStationLandState extends State {
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
             return;
 
@@ -59,7 +59,7 @@ public class AbandonedStationLandState extends State {
             return; // Handle the case where the good is not found
         }
 
-        boolean done = cargoHold.addGood(selectedGood, CargoHoldIndex);
+        boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the cargo hold
         }
@@ -87,8 +87,8 @@ public class AbandonedStationLandState extends State {
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
 
-        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates.getX(), oldCoordinates.getY());
-        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates.getX(), newCoordinates.getY());
+        SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
+        SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
@@ -102,7 +102,7 @@ public class AbandonedStationLandState extends State {
             return; // Handle the case where the good is not found
         }
 
-        boolean done = newCargoHold.addGood(selectedGood, newIndex);
+        boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
             return; // Handle the case where the good cannot be added to the new cargo hold
         }
@@ -123,6 +123,6 @@ public class AbandonedStationLandState extends State {
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
 
-        controller.setState(new FlightPhase());
+        controller.setState(new FlightPhase(controller));
     }
 }

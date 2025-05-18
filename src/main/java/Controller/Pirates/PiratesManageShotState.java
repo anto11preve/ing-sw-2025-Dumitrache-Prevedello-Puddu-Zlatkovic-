@@ -65,40 +65,40 @@ public class PiratesManageShotState extends State{
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; i <= 9; i++) {
-                    component = player.getShipBoard().getComponent(number, i);
+                    Coordinates coordinates = new Coordinates(number, i);
+                    component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(number, i);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.RIGHT:
                 for (int i = 10; i >= 4; i--) {
-                    component = player.getShipBoard().getComponent(i, number);
+                    Coordinates coordinates = new Coordinates(i, number);
+                    component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(i, number);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.LEFT:
                 for (int i = 4; i <= 10; i++) {
-                    component = player.getShipBoard().getComponent(i, number);
+                    Coordinates coordinates = new Coordinates(i, number);
+                    component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(i, number);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.REAR:
                 for (int i = 0; i <= 4; i++) {
-                    component = player.getShipBoard().getComponent(number, i);
+                    Coordinates coordinates = new Coordinates(number, i);
+                    component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(number, i);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
@@ -116,7 +116,7 @@ public class PiratesManageShotState extends State{
         if (turn > context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
             context.removeProjectile(shot);
             if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                controller.setState(new FlightPhase());
+                controller.setState(new FlightPhase(controller));
                 return;
             }
             controller.setState(new PiratesCannonShotsState(context));
@@ -182,7 +182,7 @@ public class PiratesManageShotState extends State{
         }
 
         if(shieldFound) {
-            SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
+            SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates);
             if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2))   //non è un Battery
                 return;
             BatteryCompartment compartment = (BatteryCompartment) component2;
@@ -192,7 +192,7 @@ public class PiratesManageShotState extends State{
             if (turn > context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
                 context.removeProjectile(shot);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                    controller.setState(new FlightPhase());
+                    controller.setState(new FlightPhase(controller));
                     return;
                 }
                 controller.setState(new PiratesCannonShotsState(context));
