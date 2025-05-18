@@ -15,13 +15,35 @@ public class Player {
         this.credits = 0;
         this.junk = 0;
     }
-    public String getName(){ return name; }
 
-    public ShipBoard getShipBoard() { return shipBoard; }
+    public String getName() {
+        return name;
+    }
 
-    public void deltaCredits(int delta) { credits += delta; }
-    public int getCredits() { return credits; }
+    public ShipBoard getShipBoard() {
+        return shipBoard;
+    }
 
-    public void addJunk() { junk ++; }
-    public int getJunk() { return junk; }
+    /**
+     * Allows external classes (like GameBuilder) to assign a shipBoard of custom dimensions.
+     */
+    public void setShipBoard(ShipBoard shipBoard) {
+        this.shipBoard = shipBoard;
+    }
+
+    public void deltaCredits(int delta) {
+        credits += delta;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public void addJunk() {
+        junk++;
+    }
+
+    public int getJunk() {
+        return junk;
+    }
 }

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Direction;
-import Model.Enums.Side;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class Engine extends SpaceshipComponent {
     private final String animationPath;
     private final List<String> abilities;
     private boolean hasAlien;
-    private boolean activated; // ✅ NEW: whether the engine has been activated with a battery
+    private boolean activated; //   whether the engine has been activated with a battery
 
     public Engine(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);

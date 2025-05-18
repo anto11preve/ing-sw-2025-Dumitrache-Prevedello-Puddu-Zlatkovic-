@@ -1,103 +1,51 @@
 package Model;
 
-import Controller.Exceptions.InvalidCommand;
-import Controller.Exceptions.InvalidParameters;
 import Model.Board.FlightBoard;
-import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Components.SpaceshipComponent;
 import Controller.Enums.MatchLevel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
+/**
+ * Main Game class that contains the state of a Galaxy Trucker match.
+ * It holds the players, the flight board, the difficulty level,
+ * and the pool of spaceship components used during the building phase.
+ */
 public class Game {
-    private final List<Player> players;
-    private final SpaceshipComponent[] Tiles;
-    //private List<SpaceshipComponent> hiddenComponents;
-    //private List<SpaceshipComponent> visibleComponents;
-    private FlightBoard flightBoard;
 
-    public Game(MatchLevel matchLevel) {
-        this.players = new ArrayList<>();
-        this.Tiles = new SpaceshipComponent[156];
-        //this.hiddenComponents = new ArrayList<>();
-        //this.visibleComponents = new ArrayList<>();
-        if(matchLevel==MatchLevel.TRIAL){
-            this.flightBoard = new FlightBoard();
-        } else if (matchLevel==MatchLevel.LEVEL2) {
-            this.flightBoard = new FlightBoard();
-        }
-    }
+    private final List<Player> players; // All players in the current game
+    private final FlightBoard flightBoard; // The central game board (flight phase)
+    private final MatchLevel level; // Difficulty level (I, II, or III)
+    private final List<SpaceshipComponent> componentsPool; // Pool of tiles to use during the building phase
 
-    public Player getPlayer(String name){
-        for (Player p : players) {
-            if (p.getName().equals(name)) {
-                return p;
-            }
-        }
-
-        return null;
-    }
-    public void addPlayer(String name) {
-        players.add(new Player(name));
-    }
-
-    public void removePlayer(String name) {
-        players.remove(getPlayer(name));
+    /**
+     * Constructor to initialize the game with all required elements.
+     *
+     * @param players list of players
+     * @param flightBoard shared flight board
+     * @param level match difficulty
+     * @param componentsPool shuffled pool of ship components
+     */
+    public Game(List<Player> players, FlightBoard flightBoard, MatchLevel level, List<SpaceshipComponent> componentsPool) {
+        this.players = players;
+        this.flightBoard = flightBoard;
+        this.level = level;
+        this.componentsPool = componentsPool;
     }
 
     public List<Player> getPlayers() {
         return players;
     }
 
-    public int rollDice() {
-        return new Random().nextInt(6) + 1;
-    }
-
-    public SpaceshipComponent pickComponent(int index) throws InvalidMethodParameters{
-        if (index < 0 || index >= Tiles.length) {
-            throw new InvalidMethodParameters("Invalid index");
-        }
-        SpaceshipComponent choosenComponent = Tiles[index];
-        Tiles[index]=null;
-        choosenComponent.setVisible();
-        return choosenComponent;
-    }
-
-    public void addComponent(SpaceshipComponent component) {
-        //visibleComponents.add(component);
-        if(component!=null){
-            int i=0;
-            while(Tiles[i]!=null){
-                i++;
-            }
-            Tiles[i]=component;
-        }
-
-    }
-
-
-    public List<SpaceshipComponent> viewVisibleComponents() {
-        List<SpaceshipComponent>visibleComponentsList=new ArrayList<>();
-        for (SpaceshipComponent tile : Tiles) {
-            if (tile != null && tile.isVisible()) {
-                visibleComponentsList.add(tile);
-            }
-        }
-        return visibleComponentsList;
-
-    }
-
-    public SpaceshipComponent[] getTiles(){
-        return Tiles;
-    }
-//
-//    public void pickVisibleComponent(SpaceshipComponent component) {
-//        visibleComponents.remove(component);
-//    }
-
     public FlightBoard getFlightBoard() {
         return flightBoard;
+    }
+
+    public MatchLevel getLevel() {
+        return level;
+    }
+
+    public List<SpaceshipComponent> getComponentsPool() {
+        return componentsPool;
     }
 }

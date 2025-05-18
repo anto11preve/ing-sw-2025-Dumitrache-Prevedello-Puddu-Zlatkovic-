@@ -37,6 +37,15 @@ public class ShipBoard {
     }
 
     /**
+     * Overloaded constructor to support variable size ships (for different levels).
+     */
+    public ShipBoard(int rows, int cols) {
+        this.components = new SpaceshipComponent[rows][cols];
+        this.activeComponent = null;
+        this.reservedComponents = new ArrayList<>();
+        this.condensedShip = new CondensedShip();
+    }
+    /**
      * Places a spaceship component on the board at the specified coordinates.
      * Ensures the placement is within board bounds, the position is unoccupied,
      * and the component is properly connected to existing components via compatible connectors.
@@ -624,3 +633,5 @@ public class ShipBoard {
         return exposedConnectors;
     }
 }
+
+
