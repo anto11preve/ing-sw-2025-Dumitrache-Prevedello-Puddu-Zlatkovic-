@@ -3,6 +3,7 @@ package Controller;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Model.Enums.Direction;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
 
 //import java.util.Map;
@@ -83,7 +84,7 @@ public abstract class State {
         throw new InvalidCommand("Invalid command: defend");
     }
     //ho finito di fare qualunque cosa stia facendo
-    public void end(String name) throws InvalidCommand, InvalidParameters {
+    public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: end");
     }
 

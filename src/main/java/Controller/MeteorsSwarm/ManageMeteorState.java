@@ -7,6 +7,7 @@ import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.Meteor;
 import Model.Enums.Side;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.Cannon;
@@ -49,7 +50,7 @@ public class ManageMeteorState extends State {
      * @param playerName the name of the player whose turn is ending
      */
     @Override
-    public void end(String playerName) {
+    public void end(String playerName) throws InvalidMethodParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {

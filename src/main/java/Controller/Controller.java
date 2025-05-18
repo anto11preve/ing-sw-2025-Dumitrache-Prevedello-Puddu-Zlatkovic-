@@ -5,6 +5,7 @@ import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
 // Import del modello e delle librerie per RMI
 import Model.Enums.Direction;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
 
 import Model.Ship.Coordinates;
@@ -132,7 +133,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void defend(String name) throws InvalidCommand, InvalidParameters {
         state.defend(name);
     }
-    public void end(String name) throws InvalidCommand, InvalidParameters {
+    public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         state.end(name);
     }
     public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
