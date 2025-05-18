@@ -19,11 +19,10 @@ public enum Card {
         this.hasEngine = hasEngine;
     }
 
-    public boolean hasCannon() {
-        return hasCannon;
+    public boolean hasEngine() {
+        return this == ENGINE || this == DOUBLE_ENGINE;
     }
 
-    public boolean hasEngine() {
-        return hasEngine;
+    public boolean hasCannon() {
+        return this == CANNON || this == DOUBLE_CANNON;
     }
-}

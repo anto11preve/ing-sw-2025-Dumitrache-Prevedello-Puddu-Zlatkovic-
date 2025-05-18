@@ -170,4 +170,22 @@ public class CondensedShip {
 
     public AlienCounter getAliens() {return aliens;}
 
+    public boolean canContainBrown(){
+        for (Cabin cabin : cabins) {
+            if (cabin.getCanContainBrown()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canContainPurple(){
+        for (Cabin cabin : cabins) {
+            if (cabin.getCanContainPurple()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -24,21 +24,45 @@ public class CargoHold extends SpaceshipComponent {
         return goods;
     }
 
-    public boolean addGood(Good good, int index) {
+    /**
+     * Adds a good to the first available slot in the cargo hold.
+     * @param good the good to add
+     * @return true if successfully added, false otherwise (e.g., no space or red good in normal hold)
+     */
+    public boolean addGood(Good good) {
         if (good == Good.RED && !isSpecial) {
             return false;
         }
-        if (index >= 0 && index < goods.length) {
-            if (goods[index] == null) {
-                goods[index] = good;
+        for (int i = 0; i < goods.length; i++) {
+            if (goods[i] == null) {
+                goods[i] = good;
                 return true;
-            } else {
-                // Slot is already occupied
-                return false;
             }
         }
+        return false;
     }
 
+    /**
+     * Adds a good to a specific index in the cargo hold.
+     * @param good the good to add
+     * @param index the index at which to add the good
+     * @return true if added successfully, false if the index is invalid, occupied, or not allowed
+     */
+    public boolean addGoodAt(Good good, int index) {
+        if (good == Good.RED && !isSpecial) {
+            return false;
+        }
+        if (index < 0 || index >= goods.length || goods[index] != null) {
+            return false;
+        }
+        goods[index] = good;
+        return true;
+    }
+
+    /**
+     * Removes the good at the specified index.
+     * @param index the index of the good to remove
+     */
     public void removeGood(int index) {
         if (index >= 0 && index < goods.length) {
             goods[index] = null;
@@ -47,10 +71,10 @@ public class CargoHold extends SpaceshipComponent {
 
     /*
     public void added() {
-        //to do
+        // to do
     }
     public void removed() {
-        //to do
+        // to do
     }
     public void accept(Visitor visitor) {
         visitor.visit(this);

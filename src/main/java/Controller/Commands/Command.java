@@ -3,19 +3,25 @@ package Controller.Commands;
 import Controller.Controller;
 
 public abstract class Command {
-    String name;
-    int gameID;
+    private String PlayerName;
+    private int GameID;
 
-    public void execute(Controller controller) {
-        // Implement the command execution logic here
+    public Command(String playerName, int gameID) {
+        PlayerName = playerName;
+        GameID = gameID;
     }
-
-    public String getName() {
-        return name;
+    public String getPlayerName() {
+        return PlayerName;
     }
-
     public int getGameID() {
-        return gameID;
+        return GameID;
     }
+    public void setPlayerName(String playerName) {
+        PlayerName = playerName;
+    }
+    public void setGameID(int gameID) {
+        GameID = gameID;
+    }
+    public abstract void execute(Controller controller);
 
 }

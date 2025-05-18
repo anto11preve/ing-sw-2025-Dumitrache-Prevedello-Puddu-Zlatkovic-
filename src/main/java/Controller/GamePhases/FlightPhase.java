@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class FlightPhase extends State {
 
+    public FlightPhase(Controller controller) {
+        super(controller);
+    }
+
     @Override
     public void pickNextCard(String playerName) {
         Controller controller = this.getController();
