@@ -13,25 +13,47 @@ import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+/**
+ * Manages the resolution of a cannon shot fired by pirates at a special player during the flight phase.
+ *
+ * <p>This state handles both the damage resolution (destroying components from the ship) and
+ * the defensive attempt using shields (powered by batteries). It iterates over special players,
+ * applying the shot effects or allowing them to block the shot if conditions are met.</p>
+ */
 public class PiratesManageShotState extends State{
     Context context;
-    int row;
-    int column;
+    int number;
     int turn;   ///Turno del giocatore speciale che dve subire la cannonata
     boolean hit = false;
 
-    public PiratesManageShotState(Context context, int row, int column, int turn) {
+    /**
+     * Constructs a PiratesManageShotState with the specified context, number, and turn.
+     *
+     * @param context The context providing access to the current game context.
+     * @param number  The row or column hit by the cannon shot.
+     * @param turn    The turn of the special player who is to be hit by the cannon shot.
+     */
+    public PiratesManageShotState(Context context, int number, int turn) {
         this.context = context;
-        this.row = row;
-        this.column = column;
+        this.number = number;
         this.turn = turn;
     }
 
+    /**
+     * Resolves the effects of a cannon shot on a player's ship.
+     *
+     * <p>The method checks the side of the incoming shot and removes ship components
+     * along the corresponding row or column. If the ship becomes disconnected,
+     * it transitions to a ship integrity check. If not, it proceeds to the next
+     * player or shot depending on the situation.</p>
+     *
+     * @param playerName the name of the player ending their reaction to the shot
+     */
     @Override
     public void end(String playerName) {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().get(0)) {
+        if (player != context.getSpecialPlayers().getFirst()) {
             return; // Handle the case where it's not the player's turn
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
@@ -43,40 +65,40 @@ public class PiratesManageShotState extends State{
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; i <= 9; i++) {
-                    component = player.getShipBoard().getComponent(column, i);
+                    component = player.getShipBoard().getComponent(number, i);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(column, i);
+                        Coordinates coordinates = new Coordinates(number, i);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.RIGHT:
                 for (int i = 10; i >= 4; i--) {
-                    component = player.getShipBoard().getComponent(i, row);
+                    component = player.getShipBoard().getComponent(i, number);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(i, row);
+                        Coordinates coordinates = new Coordinates(i, number);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.LEFT:
                 for (int i = 4; i <= 10; i++) {
-                    component = player.getShipBoard().getComponent(i, row);
+                    component = player.getShipBoard().getComponent(i, number);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(i, row);
+                        Coordinates coordinates = new Coordinates(i, number);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
             case Side.REAR:
                 for (int i = 0; i <= 4; i++) {
-                    component = player.getShipBoard().getComponent(column, i);
+                    component = player.getShipBoard().getComponent(number, i);
                     if (component != null) {
                         hit = true;
-                        Coordinates coordinates = new Coordinates(column, i);
+                        Coordinates coordinates = new Coordinates(number, i);
                         player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
@@ -100,11 +122,23 @@ public class PiratesManageShotState extends State{
             controller.setState(new PiratesCannonShotsState(context));
             return;
         } else {
-            controller.setState(new PiratesManageShotState(context, row, column, turn));
+            controller.setState(new PiratesManageShotState(context, number, turn));
             return;
         }
 
     }
+
+    /**
+     * Allows a player to attempt to block an incoming cannon shot using a battery-powered shield.
+     *
+     * <p>If the shot is small and the ship has an active shield in the shot's direction,
+     * the player can use a battery to activate the shield and block the shot.
+     * The game then proceeds to the next targeted player or shot.</p>
+     *
+     * @param playerName the name of the player using an item
+     * @param itemType the type of item used (must be a battery)
+     * @param coordinates the coordinates of the battery being used
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
         if (itemType != ItemType.BATTERIES) {
@@ -164,7 +198,7 @@ public class PiratesManageShotState extends State{
                 controller.setState(new PiratesCannonShotsState(context));
                 return;
             } else {
-                controller.setState(new PiratesManageShotState(context, row, column, turn));
+                controller.setState(new PiratesManageShotState(context, number, turn));
                 return;
             }
         } else {

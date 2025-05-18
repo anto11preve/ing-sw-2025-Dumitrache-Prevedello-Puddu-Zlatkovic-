@@ -10,30 +10,75 @@ import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
-
+/**
+ * This state handles the battery removal process for a player attempting to boost their power
+ * during the "Slavers" encounter. Players use batteries to reach or exceed the slavers' power level.
+ * If the player succeeds, they receive rewards. If not, they may face crew penalties (if they don't at least match the enemy's power).
+ */
 public class SlaversBatteryRemovalState extends State{
+    /**
+     * Context object that holds the game state and player information.
+     */
     private Context context;
+    /**
+     * The declared power of the player.
+     */
     private int declaredPower;
+    /**
+     * The actual power of the player.
+     */
     private int actualPower;
 
+    /**
+     * Constructor to initialize the state with the current game context and power values.
+     *
+     * @param context       the shared game context
+     * @param declaredPower the declared power of the player
+     * @param actualPower   the actual power of the player
+     */
     public SlaversBatteryRemovalState(Context context, int declaredPower, int actualPower) {
         this.context = context;
         this.declaredPower = declaredPower;
         this.actualPower = actualPower;
     }
 
+    /**
+     * Allows the player to use a battery from a specified {@link BatteryCompartment} on their ship.
+     * If the component is valid and contains a battery, it removes one unit, decreases the remaining
+     * power to declare, and increases the total declared power.
+     *
+     * Once all declared batteries are used:
+     * - If the total power exceeds the slavers' threshold, move to {@link SlaversRewardsState}.
+     * - If it matches the threshold, the player is removed and the next player proceeds.
+     * - If it's still lower, the player fails and may face consequences in {@link SlaversCrewRemovalState}.
+     *
+     * @param playerName  the name of the current player
+     * @param itemType    the type of item being used (must be {@code BATTERIES})
+     * @param coordinates the coordinates of the component to activate
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
         if(itemType != ItemType.BATTERIES){
             return;
         }
+
+        if(declaredPower < 0){
+            return; // Handle the case where no batteries are left to declare
+        }
+
+        if(coordinates == null){
+            return; // Handle the case where coordinates are invalid
+        }
+
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player == controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
+
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
             return;
+
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
         declaredPower--;
@@ -67,7 +112,16 @@ public class SlaversBatteryRemovalState extends State{
         }
     }
 
-    /// nel caso uno vinca solo con la base power
+    /**
+     * Allows the player to directly claim a reward (credits only), typically when their
+     * base power alone exceeds the slavers' strength without needing batteries.
+     *
+     * If the power condition is satisfied and no batteries were required, transition to
+     * {@link SlaversRewardsState}.
+     *
+     * @param playerName the name of the player
+     * @param rewardType the type of reward requested (must be {@code CREDITS})
+     */
     @Override
     public void getReward(String playerName, RewardType rewardType){
         if(rewardType != RewardType.CREDITS){
@@ -75,8 +129,9 @@ public class SlaversBatteryRemovalState extends State{
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player == controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
+
         if(actualPower > context.getPower() && declaredPower == 0){
             controller.setState(new SlaversRewardsState(context));
         }

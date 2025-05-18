@@ -75,7 +75,7 @@ public class OpenSpaceBatteryRemovalState extends State {
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
             return; // Handle the case where it's not the player's turn
 
-        placesGained += player.getShipBoard().getBaseEnginePower();
+        //TODO: placesGained += player.getShipBoard().getBaseEnginePower();
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates.getX(), coordinates.getY());
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
             return;

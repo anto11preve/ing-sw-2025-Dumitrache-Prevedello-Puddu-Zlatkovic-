@@ -33,8 +33,7 @@ public class Context {
     }
 
     public Context(Controller controller, AbandonedShip card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
         this.crewmates = card.getWinPenalty().getAmount();
         this.credits = card.getLandingReward().getAmount();
         this.daysLost = card.getLandingPenalty().getAmount();
@@ -42,48 +41,42 @@ public class Context {
     }
 
     public Context(Controller controller, AbandonedStation card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
         this.crewmates = card.getCrew();
-        this.goods = new ArrayList<>(card.getLandingReward().iterator()); //come funziona iterator???
+        /// TODO:this.goods = new ArrayList<>(card.getLandingReward().iterator()); //come funziona iterator???
         this.daysLost = card.getLandingPenalty().getAmount();
 
     }
 
     public Context(Controller controller, MeteorSwarm card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
-        this.projectiles = new ArrayList<>(card.iterator())
+        this(controller);
+        /// TODO:this.projectiles = new ArrayList<>(card.iterator());
 
     }
 
     public Context(Controller controller, OpenSpace card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
 
     }
 
     public Context(Controller controller, Pirates card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
         this.credits = card.getWinReward().getAmount();
         this.daysLost = card.getWinPenalty().getAmount();
-        this.projectiles = new ArrayList<>(card.getLossPenalty().iterator());
+        /// TODO:this.projectiles = new ArrayList<>(card.getLossPenalty().iterator());
         this.power = card.getPower();
 
     }
 
     public Context(Controller controller, Planets card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
         this.daysLost = card.getLandingPenalty().getAmount();
-        this.planets = new ArrayList<>(card.iterator());
+        /// TODO:this.planets = new ArrayList<>(card.iterator());
 
     }
 
     public Context(Controller controller, Slavers card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+        this(controller);
         this.credits = card.getWinReward().getAmount();
         this.daysLost = card.getWinPenalty().getAmount();
         this.crewmates = card.getLossPenalty().getAmount();
@@ -92,12 +85,17 @@ public class Context {
     }
 
     public Context(Controller controller, Smugglers card) {
-        this.controller = controller;
-        this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
-        this.goods = new ArrayList<>(card.getWinReward().iterator());
+        this(controller);
+        /// TODO:this.goods = new ArrayList<>(card.getWinReward().iterator());
         this.daysLost = card.getWinPenalty().getAmount();
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();
+    }
+
+    public Context(Controller controller, CombatZone card) {
+        this(controller);
+        /// TODO:
+
     }
 
     public Controller getController() {
@@ -159,6 +157,10 @@ public class Context {
             }
         }
         return null;
+    }
+
+    public List<Planet> getPlanets() {
+        return planets;
     }
 
 

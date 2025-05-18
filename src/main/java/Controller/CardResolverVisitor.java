@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.AbandonedShip.AbandonedShipDecidingState;
 import Controller.AbandonedStation.AbandonedStationDecidingState;
+import Controller.CombatZone.CombatZoneState;
 import Controller.GamePhases.FlightPhase;
 import Controller.MeteorsSwarm.MeteorsState;
 import Controller.OpenSpace.OpenSpaceEngineDeclarationState;
@@ -38,7 +39,7 @@ public class CardResolverVisitor {
         il giocatore perde giorni di volo
          */
         Context context = new Context(controller, card);
-        controller.setState(new AbandonedStationDecidingState(context))
+        controller.setState(new AbandonedStationDecidingState(context));
     }
 
     public void visit( Planets card, Controller controller) {
@@ -49,7 +50,7 @@ public class CardResolverVisitor {
         controller.setState(new ChoosePlanetState(context));
     }
 
-    public void visit(CombactZone card, Controller controller) {
+    public void visit(CombatZone card, Controller controller) {
         /*
         1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
         2. si calcola il giocatore con meno potenza motrice e si perdono delle merci
@@ -59,7 +60,7 @@ public class CardResolverVisitor {
         in caso di parità, il più avanti nella rotta sconta la penalità
          */
         Context context = new Context(controller, card);
-        controller.setState();
+        controller.setState(new CombatZoneState(context));
     }
 
     public void visit( Epidemic card, Controller controller) {
