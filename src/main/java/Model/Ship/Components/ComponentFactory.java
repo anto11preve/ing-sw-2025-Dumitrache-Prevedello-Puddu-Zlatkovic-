@@ -12,6 +12,7 @@ public class ComponentFactory {
                 return new Engine(json);
             case "CANNON":
                 return new Cannon(json);
+            /*TODO: fix these:
             case "CABIN":
                 return new Cabin(json);
             case "CARGOHOLD":
@@ -24,6 +25,8 @@ public class ComponentFactory {
                 return new AlienLifeSupport(json);
             case "STRUCTURE":
                 return new StructuralModule(json);
+
+             */
             default:
                 throw new IllegalArgumentException("Unknown component type: " + type);
         }

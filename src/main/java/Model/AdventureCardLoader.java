@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Board.AdventureCards.AdventureCard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

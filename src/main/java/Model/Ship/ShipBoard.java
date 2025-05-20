@@ -58,6 +58,18 @@ public class ShipBoard {
         }
     }
 
+    /** Obsolete interface for adding components
+     * TODO: remove this and fix all errors that happen
+     *
+     * @param component
+     * @param x
+     * @param y
+     * @throws InvalidMethodParameters
+     */
+    public void addComponent(SpaceshipComponent component, int x, int y) throws InvalidMethodParameters {
+        this.addComponent(component, new Coordinates(x, y));
+    }
+
     /**
      * Removes a spaceship component from the board at the given coordinates.
      * Translates logical coordinates into grid indices and clears the position if it contains a component.
@@ -293,6 +305,16 @@ public class ShipBoard {
         int y = coordinates.getY()-5;
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
         return components[y][x];
+    }
+
+    /** Obsolete interface to get components
+     * TODO: remove this and fix errors
+     * @param x
+     * @param y
+     * @return
+     */
+    public SpaceshipComponent getComponent(int x, int y){
+        return this.getComponent(new Coordinates(x, y));
     }
 
     /**

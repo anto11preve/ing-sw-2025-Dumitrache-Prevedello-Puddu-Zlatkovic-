@@ -63,17 +63,24 @@ public class CondensedShipTest {
 
     @Test
     void testSetEngines() {
-        ship.setEngine(0, 2);
-        ship.setEngine(1, 3);
-        assertArrayEquals(new int[]{2, 3}, ship.getEngines());
+        final int singles = 2, doubles = 3;
+
+        ship.getEngines().setSingleEngines(singles);
+        assertEquals(singles, ship.getEngines().getSingleEngines());
+        ship.getEngines().setDoubleEngines(doubles);
+        assertEquals(doubles, ship.getEngines().getDoubleEngines());
     }
 
     @Test
     void testSetShields() {
-        ship.setShield(0, 1);
-        ship.setShield(1, 2);
-        ship.setShield(2, 3);
-        ship.setShield(3, 4);
-        assertArrayEquals(new int[]{1, 2, 3, 4}, ship.getShields());
+        final int northShields = 1, eastShields = 2, southShields = 3, westShields = 4;
+        ship.getShields().setNorthShields(northShields);
+        assertEquals(northShields, ship.getShields().getNorthShields());
+        ship.getShields().setEastShields(eastShields);
+        assertEquals(eastShields, ship.getShields().getEastShields());
+        ship.getShields().setSouthShields(southShields);
+        assertEquals(southShields, ship.getShields().getSouthShields());
+        ship.getShields().setWestShields(westShields);
+        assertEquals(westShields, ship.getShields().getWestShields());
     }
 }

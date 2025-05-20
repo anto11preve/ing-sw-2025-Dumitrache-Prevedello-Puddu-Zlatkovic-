@@ -12,9 +12,9 @@ class CannonTest {
     @Test
     void doubleCannon() {
         Cannon cannon = new Cannon(Card.CANNON, ConnectorType.DOUBLE, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, true);
-        assertTrue(cannon.doubleCannon());
+        assertTrue(cannon.isDouble());
 
         Cannon cannon2 = new Cannon(Card.CANNON, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, ConnectorType.DOUBLE, ConnectorType.DOUBLE, false);
-        assertFalse(cannon2.doubleCannon());
+        assertFalse(cannon2.isDouble());
     }
 }

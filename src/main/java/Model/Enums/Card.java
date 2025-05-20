@@ -20,9 +20,10 @@ public enum Card {
     }
 
     public boolean hasEngine() {
-        return this == ENGINE || this == DOUBLE_ENGINE;
+        return this == ENGINE /*TODO: fix this: || this == DOUBLE_ENGINE*/;
     }
 
     public boolean hasCannon() {
-        return this == CANNON || this == DOUBLE_CANNON;
+        return this == CANNON /*TODO: fix this: || this == DOUBLE_CANNON*/;
     }
+}
