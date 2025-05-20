@@ -1,6 +1,7 @@
 package Model.Ship;
 
 import Model.Enums.Crewmates;
+import Model.Enums.Direction;
 import Model.Enums.Good;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.Cabin;
@@ -62,8 +63,8 @@ public class CondensedShip {
         int otherCannons = 0;
         for (Cannon cannon : cannons) {
 
-            if (cannon.doubleCannon()) {
-                if(cannon.getOrientation()==0){
+            if (cannon.isDouble()) {
+                if(cannon.getOrientation()== Direction.UP){
                     frontCannons++;
                 } else {
                     otherCannons++;

@@ -36,11 +36,19 @@ public class Cabin extends SpaceshipComponent {
     }
 
     public boolean hasEngineAlien() {
-        return this.hasEngineAlien;
+        if(occupants == Crewmates.BROWN_ALIEN) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean hasCannonAlien() {
-        return this.hasCannonAlien;
+        if(occupants == Crewmates.PURPLE_ALIEN) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
