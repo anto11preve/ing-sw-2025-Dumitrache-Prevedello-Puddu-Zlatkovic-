@@ -3,6 +3,7 @@ package Controller.AbandonedShip;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Enums.Crewmates;
 import Model.Player;
@@ -50,13 +51,13 @@ public class AbandonedShipCrewRemovalState extends State {
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
         if(itemType != ItemType.CREW){
-            return;
+            throw new IllegalArgumentException("Invalid item type for crew removal.");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(playerName.equals(player.getName())){
             if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
-                return; //handle the situation where the player doesn't have enough crew
+                throw new InvalidContextualAction("The player doesn't have enough crew"); //handle the situation where the player doesn't have enough crew
             }
             if(context.getCrewmates() > 0){
                 Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);

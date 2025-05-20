@@ -56,6 +56,8 @@ public class AbandonedShipDecidingState extends State {
                 controller.setState(new AbandonedShipDecidingState(context));
             }
 
+        }else{
+            throw new IllegalArgumentException("It's not your turn to skip the reward.");
         }
 
     }
@@ -73,12 +75,12 @@ public class AbandonedShipDecidingState extends State {
     public void getReward(String playerName, RewardType rewardType) {
 
         if(rewardType != RewardType.CREDITS){
-            return; // Handle the situation where the reward type is not credits
+            throw new IllegalArgumentException("Invalid reward type. Only credits are accepted.");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to take the reward.");
         player.deltaCredits(context.getCredits());
 
         // TODO: Implement the logic to remove days from the player

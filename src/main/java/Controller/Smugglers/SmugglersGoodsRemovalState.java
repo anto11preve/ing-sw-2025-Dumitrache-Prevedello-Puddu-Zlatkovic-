@@ -2,6 +2,7 @@ package Controller.Smugglers;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.Good;
 import Model.Player;
 import Model.Ship.Components.CargoHold;
@@ -75,14 +76,14 @@ public class SmugglersGoodsRemovalState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         if(oldCoordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates");
         }
 
         if(oldIndex < 0){
-            return; // Handle the case where the index is invalid
+            throw new IllegalArgumentException("Invalid index");
         }
 
         GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(amount);
@@ -103,16 +104,16 @@ public class SmugglersGoodsRemovalState extends State{
         SpaceshipComponent component = player.getShipBoard().getComponent(oldCoordinates);
 
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
-            return; // Handle the case where the components are not cargo holds
+            throw new InvalidContextualAction("Not a valid cargo hold");
         }
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = cargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            return; // Handle the case where the good is not found
+            throw new NullPointerException("The selected good is not found");
         }
         boolean done = goodCounter.removeGood(selectedGood);
         if(!done) {
-            return; // Need to remove another type of good
+            throw new InvalidContextualAction("Need to remove another type of good");
         }
         cargoHold.removeGood(oldIndex);
         amount--;

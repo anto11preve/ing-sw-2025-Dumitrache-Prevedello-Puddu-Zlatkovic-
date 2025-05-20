@@ -59,25 +59,25 @@ public class SlaversBatteryRemovalState extends State{
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
         if(itemType != ItemType.BATTERIES){
-            return;
+            throw new IllegalArgumentException("Item type must be BATTERIES");
         }
 
         if(declaredPower < 0){
-            return; // Handle the case where no batteries are left to declare
+            throw new IllegalArgumentException("Declared power cannot be negative");
         }
 
         if(coordinates == null){
-            return; // Handle the case where coordinates are invalid
+            throw new IllegalArgumentException("Coordinates are null");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
-            return;
+            throw new IllegalArgumentException("Component is not a battery compartment");
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -125,12 +125,13 @@ public class SlaversBatteryRemovalState extends State{
     @Override
     public void getReward(String playerName, RewardType rewardType){
         if(rewardType != RewardType.CREDITS){
-            return;
+            throw new IllegalArgumentException("Reward type must be CREDITS");
         }
+
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         if(actualPower > context.getPower() && declaredPower == 0){
             controller.setState(new SlaversRewardsState(context));

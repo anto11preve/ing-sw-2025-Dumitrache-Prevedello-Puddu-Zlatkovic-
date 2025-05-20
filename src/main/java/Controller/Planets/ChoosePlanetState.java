@@ -2,6 +2,7 @@ package Controller.Planets;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Player;
@@ -65,26 +66,26 @@ public class ChoosePlanetState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to choose a planet");
 
         Planet chosenPlanet = context.getPlanet(name);
         if(chosenPlanet == null) {
-            return; // Handle the case where the planet is not found
+            throw new NullPointerException("Planet not found");
         }
 
         if(chosenPlanet.isOccupied()) {
-            return; // Handle the case where the planet is already occupied
+            throw new InvalidContextualAction("Planet is already occupied");
         }
 
         chosenPlanet.setOccupied();
         if(chosenPlanets.contains(chosenPlanet)){
-            return; // Handle the case where the planet is already in the list
+            throw new InvalidContextualAction("Planet already chosen");
         } else {
             chosenPlanets.add(chosenPlanet);
         }
 
         if(context.getSpecialPlayers().contains(player)) {
-            return; // Handle the case where the player is already a special player
+            throw new InvalidContextualAction("Player already chosen a planet");
         }
 
         context.addSpecialPlayer(player);
@@ -109,7 +110,7 @@ public class ChoosePlanetState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         context.removePlayer(player);
         controller.setState(new ChoosePlanetState(context, chosenPlanets));

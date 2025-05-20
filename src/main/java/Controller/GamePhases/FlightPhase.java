@@ -1,8 +1,10 @@
 package Controller.GamePhases;
 
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Board.AdventureCards.AdventureCard;
+import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.CardDeck;
 import Model.Player;
 import Controller.CardResolverVisitor;
@@ -20,13 +22,15 @@ public class FlightPhase extends State {
         Controller controller = this.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(currentPlayer != controller.getModel().getFlightBoard().getTurnOrder()[0]){
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to pick the next card.");
         }
         CardDeck deck;
         deck = controller.getModel().getFlightBoard().getUpcomingCardDeck();
         if(!deck.peekCards().isEmpty()) {
-            AdventureCard card = deck.popCard();
+            AdventureCardFilip card = deck.popCard();
             card.accept(new CardResolverVisitor(), controller);
+        } else {
+            throw new InvalidContextualAction("No cards available to pick.");
         }
     }
 

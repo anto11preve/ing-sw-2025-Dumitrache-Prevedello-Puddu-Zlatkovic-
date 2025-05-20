@@ -3,6 +3,7 @@ package Controller.Slavers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Player;
 
@@ -46,26 +47,26 @@ public class SlaversPowerDeclarationState extends State {
     @Override
     public void declaresDouble(String playerName, DoubleType doubleType, int amount) {
         if (doubleType != DoubleType.CANNONS) {
-            return;
+            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            return; // Handle the case where amount is negative
+            throw new IllegalArgumentException("Invalid amount, must be non-negative");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to declare power");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
                 player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons() < amount){
-            return; // Not enough cannons to declare
+            throw new InvalidContextualAction("Not enough double cannons to declare");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount){
-            return; // Not enough batteries to declare
+            throw new InvalidContextualAction("Not enough batteries to declare");
         }
 
         int basePower = 69; //da sistemare
@@ -73,7 +74,7 @@ public class SlaversPowerDeclarationState extends State {
 
         if(context.getPower() > (basePower + amount)){
             if(context.getSpecialPlayers().contains(player)){
-                return; // Player already declared power
+                throw new IllegalArgumentException("Player already declared power");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);

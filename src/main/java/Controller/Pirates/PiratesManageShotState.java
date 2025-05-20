@@ -2,6 +2,7 @@ package Controller.Pirates;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
@@ -55,11 +56,11 @@ public class PiratesManageShotState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
-            return; // Handle the case where there are no projectiles
+            throw new NullPointerException("The shot is null");
         }
         SpaceshipComponent component = null;
 
@@ -121,10 +122,8 @@ public class PiratesManageShotState extends State{
                 return;
             }
             controller.setState(new PiratesCannonShotsState(context));
-            return;
         } else {
             controller.setState(new PiratesManageShotState(context, number, turn));
-            return;
         }
 
     }
@@ -143,20 +142,20 @@ public class PiratesManageShotState extends State{
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
         if (itemType != ItemType.BATTERIES) {
-            return; // Handle the case where the item is not a cannon shot
+            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().get(0)) {
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
-            return; // Handle the case where there are no projectiles
+            throw new NullPointerException("The shot is null");
         }
         SpaceshipComponent component = null;
         if(shot.isBig()){
-            return; //non lo puoi parare bro...
+            throw new InvalidContextualAction("Cannot use batteries on a big shot");
         }
         boolean shieldFound = false;
         switch (shot.getSide()){
@@ -197,13 +196,11 @@ public class PiratesManageShotState extends State{
                     return;
                 }
                 controller.setState(new PiratesCannonShotsState(context));
-                return;
             } else {
                 controller.setState(new PiratesManageShotState(context, number, turn));
-                return;
             }
         } else {
-            return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
+            ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
         }
 
     }

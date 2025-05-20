@@ -3,6 +3,7 @@ package Controller.AbandonedStation;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
@@ -51,6 +52,9 @@ public class AbandonedStationDecidingState extends State {
                 controller.setState(new AbandonedStationDecidingState(context));
             }
 
+        } else{
+            // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to skip the reward.");
         }
 
     }
@@ -72,12 +76,12 @@ public class AbandonedStationDecidingState extends State {
     public void getReward(String playerName, RewardType rewardType) {
 
         if(rewardType != RewardType.GOODS){
-            return; // Handle the situation where the reward type is not goods
+            throw new IllegalArgumentException("It's not your turn to skip the reward.");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player == controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+            throw new IllegalArgumentException("It's not your turn to take the reward.");
         if(player.getShipBoard().getCondensedShip().getTotalCrew() >= context.getCrewmates()){
             player.deltaCredits(context.getCredits());
 
@@ -85,7 +89,7 @@ public class AbandonedStationDecidingState extends State {
 
             controller.setState(new AbandonedStationLandState(context));
         } else {
-            // Handle the case where the player doesn't have enough crew members
+            throw new InvalidContextualAction("The player doesn't have enough crew to take the reward"); //handle the situation where the player doesn't have enough crew)
         }
     }
 }

@@ -2,6 +2,7 @@ package Controller.AbandonedStation;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Enums.Good;
 import Model.Player;
@@ -85,26 +86,26 @@ public class AbandonedStationLandState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to move the good.");
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
-            return; // Handle the case where the components are not cargo holds
+            throw new IllegalArgumentException("Invalid cargo hold coordinates.");
         }
 
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            return; // Handle the case where the good is not found
+            throw new NullPointerException("Selected good is null.");
         }
 
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
-            return; // Handle the case where the good cannot be added to the new cargo hold
+            throw new InvalidContextualAction("Invalid cargo hold coordinates.");
         }
 
         oldCargoHold.removeGood(oldIndex);
@@ -121,7 +122,7 @@ public class AbandonedStationLandState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn to pass.");
 
         controller.setState(new FlightPhase(controller));
     }

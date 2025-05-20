@@ -2,6 +2,7 @@ package Controller.Smugglers;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.Good;
 import Model.Player;
 import Model.Ship.Components.CargoHold;
@@ -44,28 +45,29 @@ public class SmugglersLandState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         if(coordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates");
         }
 
         if(goodIndex < 0 || goodIndex >= context.getGoods().size()){
-            return; // Handle the case where the good index is out of bounds
+            throw new IndexOutOfBoundsException("Invalid goodIndex");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
-            return;
+            throw new InvalidContextualAction("Invalid component type, expected CargoHold");
+
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
-            return; // Handle the case where the good is not found
+           throw new NullPointerException("Good not found");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
-            return; // Handle the case where the good cannot be added to the cargo hold
+            throw new InvalidContextualAction("Cannot add good to the cargo hold");
         }
 
         context.removeGood(selectedGood);
@@ -86,23 +88,25 @@ public class SmugglersLandState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
+
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
-            return; // Handle the case where the components are not cargo holds
+           throw new InvalidContextualAction("Invalid components, expected CargoHolds");
         }
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            return; // Handle the case where the good is not found
+            throw new NullPointerException("Good not found");
         }
+
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
-            return; // Handle the case where the good cannot be added to the new cargo hold
+            throw new InvalidContextualAction("Cannot add good to the cargo hold");
         }
         oldCargoHold.removeGood(oldIndex);
         controller.setState(new SmugglersLandState(context));
@@ -119,7 +123,7 @@ public class SmugglersLandState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
         if(context.getSpecialPlayers().isEmpty()){
             controller.setState(new FlightPhase(controller));
         }else{

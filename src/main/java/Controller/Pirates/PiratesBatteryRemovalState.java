@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Controller.Slavers.SlaversCrewRemovalState;
 import Controller.Slavers.SlaversPowerDeclarationState;
@@ -63,25 +64,25 @@ public class PiratesBatteryRemovalState extends State{
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
         if(itemType != ItemType.BATTERIES){
-            return;
+            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
-            return; // Handle the case where the declared power is negative
+            throw new IllegalArgumentException("Declared power cannot be negative");
         }
 
         if(coordinates == null){
-            return; // Handle the case where the coordinates are null
+            throw new IllegalArgumentException("Coordinates cannot be null");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player == controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+            throw new IllegalArgumentException("It's not the player's turn");
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
-            return;
+            throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -125,16 +126,16 @@ public class PiratesBatteryRemovalState extends State{
     @Override
     public void getReward(String playerName, RewardType rewardType){
         if(rewardType != RewardType.CREDITS){
-            return;
+            throw new IllegalArgumentException("Invalid reward type, expected CREDITS");
         }
         if(declaredPower < 0){
-            return; // Handle the case where the declared power is negative
+            throw new IllegalArgumentException("Declared power cannot be negative");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not the player's turn");
 
         if(actualPower > context.getPower() && declaredPower == 0){
             controller.setState(new PiratesRewardState(context));

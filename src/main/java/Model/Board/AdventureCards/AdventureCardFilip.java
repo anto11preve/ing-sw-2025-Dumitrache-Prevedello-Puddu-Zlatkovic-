@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Enums.CardLevel;
 
 // Classe per la gestione delle carte avventura
@@ -24,4 +26,6 @@ public abstract class AdventureCardFilip {
 
     public abstract String getDescription();
 
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+    }
 }

@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -58,25 +59,25 @@ public class SmugglersBatteryRemovalState extends State{
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
         if(itemType != ItemType.BATTERIES){
-            return;
+            throw new IllegalArgumentException("Item type must be BATTERIES");
         }
 
         if(coordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates");
         }
 
         if(declaredPower <0){
-            return; // Handle the case where no batteries are declared
+            throw new IllegalArgumentException("Invalid declared power");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
-            return;
+            throw new InvalidContextualAction("Not a valid battery compartment");
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -121,17 +122,17 @@ public class SmugglersBatteryRemovalState extends State{
     @Override
     public void getReward(String playerName, RewardType rewardType){
         if(rewardType != RewardType.CREDITS){
-            return;
+            throw new IllegalArgumentException("Reward type must be CREDITS");
         }
 
         if(declaredPower < 0){
-            return; // Handle the case where batteries are still declared
+            throw new IllegalArgumentException("Invalid declared power");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
         if(actualPower > context.getPower() && declaredPower == 0){
             controller.setState(new SmugglersLandState(context));
         }

@@ -54,12 +54,12 @@ public class ManageMeteorState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
-            return; // Handle the case where it's not the player's turn
+            throw new InvalidMethodParameters("Player " + playerName + " is not in turn.");
         }
 
         Meteor meteor = (Meteor) context.getProjectile(0);
         if (meteor == null) {
-            return; // Handle the case where there are no projectiles
+            throw new NullPointerException("Meteors are empty");
         }
 
         SpaceshipComponent component = null;
@@ -210,10 +210,8 @@ public class ManageMeteorState extends State {
                         return;
                     }
                     controller.setState(new MeteorsState(context));
-                    return;
                 } else {
                     controller.setState(new ManageMeteorState(context,number));
-                    return;
                 }
 
 

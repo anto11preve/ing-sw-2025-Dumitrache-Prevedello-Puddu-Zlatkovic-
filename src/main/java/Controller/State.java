@@ -97,7 +97,7 @@ public abstract class State {
     public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: getGood");
     }
-    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters {
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: throwDices");
     }
 

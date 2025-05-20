@@ -2,7 +2,9 @@ package Controller.MeteorsSwarm;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 
 import java.util.Random;
@@ -22,14 +24,14 @@ public class MeteorsState extends State {
     }
 
     @Override
-    public void throwDices(String playerName) {
+    public void throwDices(String playerName) throws InvalidMethodParameters {
         if(context.getProjectiles().isEmpty()) {
-            return; // Handle the case where there are no projectiles
+            throw new InvalidContextualAction("No projectiles available.");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player == controller.getModel().getFlightBoard().getTurnOrder()[0]) {
-            return; // Handle the case where it's not the player's turn
+        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
+            throw new InvalidMethodParameters("It's not your turn to throw the dice.");
         }
         Random rand = new Random();
         int dado1 = rand.nextInt(6) + 1; // numero tra 1 e 6

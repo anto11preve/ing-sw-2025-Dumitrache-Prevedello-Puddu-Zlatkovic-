@@ -79,7 +79,7 @@ public class AdventureCard {
         return options;
     }
 
-    public void accept(CardResolverVisitor visitor, Controller controller) {
-        visitor.visit( this, controller);
-    }
+//    public void accept(CardResolverVisitor visitor, Controller controller) {
+//        visitor.visit(this, controller);
+//    }
 }

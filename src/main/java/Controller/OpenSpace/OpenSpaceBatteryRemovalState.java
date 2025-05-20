@@ -3,6 +3,7 @@ package Controller.OpenSpace;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -59,26 +60,26 @@ public class OpenSpaceBatteryRemovalState extends State {
         int placesGained = declaredPower*2;
 
         if(itemType != ItemType.BATTERIES){
-            return;
+            throw new IllegalArgumentException("Invalid item type, only BATTERIES are allowed");
         }
 
         if(coordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates type, coordinates is null");
         }
 
         if(declaredPower < 0){
-            return; // Handle the case where the declared power is negative
+            throw new IllegalArgumentException("Invalid declared power type, declared power is negative");
         }
 
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+           throw new IllegalArgumentException("It's not your turn to throw the dice.");
 
         //TODO: placesGained += player.getShipBoard().getBaseEnginePower();
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
-            return;
+            throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();

@@ -3,6 +3,7 @@ package Controller.Smugglers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
@@ -45,21 +46,23 @@ public class SecondSmugglersBatteryRemovalState extends State{
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
         if(itemType != ItemType.BATTERIES){
-            return;
+            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
         if(coordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates");
         }
         if(amount <= 0){
-            return; // Handle the case where no batteries are to remove
+            throw new IllegalArgumentException("Invalid amount, must be non negative");
         }
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+            throw new IllegalArgumentException("It's not your turn");
+
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
-            return;
+            throw new InvalidContextualAction("Not a valid battery compartment");
+
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
         amount--;

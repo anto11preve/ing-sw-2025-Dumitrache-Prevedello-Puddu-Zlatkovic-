@@ -145,7 +145,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
         state.getGood(name, goodIndex, coordinates, CargoHoldIndex);
     }
-    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters {
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         state.throwDices(playerName);
     }
 

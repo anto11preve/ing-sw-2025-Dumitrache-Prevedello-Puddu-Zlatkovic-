@@ -48,11 +48,11 @@ public class SlaversCrewRemovalState extends State {
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
         if(itemType != ItemType.CREW){
-            return;
+            throw new IllegalArgumentException("Invalid item type, expected CREW");
         }
 
         if(coordinates == null){
-            return; // Handle the case where coordinates are null
+            throw new IllegalArgumentException("Invalid coordinates");
         }
 
         Controller controller = context.getController();
