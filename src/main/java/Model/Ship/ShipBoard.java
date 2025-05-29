@@ -661,6 +661,10 @@ public class ShipBoard {
         return components[y][x];
     }
 
+    public CondensedShip getCondensedShip() {
+        return condensedShip;
+    }
+
 }
 
 
