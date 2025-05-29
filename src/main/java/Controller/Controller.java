@@ -1,14 +1,12 @@
 package Controller;
 
-import Controller.Commands.Command;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
 // Import del modello e delle librerie per RMI
 import Model.Enums.Direction;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
-import Model.Ship.Components.ComponentsLoader;
-import Model.Ship.Components.SpaceshipComponent;
 
 import Model.Ship.Coordinates;
 
@@ -123,11 +121,11 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters {
         state.getReward(name, rewardType);
     }
-    public void moveGoods(String name) throws InvalidCommand, InvalidParameters {
-        state.moveGoods(name);
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
+        state.moveGood(name, oldCoordinates, newCoordinates, oldIndex, newIndex);
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates, int amount) throws InvalidCommand, InvalidParameters {
-        state.useItem(name, itemType, coordinates, amount);
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
+        state.useItem(name, itemType, coordinates);
     }
     public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
         state.declaresDouble(name, doubleType, amount);
@@ -135,7 +133,21 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void defend(String name) throws InvalidCommand, InvalidParameters {
         state.defend(name);
     }
-
+    public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        state.end(name);
+    }
+    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
+        state.choosePlanet(name, planetName);
+    }
+    public void skipReward(String name) throws InvalidCommand, InvalidParameters {
+        state.skipReward(name);
+    }
+    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
+        state.getGood(name, goodIndex, coordinates, CargoHoldIndex);
+    }
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        state.throwDices(playerName);
+    }
 
 
 

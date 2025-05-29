@@ -11,7 +11,7 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Board.Timer;
-import Controller.FlightPhase;
+import Controller.GamePhases.FlightPhase;
 
 import java.util.HashMap;
 import java.util.List;

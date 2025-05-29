@@ -4,7 +4,7 @@ import Controller.Controller;
 import Controller.Enums.CrewType;
 import Controller.Exceptions.*;
 import Controller.State;
-import Controller.FlightPhase;
+import Controller.GamePhases.FlightPhase;
 import Model.Enums.Crewmates;
 import Model.Player;
 import Model.Ship.Components.Cabin;

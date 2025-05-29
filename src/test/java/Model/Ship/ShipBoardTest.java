@@ -1,5 +1,9 @@
-package Model;
+package Model.Ship;
 
+import Model.Enums.Card;
+import Model.Enums.ConnectorType;
+import Model.Exceptions.InvalidMethodParameters;
+import Model.Ship.Components.SpaceshipComponent;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,51 +20,51 @@ public class ShipBoardTest {
     }
 
     @Test
-    void testValidEngine() {
+    void testValidEngine() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
+        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
         assertTrue(board.validateShip());
     }
 
     @Test
-    void testBlockedEngineFails() {
+    void testBlockedEngineFails() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        board.addComponent(comp(Card.CABIN, ConnectorType.STANDARD, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE), 3, 3);
+        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
+        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 3, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testValidCannon() {
+    void testValidCannon() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CANNON, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
+        board.addComponent(comp(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
         assertTrue(board.validateShip());
     }
 
     @Test
-    void testBlockedCannonFails() {
+    void testBlockedCannonFails() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CANNON, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        board.addComponent(comp(Card.CABIN, ConnectorType.STANDARD, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE), 1, 3);
+        board.addComponent(comp(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
+        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 1, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testCabinNoConnectorsFails() {
+    void testCabinNoConnectorsFails() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.CABIN, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testAlienLifeSupportNoCabinFails() {
+    void testAlienLifeSupportNoCabinFails() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.ALIEN_LIFE_SUPPORT, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testAlienLifeSupportWithCabinSucceeds() {
+    void testAlienLifeSupportWithCabinSucceeds() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.ALIEN_LIFE_SUPPORT, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
         board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 4);
@@ -68,28 +72,28 @@ public class ShipBoardTest {
     }
 
     @Test
-    void testShieldGeneratorValidPosition() {
+    void testShieldGeneratorValidPosition() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.SHIELD_GENERATOR, ConnectorType.STANDARD, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
+        board.addComponent(comp(Card.SHIELD_GENERATOR, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
         assertTrue(board.validateShip());
     }
 
     @Test
-    void testShieldGeneratorInvalidPosition() {
+    void testShieldGeneratorInvalidPosition() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.SHIELD_GENERATOR, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testSpecialCargoWithoutCargoFails() {
+    void testSpecialCargoWithoutCargoFails() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.SPECIAL_CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
         assertFalse(board.validateShip());
     }
 
     @Test
-    void testSpecialCargoAdjacentToCargoSucceeds() {
+    void testSpecialCargoAdjacentToCargoSucceeds() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.SPECIAL_CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
         board.addComponent(comp(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 4);
@@ -103,7 +107,7 @@ public class ShipBoardTest {
     }
 
     @Test
-    void testDisconnectedComponents() {
+    void testDisconnectedComponents() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 0, 0);
         board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 4, 6);

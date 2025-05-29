@@ -3,13 +3,14 @@ package Controller;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Model.Enums.Direction;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
 
 //import java.util.Map;
 
 public abstract class State {
 
-    private final Controller controller;
+    private Controller controller;
 
     public Controller getController() {
         return controller;
@@ -18,6 +19,8 @@ public abstract class State {
     public State(Controller controller) {
         this.controller = controller;
     }
+
+    public State(){};
 
     public void login(String name) throws InvalidCommand, InvalidParameters{
         throw new InvalidCommand("Invalid command: login");
@@ -68,10 +71,10 @@ public abstract class State {
         throw new InvalidCommand("Invalid command: getReward");
     }
     //
-    public void moveGoods(String name) throws InvalidCommand, InvalidParameters {
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: moveGoods");
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates, int amount) throws InvalidCommand, InvalidParameters {
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: useItem");
     }
     public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
@@ -80,6 +83,22 @@ public abstract class State {
     public void defend(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: defend");
     }
+    //ho finito di fare qualunque cosa stia facendo
+    public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        throw new InvalidCommand("Invalid command: end");
+    }
 
+    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
+        throw new InvalidCommand("Invalid command: choosePlanet");
+    }
+    public void skipReward(String name) throws InvalidCommand, InvalidParameters {
+        throw new InvalidCommand("Invalid command: skipReward");
+    }
+    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
+        throw new InvalidCommand("Invalid command: getGood");
+    }
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        throw new InvalidCommand("Invalid command: throwDices");
+    }
 
 }

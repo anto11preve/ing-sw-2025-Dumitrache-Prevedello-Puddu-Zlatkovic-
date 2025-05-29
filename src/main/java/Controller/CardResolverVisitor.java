@@ -1,17 +1,21 @@
 package Controller;
 
-import Controller.AbandonedShip.AbandonedShipState;
-import Controller.AbandonedStation.AbandonedStationState;
-import Controller.Enemy.PiratesStatePowerDeclaration;
-import Controller.Enemy.SlaversStatePowerDeclaration;
-import Controller.Enemy.SmugglersStatePowerDeclaration;
-import Controller.OpenSpace.OpenSpaceState;
-import Controller.Planets.PlanetsState;
+import Controller.AbandonedShip.AbandonedShipDecidingState;
+import Controller.AbandonedStation.AbandonedStationDecidingState;
+import Controller.CombatZone.CombatZoneState;
+import Controller.GamePhases.FlightPhase;
+import Controller.MeteorsSwarm.MeteorsState;
+import Controller.OpenSpace.OpenSpaceEngineDeclarationState;
+import Controller.Pirates.PiratesPowerDeclarationState;
+import Controller.Planets.ChoosePlanetState;
+import Controller.Slavers.SlaversPowerDeclarationState;
+import Controller.Smugglers.SmugglersPowerDeclarationState;
 import Model.Board.AdventureCards.*;
 import Model.Enums.Crewmates;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.Coordinates;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +29,8 @@ public class CardResolverVisitor {
         si fa uno alla volta, fino a che qualcuno effettivamente la svolge, in ordine di rotta
         può rinunciare a tot quipaggio per dei crediti e perdere giorni di volo
          */
-        controller.setState(new AbandonedShipState(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new AbandonedShipDecidingState(context));
     }
 
     public void visit(AbandonedStation card, Controller controller) {
@@ -34,17 +39,19 @@ public class CardResolverVisitor {
         se il giocatore ha abbastanza equipaggio, può caricare le merci dove vuole e ridistribuirle
         il giocatore perde giorni di volo
          */
-        controller.setState(new AbandonedStationState(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new AbandonedStationDecidingState(context));
     }
 
-    public void visit( AvailablePlanets card, Controller controller) {
+    public void visit( Planets card, Controller controller) {
         /*
 
          */
-        controller.setState(new PlanetsState(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new ChoosePlanetState(context));
     }
 
-    public void visit(CombactZone card, Controller controller) {
+    public void visit(CombatZone card, Controller controller) {
         /*
         1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
         2. si calcola il giocatore con meno potenza motrice e si perdono delle merci
@@ -53,35 +60,39 @@ public class CardResolverVisitor {
            le cannonate piccole si parano solo con gli scudi, quelle grandi si prega
         in caso di parità, il più avanti nella rotta sconta la penalità
          */
+        Context context = new Context(controller, card);
+        controller.setState(new CombatZoneState(context));
     }
 
     public void visit( Epidemic card, Controller controller) {
         /*
         si scorrono le cabine, e se essa è adiacente a un'altra cabina, si rimuove un membro dell'equipaggio (alieno o umano)
          */
-        for(Player p : controller.getModel().getFlightboard().getTurnOrder()){
+        for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             Set<Cabin> processed = new HashSet<>();
             for(int i=4; i<10; i++){{
                 for(int j=4; j<9; j++){
-                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(i,j))){
-                    SpaceshipComponent c = p.getShipBoard().getComponent(i,j);  //come faccio a dire che è una cabina?
+                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(new Coordinates(i,j)))){
+                    SpaceshipComponent c = p.getShipBoard().getComponent(new Coordinates(i,j));  //come faccio a dire che è una cabina?
                         int [][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
 
                         for(int [] d : directions){
                             int newRow = i + d[0];
                             int newColumn = j + d[1];
 
-                            if(p.getShipBoard().getComponent(newRow,newColumn) != null){
-                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(newRow,newColumn);  //come faccio a dire che è una cabina?
+                            if(p.getShipBoard().getComponent(new Coordinates(newRow,newColumn)) != null){
+                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(new Coordinates(newRow,newColumn));  //come faccio a dire che è una cabina?
                                 if( !processed.contains(adjacent) && p.getShipBoard().getCondensedShip().getCabins().contains(adjacent)){   //da rivedere
-                                    Crewmates firstCabin = c.getOccupants();
-                                    Crewmates secondCabin = (Cabin) adjacent.getOccupants();    //da rivedere
+                                    Cabin cNew = (Cabin) c;
+                                    Crewmates firstCabin = cNew.getOccupants();
+                                    Cabin adjacentNew = (Cabin) adjacent;
+                                    Crewmates secondCabin = adjacentNew.getOccupants();    //da rivedere
                                     switch(firstCabin){
                                         case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
-                                            c.setOccupants(Crewmates.EMPTY);
+                                            cNew.setOccupants(Crewmates.EMPTY);
                                             break;
                                         case DOUBLE_HUMAN:
-                                            c.setOccupants(Crewmates.SINGLE_HUMAN);
+                                            cNew.setOccupants(Crewmates.SINGLE_HUMAN);
                                             break;
                                         default:
                                             break;
@@ -89,17 +100,17 @@ public class CardResolverVisitor {
 
                                     switch(secondCabin){
                                         case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
-                                            adjacent.setOccupants(Crewmates.EMPTY);
+                                            adjacentNew.setOccupants(Crewmates.EMPTY);
                                             break;
                                         case DOUBLE_HUMAN:
-                                            adjacent.setOccupants(Crewmates.SINGLE_HUMAN);
+                                            adjacentNew.setOccupants(Crewmates.SINGLE_HUMAN);
                                             break;
                                         default:
                                             break;
                                     }
 
-                                    processed.add(c);
-                                    processed.add(adjacent);
+                                    processed.add(cNew);
+                                    processed.add(adjacentNew);
 
                                 }
 
@@ -112,7 +123,7 @@ public class CardResolverVisitor {
             }
         }
 
-        controller.setState(new FlightPhase());
+        controller.setState(new FlightPhase(controller));
     }
 
     public void visit(MeteorSwarm card, Controller controller) {
@@ -127,6 +138,9 @@ public class CardResolverVisitor {
 
 
          */
+
+        Context context = new Context(controller, card);
+        controller.setState(new MeteorsState(context));
     }
 
     public void visit( OpenSpace card, Controller controller) {
@@ -134,7 +148,8 @@ public class CardResolverVisitor {
         deve ricevere in qualche modo il numero di batterie che ciascun giocatore vuole usare
         poi semplicemente si calcola la potenza motrice di ciascun giocatore e si muove la nave sulla flighboard
         */
-        controller.setState(new OpenSpaceState(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new OpenSpaceEngineDeclarationState(context));
     }
 
     public void visit( Pirates card, Controller controller) {
@@ -143,7 +158,8 @@ public class CardResolverVisitor {
         si vincono crediti e se si perde si ricevono cannonate
          */
 
-        controller.setState(new PiratesStatePowerDeclaration(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new PiratesPowerDeclarationState(context));
     }
 
     public void visit( Slavers card, Controller controller) {
@@ -152,7 +168,8 @@ public class CardResolverVisitor {
         si vincono crediti e di perde equipaggio
          */
 
-        controller.setState(new SlaversStatePowerDeclaration(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new SlaversPowerDeclarationState(context));
     }
 
     public void visit( Smugglers card, Controller controller) {
@@ -162,7 +179,8 @@ public class CardResolverVisitor {
         2. se perde, si paga la penalità e si passa al giocatore dopo
          */
 
-        controller.setState(new SmugglersStatePowerDeclaration(controller, card));
+        Context context = new Context(controller, card);
+        controller.setState(new SmugglersPowerDeclarationState(context));
     }
 
     public void visit( Stardust card, Controller controller) {
@@ -171,5 +189,11 @@ public class CardResolverVisitor {
         in base al loro tipo si perdono giorni di rotta
          */
     }
+
+    public interface SpaceshipComponentVisitor {
+        void visit(Cabin cabin);
+        // You can add more components later as needed
+    }
+
 
 }
