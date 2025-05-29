@@ -15,6 +15,10 @@ public class Cabin extends SpaceshipComponent {
     private boolean canContainBrown;   // True if the cabin can host brown aliens
     private boolean canContainPurple;  // True if the cabin can host purple aliens
 
+    // New fields to support aliens actually present in the cabin
+    private boolean hasAlien = false;
+    private String alienType = null; // "brown" or "purple"
+
     /**
      * Standard constructor for Cabin with explicit parameters.
      */
@@ -65,6 +69,32 @@ public class Cabin extends SpaceshipComponent {
 
     public Crewmates getOccupants() {
         return occupants;
+    }
+
+    // Added support for alien tracking
+    public boolean hasAlien() {
+        return hasAlien;
+    }
+
+    public String getAlienType() {
+        return alienType;
+    }
+
+    public void setHasAlien(boolean hasAlien) {
+        this.hasAlien = hasAlien;
+    }
+
+    public void setAlienType(String alienType) {
+        this.alienType = alienType;
+    }
+
+    /**
+     * Constructor used for testing or simplified instantiation
+     */
+    public Cabin(boolean hasAlien, String alienType) {
+        super(Card.CABIN, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE);
+        this.hasAlien = hasAlien;
+        this.alienType = alienType;
     }
 
     /*
