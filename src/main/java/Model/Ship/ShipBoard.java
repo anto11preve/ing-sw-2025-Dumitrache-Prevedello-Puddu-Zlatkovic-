@@ -632,6 +632,35 @@ public class ShipBoard {
         }
         return exposedConnectors;
     }
+
+
+    /**
+     * Attempts to place a component on the board using full connection logic.
+     * Returns true if placement is valid and performed, false otherwise.
+     */
+    public boolean placeComponent(SpaceshipComponent component, Coordinates coordinates) {
+        int x = coordinates.getX() - 4;
+        int y = coordinates.getY() - 5;
+
+        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return false;
+        if (components[y][x] != null) return false;
+        if (!isConnectedToExistingComponents(component, y, x) && !isEmpty()) return false;
+
+        components[y][x] = component;
+        return true;
+    }
+
+    /**
+     * Returns the component at the given coordinates, or null if empty/out of bounds.
+     */
+    public SpaceshipComponent getComponentAt(Coordinates coordinates) {
+        int x = coordinates.getX() - 4;
+        int y = coordinates.getY() - 5;
+
+        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return null;
+        return components[y][x];
+    }
+
 }
 
 
