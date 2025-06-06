@@ -50,34 +50,47 @@ public class AbandonedShipCrewRemovalState extends State {
      */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
+        Controller controller = context.getController();
         if(itemType != ItemType.CREW){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid item type for crew removal.");
         }
-        Controller controller = context.getController();
-        Player player = controller.getModel().getPlayer(playerName);
-        if(playerName.equals(player.getName())){
-            if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
-                throw new InvalidContextualAction("The player doesn't have enough crew"); //handle the situation where the player doesn't have enough crew
-            }
-            if(context.getCrewmates() > 0){
-                Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
-                switch (cabin.getOccupants()){
-                    case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
-                        cabin.setOccupants(Crewmates.EMPTY);
-                        break;
-                    case DOUBLE_HUMAN:
-                        cabin.setOccupants(Crewmates.SINGLE_HUMAN);
-                        break;
-                    default:
-                        break;
-                }
-                context.removeCrewmate();
 
-                controller.setState(new AbandonedShipCrewRemovalState(context));
+        if(coordinates == null){
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("Coordinates cannot be null.");
+        }
+
+        Player player = controller.getModel().getPlayer(playerName);
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("It's not your turn to remove crew members.");
+        }
+
+        if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
+            controller.getModel().setError(true);
+            throw new InvalidContextualAction("The player doesn't have enough crew");
+        }
+        if(context.getCrewmates() > 0){
+            Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
+            switch (cabin.getOccupants()){
+                case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
+                    cabin.setOccupants(Crewmates.EMPTY);
+                    break;
+                case DOUBLE_HUMAN:
+                    cabin.setOccupants(Crewmates.SINGLE_HUMAN);
+                    break;
+                default:
+                    break;
             }
-            else{
-                controller.setState(new FlightPhase(controller));
-            }
+            context.removeCrewmate();
+
+            controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
+            controller.getModel().setError(false);
+        }
+        else{
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
         }
     }
 }

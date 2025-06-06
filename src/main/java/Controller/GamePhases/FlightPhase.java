@@ -21,7 +21,8 @@ public class FlightPhase extends State {
     public void pickNextCard(String playerName) {
         Controller controller = this.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer != controller.getModel().getFlightBoard().getTurnOrder()[0]){
+        if(!currentPlayer.equals(controller.getModel().getFlightBoard().getTurnOrder()[0])){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to pick the next card.");
         }
         CardDeck deck;
@@ -29,7 +30,9 @@ public class FlightPhase extends State {
         if(!deck.peekCards().isEmpty()) {
             AdventureCardFilip card = deck.popCard();
             card.accept(new CardResolverVisitor(), controller);
+            controller.getModel().setError(false);
         } else {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("No cards available to pick.");
         }
     }

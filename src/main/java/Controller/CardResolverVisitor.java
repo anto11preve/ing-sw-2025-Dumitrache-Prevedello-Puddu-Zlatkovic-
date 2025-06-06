@@ -2,7 +2,8 @@ package Controller;
 
 import Controller.AbandonedShip.AbandonedShipDecidingState;
 import Controller.AbandonedStation.AbandonedStationDecidingState;
-import Controller.CombatZone.CombatZoneState;
+import Controller.CombatZone.Level_ONE.CombatZone1EngineDeclarationState;
+import Controller.CombatZone.Level_TWO.CombatZone2EngineDeclarationState;
 import Controller.GamePhases.FlightPhase;
 import Controller.MeteorsSwarm.MeteorsState;
 import Controller.OpenSpace.OpenSpaceEngineDeclarationState;
@@ -11,7 +12,10 @@ import Controller.Planets.ChoosePlanetState;
 import Controller.Slavers.SlaversPowerDeclarationState;
 import Controller.Smugglers.SmugglersPowerDeclarationState;
 import Model.Board.AdventureCards.*;
+import Model.Board.AdventureCards.Penalties.RegularPenalty;
+import Model.Enums.CardLevel;
 import Model.Enums.Crewmates;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
@@ -30,7 +34,7 @@ public class CardResolverVisitor {
         può rinunciare a tot quipaggio per dei crediti e perdere giorni di volo
          */
         Context context = new Context(controller, card);
-        controller.setState(new AbandonedShipDecidingState(context));
+        controller.getModel().setState(new AbandonedShipDecidingState(context));
     }
 
     public void visit(AbandonedStation card, Controller controller) {
@@ -40,7 +44,7 @@ public class CardResolverVisitor {
         il giocatore perde giorni di volo
          */
         Context context = new Context(controller, card);
-        controller.setState(new AbandonedStationDecidingState(context));
+        controller.getModel().setState(new AbandonedStationDecidingState(context));
     }
 
     public void visit( Planets card, Controller controller) {
@@ -48,10 +52,10 @@ public class CardResolverVisitor {
 
          */
         Context context = new Context(controller, card);
-        controller.setState(new ChoosePlanetState(context));
+        controller.getModel().setState(new ChoosePlanetState(context));
     }
 
-    public void visit(CombatZone card, Controller controller) {
+    public void visit(CombatZone card, Controller controller) throws InvalidMethodParameters {
         /*
         1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
         2. si calcola il giocatore con meno potenza motrice e si perdono delle merci
@@ -61,7 +65,25 @@ public class CardResolverVisitor {
         in caso di parità, il più avanti nella rotta sconta la penalità
          */
         Context context = new Context(controller, card);
-        controller.setState(new CombatZoneState(context));
+        CombatZone Ccard = (CombatZone) card;
+        if(Ccard.getLevel() == CardLevel.LEVEL_ONE){
+            int numPlayers = controller.getModel().getFlightBoard().getTurnOrder().length;
+            Player currentPlayer = controller.getModel().getFlightBoard().getTurnOrder()[0];
+            for(int i = 0; i<numPlayers; i++){
+                Player nextPlayer = controller.getModel().getFlightBoard().getTurnOrder()[(i+1)];
+                if(nextPlayer.getShipBoard().getCondensedShip().getTotalCrew() > currentPlayer.getShipBoard().getCondensedShip().getTotalCrew()){
+                    currentPlayer = nextPlayer;
+                }
+            }
+            RegularPenalty penalty = (RegularPenalty) Ccard.iterator().next().getPenalty();
+            controller.getModel().getFlightBoard().deltaFlightDays(currentPlayer, penalty.getAmount());
+            controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
+        } else if( Ccard.getLevel() == CardLevel.LEVEL_TWO) {
+            controller.getModel().setState(new CombatZone1EngineDeclarationState(context));
+        } else{
+            throw new InvalidMethodParameters("Invalid card level for CombatZone: " + Ccard.getLevel());
+        }
+
     }
 
     public void visit( Epidemic card, Controller controller) {
@@ -123,7 +145,7 @@ public class CardResolverVisitor {
             }
         }
 
-        controller.setState(new FlightPhase(controller));
+        controller.getModel().setState(new FlightPhase(controller));
     }
 
     public void visit(MeteorSwarm card, Controller controller) {
@@ -140,7 +162,7 @@ public class CardResolverVisitor {
          */
 
         Context context = new Context(controller, card);
-        controller.setState(new MeteorsState(context));
+        controller.getModel().setState(new MeteorsState(context));
     }
 
     public void visit( OpenSpace card, Controller controller) {
@@ -149,7 +171,7 @@ public class CardResolverVisitor {
         poi semplicemente si calcola la potenza motrice di ciascun giocatore e si muove la nave sulla flighboard
         */
         Context context = new Context(controller, card);
-        controller.setState(new OpenSpaceEngineDeclarationState(context));
+        controller.getModel().setState(new OpenSpaceEngineDeclarationState(context));
     }
 
     public void visit( Pirates card, Controller controller) {
@@ -159,7 +181,7 @@ public class CardResolverVisitor {
          */
 
         Context context = new Context(controller, card);
-        controller.setState(new PiratesPowerDeclarationState(context));
+        controller.getModel().setState(new PiratesPowerDeclarationState(context));
     }
 
     public void visit( Slavers card, Controller controller) {
@@ -169,7 +191,7 @@ public class CardResolverVisitor {
          */
 
         Context context = new Context(controller, card);
-        controller.setState(new SlaversPowerDeclarationState(context));
+        controller.getModel().setState(new SlaversPowerDeclarationState(context));
     }
 
     public void visit( Smugglers card, Controller controller) {
@@ -180,7 +202,7 @@ public class CardResolverVisitor {
          */
 
         Context context = new Context(controller, card);
-        controller.setState(new SmugglersPowerDeclarationState(context));
+        controller.getModel().setState(new SmugglersPowerDeclarationState(context));
     }
 
     public void visit( Stardust card, Controller controller) {

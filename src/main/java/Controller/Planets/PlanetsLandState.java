@@ -56,47 +56,76 @@ public class PlanetsLandState extends State {
     public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex){
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn");
+        }
 
-        if(context.getSpecialPlayers().getFirst() != player)
+        if(context.getSpecialPlayers().getFirst() != player) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to collect goods");
+        }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
+        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {   //non è un CargoHold
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("The selected component is not a cargo hold");
+        }
 
         CargoHold cargoHold = (CargoHold) component;
         Planet planet = chosenPlanets.getFirst();
         if(planet == null) {
+            controller.getModel().setError(true);
             throw new NullPointerException("The planet is nto found");
         }
         if(!planet.isOccupied()){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("The planet is not occupied");
         }
         Good selectedGood = null;   //da correggere
-        ///TODO: Good selectedGood = planet.getLandingReward().iterator(goodIndex);
+
+        int corrente = 0;
+        while (planet.getLandingReward().iterator().hasNext()) {
+            selectedGood = planet.getLandingReward().iterator().next();
+            if (corrente == goodIndex) {
+                break;
+            }
+            corrente++;
+        }
+
 
         if(selectedGood == null) {
+            controller.getModel().setError(true);
             throw new NullPointerException("The selected good is not found");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("The good cannot be added to the cargo hold");
         }
 
-        ///TODO: planet.getLandingReward().remove(selectedGood);
-        if(true) {  /// TODO: replace with planet.getLandingReward().isEmpty()
-            chosenPlanets.remove(0);
+        while (planet.getLandingReward().iterator().hasNext()) {
+            Good currentGood = planet.getLandingReward().iterator().next();
+            if (currentGood.equals(selectedGood)) {
+                planet.getLandingReward().iterator().remove(); // Rimuove in modo sicuro durante l'iterazione
+                break;
+            }
+        }
+
+        if(planet.getLandingReward().iterator().hasNext()) {
+            chosenPlanets.removeFirst();
             context.removeSpecialPlayer(player);
             if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {      //dovrei controllare anche le non conformità delle due liste
-                controller.setState(new FlightPhase(controller));     //finiti pianeti occupati
+                controller.getModel().setState(new FlightPhase(controller));     //finiti pianeti occupati
+                controller.getModel().setError(false);
             } else {
-                controller.setState(new PlanetsLandState(context, chosenPlanets));
+                controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+                controller.getModel().setError(false);
             }
         } else{
-            controller.setState(new PlanetsLandState(context, chosenPlanets));
+            controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+            controller.getModel().setError(false);
         }
 
     }
@@ -115,28 +144,34 @@ public class PlanetsLandState extends State {
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn");
+        }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("The selected components are not both a cargo hold");
         }
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
+            controller.getModel().setError(true);
             throw new NullPointerException("The selected good is not found");
         }
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("The good cannot be added to the cargo hold");
         }
         oldCargoHold.removeGood(oldIndex);
-        controller.setState(new PlanetsLandState(context, chosenPlanets));
+        controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+        controller.getModel().setError(false);
     }
 
     /**
@@ -149,8 +184,11 @@ public class PlanetsLandState extends State {
     public void end(String playerName){
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn");
-        controller.setState(new FlightPhase(controller));
+        }
+        controller.getModel().setState(new FlightPhase(controller));
+        controller.getModel().setError(false);
     }
 }

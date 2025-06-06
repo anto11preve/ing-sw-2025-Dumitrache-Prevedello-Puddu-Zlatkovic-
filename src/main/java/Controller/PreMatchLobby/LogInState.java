@@ -20,7 +20,7 @@ public class LogInState extends State {
 //                break;
 //            case "StartConstruction":
 //                if(controller.getModel().getPlayers().size() == 4)
-//                    controller.setState(new BuildingState());
+//                    controller.getModel().setState(new BuildingState());
 //                break;
 //
 //            case "Testing":

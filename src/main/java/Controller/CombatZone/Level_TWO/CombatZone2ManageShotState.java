@@ -1,56 +1,30 @@
-package Controller.Pirates;
+package Controller.CombatZone.Level_TWO;
+
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
+import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
-import Model.Enums.ConnectorType;
 import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
-import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
-/**
- * Manages the resolution of a cannon shot fired by pirates at a special player during the flight phase.
- *
- * <p>This state handles both the damage resolution (destroying components from the ship) and
- * the defensive attempt using shields (powered by batteries). It iterates over special players,
- * applying the shot effects or allowing them to block the shot if conditions are met.</p>
- */
-public class PiratesManageShotState extends State{
-    Context context;
-    int number;
-    int turn;   ///Turno del giocatore speciale che dve subire la cannonata
+public class CombatZone2ManageShotState extends State {
+    private final Context context;
+    private final int number;
     boolean hit = false;
 
-    /**
-     * Constructs a PiratesManageShotState with the specified context, number, and turn.
-     *
-     * @param context The context providing access to the current game context.
-     * @param number  The row or column hit by the cannon shot.
-     * @param turn    The turn of the special player who is to be hit by the cannon shot.
-     */
-    public PiratesManageShotState(Context context, int number, int turn) {
+    public CombatZone2ManageShotState(Context context,  int number) {
         this.context = context;
         this.number = number;
-        this.turn = turn;
     }
 
-    /**
-     * Resolves the effects of a cannon shot on a player's ship.
-     *
-     * <p>The method checks the side of the incoming shot and removes ship components
-     * along the corresponding row or column. If the ship becomes disconnected,
-     * it transitions to a ship integrity check. If not, it proceeds to the next
-     * player or shot depending on the situation.</p>
-     *
-     * @param playerName the name of the player ending their reaction to the shot
-     */
     @Override
     public void end(String playerName) throws InvalidMethodParameters {
         Controller controller = context.getController();
@@ -112,38 +86,24 @@ public class PiratesManageShotState extends State{
         if(hit){
             boolean brokenShip = player.getShipBoard().checkIntegrity();
             if (brokenShip) {
-                controller.getModel().setState(new PiratesCheckShipState(context));
-                return;
-            }
-        }
-        turn++;
-        if (turn > context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
-            context.removeProjectile(shot);
-            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setState(new CombatZone2CheckShipState(context));
                 controller.getModel().setError(false);
                 return;
             }
-            controller.getModel().setState(new PiratesCannonShotsState(context));
-            controller.getModel().setError(false);
-        } else {
-            controller.getModel().setState(new PiratesManageShotState(context, number, turn));
-            controller.getModel().setError(false);
         }
+
+        context.removeProjectile(shot);
+        if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+            return;
+        }
+        controller.getModel().setState(new CombatZone2CannonShotsState(context));
+        controller.getModel().setError(false);
 
     }
 
-    /**
-     * Allows a player to attempt to block an incoming cannon shot using a battery-powered shield.
-     *
-     * <p>If the shot is small and the ship has an active shield in the shot's direction,
-     * the player can use a battery to activate the shield and block the shot.
-     * The game then proceeds to the next targeted player or shot.</p>
-     *
-     * @param playerName the name of the player using an item
-     * @param itemType the type of item used (must be a battery)
-     * @param coordinates the coordinates of the battery being used
-     */
+
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
         Controller controller = context.getController();
@@ -152,7 +112,7 @@ public class PiratesManageShotState extends State{
             throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (player != context.getSpecialPlayers().get(0)) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }
@@ -199,24 +159,17 @@ public class PiratesManageShotState extends State{
             BatteryCompartment compartment = (BatteryCompartment) component2;
             compartment.removeBattery();
 
-            turn++;
-            if (turn > context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
-                context.removeProjectile(shot);
-                if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                    controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
-                    return;
-                }
-                controller.getModel().setState(new PiratesCannonShotsState(context));
+            context.removeProjectile(shot);
+            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+                controller.getModel().setState(new FlightPhase(controller));
                 controller.getModel().setError(false);
-            } else {
-                controller.getModel().setState(new PiratesManageShotState(context, number, turn));
-                controller.getModel().setError(false);
+                return;
             }
+            controller.getModel().setState(new CombatZone2CannonShotsState(context));
+            controller.getModel().setError(false);
         } else {
             ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
         }
 
     }
-
 }

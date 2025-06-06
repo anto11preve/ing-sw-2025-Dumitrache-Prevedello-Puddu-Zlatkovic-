@@ -17,7 +17,6 @@ import java.util.*;
 
 public class Controller /*extends UnicastRemoteObject implements ControllerInterface*/ {
     private final Game model;
-    private State state;
     private final Queue<Command> commandQueue= new LinkedList<>();
     private final MatchLevel matchLevel;
     private final int gameID;
@@ -41,7 +40,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
 
     public Controller(MatchLevel matchLevel, int GameID/*, Smistatore smistatore*/) throws RemoteException {
         this.model = new Game(matchLevel);
-        this.state = new LogInState(this);
+        model.setState(new LogInState(this));
         this.matchLevel = matchLevel;
         this.gameID = GameID;
         //this.smistatatore=smistatatore;
@@ -51,10 +50,6 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     // Getter for game model
     public Game getModel() {
         return model;
-    }
-
-    public void setState(State phase) {
-        this.state = phase;
     }
 
     public int getGameID() {
@@ -73,80 +68,80 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
 
 
     /*
-    public void send(Map<String, Object> command) {state.execute(this);}
+    public void send(Map<String, Object> command) {model.getState().execute(this);}
     */
 
 
     public void login(String name) throws InvalidCommand, InvalidParameters {
-        state.login(name);
+        model.getState().login(name);
     }
     public void logout(String name) throws InvalidCommand, InvalidParameters {
-        state.logout(name);
+        model.getState().logout(name);
     }
     public void startGame(String name) throws InvalidCommand, InvalidParameters {
-        state.startGame(name);
+        model.getState().startGame(name);
     }
     public void getComponent(String name, int index) throws InvalidCommand, InvalidParameters {
-        state.getComponent(name, index);
+        model.getState().getComponent(name, index);
     }
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
-        state.reserveComponent(name);
+        model.getState().reserveComponent(name);
     }
     public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
-        state.placeComponent(name, origin, coordinates, orientation);
+        model.getState().placeComponent(name, origin, coordinates, orientation);
     }
     public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {
-        state.lookDeck(name, index);
+        model.getState().lookDeck(name, index);
     }
     public void flipHourGlass(String name) throws InvalidCommand, InvalidParameters {
-        state.flipHourGlass(name);
+        model.getState().flipHourGlass(name);
     }
     public void finishBuilding(String name, int position) throws InvalidCommand, InvalidParameters {
-        state.finishBuilding(name, position);
+        model.getState().finishBuilding(name, position);
     }
     public void placeCrew(String name, Coordinates coordinates, CrewType type) throws InvalidCommand, InvalidParameters {
-        state.placeCrew(name, coordinates, type);
+        model.getState().placeCrew(name, coordinates, type);
     }
 
     // Adventure Card resolution
     public void pickNextCard(String name) throws InvalidCommand, InvalidParameters {
-        state.pickNextCard(name);
+        model.getState().pickNextCard(name);
     }
     public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
-        state.deleteComponent(name, coordinates);
+        model.getState().deleteComponent(name, coordinates);
     }
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
-        state.leaveRace(name);
+        model.getState().leaveRace(name);
     }
-    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters {
-        state.getReward(name, rewardType);
+    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        model.getState().getReward(name, rewardType);
     }
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
-        state.moveGood(name, oldCoordinates, newCoordinates, oldIndex, newIndex);
+        model.getState().moveGood(name, oldCoordinates, newCoordinates, oldIndex, newIndex);
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
-        state.useItem(name, itemType, coordinates);
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        model.getState().useItem(name, itemType, coordinates);
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
-        state.declaresDouble(name, doubleType, amount);
+    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+        model.getState().declaresDouble(name, doubleType, amount);
     }
     public void defend(String name) throws InvalidCommand, InvalidParameters {
-        state.defend(name);
+        model.getState().defend(name);
     }
     public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
-        state.end(name);
+        model.getState().end(name);
     }
     public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
-        state.choosePlanet(name, planetName);
+        model.getState().choosePlanet(name, planetName);
     }
     public void skipReward(String name) throws InvalidCommand, InvalidParameters {
-        state.skipReward(name);
+        model.getState().skipReward(name);
     }
     public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
-        state.getGood(name, goodIndex, coordinates, CargoHoldIndex);
+        model.getState().getGood(name, goodIndex, coordinates, CargoHoldIndex);
     }
     public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
-        state.throwDices(playerName);
+        model.getState().throwDices(playerName);
     }
 
 
