@@ -211,7 +211,7 @@ import java.util.Map;
 
         // If the map is empty, change the state to the next one
         if (playersAlienAvailability.isEmpty()) {
-            this.getController().setState(new FlightPhase(this.getController()));
+            this.getController().getModel().setState(new FlightPhase(this.getController()));
         }
 
 

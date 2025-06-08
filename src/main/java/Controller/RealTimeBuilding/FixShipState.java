@@ -133,11 +133,11 @@ import java.util.Map;
         if (allPlayersHaveValidShips()) {
 
             PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-            this.getController().setState(placeAlienState);
+            this.getController().getModel().setState(placeAlienState);
 
             if(placeAlienState.allPlayersHavePlacedAliens()){
                 //if no players can place aliens, set FlightPhase
-                this.getController().setState(new FlightPhase(this.getController()));
+                this.getController().getModel().setState(new FlightPhase(this.getController()));
             }
         }
 

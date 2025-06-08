@@ -83,16 +83,16 @@ public class HourGlassFinishedState extends State {
 
         if(finishedPlayers.size()==model.getPlayers().size()){
             FixShipState fixShipState= new FixShipState(this.getController());
-            this.getController().setState(fixShipState);
+            this.getController().getModel().setState(fixShipState);
 
             if(fixShipState.allPlayersHaveValidShips()){
                 //if all players already have valid ships, set PlaceAlienState
                 PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-                this.getController().setState(placeAlienState);
+                this.getController().getModel().setState(placeAlienState);
 
                 if(placeAlienState.allPlayersHavePlacedAliens()){
                     //if no players can place aliens, set FlightPhase
-                    this.getController().setState(new FlightPhase(this.getController()));
+                    this.getController().getModel().setState(new FlightPhase(this.getController()));
                 }
 
             }

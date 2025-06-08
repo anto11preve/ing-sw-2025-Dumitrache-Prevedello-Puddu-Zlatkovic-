@@ -85,7 +85,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -130,7 +130,7 @@ public class BuildingState extends State {
         }
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -168,7 +168,7 @@ public class BuildingState extends State {
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         Game model= this.getController().getModel();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -280,7 +280,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -331,7 +331,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()==Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -375,7 +375,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -419,21 +419,21 @@ public class BuildingState extends State {
                 if (matchLevel == MatchLevel.TRIAL) {
                     //if it's a trial game set at frist PlaceAlienState that will populate cabins autonomously
                     // then, skip FixShipState, since in Trial mode you cannot finish building unless your ship is valid.
-                    this.getController().setState(new PlaceAlienState(this.getController()));
-                    this.getController().setState(new FlightPhase(this.getController()));
+                    this.getController().getModel().setState(new PlaceAlienState(this.getController()));
+                    this.getController().getModel().setState(new FlightPhase(this.getController()));
                 } else {
                     //if it's a level2 game, set FixShipState that will allow players to fix their ships
                     FixShipState fixShipState= new FixShipState(this.getController());
-                    this.getController().setState(fixShipState);
+                    this.getController().getModel().setState(fixShipState);
 
                     if(fixShipState.allPlayersHaveValidShips()){
                         //if all players already have valid ships, set PlaceAlienState
                         PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-                        this.getController().setState(placeAlienState);
+                        this.getController().getModel().setState(placeAlienState);
 
                         if(placeAlienState.allPlayersHavePlacedAliens()){
                             //if no players can place aliens, set FlightPhase
-                            this.getController().setState(new FlightPhase(this.getController()));
+                            this.getController().getModel().setState(new FlightPhase(this.getController()));
                         }
 
                     }

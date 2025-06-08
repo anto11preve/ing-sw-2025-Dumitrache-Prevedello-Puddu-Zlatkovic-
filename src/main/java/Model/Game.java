@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.Enums.MatchLevel;
+import Controller.State;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.FlightBoard;
 import Model.Ship.Components.SpaceshipComponent;
@@ -18,6 +19,8 @@ public class Game {
     private final List<Player> players; // All players in the current game
     private final FlightBoard flightBoard; // The central game board (flight phase)
     private final List<SpaceshipComponent> componentsPool; // Pool of tiles to use during the building phase
+    private State state;
+    private boolean error = false;
 
     /**
      * Constructor to initialize the game with all required elements.
@@ -133,6 +136,22 @@ public class Game {
      */
     public FlightBoard getFlightBoard() {
         return this.flightBoard;
+    }
+
+    public void setState(State phase) {
+        this.state = phase;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 }
 

@@ -67,7 +67,7 @@ public class LogInState extends State {
         if(this.getController().getModel().getPlayers().isEmpty()){
 
             //qui andrebbe eliminata dalla lista partite accedibili
-            this.getController().setState(new OffState(this.getController()));
+            this.getController().getModel().setState(new OffState(this.getController()));
         }
         System.out.println("Player " + name + " logged out");
         // You can add more logic here if needed
@@ -84,7 +84,7 @@ public class LogInState extends State {
             throw new InvalidCommand("Not enough players to start the game");
         }
 
-        this.getController().setState(new BuildingState(this.getController()));
+        this.getController().getModel().setState(new BuildingState(this.getController()));
 
         System.out.println("Game started by admin " + name);
         // You can add more logic here if needed
