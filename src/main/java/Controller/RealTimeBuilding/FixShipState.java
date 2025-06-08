@@ -1,8 +1,10 @@
 package Controller.RealTimeBuilding;
 
 import Controller.Controller;
+import Controller.Enums.MatchLevel;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -13,12 +15,26 @@ import Model.Ship.ShipBoard;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/**
+ * State that manages the correction of invalid ships for Level 2
+ * After the building phase, players with ships that violate rules
+ * must remove components until they are compliant.
+ */
+ public class FixShipState extends State {
 
-public class FixShipState extends State {
-
+    /** List of players with invalid ships that need to be corrected */
     List<Player> playersWithInvalidShip;
-    Map<Integer, List<Integer>> validCoordinates=new HashMap<>();
 
+    /** Valid coordinates for component placement */
+    Map<Integer, List<Integer>> validCoordinates = new HashMap<>();
+
+    /**
+     * Constructor that identifies players with invalid ships,
+     * and put them in, playersWithInvalidShip list.
+     * Initializes valid coordinates and validates all ships.
+     *
+     * @param controller The game controller
+     */
     FixShipState(Controller controller) {
 
         super(controller);
@@ -53,6 +69,28 @@ public class FixShipState extends State {
         }
     }
 
+    /**
+     * Checks if all players have valid ships.
+     * If the list of players with invalid ships is empty, returns true.
+     *
+     * @return true if all players have valid ships, false otherwise
+     */
+    public boolean allPlayersHaveValidShips() {
+        return playersWithInvalidShip.isEmpty();
+    }
+
+
+    /**
+     * Removes a component from the ship to correct rule violations.
+     * If by removing the component the ship becomes valid,
+     * the player is removed from the list of players with invalid ships.
+     * The player receives a penalty (junk) for each removed component.
+     *
+     * @param name Player's name
+     * @param coordinates Coordinates of the component to remove
+     * @throws InvalidCommand If the player doesn't have an invalid ship
+     * @throws InvalidParameters If coordinates are invalid or contain no component
+     */
     @Override
     public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
         Player currrentPlayer = this.getController().getModel().getPlayer(name);
@@ -89,6 +127,18 @@ public class FixShipState extends State {
         //check if the ship is now valid and if so remove the player from the list
         if (shipBoard.validateShip()) {
             playersWithInvalidShip.remove(currrentPlayer);
+        }
+
+        // If all players have valid ships, change state to PlaceAlienState
+        if (allPlayersHaveValidShips()) {
+
+            PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
+            this.getController().setState(placeAlienState);
+
+            if(placeAlienState.allPlayersHavePlacedAliens()){
+                //if no players can place aliens, set FlightPhase
+                this.getController().setState(new FlightPhase(this.getController()));
+            }
         }
 
     }

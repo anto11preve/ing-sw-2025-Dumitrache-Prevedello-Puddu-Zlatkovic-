@@ -131,7 +131,7 @@ public class Game {
      *
      * @return the FlightBoard instance
      */
-    public FlightBoard getFlightboard() {
+    public FlightBoard getFlightBoard() {
         return this.flightBoard;
     }
 }

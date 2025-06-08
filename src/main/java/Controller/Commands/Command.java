@@ -1,4 +1,6 @@
-package Controller;
+package Controller.Commands;
+
+import Controller.Controller;
 
 public abstract class Command {
     private String PlayerName;

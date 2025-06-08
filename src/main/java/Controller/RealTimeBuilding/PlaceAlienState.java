@@ -2,6 +2,7 @@ package Controller.RealTimeBuilding;
 
 import Controller.Controller;
 import Controller.Enums.CrewType;
+import Controller.Enums.MatchLevel;
 import Controller.Exceptions.*;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
@@ -16,35 +17,79 @@ import Model.Ship.ShipBoard;
 import java.util.List;
 import java.util.Map;
 
-class CanInsertAliens {
 
+/**
+ * Helper class that tracks which types of aliens a player can still insert.
+ * Each player can insert at most one brown alien and one purple alien.
+ */
+ class CanInsertAliens {
+
+    /** Indicates if the player can still insert a brown alien */
     private boolean canInstertBrown;
+
+    /** Indicates if the player can still insert a purple alien */
     private boolean canInsertPurple;
 
+    /**
+     * Constructor that initializes insertion possibilities.
+     *
+     * @param canInstertBrown If can insert a brown alien
+     * @param canInsertPurple If can insert a purple alien
+     */
     public CanInsertAliens(boolean canInstertBrown, boolean canInsertPurple) {
         this.canInstertBrown = canInstertBrown;
         this.canInsertPurple = canInsertPurple;
     }
 
+    /**
+     * Checks if can insert a brown alien.
+     *
+     * @return true if can insert a brown alien
+     */
     public boolean getCanInstertBrown() {
         return canInstertBrown;
     }
+
+    /**
+     * Checks if can insert a purple alien.
+     *
+     * @return true if can insert a purple alien
+     */
     public boolean getCanInsertPurple() {
         return canInsertPurple;
     }
 
+    /**
+     * Records the insertion of a brown alien.
+     * Prevents further brown alien insertions.
+     */
     public void insertedBrown() {
         this.canInstertBrown = false;
     }
+
+    /**
+     * Records the insertion of a purple alien.
+     * Prevents further purple alien insertions.
+     */
     public void insertedPurple() {
         this.canInsertPurple = false;
     }
 }
 
-public class PlaceAlienState extends State {
+/**
+ * State that manages the placement of aliens in cabins.
+ */
+ public class PlaceAlienState extends State {
 
+
+    /** Map tracking which aliens each player can still insert */
     Map<Player, CanInsertAliens> playersAlienAvailability;
 
+    /**
+     * Fills all empty cabins with human crew.
+     *
+     * @param condensedShip The condensed ship to fill
+     */
     private void fillCabinsWithHumans(CondensedShip condensedShip) {
         List<Cabin> cabins = condensedShip.getCabins();
         for (Cabin cabin : cabins) {
@@ -55,6 +100,12 @@ public class PlaceAlienState extends State {
 
     }
 
+    /**
+     * Constructor that determines which players can insert aliens.
+     * Checks for appropriate life support modules through CondensedShip class.
+     *
+     * @param controller The game controller
+     */
     public PlaceAlienState(Controller controller) {
         super(controller);
         List<Player> players = controller.getModel().getPlayers();
@@ -82,6 +133,26 @@ public class PlaceAlienState extends State {
 
     }
 
+    /**
+     * Checks if all players have placed their aliens.
+     * @return true if all players have placed their aliens, false otherwise
+     */
+    public boolean allPlayersHavePlacedAliens() {
+        // Check if all players have placed their aliens
+        return playersAlienAvailability.isEmpty();
+    }
+
+    /**
+     * Places an alien in a specific cabin.
+     * The cabin must have appropriate life support modules.
+     *
+     * @param name Player's name
+     * @param coordinates Cabin coordinates
+     * @param type Type of alien to insert
+     * @throws InvalidCommand If player has already placed that alien type
+     *                       or cabin cannot contain it
+     * @throws InvalidParameters If coordinates don't correspond to a valid cabin
+     */
     @Override
     public void placeCrew(String name, Coordinates coordinates, CrewType type) throws InvalidCommand, InvalidParameters {
         Player currentPlayer = this.getController().getModel().getPlayer(name);

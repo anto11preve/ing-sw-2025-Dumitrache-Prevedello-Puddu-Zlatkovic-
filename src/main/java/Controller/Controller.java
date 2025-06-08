@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Commands.Command;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;

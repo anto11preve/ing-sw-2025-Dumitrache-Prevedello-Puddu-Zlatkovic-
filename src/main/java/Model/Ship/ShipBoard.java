@@ -362,9 +362,7 @@ public class ShipBoard {
         return firepower;
     }
 
-    /**
-     * Calculates total thrust considering engine orientation.
-     */
+
     /**
      * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
      * Only engines that face the specified rear direction contribute their engine power.
@@ -687,11 +685,11 @@ public class ShipBoard {
 
     /**
      * Removes a reserved component by index.
+     *
      * @param index the index to remove
-     * @return the removed component
      */
-    public SpaceshipComponent removeReservedComponent(int index) {
-        return reservedComponents.remove(index);
+    public void removeReservedComponent(int index) {
+        reservedComponents.remove(index);
     }
 
     /**
