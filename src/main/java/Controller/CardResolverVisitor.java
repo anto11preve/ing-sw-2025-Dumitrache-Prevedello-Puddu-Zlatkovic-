@@ -212,4 +212,10 @@ public class CardResolverVisitor {
          */
     }
 
+    public interface SpaceshipComponentVisitor {
+        void visit(Cabin cabin);
+        // You can add more components later as needed
+    }
+
+
 }

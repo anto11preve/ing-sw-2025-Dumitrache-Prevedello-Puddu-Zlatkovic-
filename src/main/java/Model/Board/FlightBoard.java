@@ -4,6 +4,7 @@ import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Enums.CardLevel;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
+import Controller.Enums.MatchLevel;
 
 import java.util.*;
 
@@ -165,6 +166,19 @@ public class FlightBoard {
         return playerPositions.get(player);
     }
 
+    public FlightBoard(List<Player> players, CardDeck deck, MatchLevel level) {
+        this.cellNumber = (level == MatchLevel.TRIAL) ? 18 : 24;
+        this.timer = (level == MatchLevel.LEVEL2) ? new Timer() : null;
+        this.hiddenCardDeck = deck;
+        this.peekableCardDecks = (level == MatchLevel.LEVEL2) ? new ArrayList<>() : null;
+        this.upcomingCardDeck = null;
+        this.playerPositions = new HashMap<>();
+        for (Player p : players) {
+            playerPositions.put(p, 0);
+        }
+    }
+
+
     public void updatePosition(Player player, int position) {
         playerPositions.put(player, position);
     }
@@ -279,4 +293,6 @@ public class FlightBoard {
                 .map(Map.Entry::getKey)
                 .toArray(Player[]::new);
     }
+
+
 }

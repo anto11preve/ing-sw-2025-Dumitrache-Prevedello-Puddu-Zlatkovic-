@@ -37,6 +37,15 @@ public class ShipBoard {
     }
 
     /**
+     * Overloaded constructor to support variable size ships (for different levels).
+     */
+    public ShipBoard(int rows, int cols) {
+        this.components = new SpaceshipComponent[rows][cols];
+        this.activeComponent = null;
+        this.reservedComponents = new ArrayList<>();
+        this.condensedShip = new CondensedShip();
+    }
+    /**
      * Places a spaceship component on the board at the specified coordinates.
      * Ensures the placement is within board bounds, the position is unoccupied,
      * and the component is properly connected to existing components via compatible connectors.
@@ -56,18 +65,6 @@ public class ShipBoard {
         }else{
             throw new InvalidMethodParameters("Component not connected to existing components");
         }
-    }
-
-    /** Obsolete interface for adding components
-     * TODO: remove this and fix all errors that happen
-     *
-     * @param component
-     * @param x
-     * @param y
-     * @throws InvalidMethodParameters
-     */
-    public void addComponent(SpaceshipComponent component, int x, int y) throws InvalidMethodParameters {
-        this.addComponent(component, new Coordinates(x, y));
     }
 
     /**
@@ -307,16 +304,6 @@ public class ShipBoard {
         return components[y][x];
     }
 
-    /** Obsolete interface to get components
-     * TODO: remove this and fix errors
-     * @param x
-     * @param y
-     * @return
-     */
-    public SpaceshipComponent getComponent(int x, int y){
-        return this.getComponent(new Coordinates(x, y));
-    }
-
     /**
      * Searches for the specified component in the grid and returns its coordinates.
      * If not found, returns (-1, -1).
@@ -375,7 +362,7 @@ public class ShipBoard {
         return firepower;
     }
 
-    /*
+    /**
      * Calculates total thrust considering engine orientation.
      */
     /**
@@ -401,7 +388,7 @@ public class ShipBoard {
     }
 
 
-    /*
+    /**
      * Checks if a component at a given position is protected by an active shield facing a direction.
      * Accepts incoming side (FRONT, REAR, LEFT, RIGHT) and converts it to Direction internally.
      */
@@ -437,7 +424,9 @@ public class ShipBoard {
         }
         return false;
     }
-
+    /**
+     * Applies damage to a given position if it is not protected by a shield.
+     */
     /**
      * Applies damage to the component at the given position.
      * If the component is not protected by a shield in the incoming direction, it is removed (set to null).
@@ -644,52 +633,91 @@ public class ShipBoard {
         return exposedConnectors;
     }
 
-    public void reserveComponent(SpaceshipComponent component) throws InvalidMethodParameters {
 
-        if (reservedComponents.size()<3) {
-            reservedComponents.add(component);
-        }
-        else {
-            throw new InvalidMethodParameters("There are already 2 reserved components");
-        }
+    /**
+     * Attempts to place a component on the board using full connection logic.
+     * Returns true if placement is valid and performed, false otherwise.
+     */
+    public boolean placeComponent(SpaceshipComponent component, Coordinates coordinates) {
+        int x = coordinates.getX() - 4;
+        int y = coordinates.getY() - 5;
+
+        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return false;
+        if (components[y][x] != null) return false;
+        if (!isConnectedToExistingComponents(component, y, x) && !isEmpty()) return false;
+
+        components[y][x] = component;
+        return true;
     }
 
-    public void removeReservedComponent(SpaceshipComponent component) {
-        reservedComponents.remove(component);
-    }
+    /**
+     * Returns the component at the given coordinates, or null if empty/out of bounds.
+     */
+    public SpaceshipComponent getComponentAt(Coordinates coordinates) {
+        int x = coordinates.getX() - 4;
+        int y = coordinates.getY() - 5;
 
-    public List<SpaceshipComponent> getReservedComponents() {
-        return reservedComponents;
+        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return null;
+        return components[y][x];
     }
 
     public CondensedShip getCondensedShip() {
         return condensedShip;
     }
 
-//    public boolean hasEngineAlien() {
-//        for (SpaceshipComponent[] row : components) {
-//            for (SpaceshipComponent comp : row) {
-//                if (comp instanceof Engine engine && engine.hasAlien()) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//
-//    /**
-//     * Checks if there is at least one Cannon with an alien onboard.
-//     *
-//     * @return true if any Cannon has an alien.
-//     */
-//    public boolean hasCannonAlien() {
-//        for (SpaceshipComponent[] row : components) {
-//            for (SpaceshipComponent comp : row) {
-//                if (comp instanceof Cannon cannon && cannon.hasAlien()) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
+    /**
+     * Adds a component to the reserved components list.
+     * Throws an exception if more than 2 are reserved.
+     * @param component the component to reserve
+     */
+    public void reserveComponent(SpaceshipComponent component) {
+        if (reservedComponents.size() >= 2) {
+            throw new IllegalStateException("You can only reserve up to 2 components.");
+        }
+        reservedComponents.add(component);
+    }
+
+    /**
+     * Returns a copy of the reserved components list.
+     * @return list of reserved components
+     */
+    public List<SpaceshipComponent> getReservedComponents() {
+        return new ArrayList<>(reservedComponents);
+    }
+
+    /**
+     * Removes a reserved component by index.
+     * @param index the index to remove
+     * @return the removed component
+     */
+    public SpaceshipComponent removeReservedComponent(int index) {
+        return reservedComponents.remove(index);
+    }
+
+    /**
+     * Removes all components that are no longer connected to the central part of the ship.
+     * Performs a DFS from the center and removes anything not visited.
+     */
+    public void purgeDisconnectedComponents() {
+        int centerRow = components.length / 2;
+        int centerCol = components[0].length / 2;
+
+        if (components[centerRow][centerCol] == null) return;
+
+        boolean[][] visited = new boolean[components.length][components[0].length];
+        dfs(centerRow, centerCol, visited);
+
+        for (int row = 0; row < components.length; row++) {
+            for (int col = 0; col < components[0].length; col++) {
+                if (components[row][col] != null && !visited[row][col]) {
+                    components[row][col] = null;
+                }
+            }
+        }
+    }
+
+
+
 }
+
+

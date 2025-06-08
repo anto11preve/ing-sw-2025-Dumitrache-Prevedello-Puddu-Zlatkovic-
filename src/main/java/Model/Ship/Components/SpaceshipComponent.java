@@ -5,7 +5,6 @@ import Model.Enums.ConnectorType;
 import Model.Enums.Direction;
 import Model.Enums.Side;
 import Model.Ship.ShipBoard;
-import javafx.scene.control.skin.TextInputControlSkin;
 
 /**
  * Abstract class representing a spaceship component.
@@ -17,11 +16,9 @@ public abstract class SpaceshipComponent {
     private ConnectorType rearConnector;
     private ConnectorType leftConnector;
     private ConnectorType rightConnector;
-    private Direction orientation; // UP = standard, RIGHT = 90°, DOWN = 180°, LEFT = 270°
+    protected Direction orientation; // UP = standard, RIGHT = 90°, DOWN = 180°, LEFT = 270°
     private ShipBoard shipBoard;
     private boolean isVisible;
-
-
 
     public SpaceshipComponent(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
         this.type = type;
@@ -34,11 +31,11 @@ public abstract class SpaceshipComponent {
         this.shipBoard = null;
     }
 
-    public void setVisible(){
+    public void setVisible() {
         this.isVisible = true;
     }
 
-    public boolean isVisible(){
+    public boolean isVisible() {
         return isVisible;
     }
 
@@ -58,13 +55,14 @@ public abstract class SpaceshipComponent {
         orientation = rotateClockwise(orientation);
     }
 
+    /**
+     * Rotates to match a specific target orientation (minimal steps).
+     */
     public void setOrientation(Direction orientation) {
-
         while (this.orientation != orientation) {
             rotate();
         }
     }
-
 
     private Direction rotateClockwise(Direction dir) {
         switch (dir) {
@@ -76,10 +74,12 @@ public abstract class SpaceshipComponent {
         }
     }
 
-
-//    public void setOrientation(Direction orientation) {
-//        this.orientation = orientation;
-//    }
+    /**
+     * Returns the current orientation of the component.
+     */
+    public Direction getOrientation() {
+        return orientation;
+    }
 
     /**
      * Returns the connector type at a given side considering current orientation.
@@ -133,9 +133,8 @@ public abstract class SpaceshipComponent {
         // to be implemented if needed
     }
 
-    /// TODO: implement this method
+    /* TODO: implement this method
     public Direction getOrientation() {
         return null;
-    }
+    }*/
 }
-

@@ -46,7 +46,6 @@ public class Cannon extends SpaceshipComponent {
         this.activated = !isDouble; // single cannons default to active
     }
 
-
 //    public void setOrientation(Direction dir) {
 //        this.orientation = dir;
 //    }
@@ -137,4 +136,3 @@ public class Cannon extends SpaceshipComponent {
         this.hasAlien = hasAlien;
     }
 }
-

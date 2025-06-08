@@ -3,17 +3,43 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Good;
+import com.google.gson.JsonObject;
 
+/**
+ * Represents a CargoHold component used to store goods in the ship.
+ * Special cargo holds can contain red (dangerous) goods, while standard holds cannot.
+ */
 public class CargoHold extends SpaceshipComponent {
-    private final int capacity;
-    private Good[] goods;
-    private boolean isSpecial;
+    private final int capacity;        // Number of slots available in the hold
+    private Good[] goods;              // Goods currently stored in the cargo hold
+    private boolean isSpecial;         // True if this cargo hold can carry red goods
 
+    /**
+     * Constructor using explicit parameters.
+     */
     public CargoHold(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, int capacity, boolean isSpecial) {
         super(Type, front, rear, left, right);
         this.capacity = capacity;
         this.goods = new Good[capacity];
         this.isSpecial = isSpecial;
+    }
+
+    /**
+     * Constructor that initializes a CargoHold from a JSON object.
+     * Used by the ComponentFactory to dynamically load components from configuration.
+     */
+    public CargoHold(JsonObject json) {
+        super(
+                Card.valueOf(json.get("type").getAsString()),
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+        );
+
+        this.capacity = json.has("cargoCapacity") ? json.get("cargoCapacity").getAsInt() : 2; // Default to 2 if unspecified
+        this.goods = new Good[capacity];
+        this.isSpecial = json.has("isSpecial") && json.get("isSpecial").getAsBoolean();
     }
 
     public int getCapacity() {

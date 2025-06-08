@@ -1,103 +1,139 @@
 package Model;
 
-import Controller.Exceptions.InvalidCommand;
-import Controller.Exceptions.InvalidParameters;
-import Model.Board.FlightBoard;
-import Model.Exceptions.InvalidMethodParameters;
-import Model.Ship.Components.SpaceshipComponent;
 import Controller.Enums.MatchLevel;
+import Model.Board.AdventureCards.AdventureCardFilip;
+import Model.Board.FlightBoard;
+import Model.Ship.Components.SpaceshipComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
+/**
+ * Represents the main Game class, managing players, the flight board, the component pool,
+ * and overall match state.
+ * This class unifies responsibilities previously split across Game and GameBuilder.
+ */
 public class Game {
-    private final List<Player> players;
-    private final SpaceshipComponent[] Tiles;
-    //private List<SpaceshipComponent> hiddenComponents;
-    //private List<SpaceshipComponent> visibleComponents;
-    private FlightBoard flightBoard;
 
-    public Game(MatchLevel matchLevel) {
-        this.players = new ArrayList<>();
-        this.Tiles = new SpaceshipComponent[156];
-        //this.hiddenComponents = new ArrayList<>();
-        //this.visibleComponents = new ArrayList<>();
-        if(matchLevel==MatchLevel.TRIAL){
-            this.flightBoard = new FlightBoard();
-        } else if (matchLevel==MatchLevel.LEVEL2) {
-            this.flightBoard = new FlightBoard();
-        }
+    private final List<Player> players; // All players in the current game
+    private final FlightBoard flightBoard; // The central game board (flight phase)
+    private final List<SpaceshipComponent> componentsPool; // Pool of tiles to use during the building phase
+
+    /**
+     * Constructor to initialize the game with all required elements.
+     *
+     * @param players list of players
+     * @param level match difficulty
+     * @param componentsPool list of spaceship components
+     * @param adventureCards the deck of adventure cards for the flight phase
+     */
+    public Game(List<Player> players, MatchLevel level,
+                List<SpaceshipComponent> componentsPool,
+                List<AdventureCardFilip> adventureCards) {
+        if (players == null || players.isEmpty())
+            throw new IllegalArgumentException("Player list must not be empty");
+        if (level == null)
+            throw new IllegalArgumentException("Match level must not be null");
+        if (componentsPool == null || componentsPool.isEmpty())
+            throw new IllegalArgumentException("Component pool must not be empty");
+
+        this.players = players;
+        this.componentsPool = componentsPool;
+        this.flightBoard = new FlightBoard(adventureCards);
     }
 
-    public Player getPlayer(String name){
-        for (Player p : players) {
-            if (p.getName().equals(name)) {
-                return p;
-            }
-        }
-
-        return null;
-    }
+    /**
+     * Adds a new player to the game.
+     *
+     * @param name the name of the new player
+     */
     public void addPlayer(String name) {
-        players.add(new Player(name));
+        this.players.add(new Player(name));
     }
 
+    /**
+     * Removes the player with the given name from the game.
+     *
+     * @param name the name of the player to remove
+     */
     public void removePlayer(String name) {
-        players.remove(getPlayer(name));
+        players.removeIf(p -> p.getName().equals(name));
     }
 
+    /**
+     * Retrieves a player by name.
+     *
+     * @param name the name of the player
+     * @return the Player object, or null if not found
+     */
+    public Player getPlayer(String name) {
+        return players.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Returns a copy of the list of players.
+     *
+     * @return the list of players
+     */
     public List<Player> getPlayers() {
-        return players;
+        return new ArrayList<>(players);
     }
 
+
+    /**
+     * Simulates rolling a dice (1 to 6).
+     *
+     * @return a number between 1 and 6
+     */
     public int rollDice() {
-        return new Random().nextInt(6) + 1;
+        return (int)(Math.random() * 6 + 1);
     }
 
-    public SpaceshipComponent pickComponent(int index) throws InvalidMethodParameters{
-        if (index < 0 || index >= Tiles.length) {
-            throw new InvalidMethodParameters("Invalid index");
-        }
-        SpaceshipComponent choosenComponent = Tiles[index];
-        Tiles[index]=null;
-        choosenComponent.setVisible();
-        return choosenComponent;
+    /**
+     * Picks a component from the pool by index and removes it.
+     *
+     * @param index the index of the component
+     * @return the component removed
+     */
+    public SpaceshipComponent pickComponent(int index) {
+        if (index < 0 || index >= componentsPool.size())
+            throw new IndexOutOfBoundsException("Invalid component index");
+        return componentsPool.remove(index);
     }
 
+    /**
+     * Adds a component back into the pool.
+     *
+     * @param component the component to add
+     */
     public void addComponent(SpaceshipComponent component) {
-        //visibleComponents.add(component);
-        if(component!=null){
-            int i=0;
-            while(Tiles[i]!=null){
-                i++;
-            }
-            Tiles[i]=component;
-        }
-
+        this.componentsPool.add(component);
     }
 
-
+    /**
+     * Returns a list of currently visible components.
+     *
+     * @return list of visible spaceship components
+     */
     public List<SpaceshipComponent> viewVisibleComponents() {
-        List<SpaceshipComponent>visibleComponentsList=new ArrayList<>();
-        for (SpaceshipComponent tile : Tiles) {
-            if (tile != null && tile.isVisible()) {
-                visibleComponentsList.add(tile);
-            }
+        List<SpaceshipComponent> visible = new ArrayList<>();
+        for (SpaceshipComponent c : componentsPool) {
+            if (c.isVisible()) visible.add(c);
         }
-        return visibleComponentsList;
-
+        return visible;
     }
 
-    public SpaceshipComponent[] getTiles(){
-        return Tiles;
-    }
-//
-//    public void pickVisibleComponent(SpaceshipComponent component) {
-//        visibleComponents.remove(component);
-//    }
-
-    public FlightBoard getFlightBoard() {
-        return flightBoard;
+    /**
+     * Returns the flight board of the game.
+     *
+     * @return the FlightBoard instance
+     */
+    public FlightBoard getFlightboard() {
+        return this.flightBoard;
     }
 }
+
+
