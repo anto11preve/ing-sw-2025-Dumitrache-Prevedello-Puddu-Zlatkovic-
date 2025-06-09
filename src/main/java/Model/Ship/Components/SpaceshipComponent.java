@@ -125,6 +125,36 @@ public abstract class SpaceshipComponent {
         // to be implemented if needed
     }
 
+    /**
+     * Default firepower of a component is 0.
+     * Override this method in subclasses like Cannon.
+     */
+    public int getFirepower(Direction direction) {
+        return 0;
+    }
+
+    /**
+     * Default implementation: components that are not engines do not produce thrust.
+     *
+     * @param shipRear the direction that represents the rear of the ship
+     * @return the amount of thrust produced (0 by default)
+     */
+    public int getThrust(Direction shipRear) {
+        return 0;
+    }
+
+    /**
+     * Default behavior: components do not block incoming fire.
+     *
+     * @param incoming the direction of incoming fire
+     * @return true if this component blocks it (false by default)
+     */
+    public boolean blocks(Direction incoming) {
+        return false;
+    }
+
+
+
     public void removed() {
         // to be implemented if needed
     }
