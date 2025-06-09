@@ -133,8 +133,8 @@ public abstract class SpaceshipComponent {
         // to be implemented if needed
     }
 
-    /// TODO: implement this method
+    /* TODO: implement this method
     public Direction getOrientation() {
         return null;
-    }
+    }*/
 }

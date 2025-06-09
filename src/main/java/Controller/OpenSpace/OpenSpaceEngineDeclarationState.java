@@ -47,25 +47,32 @@ public class OpenSpaceEngineDeclarationState extends State {
      */
     @Override
     public void declaresDouble(String playerName, DoubleType doubleType, int amount){
+        Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid double type, only ENGINES are allowed");
         }
 
         if(amount < 0){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid amount of double, only non negative integers are allowed");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to throw the dice.");
+        }
 
         //TODO: Se il giocatore ha potenza motrice base 0, lascia la partita
 
-        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount || player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines() < amount)
+        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount || player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines() < amount) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not enough batteries or double engines to declare.");
+        }
 
-        controller.setState(new OpenSpaceBatteryRemovalState(context, amount));
+        controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount));
+        controller.getModel().setError(false);
     }
 
 

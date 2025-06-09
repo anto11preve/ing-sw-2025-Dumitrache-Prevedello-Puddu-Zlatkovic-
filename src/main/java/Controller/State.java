@@ -67,17 +67,17 @@ public abstract class State {
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: leaveRace");
     }
-    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters {
+    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: getReward");
     }
     //
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: moveGoods");
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: useItem");
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters {
+    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: declaresDouble");
     }
     public void defend(String name) throws InvalidCommand, InvalidParameters {

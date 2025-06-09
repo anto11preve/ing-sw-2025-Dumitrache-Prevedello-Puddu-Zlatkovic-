@@ -362,9 +362,7 @@ public class ShipBoard {
         return firepower;
     }
 
-    /**
-     * Calculates total thrust considering engine orientation.
-     */
+
     /**
      * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
      * Only engines that face the specified rear direction contribute their engine power.
@@ -664,6 +662,59 @@ public class ShipBoard {
     public CondensedShip getCondensedShip() {
         return condensedShip;
     }
+
+    /**
+     * Adds a component to the reserved components list.
+     * Throws an exception if more than 2 are reserved.
+     * @param component the component to reserve
+     */
+    public void reserveComponent(SpaceshipComponent component) {
+        if (reservedComponents.size() >= 2) {
+            throw new IllegalStateException("You can only reserve up to 2 components.");
+        }
+        reservedComponents.add(component);
+    }
+
+    /**
+     * Returns a copy of the reserved components list.
+     * @return list of reserved components
+     */
+    public List<SpaceshipComponent> getReservedComponents() {
+        return new ArrayList<>(reservedComponents);
+    }
+
+    /**
+     * Removes a reserved component by index.
+     *
+     * @param index the index to remove
+     */
+    public void removeReservedComponent(int index) {
+        reservedComponents.remove(index);
+    }
+
+    /**
+     * Removes all components that are no longer connected to the central part of the ship.
+     * Performs a DFS from the center and removes anything not visited.
+     */
+    public void purgeDisconnectedComponents() {
+        int centerRow = components.length / 2;
+        int centerCol = components[0].length / 2;
+
+        if (components[centerRow][centerCol] == null) return;
+
+        boolean[][] visited = new boolean[components.length][components[0].length];
+        dfs(centerRow, centerCol, visited);
+
+        for (int row = 0; row < components.length; row++) {
+            for (int col = 0; col < components[0].length; col++) {
+                if (components[row][col] != null && !visited[row][col]) {
+                    components[row][col] = null;
+                }
+            }
+        }
+    }
+
+
 
 }
 

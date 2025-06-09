@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
 import Controller.State;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
@@ -40,27 +41,31 @@ public class SlaversRewardsState extends State{
      * @param rewardType  the type of reward to be claimed (must be {@code CREDITS})
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+        Controller controller = context.getController();
         if (rewardType != RewardType.CREDITS) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid reward type, expected CREDITS");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }
 
         player.deltaCredits(context.getCredits());
 
-        ///TODO: togli i giorni di volo
+        controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
 
         context.removePlayer(player);
 
         if(!context.getSpecialPlayers().isEmpty()){
-            controller.setState(new SlaversCrewRemovalState(context));
+            controller.getModel().setState(new SlaversCrewRemovalState(context));
+            controller.getModel().setError(false);
         } else {
-            controller.setState(new FlightPhase(controller));
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
         }
     }
 
@@ -75,15 +80,18 @@ public class SlaversRewardsState extends State{
     public void skipReward(String playerName) {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }
         context.removePlayer(player);
 
         if(!context.getSpecialPlayers().isEmpty()){
-            controller.setState(new SlaversCrewRemovalState(context));
+            controller.getModel().setState(new SlaversCrewRemovalState(context));
+            controller.getModel().setError(false);
         } else {
-            controller.setState(new FlightPhase(controller));
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
         }
     }
 }

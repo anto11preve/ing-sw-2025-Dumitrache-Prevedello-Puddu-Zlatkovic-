@@ -45,23 +45,30 @@ public class SecondSmugglersBatteryRemovalState extends State{
      */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+        Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
         if(coordinates == null){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid coordinates");
         }
         if(amount <= 0){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("Invalid amount, must be non negative");
         }
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn");
+        }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
+        if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not a valid battery compartment");
+        }
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -69,12 +76,15 @@ public class SecondSmugglersBatteryRemovalState extends State{
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
-                controller.setState(new FlightPhase(controller));
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
             } else {
-                controller.setState(new SmugglersGoodsRemovalState(context));
+                controller.getModel().setState(new SmugglersGoodsRemovalState(context));
+                controller.getModel().setError(false);
             }
         } else {
-            controller.setState(new SecondSmugglersBatteryRemovalState(context, amount));
+            controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+            controller.getModel().setError(false);
         }
     }
 }

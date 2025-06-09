@@ -2,6 +2,7 @@ package Controller.RealTimeBuilding;
 
 import Controller.Controller;
 import Controller.Enums.ComponentOrigin;
+import Controller.Enums.MatchLevel;
 import Controller.Exceptions.*;
 import Controller.State;
 import Model.Enums.Direction;
@@ -17,11 +18,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * State that manages the real-time ship building phase.
+ * During this phase, players simultaneously assemble their ships
+ * by drawing components from a common pool and placing them on their boards.
+ *
+ * The class coordinates:
+ * - Component drawing and placement
+ * - Timer management (hourglass)
+ * - Component reservation (for advanced levels)
+ * - Assembly completion
+ *
+ */
 public class BuildingState extends State {
 
-    Map<Integer, Player> finishedPlayers=new HashMap<>();
-    Map<Integer, List<Integer>> validCoordinates=new HashMap<>();
 
+    /** Map of players who have finished assembly with their starting position */
+    Map<Integer, Player> finishedPlayers = new HashMap<>();
+
+    /** Valid coordinates for component placement based on game level */
+    Map<Integer, List<Integer>> validCoordinates = new HashMap<>();
+
+    /**
+     * Constructor that initializes the building state.
+     * Sets up valid coordinates based on match level (Trial or Level 2).
+     *
+     * @param controller The game controller
+     * @throws IllegalArgumentException if the match level is invalid
+     */
     public BuildingState(Controller controller) {
         super(controller);
         MatchLevel matchLevel=controller.getMatchLevel();
@@ -47,12 +71,21 @@ public class BuildingState extends State {
 
     }
 
+    /**
+     * Allows a player to draw a component from the common pool.
+     * The component becomes the player's active component.
+     *
+     * @param name Player's name
+     * @param index Index of the component in the pool
+     * @throws InvalidCommand If the player has already finished or timer has expired
+     * @throws InvalidParameters If the index is invalid or player doesn't exist
+     */
     @Override
     public void getComponent(String name, int index) throws InvalidCommand, InvalidParameters {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -63,10 +96,13 @@ public class BuildingState extends State {
                 throw new InvalidCommand("Player already finished");
             }
             if (index < 0 || index >= this.getController().getModel().getTiles().length) {
+                //TODO: getTiles() non funziona più......
                 throw new InvalidParameters("Invalid index");
             }
 
             SpaceshipComponent selectedTile = this.getController().getModel().getTiles()[index];
+
+            //TODO: getTiles() non funziona più......
             if(selectedTile == null) {
                 throw new InvalidParameters("Component not found");
             }
@@ -78,6 +114,15 @@ public class BuildingState extends State {
 
     }
 
+    /**
+     * Allows a player to reserve their active component.
+     * Only available in advanced levels (not Trial).
+     *
+     * @param name Player's name
+     * @throws InvalidCommand If it's a Trial deck, player has finished,
+     *                       or has already reserved 2 components
+     * @throws InvalidParameters If the player doesn't exist
+     */
     @Override
     public void reserveComponent(String name) throws InvalidCommand, InvalidParameters {
         if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
@@ -85,7 +130,7 @@ public class BuildingState extends State {
         }
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -102,18 +147,28 @@ public class BuildingState extends State {
             try {
                 currentPlayer.getShipBoard().reserveComponent(selectedTile);
                 currentPlayer.getShipBoard().setActiveComponent(null);
-            } catch (InvalidMethodParameters e) {
+            } catch (IllegalStateException e) {
                 throw new InvalidCommand("Already reserved 2 tiles");
             }
         }
     }
-
+    /**
+     * Places a component on the player's board.
+     * The component can come from hand or reserved components.
+     *
+     * @param name Player's name
+     * @param origin Component origin (hand or reserved)
+     * @param coordinates Coordinates where to place the component
+     * @param orientation Component orientation
+     * @throws InvalidCommand If player has finished or has no component in the selected origin
+     * @throws InvalidParameters If coordinates are invalid or already occupied
+     */
     @Override
     public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         Game model= this.getController().getModel();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -129,8 +184,9 @@ public class BuildingState extends State {
             if(currentPlayer.getShipBoard().getComponent(coordinates)!=null){
                 throw new InvalidParameters("Coordinates already occupied");
             }
-            //if the component is not near a tile already placed it's not valid
 
+            //inside the switch case is also checked if the component is not connected to a tile already placed, since it's not valid
+            //it can be checked only after the component is selected, since the connectors and the orientation are not known before
 
 
 
@@ -165,7 +221,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
                         throw new InvalidParameters("Invalid position, must be connected to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(activeTile);
+                    currentPlayer.getShipBoard().removeReservedComponent(1);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -181,7 +237,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
                         throw new InvalidParameters("Invalid position, must be connected to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(activeTile);
+                    currentPlayer.getShipBoard().removeReservedComponent(2);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -205,6 +261,16 @@ public class BuildingState extends State {
 
         }
     }
+
+    /**
+     * Allows viewing one of the predictable adventure card decks.
+     * Only available in advanced levels.
+     *
+     * @param name Player's name
+     * @param index Index of the deck to view (1-3)
+     * @throws InvalidCommand If it's a Trial deck or player hasn't placed components yet
+     * @throws InvalidParameters If the index is invalid
+     */
     public void lookDeck(String name, int index) throws InvalidCommand, InvalidParameters {
 
         index-=1;
@@ -214,7 +280,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -238,12 +304,24 @@ public class BuildingState extends State {
 
 
             //manca l'implementazione
+            //TODO: implementare la visualizzazione delle carte
 
 
 
         }
 
     }
+
+    /**
+     * Flips the hourglass to proceed to the next phase.
+     * Only players who have finished can flip the last hourglass.
+     *
+     * @param name Player's name
+     * @throws InvalidCommand If it's a Trial deck, hourglass isn't finished,
+     *                       or player cannot flip it (e.g. hasn't finished,
+     *                       and want to flip the last hourglass)
+     * @throws InvalidParameters If the player doesn't exist
+     */
     public void flipHourGlass(String name) throws InvalidCommand, InvalidParameters {
 
         if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
@@ -253,7 +331,7 @@ public class BuildingState extends State {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()==Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -282,11 +360,22 @@ public class BuildingState extends State {
         }
 
     }
+
+    /**
+     * Finishes assembly for a player and places them on the starting grid.
+     * If there are components reserved not placed,
+     * they are converted into junk (penalty).
+     *
+     * @param name Player's name
+     * @param position Desired starting position (1-4)
+     * @throws InvalidCommand If player has already finished or ship is invalid (Trial)
+     * @throws InvalidParameters If position is already occupied
+     */
     public void finishBuilding(String name, int position) throws InvalidCommand, InvalidParameters {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
@@ -328,15 +417,31 @@ public class BuildingState extends State {
                 MatchLevel matchLevel=this.getController().getMatchLevel();
 
                 if (matchLevel == MatchLevel.TRIAL) {
-                    this.getController().setState(new PlaceAlienState(this.getController()));
-                    this.getController().setState(new FlightPhase(this.getController()));
+                    //if it's a trial game set at frist PlaceAlienState that will populate cabins autonomously
+                    // then, skip FixShipState, since in Trial mode you cannot finish building unless your ship is valid.
+                    this.getController().getModel().setState(new PlaceAlienState(this.getController()));
+                    this.getController().getModel().setState(new FlightPhase(this.getController()));
                 } else {
-                    this.getController().setState(new FixShipState(this.getController()));
+                    //if it's a level2 game, set FixShipState that will allow players to fix their ships
+                    FixShipState fixShipState= new FixShipState(this.getController());
+                    this.getController().getModel().setState(fixShipState);
+
+                    if(fixShipState.allPlayersHaveValidShips()){
+                        //if all players already have valid ships, set PlaceAlienState
+                        PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
+                        this.getController().getModel().setState(placeAlienState);
+
+                        if(placeAlienState.allPlayersHavePlacedAliens()){
+                            //if no players can place aliens, set FlightPhase
+                            this.getController().getModel().setState(new FlightPhase(this.getController()));
+                        }
+
+                    }
+
                 }
 
             }
-            //if it's a trial game set at frist PlaceAlienState that will populate cabins autonomously
-            // then, skip FixShipState, since you cannot finish building unless your ship is valid.
+
 
 
 

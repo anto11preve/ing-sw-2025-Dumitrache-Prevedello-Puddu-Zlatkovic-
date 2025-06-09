@@ -25,12 +25,14 @@ public class MeteorsState extends State {
 
     @Override
     public void throwDices(String playerName) throws InvalidMethodParameters {
+        Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("No projectiles available.");
         }
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new InvalidMethodParameters("It's not your turn to throw the dice.");
         }
         Random rand = new Random();
@@ -41,7 +43,8 @@ public class MeteorsState extends State {
         for(Player p : controller.getModel().getPlayers()){
             context.addSpecialPlayer(p);
         }
-        controller.setState(new ManageMeteorState(context, number));
+        controller.getModel().setState(new ManageMeteorState(context, number));
+        controller.getModel().setError(false);
 
     }
 }

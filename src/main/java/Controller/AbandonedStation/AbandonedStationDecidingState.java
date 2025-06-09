@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.State;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
@@ -43,18 +44,19 @@ public class AbandonedStationDecidingState extends State {
     public void skipReward(String playerName){
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer == controller.getModel().getFlightBoard().getTurnOrder()[0]){  //se è il suo turno
-            context.removePlayer(currentPlayer);
-            if(context.getPlayers().isEmpty()){         //se skippano tutti....
-                controller.setState(new FlightPhase(controller));
-            }
-            else{
-                controller.setState(new AbandonedStationDecidingState(context));
-            }
-
-        } else{
-            // Handle the case where it's not the player's turn
+        if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to skip the reward.");
+        }
+
+        context.removePlayer(currentPlayer);
+        if(context.getPlayers().isEmpty()){         //se skippano tutti....
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+        }
+        else{
+            controller.getModel().setState(new AbandonedStationDecidingState(context));
+            controller.getModel().setError(false);
         }
 
     }
@@ -73,22 +75,26 @@ public class AbandonedStationDecidingState extends State {
      * @param rewardType the type of reward selected; must be {@code GOODS} to be processed
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) {
-
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+        Controller controller = context.getController();
         if(rewardType != RewardType.GOODS){
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to skip the reward.");
         }
-        Controller controller = context.getController();
+
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to take the reward.");
+        }
+
         if(player.getShipBoard().getCondensedShip().getTotalCrew() >= context.getCrewmates()){
             player.deltaCredits(context.getCredits());
-
-            // TODO: Implement the logic to remove days from the player
-
-            controller.setState(new AbandonedStationLandState(context));
+            controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
+            controller.getModel().setState(new AbandonedStationLandState(context));
+            controller.getModel().setError(false);
         } else {
+            controller.getModel().setError(false);
             throw new InvalidContextualAction("The player doesn't have enough crew to take the reward"); //handle the situation where the player doesn't have enough crew)
         }
     }

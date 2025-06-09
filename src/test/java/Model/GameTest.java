@@ -1,8 +1,11 @@
 package Model;
 
-import Model.Board.FlightBoard;
-import Model.Ship.Components.SpaceshipComponent;
 import Controller.Enums.MatchLevel;
+import Model.Board.AdventureCards.AdventureCardFilip;
+import Model.Game;
+import Model.Player;
+import Model.Ship.Components.SpaceshipComponent;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,48 +13,113 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for the Game class, which holds the full state of a match.
- */
-public class GameTest {
+class GameTest {
 
-    @Test
-    public void testConstructorInitializesFieldsCorrectly() {
-        // Create sample players
-        Player p1 = new Player("Alice");
-        Player p2 = new Player("Bob");
-        List<Player> players = List.of(p1, p2);
+    private Game game;
+    private List<Player> players;
+    private List<SpaceshipComponent> componentPool;
+    private List<AdventureCardFilip> adventureCards;
 
-        // Create an empty flight board and component pool
-        FlightBoard board = new FlightBoard();
-        List<SpaceshipComponent> components = new ArrayList<>();
+    @BeforeEach
+    void setUp() {
+        players = new ArrayList<>();
+        players.add(new Player("Alice"));
+        players.add(new Player("Bob"));
 
-        // Set match difficulty
-        MatchLevel level = MatchLevel.TRIAL;
+        componentPool = new ArrayList<>();
+        SpaceshipComponent dummyComponent = new SpaceshipComponent() {
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+        };
 
-        // Create game instance
-        Game game = new Game(players, board, level, components);
+        for (int i = 0; i < 5; i++) {
+            componentPool.add(dummyComponent);
+        }
 
-        // Assertions to verify the integrity of game initialization
-        assertEquals(players, game.getPlayers(), "Players list should match input");
-        assertEquals(board, game.getFlightBoard(), "FlightBoard should be correctly assigned");
-        assertEquals(level, game.getLevel(), "MatchLevel should be TRIAL");
-        assertEquals(components, game.getComponentsPool(), "Components pool should match input list");
+        adventureCards = new ArrayList<>();
+
+        game = new Game(players, MatchLevel.TRIAL, componentPool, adventureCards);
     }
 
     @Test
-    public void testPlayersAreSharedReferences() {
-        // Setup
-        Player player = new Player("TestPlayer");
-        List<Player> players = List.of(player);
-        FlightBoard board = new FlightBoard();
-        List<SpaceshipComponent> components = new ArrayList<>();
-        Game game = new Game(players, board, MatchLevel.LEVEL2, components);
+    void testAddPlayer() {
+        game.addPlayer("Charlie");
+        assertNotNull(game.getPlayer("Charlie"));
+        assertEquals(3, game.getPlayers().size());
+    }
 
-        // Change player state externally
-        player.deltaCredits(5);
+    @Test
+    void testRemovePlayer() {
+        game.removePlayer("Bob");
+        assertNull(game.getPlayer("Bob"));
+        assertEquals(1, game.getPlayers().size());
+    }
 
-        // Then the reference in the game should reflect the change
-        assertEquals(5, game.getPlayers().get(0).getCredits(), "Player reference should reflect external state change");
+    @Test
+    void testGetPlayer() {
+        Player p = game.getPlayer("Alice");
+        assertNotNull(p);
+        assertEquals("Alice", p.getName());
+    }
+
+    @Test
+    void testGetPlayers() {
+        List<Player> list = game.getPlayers();
+        assertEquals(2, list.size());
+    }
+
+    @Test
+    void testRollDice() {
+        for (int i = 0; i < 100; i++) {
+            int roll = game.rollDice();
+            assertTrue(roll >= 1 && roll <= 6);
+        }
+    }
+
+    @Test
+    void testPickComponent() {
+        SpaceshipComponent picked = game.pickComponent(0);
+        assertNotNull(picked);
+        assertEquals(4, game.viewVisibleComponents().size());
+    }
+
+    @Test
+    void testPickComponentInvalidIndex() {
+        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(100));
+    }
+
+    @Test
+    void testAddComponent() {
+        SpaceshipComponent dummy = new SpaceshipComponent() {
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+        };
+        game.addComponent(dummy);
+        assertEquals(6, game.viewVisibleComponents().size());
+    }
+
+    @Test
+    void testViewVisibleComponents() {
+        List<SpaceshipComponent> visible = game.viewVisibleComponents();
+        assertEquals(5, visible.size());
+    }
+
+    @Test
+    void testGetFlightBoard() {
+        assertNotNull(game.getFlightboard());
+    }
+
+    @Test
+    void testConstructorWithInvalidArguments() {
+        assertThrows(IllegalArgumentException.class, () -> new Game(null, MatchLevel.TRIAL, componentPool, adventureCards));
+        assertThrows(IllegalArgumentException.class, () -> new Game(new ArrayList<>(), MatchLevel.TRIAL, componentPool, adventureCards));
+        assertThrows(IllegalArgumentException.class, () -> new Game(players, null, componentPool, adventureCards));
+        assertThrows(IllegalArgumentException.class, () -> new Game(players, MatchLevel.TRIAL, null, adventureCards));
+        assertThrows(IllegalArgumentException.class, () -> new Game(players, MatchLevel.TRIAL, new ArrayList<>(), adventureCards));
     }
 }
