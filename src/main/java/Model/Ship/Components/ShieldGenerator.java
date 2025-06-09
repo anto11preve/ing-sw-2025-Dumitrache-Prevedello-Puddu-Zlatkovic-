@@ -21,6 +21,12 @@ public class ShieldGenerator extends SpaceshipComponent {
         this.direction = direction;
     }
 
+    @Override
+    public boolean blocks(Direction incoming) {
+        return this.getDirection() == incoming;
+    }
+
+
     /**
      * Constructor to initialize a ShieldGenerator from a JSON object.
      * Used by ComponentFactory for dynamic component creation.

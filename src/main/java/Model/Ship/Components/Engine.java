@@ -83,6 +83,12 @@ public class Engine extends SpaceshipComponent {
         }
     }
 
+    @Override
+    public int getThrust(Direction shipRear) {
+        return isCorrectlyOriented(shipRear) ? getEnginePower() : 0;
+    }
+
+
     /**
      * Returns whether this engine has been activated (only matters for double engines).
      */

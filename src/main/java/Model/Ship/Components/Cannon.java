@@ -135,4 +135,10 @@ public class Cannon extends SpaceshipComponent {
     public void setAlien(boolean hasAlien) {
         this.hasAlien = hasAlien;
     }
+
+    @Override
+    public int getFirepower(Direction direction) {
+        return getEffectivePower(direction); // cannon-specific logic
+    }
+
 }

@@ -346,21 +346,23 @@ public class ShipBoard {
      * Calculates the total firepower of the ship.
      * Considers all cannon components and their orientation relative to the ship's forward direction.
      *
-     * @param shipForward the direction the ship is facing
+     *
      * @return the sum of effective power from all cannons
      */
+
     public int calculateFirepower(Direction shipForward) {
         int firepower = 0;
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 SpaceshipComponent component = components[row][col];
-                if (component instanceof Cannon cannon) {
-                    firepower += cannon.getEffectivePower(shipForward);
+                if (component != null) {
+                    firepower += component.getFirepower(shipForward);
                 }
             }
         }
         return firepower;
     }
+
 
     /**
      * Calculates total thrust considering engine orientation.
@@ -377,15 +379,14 @@ public class ShipBoard {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 SpaceshipComponent component = components[row][col];
-                if (component instanceof Engine engine) {
-                    if (engine.isCorrectlyOriented(shipRear)) {
-                        thrust += engine.getEnginePower();
-                    }
+                if (component != null) {
+                    thrust += component.getThrust(shipRear);
                 }
             }
         }
         return thrust;
     }
+
 
 
     /**
@@ -414,16 +415,14 @@ public class ShipBoard {
             int adjCol = col + offset[1];
             if (isValidPosition(adjRow, adjCol)) {
                 SpaceshipComponent neighbor = components[adjRow][adjCol];
-                if (neighbor instanceof ShieldGenerator shield) {
-                    Model.Enums.Direction shieldDir = shield.getDirection();
-                    if (shieldDir == incomingDirection) {
-                        return true;
-                    }
+                if (neighbor != null && neighbor.blocks(incomingDirection)) {
+                    return true;
                 }
             }
         }
         return false;
     }
+
     /**
      * Applies damage to a given position if it is not protected by a shield.
      */
