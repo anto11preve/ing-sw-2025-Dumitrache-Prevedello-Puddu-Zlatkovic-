@@ -102,7 +102,7 @@ public class FlightBoard {
      * @throws AssertionError if something is wrong with passed decks:
      *                        peekableCardDecks size is not 3, peekableCardDecks elements size is not 4...
      */
-    public FlightBoard(AdventureCardFilip[] hiddenCardDeck, List<CardDeck> peekableCardDecks) {
+    public FlightBoard(CardDeck hiddenCardDeck, List<CardDeck> peekableCardDecks) {
         this.cellNumber = 24;
         this.timer = new Timer();
 
@@ -112,7 +112,7 @@ public class FlightBoard {
         }
         this.peekableCardDecks = peekableCardDecks;
 
-        this.hiddenCardDeck = new CardDeck(hiddenCardDeck);
+        this.hiddenCardDeck = hiddenCardDeck;
         assert (4 == this.hiddenCardDeck.peekCards().size());
 
         this.upcomingCardDeck = null;
