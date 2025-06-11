@@ -2,6 +2,7 @@ package Model.Ship.Components;
 
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -61,15 +62,20 @@ public class BatteryCompartment extends SpaceshipComponent {
         }
     }
 
-    /*
-    public void added() {
-        // to do
+    public void added(ShipBoard shipBoard){
+        if(shipBoard.getCondensedShip().getBatteryCompartments().contains(this)){
+            throw new RuntimeException("Battery Compartment already added to the ship.");
+        } else {
+            shipBoard.getCondensedShip().addBatteryCompartment(this);
+        }
     }
-    public void removed() {
-        // to do
+
+    public void removed(ShipBoard shipBoard) {
+        if(!shipBoard.getCondensedShip().getBatteryCompartments().contains(this)){
+            throw new RuntimeException("Battery Compartment not found in the ship.");
+        } else {
+            shipBoard.getCondensedShip().removeBatteryCompartment(this);
+        }
+
     }
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }

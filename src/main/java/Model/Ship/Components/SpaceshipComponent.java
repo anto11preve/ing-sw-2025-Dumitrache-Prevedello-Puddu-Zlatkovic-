@@ -52,7 +52,12 @@ public abstract class SpaceshipComponent {
         leftConnector = rearConnector;
         rearConnector = rightConnector;
         rightConnector = temp;
-        orientation = rotateClockwise(orientation);
+        switch (orientation){
+            case UP: orientation = Direction.RIGHT; break;
+            case RIGHT: orientation = Direction.DOWN; break;
+            case DOWN: orientation = Direction.LEFT; break;
+            case LEFT: orientation = Direction.UP; break;
+        }
     }
 
     /**
@@ -61,16 +66,6 @@ public abstract class SpaceshipComponent {
     public void setOrientation(Direction orientation) {
         while (this.orientation != orientation) {
             rotate();
-        }
-    }
-
-    private Direction rotateClockwise(Direction dir) {
-        switch (dir) {
-            case UP: return Direction.RIGHT;
-            case RIGHT: return Direction.DOWN;
-            case DOWN: return Direction.LEFT;
-            case LEFT: return Direction.UP;
-            default: return dir;
         }
     }
 
@@ -85,9 +80,7 @@ public abstract class SpaceshipComponent {
      * Returns the connector type at a given side considering current orientation.
      */
     public ConnectorType getConnectorAt(Side side) {
-        // Map the logical side based on the current rotation
-        Side rotatedSide = getRotatedSide(side);
-        switch (rotatedSide) {
+        switch (side) {
             case FRONT: return frontConnector;
             case REAR: return rearConnector;
             case LEFT: return leftConnector;
@@ -95,28 +88,50 @@ public abstract class SpaceshipComponent {
             default: return null;
         }
     }
+//    private Direction rotateClockwise(Direction dir) {
+//        switch (dir) {
+//            case UP: return Direction.RIGHT;
+//            case RIGHT: return Direction.DOWN;
+//            case DOWN: return Direction.LEFT;
+//            case LEFT: return Direction.UP;
+//            default: return dir;
+//        }
 
-    private Side getRotatedSide(Side side) {
-        int rotations = orientation.ordinal() % 4;
-        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
-        int idx = -1;
-        for (int i = 0; i < order.length; i++) {
-            if (order[i] == side) {
-                idx = i;
-                break;
-            }
-        }
-        if (idx == -1) return side;
-        return order[(idx + rotations) % 4];
-    }
+//    }
 
-    public ShipBoard getShipBoard() {
-        return shipBoard;
-    }
+//    public ConnectorType getConnectorAt(Side side) {
+//        // Map the logical side based on the current rotation
+//        Side rotatedSide = getRotatedSide(side);
+//        switch (rotatedSide) {
+//            case FRONT: return frontConnector;
+//            case REAR: return rearConnector;
+//            case LEFT: return leftConnector;
+//            case RIGHT: return rightConnector;
+//            default: return null;
+//        }
+//    }
 
-    public void setShipBoard(ShipBoard ship) {
-        this.shipBoard = ship;
-    }
+//    private Side getRotatedSide(Side side) {
+//        int rotations = orientation.ordinal() % 4;
+//        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
+//        int idx = -1;
+//        for (int i = 0; i < order.length; i++) {
+//            if (order[i] == side) {
+//                idx = i;
+//                break;
+//            }
+//        }
+//        if (idx == -1) return side;
+//        return order[(idx + rotations) % 4];
+//    }
+//
+//    public ShipBoard getShipBoard() {
+//        return shipBoard;
+//    }
+//
+//    public void setShipBoard(ShipBoard ship) {
+//        this.shipBoard = ship;
+//    }
 
     /**
      * Hooks for lifecycle events: override in subclasses if needed.
@@ -133,8 +148,4 @@ public abstract class SpaceshipComponent {
         // to be implemented if needed
     }
 
-    /* TODO: implement this method
-    public Direction getOrientation() {
-        return null;
-    }*/
 }

@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.Enums.MatchLevel;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.FlightBoard;
@@ -32,9 +33,9 @@ public class Game {
      */
     public Game(List<Player> players, MatchLevel level,
                 List<SpaceshipComponent> componentsPool,
-                List<AdventureCardFilip> adventureCards) {
+                List<AdventureCardFilip> adventureCards) throws InvalidParameters {
         if (players == null || players.isEmpty())
-            throw new IllegalArgumentException("Player list must not be empty");
+            throw new InvalidParameters("Player list must not be empty");
         if (level == null)
             throw new IllegalArgumentException("Match level must not be null");
         if (componentsPool == null || componentsPool.isEmpty())
@@ -140,6 +141,7 @@ public class Game {
 
     public void setState(State phase) {
         this.state = phase;
+        phase.onEnter();
     }
 
     public State getState() {

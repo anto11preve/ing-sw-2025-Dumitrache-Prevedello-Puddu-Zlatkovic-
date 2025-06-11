@@ -3,6 +3,7 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.AlienColor;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -43,15 +44,20 @@ public class AlienLifeSupport extends SpaceshipComponent {
         return color;
     }
 
-    /*
-    public void added() {
-        // to do
+    public void added(ShipBoard shipBoard){
+        if(shipBoard.getCondensedShip().getAlienSupports().contains(this)){
+            throw new RuntimeException("Alien Support already added to the ship.");
+        } else {
+            shipBoard.getCondensedShip().addAlienSupport(this);
+        }
     }
-    public void removed() {
-        // to do
+
+    public void removed(ShipBoard shipBoard) {
+        if(!shipBoard.getCondensedShip().getAlienSupports().contains(this)){
+            throw new RuntimeException("Alien Support not found in the ship.");
+        } else {
+            shipBoard.getCondensedShip().removeAlienSupport(this);
+        }
+
     }
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }

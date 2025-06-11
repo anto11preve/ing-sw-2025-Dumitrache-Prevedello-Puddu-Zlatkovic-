@@ -41,6 +41,8 @@ public class FlightBoard {
 
     private final Map<Player, Integer> playerPositions;
 
+    private List<Player> ffPlayers;
+
     /**
      * FlightBoard default constructor stub.
      *
@@ -85,6 +87,7 @@ public class FlightBoard {
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
+        this.ffPlayers = new ArrayList<>();
     }
 
     public FlightBoard(AdventureCardFilip[] hiddenCardDeck, List<CardDeck> peekableCardDecks) {
@@ -102,6 +105,7 @@ public class FlightBoard {
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
+        this.ffPlayers = new ArrayList<>();
     }
 
     public final int getCellNumber() {
@@ -176,6 +180,7 @@ public class FlightBoard {
         for (Player p : players) {
             playerPositions.put(p, 0);
         }
+        this.ffPlayers = new ArrayList<>();
     }
 
 
@@ -292,6 +297,19 @@ public class FlightBoard {
                 .sorted(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .toArray(Player[]::new);
+    }
+
+    public void removePlayingPlayer(Player player) {
+        if (playerPositions.containsKey(player)) {
+            playerPositions.remove(player);
+            ffPlayers.add(player);
+        } else {
+            throw new IllegalArgumentException("Player not found in flight board");
+        }
+    }
+
+    public List<Player> getFinishedFlightPlayers() {
+        return ffPlayers;
     }
 
 
