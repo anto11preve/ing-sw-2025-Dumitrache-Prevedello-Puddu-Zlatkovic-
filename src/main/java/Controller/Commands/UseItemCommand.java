@@ -3,6 +3,7 @@ package Controller.Commands;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
@@ -42,7 +43,7 @@ public class UseItemCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters{
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         controller.useItem(getPlayerName(), itemType, coordinates);
     }
     

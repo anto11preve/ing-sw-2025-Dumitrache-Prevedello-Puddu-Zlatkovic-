@@ -138,7 +138,7 @@ public class PiratesBatteryRemovalState extends State{
      * @param rewardType  the type of reward being claimed (must be {@code RewardType.CREDITS})
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType){
+    public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
             controller.getModel().setError(true);

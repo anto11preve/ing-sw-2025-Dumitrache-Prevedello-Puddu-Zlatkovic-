@@ -11,20 +11,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CondensedShip {
-    private List<Cabin> cabins;
-    private List<BatteryCompartment> batteryCompartments;
-    private List<CargoHold> cargoHolds;
-    private List<Cannon> cannons;
-    private List<AlienLifeSupport> alienSupports;
-    private EnginesCounter engines;
-    private AlienCounter aliens;
-    private ShieldCounter shields;
+    private final List<Cabin> cabins;
+    private final List<BatteryCompartment> batteryCompartments;
+    private final List<CargoHold> cargoHolds;
+    private final List<Cannon> cannons;
+    private final List<AlienLifeSupport> alienSupports;
+    private final EnginesCounter engines;
+    private final AlienCounter aliens;
+    private final ShieldCounter shields;
 
     public CondensedShip() {
         this.cabins = new ArrayList<>();
         this.batteryCompartments = new ArrayList<>();
         this.cargoHolds = new ArrayList<>();
         this.cannons = new ArrayList<>();
+        this.alienSupports = new ArrayList<>();
         this.engines = new EnginesCounter();
         this.aliens = new AlienCounter();
         this.shields = new ShieldCounter();

@@ -94,7 +94,7 @@ public class SmugglersLandState extends State{
      * @param newIndex the target index in the destination cargo hold
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
@@ -135,7 +135,7 @@ public class SmugglersLandState extends State{
      * @param playerName the name of the player finishing the reward phase
      */
     @Override
-    public void end(String playerName){
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {

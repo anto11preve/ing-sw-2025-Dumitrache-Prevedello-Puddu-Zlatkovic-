@@ -132,7 +132,7 @@ public class AbandonedStationLandState extends State {
      * @param playerName the name of the player ending their action
      */
     @Override
-    public void end(String playerName){
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {

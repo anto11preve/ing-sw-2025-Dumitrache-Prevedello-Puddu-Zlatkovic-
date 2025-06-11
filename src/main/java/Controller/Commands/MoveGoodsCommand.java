@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Ship.Coordinates;
 
@@ -47,7 +48,7 @@ public class MoveGoodsCommand extends Command {
     public void execute(Controller controller) {
         try {
             controller.moveGood(getPlayerName(), oldCoordinates, newCoordinates, oldIndex, newIndex);
-        } catch (InvalidCommand | InvalidParameters e) {
+        } catch (InvalidCommand | InvalidParameters | InvalidContextualAction e) {
             System.err.println("Failed to move goods: " + e.getMessage());
         }
     }

@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 
 /**
@@ -29,7 +30,7 @@ public class PickNextCardCommand extends Command {
     public void execute(Controller controller) {
         try {
             controller.pickNextCard(getPlayerName());
-        } catch (InvalidCommand | InvalidParameters e) {
+        } catch (InvalidCommand | InvalidParameters | InvalidContextualAction e) {
             System.err.println("Failed to pick next card: " + e.getMessage());
         }
     }

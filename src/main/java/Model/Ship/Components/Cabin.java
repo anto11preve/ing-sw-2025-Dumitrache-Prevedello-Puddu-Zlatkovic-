@@ -68,19 +68,21 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
-    public void added(ShipBoard shipBoard) {
-        if(shipBoard.getCondensedShip().getCabins().contains(this)){
+    @Override
+    public void added() {
+        if(getShipBoard().getCondensedShip().getCabins().contains(this)){
             throw new RuntimeException("Cabin already added to the ship.");
         } else {
-            shipBoard.getCondensedShip().addCabin(this);
+            getShipBoard().getCondensedShip().addCabin(this);
         }
     }
 
-    public void removed(ShipBoard shipBoard) {
-        if(!shipBoard.getCondensedShip().getCabins().contains(this)){
+    @Override
+    public void removed() {
+        if(!getShipBoard().getCondensedShip().getCabins().contains(this)){
             throw new RuntimeException("Cabin not found in the ship.");
         } else {
-            shipBoard.getCondensedShip().removeCabin(this);
+            getShipBoard().getCondensedShip().removeCabin(this);
         }
 
     }

@@ -44,19 +44,21 @@ public class AlienLifeSupport extends SpaceshipComponent {
         return color;
     }
 
-    public void added(ShipBoard shipBoard){
-        if(shipBoard.getCondensedShip().getAlienSupports().contains(this)){
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getAlienSupports().contains(this)){
             throw new RuntimeException("Alien Support already added to the ship.");
         } else {
-            shipBoard.getCondensedShip().addAlienSupport(this);
+            getShipBoard().getCondensedShip().addAlienSupport(this);
         }
     }
 
-    public void removed(ShipBoard shipBoard) {
-        if(!shipBoard.getCondensedShip().getAlienSupports().contains(this)){
+    @Override
+    public void removed() {
+        if(!getShipBoard().getCondensedShip().getAlienSupports().contains(this)){
             throw new RuntimeException("Alien Support not found in the ship.");
         } else {
-            shipBoard.getCondensedShip().removeAlienSupport(this);
+            getShipBoard().getCondensedShip().removeAlienSupport(this);
         }
 
     }

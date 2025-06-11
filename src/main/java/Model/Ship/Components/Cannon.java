@@ -137,19 +137,21 @@ public class Cannon extends SpaceshipComponent {
         this.hasAlien = hasAlien;
     }
 
-    public void added(ShipBoard shipBoard){
-        if(shipBoard.getCondensedShip().getCannons().contains(this)){
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getCannons().contains(this)){
             throw new RuntimeException("Cannon already added to the ship.");
         } else {
-            shipBoard.getCondensedShip().addCannon(this);
+            getShipBoard().getCondensedShip().addCannon(this);
         }
     }
 
-    public void removed(ShipBoard shipBoard) {
-        if(!shipBoard.getCondensedShip().getCannons().contains(this)){
+    @Override
+    public void removed() {
+        if(!getShipBoard().getCondensedShip().getCannons().contains(this)){
             throw new RuntimeException("Cannon not found in the ship.");
         } else {
-            shipBoard.getCondensedShip().removeCannon(this);
+            getShipBoard().getCondensedShip().removeCannon(this);
         }
 
     }

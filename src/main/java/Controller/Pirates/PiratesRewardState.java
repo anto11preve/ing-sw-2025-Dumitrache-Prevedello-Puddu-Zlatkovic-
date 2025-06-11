@@ -79,7 +79,7 @@ public class PiratesRewardState extends State {
      * @param playerName the name of the player skipping the reward
      */
     @Override
-    public void skipReward(String playerName) {
+    public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {

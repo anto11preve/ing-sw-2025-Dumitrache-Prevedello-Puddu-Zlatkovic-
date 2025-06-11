@@ -4,6 +4,7 @@ import Controller.AbandonedShip.AbandonedShipDecidingState;
 import Controller.AbandonedStation.AbandonedStationDecidingState;
 import Controller.CombatZone.Level_ONE.CombatZone1EngineDeclarationState;
 import Controller.CombatZone.Level_TWO.CombatZone2EngineDeclarationState;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.MeteorsSwarm.MeteorsState;
 import Controller.OpenSpace.OpenSpaceEngineDeclarationState;
@@ -55,7 +56,7 @@ public class CardResolverVisitor {
         controller.getModel().setState(new ChoosePlanetState(context));
     }
 
-    public void visit(CombatZone card, Controller controller) throws InvalidMethodParameters {
+    public void visit(CombatZone card, Controller controller) throws InvalidMethodParameters, InvalidParameters {
         /*
         1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
         2. si calcola il giocatore con meno potenza motrice e si perdono delle merci

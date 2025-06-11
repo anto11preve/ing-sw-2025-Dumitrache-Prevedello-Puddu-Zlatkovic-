@@ -96,19 +96,21 @@ public class CargoHold extends SpaceshipComponent {
         }
     }
 
-    public void added(ShipBoard shipBoard){
-        if(shipBoard.getCondensedShip().getCargoHolds().contains(this)){
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getCargoHolds().contains(this)){
             throw new RuntimeException("Cargo Hold already added to the ship.");
         } else {
-            shipBoard.getCondensedShip().addCargoHold(this);
+            getShipBoard().getCondensedShip().addCargoHold(this);
         }
     }
 
-    public void removed(ShipBoard shipBoard) {
-        if(!shipBoard.getCondensedShip().getCargoHolds().contains(this)){
+    @Override
+    public void removed() {
+        if(!getShipBoard().getCondensedShip().getCargoHolds().contains(this)){
             throw new RuntimeException("Cargo Hold not found in the ship.");
         } else {
-            shipBoard.getCondensedShip().removeCargoHold(this);
+            getShipBoard().getCondensedShip().removeCargoHold(this);
         }
 
     }

@@ -115,7 +115,7 @@ public class ChoosePlanetState extends State {
      * @param playerName the name of the player skipping the choice
      */
     @Override
-    public void end(String playerName) {
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {

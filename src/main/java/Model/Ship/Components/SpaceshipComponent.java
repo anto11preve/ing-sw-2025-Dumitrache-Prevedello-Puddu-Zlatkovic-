@@ -124,23 +124,23 @@ public abstract class SpaceshipComponent {
 //        if (idx == -1) return side;
 //        return order[(idx + rotations) % 4];
 //    }
-//
-//    public ShipBoard getShipBoard() {
-//        return shipBoard;
-//    }
-//
-//    public void setShipBoard(ShipBoard ship) {
-//        this.shipBoard = ship;
-//    }
+
+    public ShipBoard getShipBoard() {
+        return shipBoard;
+    }
+
+    public void setShipBoard(ShipBoard ship) {
+        this.shipBoard = ship;
+    }
 
     /**
      * Hooks for lifecycle events: override in subclasses if needed.
      */
-    public void added() {
+    public void added() throws RuntimeException {
         // to be implemented if needed
     }
 
-    public void removed() {
+    public void removed() throws RuntimeException {
         // to be implemented if needed
     }
 

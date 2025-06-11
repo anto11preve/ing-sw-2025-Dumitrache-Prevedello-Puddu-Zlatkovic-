@@ -27,7 +27,7 @@ public class CombatZone1ManageShotState extends State {
     }
 
     @Override
-    public void end(String playerName) throws InvalidMethodParameters {
+    public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {

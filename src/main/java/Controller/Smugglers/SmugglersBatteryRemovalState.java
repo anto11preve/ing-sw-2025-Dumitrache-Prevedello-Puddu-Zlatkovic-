@@ -134,7 +134,7 @@ public class SmugglersBatteryRemovalState extends State{
      * @param rewardType must be {@link RewardType#CREDITS}
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType){
+    public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
             controller.getModel().setError(true);

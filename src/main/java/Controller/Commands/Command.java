@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
@@ -25,6 +26,6 @@ public abstract class Command {
     public void setGameID(int gameID) {
         GameID = gameID;
     }
-    public abstract void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters;
+    public abstract void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction;
 
 }
