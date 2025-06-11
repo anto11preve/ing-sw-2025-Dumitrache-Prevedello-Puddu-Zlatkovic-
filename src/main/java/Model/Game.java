@@ -19,6 +19,7 @@ public class Game {
     private final List<Player> players; // All players in the current game
     private final FlightBoard flightBoard; // The central game board (flight phase)
     private final List<SpaceshipComponent> componentsPool; // Pool of tiles to use during the building phase
+    private final MatchLevel level; // Match difficulty level
     private State state;
     private boolean error = false;
 
@@ -39,10 +40,13 @@ public class Game {
             throw new IllegalArgumentException("Match level must not be null");
         if (componentsPool == null || componentsPool.isEmpty())
             throw new IllegalArgumentException("Component pool must not be empty");
+        if (componentsPool.size() != 156)
+            throw new IllegalArgumentException("There must be exactly 156 spaceship components.");
 
         this.players = players;
+        this.level = level;
         this.componentsPool = componentsPool;
-        this.flightBoard = new FlightBoard(adventureCards);
+        this.flightBoard = new FlightBoard(adventureCards.toArray(new AdventureCardFilip[0]));
     }
 
     /**
@@ -85,7 +89,6 @@ public class Game {
         return new ArrayList<>(players);
     }
 
-
     /**
      * Simulates rolling a dice (1 to 6).
      *
@@ -113,6 +116,8 @@ public class Game {
      * @param component the component to add
      */
     public void addComponent(SpaceshipComponent component) {
+        if (component == null)
+            throw new IllegalArgumentException("Component cannot be null");
         this.componentsPool.add(component);
     }
 
@@ -138,6 +143,15 @@ public class Game {
         return this.flightBoard;
     }
 
+    /**
+     * Returns the match difficulty level.
+     *
+     * @return match level
+     */
+    public MatchLevel getLevel() {
+        return this.level;
+    }
+
     public void setState(State phase) {
         this.state = phase;
     }
@@ -154,5 +168,4 @@ public class Game {
         this.error = error;
     }
 }
-
 
