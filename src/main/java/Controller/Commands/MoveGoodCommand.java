@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Ship.Coordinates;
 
@@ -9,7 +10,7 @@ import Model.Ship.Coordinates;
  * Command for moving goods between cargo holds.
  * Used during cargo management phases.
  */
-public class MoveGoodsCommand extends Command {
+public class MoveGoodCommand extends Command {
     /** The coordinates of the source cargo hold */
     private final Coordinates oldCoordinates;
     /** The coordinates of the destination cargo hold */
@@ -29,7 +30,7 @@ public class MoveGoodsCommand extends Command {
      * @param oldIndex the source index
      * @param newIndex the destination index
      */
-    public MoveGoodsCommand(String playerName, int gameID, Coordinates oldCoordinates, 
+    public MoveGoodCommand(String playerName, int gameID, Coordinates oldCoordinates,
                            Coordinates newCoordinates, int oldIndex, int newIndex) {
         super(playerName, gameID);
         this.oldCoordinates = oldCoordinates;
@@ -44,7 +45,7 @@ public class MoveGoodsCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) throws InvalidCommand, InvalidParameters{
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         controller.moveGood(getPlayerName(), oldCoordinates, newCoordinates, oldIndex, newIndex);
     }
     

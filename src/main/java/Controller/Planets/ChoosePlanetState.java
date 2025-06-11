@@ -3,6 +3,7 @@ package Controller.Planets;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Player;
@@ -62,18 +63,18 @@ public class ChoosePlanetState extends State {
      * @param name       the name of the chosen planet
      */
     @Override
-    public void choosePlanet(String playerName, String name) {
+    public void choosePlanet(String playerName, String name) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to choose a planet");
+            throw new InvalidParameters("It's not your turn to choose a planet");
         }
 
         Planet chosenPlanet = context.getPlanet(name);
         if(chosenPlanet == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("Planet not found");
+            throw new InvalidParameters("Planet not found");
         }
 
         if(chosenPlanet.isOccupied()) {
@@ -119,7 +120,7 @@ public class ChoosePlanetState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         context.removePlayer(player);

@@ -3,6 +3,7 @@ package Controller.Smugglers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Good;
 import Model.Player;
 import Model.Ship.Components.CargoHold;
@@ -72,22 +73,22 @@ public class SmugglersGoodsRemovalState extends State{
      * @param newIndex unused in this context
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         if(oldCoordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid coordinates");
+            throw new InvalidParameters("Invalid coordinates");
         }
 
         if(oldIndex < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid index");
+            throw new InvalidParameters("Invalid index");
         }
 
         GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(amount);
@@ -118,7 +119,7 @@ public class SmugglersGoodsRemovalState extends State{
         Good selectedGood = cargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The selected good is not found");
+            throw new InvalidParameters("The selected good is not found");
         }
         boolean done = goodCounter.removeGood(selectedGood);
         if(!done) {

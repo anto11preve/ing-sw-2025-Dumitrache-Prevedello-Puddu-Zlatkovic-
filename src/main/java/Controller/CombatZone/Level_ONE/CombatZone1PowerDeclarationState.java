@@ -23,7 +23,7 @@ public class CombatZone1PowerDeclarationState extends State {
     }
 
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidMethodParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidMethodParameters, InvalidContextualAction {
 
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {

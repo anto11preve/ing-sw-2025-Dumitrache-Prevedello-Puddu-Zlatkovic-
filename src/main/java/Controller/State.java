@@ -22,6 +22,8 @@ public abstract class State {
 
     public State(){};
 
+    public void onEnter() {}
+
     public void login(String name) throws InvalidCommand, InvalidParameters{
         throw new InvalidCommand("Invalid command: login");
     }
@@ -57,7 +59,7 @@ public abstract class State {
 
 
     // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters {
+    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: pickNextCard");
     }
 
@@ -67,37 +69,33 @@ public abstract class State {
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: leaveRace");
     }
-    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: getReward");
     }
     //
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: moveGoods");
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: useItem");
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: declaresDouble");
-    }
-    public void defend(String name) throws InvalidCommand, InvalidParameters {
-        throw new InvalidCommand("Invalid command: defend");
     }
     //ho finito di fare qualunque cosa stia facendo
     public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: end");
     }
-
-    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
+    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: choosePlanet");
     }
     public void skipReward(String name) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: skipReward");
     }
-    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
+    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: getGood");
     }
-    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: throwDices");
     }
 

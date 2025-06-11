@@ -23,7 +23,7 @@ public class CombatZone1EngineDeclarationState extends State {
     }
 
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount){
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);

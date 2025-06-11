@@ -3,6 +3,7 @@ package Controller.AbandonedShip;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -45,12 +46,12 @@ public class AbandonedShipDecidingState extends State {
      * @param playerName the name of the player choosing to skip the reward.
      */
     @Override
-    public void skipReward(String playerName){
+    public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to skip the reward.");
+            throw new InvalidParameters("It's not your turn to skip the reward.");
         }
 
         context.removePlayer(currentPlayer);
@@ -75,17 +76,17 @@ public class AbandonedShipDecidingState extends State {
      * @param rewardType the type of reward chosen (has to be credits).
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidParameters {
 
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid reward type. Only credits are accepted.");
+            throw new InvalidParameters("Invalid reward type. Only credits are accepted.");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to take the reward.");
+            throw new InvalidParameters("It's not your turn to take the reward.");
         }
 
         player.deltaCredits(context.getCredits());

@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Exceptions.InvalidMethodParameters;
@@ -17,23 +18,23 @@ public class CombatZone2PowerDeclarationState extends State {
     }
 
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidMethodParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
 
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
+            throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Negative amount");
+            throw new InvalidParameters("Negative amount");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +

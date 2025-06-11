@@ -3,6 +3,7 @@ package Controller.Slavers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -41,17 +42,17 @@ public class SlaversRewardsState extends State{
      * @param rewardType  the type of reward to be claimed (must be {@code CREDITS})
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         if (rewardType != RewardType.CREDITS) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid reward type, expected CREDITS");
+            throw new InvalidParameters("Invalid reward type, expected CREDITS");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         player.deltaCredits(context.getCredits());
@@ -77,12 +78,12 @@ public class SlaversRewardsState extends State{
      * @param playerName the name of the player skipping the reward
      */
     @Override
-    public void skipReward(String playerName) {
+    public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         context.removePlayer(player);
 

@@ -3,6 +3,7 @@ package Controller.CombatZone.Level_TWO;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.Smugglers.SmugglersGoodsRemovalState;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
@@ -35,12 +36,12 @@ public class CombatZone2GoodsRemovalState extends State {
 
 
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         if(oldCoordinates == null){
@@ -87,7 +88,7 @@ public class CombatZone2GoodsRemovalState extends State {
         Good selectedGood = cargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The selected good is not found");
+            throw new InvalidParameters("The selected good is not found");
         }
         boolean done = goodCounter.removeGood(selectedGood);
         if(!done) {

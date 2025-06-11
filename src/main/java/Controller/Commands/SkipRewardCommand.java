@@ -26,11 +26,7 @@ public class SkipRewardCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.skipReward(getPlayerName());
-        } catch (InvalidCommand | InvalidParameters e) {
-            System.err.println("Failed to skip reward: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters{
+        controller.skipReward(getPlayerName());
     }
 }

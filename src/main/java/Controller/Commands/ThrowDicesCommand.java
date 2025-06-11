@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
@@ -27,11 +28,7 @@ public class ThrowDicesCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.throwDices(getPlayerName());
-        } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters e) {
-            System.err.println("Failed to throw dices: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
+        controller.throwDices(getPlayerName());
     }
 }

@@ -36,12 +36,8 @@ public class DeclaresDoubleCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.declaresDouble(getPlayerName(), doubleType, amount);
-        } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters e) {
-            System.err.println("Failed to declare double: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters{
+        controller.declaresDouble(getPlayerName(), doubleType, amount);
     }
     
     /**

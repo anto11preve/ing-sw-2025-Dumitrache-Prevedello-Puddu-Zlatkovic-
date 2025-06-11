@@ -32,7 +32,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
     }
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);

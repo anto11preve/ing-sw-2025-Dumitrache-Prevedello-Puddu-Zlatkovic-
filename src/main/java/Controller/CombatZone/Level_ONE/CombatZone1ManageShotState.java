@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
@@ -36,7 +37,7 @@ public class CombatZone1ManageShotState extends State {
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The shot is null");
+            throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
 
@@ -105,7 +106,7 @@ public class CombatZone1ManageShotState extends State {
 
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (itemType != ItemType.BATTERIES) {
             controller.getModel().setError(true);
@@ -119,7 +120,7 @@ public class CombatZone1ManageShotState extends State {
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The shot is null");
+            throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
         if(shot.isBig()){

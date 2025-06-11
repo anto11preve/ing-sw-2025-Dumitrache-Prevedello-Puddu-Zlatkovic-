@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Penalties.RegularPenalty;
@@ -33,16 +34,16 @@ public class CombatZone2_P_BatteryRemovalState extends State {
     }
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){

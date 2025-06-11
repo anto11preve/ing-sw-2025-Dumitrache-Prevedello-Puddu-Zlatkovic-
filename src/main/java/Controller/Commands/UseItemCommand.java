@@ -42,12 +42,8 @@ public class UseItemCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.useItem(getPlayerName(), itemType, coordinates);
-        } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters e) {
-            System.err.println("Failed to use item: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters{
+        controller.useItem(getPlayerName(), itemType, coordinates);
     }
     
     /**

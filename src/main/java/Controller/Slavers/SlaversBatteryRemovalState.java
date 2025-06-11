@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -57,33 +58,33 @@ public class SlaversBatteryRemovalState extends State{
      * @param coordinates the coordinates of the component to activate
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Item type must be BATTERIES");
+            throw new InvalidParameters("Item type must be BATTERIES");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates are null");
+            throw new InvalidParameters("Coordinates are null");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Component is not a battery compartment");
+            throw new InvalidParameters("Component is not a battery compartment");
         }
 
         BatteryCompartment compartment = (BatteryCompartment) component;
@@ -135,17 +136,17 @@ public class SlaversBatteryRemovalState extends State{
      * @param rewardType the type of reward requested (must be {@code CREDITS})
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType){
+    public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Reward type must be CREDITS");
+            throw new InvalidParameters("Reward type must be CREDITS");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         if(actualPower > context.getPower() && declaredPower == 0){

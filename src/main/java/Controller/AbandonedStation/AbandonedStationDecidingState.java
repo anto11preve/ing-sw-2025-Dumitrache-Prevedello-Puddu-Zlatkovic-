@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -41,12 +42,12 @@ public class AbandonedStationDecidingState extends State {
      * @param playerName the name of the player who skips the reward
      */
     @Override
-    public void skipReward(String playerName){
+    public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to skip the reward.");
+            throw new InvalidParameters("It's not your turn to skip the reward.");
         }
 
         context.removePlayer(currentPlayer);
@@ -75,17 +76,17 @@ public class AbandonedStationDecidingState extends State {
      * @param rewardType the type of reward selected; must be {@code GOODS} to be processed
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.GOODS){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to skip the reward.");
+            throw new InvalidParameters("It's not your turn to skip the reward.");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to take the reward.");
+            throw new InvalidParameters("It's not your turn to take the reward.");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalCrew() >= context.getCrewmates()){

@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Enums.Direction;
 import Model.Player;
@@ -46,22 +47,22 @@ public class SlaversPowerDeclarationState extends State {
      * @param amount     the number of double cannons declared
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
+            throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid amount, must be non-negative");
+            throw new InvalidParameters("Invalid amount, must be non-negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to declare power");
+            throw new InvalidParameters("It's not your turn to declare power");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
@@ -84,7 +85,7 @@ public class SlaversPowerDeclarationState extends State {
         if(context.getPower() > (basePower + amount)){
             if(context.getSpecialPlayers().contains(player)){
                 controller.getModel().setError(true);
-                throw new IllegalArgumentException("Player already declared power");
+                throw new InvalidParameters("Player already declared power");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);

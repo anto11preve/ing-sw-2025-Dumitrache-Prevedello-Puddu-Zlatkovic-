@@ -3,6 +3,7 @@ package Controller.AbandonedStation;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Enums.Good;
 import Model.Player;
@@ -44,12 +45,12 @@ public class AbandonedStationLandState extends State {
      * @param CargoHoldIndex the index within the cargo hold where the good should be placed
      */
     @Override
-    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex){
+    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to remove crew members.");
+            throw new InvalidParameters("It's not your turn to remove crew members.");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
@@ -62,7 +63,7 @@ public class AbandonedStationLandState extends State {
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("Selected good is null.");
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
@@ -89,12 +90,12 @@ public class AbandonedStationLandState extends State {
      * @param newIndex     the index where the good should be placed in the target cargo hold
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to move the good.");
+            throw new InvalidParameters("It's not your turn to move the good.");
         }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
@@ -103,7 +104,7 @@ public class AbandonedStationLandState extends State {
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid cargo hold coordinates.");
+            throw new InvalidParameters("Invalid cargo hold coordinates.");
         }
 
         CargoHold oldCargoHold = (CargoHold) oldComponent;
@@ -111,7 +112,7 @@ public class AbandonedStationLandState extends State {
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("Selected good is null.");
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
@@ -136,7 +137,7 @@ public class AbandonedStationLandState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to pass.");
+            throw new InvalidParameters("It's not your turn to pass.");
         }
 
         controller.getModel().setState(new FlightPhase(controller));

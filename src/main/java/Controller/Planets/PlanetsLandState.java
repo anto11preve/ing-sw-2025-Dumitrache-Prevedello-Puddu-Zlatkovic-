@@ -3,6 +3,7 @@ package Controller.Planets;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Enums.Good;
 import Model.Player;
@@ -53,30 +54,30 @@ public class PlanetsLandState extends State {
      * @param CargoHoldIndex the index within the cargo hold where the good should be placed
      */
     @Override
-    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex){
+    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         if(context.getSpecialPlayers().getFirst() != player) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to collect goods");
+            throw new InvalidParameters("It's not your turn to collect goods");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {   //non è un CargoHold
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("The selected component is not a cargo hold");
+            throw new InvalidParameters("The selected component is not a cargo hold");
         }
 
         CargoHold cargoHold = (CargoHold) component;
         Planet planet = chosenPlanets.getFirst();
         if(planet == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The planet is nto found");
+            throw new InvalidParameters("The planet is nto found");
         }
         if(!planet.isOccupied()){
             controller.getModel().setError(true);
@@ -96,7 +97,7 @@ public class PlanetsLandState extends State {
 
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The selected good is not found");
+            throw new InvalidParameters("The selected good is not found");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
@@ -141,12 +142,12 @@ public class PlanetsLandState extends State {
      * @param newIndex       the index in the target cargo hold where the good should be placed
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
@@ -162,7 +163,7 @@ public class PlanetsLandState extends State {
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The selected good is not found");
+            throw new InvalidParameters("The selected good is not found");
         }
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {

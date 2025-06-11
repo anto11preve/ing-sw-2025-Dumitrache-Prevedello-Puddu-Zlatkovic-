@@ -22,6 +22,6 @@ public abstract class Command {
     public void setGameID(int gameID) {
         GameID = gameID;
     }
-    public abstract void execute(Controller controller);
+    public abstract void execute(Controller controller) throws Exception;
 
 }

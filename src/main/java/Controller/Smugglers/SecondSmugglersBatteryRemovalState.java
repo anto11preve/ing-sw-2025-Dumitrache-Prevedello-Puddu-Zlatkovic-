@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
@@ -44,24 +45,24 @@ public class SecondSmugglersBatteryRemovalState extends State{
      * @param coordinates the coordinates of the battery compartment
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid coordinates");
+            throw new InvalidParameters("Invalid coordinates");
         }
         if(amount <= 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid amount, must be non negative");
+            throw new InvalidParameters("Invalid amount, must be non negative");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);

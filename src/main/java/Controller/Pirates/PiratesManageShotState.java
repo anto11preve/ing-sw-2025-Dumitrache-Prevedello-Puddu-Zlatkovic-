@@ -3,6 +3,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
@@ -52,17 +53,17 @@ public class PiratesManageShotState extends State{
      * @param playerName the name of the player ending their reaction to the shot
      */
     @Override
-    public void end(String playerName) throws InvalidMethodParameters {
+    public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The shot is null");
+            throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
 
@@ -145,21 +146,21 @@ public class PiratesManageShotState extends State{
      * @param coordinates the coordinates of the battery being used
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (itemType != ItemType.BATTERIES) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("The shot is null");
+            throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
         if(shot.isBig()){

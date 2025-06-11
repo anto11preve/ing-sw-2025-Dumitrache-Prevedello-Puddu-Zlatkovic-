@@ -17,7 +17,7 @@ public class CombatZone1CannonShotsState extends State {
     }
 
     @Override
-    public void throwDices(String playerName) {
+    public void throwDices(String playerName) throws InvalidContextualAction {
         Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
             controller.getModel().setError(true);

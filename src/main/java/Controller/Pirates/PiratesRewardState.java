@@ -3,6 +3,7 @@ package Controller.Pirates;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.State;
@@ -43,16 +44,16 @@ public class PiratesRewardState extends State {
      * @param rewardType the type of reward the player wants (only {@code CREDITS} is valid)
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         if (rewardType != RewardType.CREDITS) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid reward type, expected CREDITS");
+            throw new InvalidParameters("Invalid reward type, expected CREDITS");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         player.deltaCredits(context.getCredits());
 
@@ -83,7 +84,7 @@ public class PiratesRewardState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         context.removePlayer(player);
 

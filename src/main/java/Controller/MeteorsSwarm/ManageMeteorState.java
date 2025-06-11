@@ -3,6 +3,7 @@ package Controller.MeteorsSwarm;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.Meteor;
@@ -50,7 +51,7 @@ public class ManageMeteorState extends State {
      * @param playerName the name of the player whose turn is ending
      */
     @Override
-    public void end(String playerName) throws InvalidMethodParameters {
+    public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
@@ -61,7 +62,7 @@ public class ManageMeteorState extends State {
         Meteor meteor = (Meteor) context.getProjectile(0);
         if (meteor == null) {
             controller.getModel().setError(true);
-            throw new NullPointerException("Meteors are empty");
+            throw new InvalidParameters("Meteors are empty");
         }
 
         SpaceshipComponent component = null;

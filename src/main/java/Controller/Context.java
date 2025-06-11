@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.*;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.*;
@@ -107,7 +108,7 @@ public class Context {
         this.requiredGoods = card.getLossPenalty().getAmount();
     }
 
-    public Context(Controller controller, CombatZone card) {
+    public Context(Controller controller, CombatZone card) throws InvalidParameters {
         this(controller);
         if( card.getLevel() == CardLevel.LEVEL_ONE){
             this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
@@ -122,7 +123,7 @@ public class Context {
                 this.projectiles.add(projectile);
             }
         } else {
-            throw new IllegalArgumentException("Invalid card level for CombatZone: " + card.getLevel());
+            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
         }
 
     }

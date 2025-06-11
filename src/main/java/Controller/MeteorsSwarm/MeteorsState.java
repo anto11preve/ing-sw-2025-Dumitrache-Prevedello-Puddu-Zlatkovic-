@@ -24,7 +24,7 @@ public class MeteorsState extends State {
     }
 
     @Override
-    public void throwDices(String playerName) throws InvalidMethodParameters {
+    public void throwDices(String playerName) throws InvalidMethodParameters, InvalidContextualAction {
         Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
             controller.getModel().setError(true);

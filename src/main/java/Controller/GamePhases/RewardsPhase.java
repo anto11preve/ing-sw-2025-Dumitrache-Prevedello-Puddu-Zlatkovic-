@@ -1,5 +1,6 @@
 package Controller.GamePhases;
 
+import Controller.Controller;
 import Controller.State;
 import Model.Enums.Good;
 import Model.Player;
@@ -9,12 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RewardsPhase extends State {
-    public RewardsPhase() {
-        super();
+    public RewardsPhase(Controller controller) {
+        super(controller);
     }
 
     @Override
-    public void endGame() {
+    public void onEnter() {
         for(int i=0; i<getController().getModel().getFlightBoard().getTurnOrder().length; i++){
             Player player = getController().getModel().getFlightBoard().getTurnOrder()[i];
             player.deltaCredits(4-i);
@@ -22,7 +23,7 @@ public class RewardsPhase extends State {
 
         //TODO: ricompensa nave più bella, cioè il giocatore con meno connettori esposti prende 2 crediti (a parimerito prendono entrambi)
 
-        for(Player p : getController().getModel().getFlightBoard().getTurnOrder()){
+        for(Player p : this.getController().getModel().getFlightBoard().getTurnOrder()){
             List<Good> allGoods = p.getShipBoard().getCondensedShip().getCargoHolds().stream()
                     .flatMap(cargo -> Arrays.stream(cargo.getGoods()))
                     .toList();
@@ -41,6 +42,8 @@ public class RewardsPhase extends State {
 
             p.deltaCredits(-p.getJunk());
         }
+
+        //TODO: farlo anche per this.getController().getModel().getFlightBoard().getFinishedFlightPlayers()
 
     }
 }

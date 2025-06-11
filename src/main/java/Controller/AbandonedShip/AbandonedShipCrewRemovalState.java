@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Enums.Crewmates;
 import Model.Player;
@@ -49,22 +50,22 @@ public class AbandonedShipCrewRemovalState extends State {
      * @param coordinates the coordinates of the cabin where crew members are removed.
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type for crew removal.");
+            throw new InvalidParameters("Invalid item type for crew removal.");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null.");
+            throw new InvalidParameters("Coordinates cannot be null.");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to remove crew members.");
+            throw new InvalidParameters("It's not your turn to remove crew members.");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){

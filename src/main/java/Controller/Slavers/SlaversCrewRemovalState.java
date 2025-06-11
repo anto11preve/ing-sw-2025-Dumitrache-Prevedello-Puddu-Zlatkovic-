@@ -3,6 +3,7 @@ package Controller.Slavers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Crewmates;
 import Model.Player;
 import Model.Ship.Components.Cabin;
@@ -46,16 +47,16 @@ public class SlaversCrewRemovalState extends State {
      * @param coordinates the coordinates of the cabin containing the crew member
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected CREW");
+            throw new InvalidParameters("Invalid item type, expected CREW");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid coordinates");
+            throw new InvalidParameters("Invalid coordinates");
         }
 
         Player player = controller.getModel().getPlayer(playerName);

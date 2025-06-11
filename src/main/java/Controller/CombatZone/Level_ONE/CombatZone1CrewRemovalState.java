@@ -19,7 +19,7 @@ public class CombatZone1CrewRemovalState extends State {
     }
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
             controller.getModel().setError(true);

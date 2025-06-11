@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
@@ -44,22 +45,22 @@ public class SmugglersPowerDeclarationState extends State {
      * @param amount the number of cannons the player wants to use
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
+            throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid amount, must be non-negative");
+            throw new InvalidParameters("Invalid amount, must be non-negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to declare power");
+            throw new InvalidParameters("It's not your turn to declare power");
         }
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
                 player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons() < amount){

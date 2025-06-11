@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
@@ -58,23 +59,23 @@ public class OpenSpaceBatteryRemovalState extends State {
      * @param coordinates the coordinates of the battery compartment to remove a battery from
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         int placesGained = declaredPower*2;
         Controller controller = context.getController();
 
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, only BATTERIES are allowed");
+            throw new InvalidParameters("Invalid item type, only BATTERIES are allowed");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid coordinates type, coordinates is null");
+            throw new InvalidParameters("Invalid coordinates type, coordinates is null");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid declared power type, declared power is negative");
+            throw new InvalidParameters("Invalid declared power type, declared power is negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);

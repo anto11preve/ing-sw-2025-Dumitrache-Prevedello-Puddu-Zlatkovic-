@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Controller.Slavers.SlaversCrewRemovalState;
 import Controller.Slavers.SlaversPowerDeclarationState;
@@ -62,27 +63,27 @@ public class PiratesBatteryRemovalState extends State{
      * @param coordinates the coordinates of the battery compartment
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null");
+            throw new InvalidParameters("Coordinates cannot be null");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
@@ -141,17 +142,17 @@ public class PiratesBatteryRemovalState extends State{
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid reward type, expected CREDITS");
+            throw new InvalidParameters("Invalid reward type, expected CREDITS");
         }
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         if(actualPower > context.getPower() && declaredPower == 0){

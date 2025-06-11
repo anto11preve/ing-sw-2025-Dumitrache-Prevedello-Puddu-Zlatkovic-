@@ -111,7 +111,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     }
 
     // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters {
+    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         model.getState().pickNextCard(name);
     }
     public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
@@ -120,34 +120,31 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
         model.getState().leaveRace(name);
     }
-    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void getReward(String name, RewardType rewardType) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().getReward(name, rewardType);
     }
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters {
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         model.getState().moveGood(name, oldCoordinates, newCoordinates, oldIndex, newIndex);
     }
-    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().useItem(name, itemType, coordinates);
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().declaresDouble(name, doubleType, amount);
-    }
-    public void defend(String name) throws InvalidCommand, InvalidParameters {
-        model.getState().defend(name);
     }
     public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         model.getState().end(name);
     }
-    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters {
+    public void choosePlanet(String name, String planetName) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         model.getState().choosePlanet(name, planetName);
     }
     public void skipReward(String name) throws InvalidCommand, InvalidParameters {
         model.getState().skipReward(name);
     }
-    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters {
+    public void getGood(String name, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         model.getState().getGood(name, goodIndex, coordinates, CargoHoldIndex);
     }
-    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
+    public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().throwDices(playerName);
     }
 

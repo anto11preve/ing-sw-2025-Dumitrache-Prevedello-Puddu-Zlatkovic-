@@ -27,11 +27,7 @@ public class EndCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.end(getPlayerName());
-        } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters e) {
-            System.err.println("Failed to end action: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters{
+        controller.end(getPlayerName());
     }
 }

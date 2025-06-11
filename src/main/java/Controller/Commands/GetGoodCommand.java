@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Ship.Coordinates;
 
@@ -40,12 +41,8 @@ public class GetGoodCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.getGood(getPlayerName(), goodIndex, coordinates, cargoHoldIndex);
-        } catch (InvalidCommand | InvalidParameters e) {
-            System.err.println("Failed to get good: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
+        controller.getGood(getPlayerName(), goodIndex, coordinates, cargoHoldIndex);
     }
     
     /**

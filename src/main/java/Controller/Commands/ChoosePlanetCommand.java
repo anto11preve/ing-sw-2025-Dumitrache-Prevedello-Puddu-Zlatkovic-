@@ -2,6 +2,7 @@ package Controller.Commands;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 
 /**
@@ -30,12 +31,8 @@ public class ChoosePlanetCommand extends Command {
      * @param controller the controller to execute the command on
      */
     @Override
-    public void execute(Controller controller) {
-        try {
-            controller.choosePlanet(getPlayerName(), planetName);
-        } catch (InvalidCommand | InvalidParameters e) {
-            System.err.println("Failed to choose planet: " + e.getMessage());
-        }
+    public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
+        controller.choosePlanet(getPlayerName(), planetName);
     }
     
     /**

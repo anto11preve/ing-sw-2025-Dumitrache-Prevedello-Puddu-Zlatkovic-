@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Player;
 
@@ -46,22 +47,22 @@ public class OpenSpaceEngineDeclarationState extends State {
      * @param amount     the number of double engines the player wants to use
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount){
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid double type, only ENGINES are allowed");
+            throw new InvalidParameters("Invalid double type, only ENGINES are allowed");
         }
 
         if(amount < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid amount of double, only non negative integers are allowed");
+            throw new InvalidParameters("Invalid amount of double, only non negative integers are allowed");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to throw the dice.");
+            throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
         //TODO: Se il giocatore ha potenza motrice base 0, lascia la partita
