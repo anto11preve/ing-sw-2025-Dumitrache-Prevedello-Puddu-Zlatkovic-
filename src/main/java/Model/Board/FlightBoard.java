@@ -90,7 +90,22 @@ public class FlightBoard {
         this.ffPlayers = new ArrayList<>();
     }
 
-    public FlightBoard(AdventureCardFilip[] hiddenCardDeck, List<CardDeck> peekableCardDecks) {
+    /**
+     * FlightBoard constructor of level 2.
+     * Sets the number of cells to 24.
+     * Sets the timer to a new Timer.
+     * Sets the peekable card decks to the passed value.
+     * Sets the hidden card deck to the passed value.
+     * Sets the player positions map to an empty HashMap.
+     * Sets every other member to {@code null}.
+     *
+     * @param hiddenCardDeck the deck of cards to be used later in the
+     *                       flight phase
+     * @param peekableCardDecks the list of peekable card decks
+     * @throws AssertionError if something is wrong with passed decks:
+     *                        peekableCardDecks size is not 3, peekableCardDecks elements size is not 4...
+     */
+    public FlightBoard(CardDeck hiddenCardDeck, List<CardDeck> peekableCardDecks) {
         this.cellNumber = 24;
         this.timer = new Timer();
 
@@ -100,7 +115,7 @@ public class FlightBoard {
         }
         this.peekableCardDecks = peekableCardDecks;
 
-        this.hiddenCardDeck = new CardDeck(hiddenCardDeck);
+        this.hiddenCardDeck = hiddenCardDeck;
         assert (4 == this.hiddenCardDeck.peekCards().size());
 
         this.upcomingCardDeck = null;
