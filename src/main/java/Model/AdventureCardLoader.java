@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Board.AdventureCards.AdventureCardFilip;
+import Model.Factories.AdventureCardFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,17 +11,18 @@ import Controller.Enums.MatchLevel;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Loads adventure cards from JSON files based on the game level.
- * Uses an internal factory to construct specific card types from their JSON representation.
+ * Loads and builds adventure cards from a unified JSON file.
  */
 public class AdventureCardLoader {
 
     /**
-     * Loads a list of AdventureCardFilip from a JSON file using the specified resource path.
-     * Cards are built dynamically using the internal factory.
+     * Loads all adventure cards from a JSON file using the specified resource path.
+     * Cards are built dynamically using AdventureCardFactory.
      *
      * @param resourcePath path to the JSON file (must be in resources folder)
      * @return list of parsed AdventureCardFilip objects
@@ -38,7 +40,7 @@ public class AdventureCardLoader {
 
             for (JsonElement element : array) {
                 JsonObject obj = element.getAsJsonObject();
-                cards.add(InternalFactory.fromJson(obj));
+                cards.add(AdventureCardFactory.fromJson(obj));
             }
 
             return cards;
@@ -49,42 +51,41 @@ public class AdventureCardLoader {
     }
 
     /**
-     * Loads cards based on the match level.
-     * TRIAL uses adventure_cards_trial.json
-     * LEVEL2 uses adventure_cards_level2.json
+     * Loads and filters cards based on the match level from a single JSON file.
+     * Builds the deck according to the official Galaxy Trucker rules.
      *
      * @param level the difficulty level of the match
      * @return list of cards for the selected level
      */
     public static List<AdventureCardFilip> loadCardsForLevel(MatchLevel level) {
+        List<AdventureCardFilip> allCards = loadCards("adventure_cards.json");
+
         return switch (level) {
-            case TRIAL -> loadCards("adventure_cards_trial.json");
-            case LEVEL2 -> loadCards("adventure_cards_level2.json");
+            case TRIAL -> allCards.stream()
+                    .filter(card -> card.getLevel().toString().equals("TRIAL"))
+                    .collect(Collectors.toList());
+
+            case LEVEL2 -> {
+                List<AdventureCardFilip> level1 = allCards.stream()
+                        .filter(card -> card.getLevel().toString().equals("LEVEL1"))
+                        .limit(4)
+                        .collect(Collectors.toList());
+                List<AdventureCardFilip> level2 = allCards.stream()
+                        .filter(card -> card.getLevel().toString().equals("LEVEL2"))
+                        .limit(4)
+                        .collect(Collectors.toList());
+                List<AdventureCardFilip> level3 = allCards.stream()
+                        .filter(card -> card.getLevel().toString().equals("LEVEL3"))
+                        .limit(4)
+                        .collect(Collectors.toList());
+
+                List<AdventureCardFilip> combined = new ArrayList<>();
+                combined.addAll(level1);
+                combined.addAll(level2);
+                combined.addAll(level3);
+                Collections.shuffle(combined);
+                yield combined;
+            }
         };
-    }
-
-    /**
-     * Internal factory for constructing adventure cards based on their type.
-     * Avoids exposing a separate AdventureCardFactory class.
-     */
-    private static class InternalFactory {
-        public static AdventureCardFilip fromJson(JsonObject json) {
-            String type = json.get("type").getAsString();
-
-            return switch (type) {
-                case "OpenSpace" -> new Model.Board.AdventureCards.OpenSpace(json);
-                case "MeteorSwarm" -> new Model.Board.AdventureCards.MeteorSwarm(json);
-                case "Stardust" -> new Model.Board.AdventureCards.Stardust(json);
-                case "Planets" -> new Model.Board.AdventureCards.Planets(json);
-                case "Pirates" -> new Model.Board.AdventureCards.Pirates(json);
-                case "Slavers" -> new Model.Board.AdventureCards.Slavers(json);
-                case "Smugglers" -> new Model.Board.AdventureCards.Smugglers(json);
-                case "AbandonedShip" -> new Model.Board.AdventureCards.AbandonedShip(json);
-                case "AbandonedStation" -> new Model.Board.AdventureCards.AbandonedStation(json);
-                case "CombatZone" -> new Model.Board.AdventureCards.CombatZone(json);
-                case "Epidemic" -> new Model.Board.AdventureCards.Epidemic(json);
-                default -> throw new IllegalArgumentException("Unknown card type: " + type);
-            };
-        }
     }
 }
