@@ -4,6 +4,7 @@ import Model.Board.AdventureCards.Penalties.CrewPenalty;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 public class AbandonedShip extends AdventureCardFilip {
     private final CrewPenalty winPenalty;
@@ -42,4 +43,17 @@ public class AbandonedShip extends AdventureCardFilip {
     public String getDescription() {
         return "";
     }
+
+    public AbandonedShip(JsonObject json) {
+        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+
+        int crew = json.get("crewRequired").getAsInt();
+        int credits = json.getAsJsonObject("reward").get("value").getAsInt();
+        int days = json.get("days").getAsInt();
+
+        this.winPenalty = new CrewPenalty(crew);
+        this.landingReward = new Credits(credits);
+        this.landingPenalty = new DaysPenalty(days);
+    }
+
 }

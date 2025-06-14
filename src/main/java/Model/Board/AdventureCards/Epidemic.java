@@ -1,11 +1,25 @@
 package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 public class Epidemic extends AdventureCardFilip {
 
+    private int crewLost = 0;
+
     public Epidemic(int id, CardLevel level) {
         super(id, level);
+    }
+
+    public Epidemic(JsonObject json) {
+        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+        if (json.has("crewLost")) {
+            this.crewLost = json.get("crewLost").getAsInt();
+        }
+    }
+
+    public int getCrewLost() {
+        return crewLost;
     }
 
     @Override

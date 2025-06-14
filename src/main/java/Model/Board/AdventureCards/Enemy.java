@@ -1,9 +1,12 @@
 package Model.Board.AdventureCards;
 
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
+import Model.Board.AdventureCards.Penalties.GoodsPenalty;
 import Model.Board.AdventureCards.Penalties.Penalty;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Board.AdventureCards.Rewards.Reward;
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 /**
  * @param <P> Penalty inflicted upon the player if the card is not beaten
@@ -38,4 +41,6 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
     public final R getWinReward() {
         return winReward;
     }
+
+
 }

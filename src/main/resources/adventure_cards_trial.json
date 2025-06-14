@@ -67,10 +67,10 @@
         "type": "Credits",
         "value": 3
       },
-      "penalty": {
-        "type": "GoodsPenalty",
-        "value": 2
-      }
+      "penalty": [
+        { "direction": "LEFT", "big": false },
+        { "direction": "REAR", "big": false }
+      ]
     },
     "imagePath": "pirates.png"
   },
@@ -86,18 +86,38 @@
     "id": 8,
     "type": "Smugglers",
     "level": "TRIAL",
-    "description": "Smugglers pass by. You may fight or ignore.",
+    "description": "Smugglers try to steal your cargo.",
     "enemy": {
-      "firepower": 4,
-      "reward": {
-        "type": "Credits",
+      "firepower": 3,
+      "penalty": {
+        "type": "GoodsPenalty",
         "value": 2
       },
-      "penalty": {
-        "type": "CrewPenalty",
-        "value": 1
+      "days": 1,
+      "reward": {
+        "type": "Goods",
+        "value": ["RED", "BLUE", "RED"]
       }
     },
     "imagePath": "smugglers.png"
+  },
+  {
+    "id": 9,
+    "type": "Slavers",
+    "level": "TRIAL",
+    "description": "Slavers try to capture your crew.",
+    "enemy": {
+      "firepower": 4,
+      "penalty": {
+        "type": "CrewPenalty",
+        "value": 2
+      },
+      "days": 1,
+      "reward": {
+        "type": "Credits",
+        "value": 3
+      }
+    },
+    "imagePath": "slavers.png"
   }
 ]
