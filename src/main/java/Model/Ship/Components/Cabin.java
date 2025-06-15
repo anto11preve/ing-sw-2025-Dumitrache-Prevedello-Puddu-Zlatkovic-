@@ -3,7 +3,6 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Crewmates;
-import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -15,6 +14,10 @@ public class Cabin extends SpaceshipComponent {
     private Crewmates occupants;
     private boolean canContainBrown;   // True if the cabin can host brown aliens
     private boolean canContainPurple;  // True if the cabin can host purple aliens
+
+    // New fields to support aliens actually present in the cabin
+    private boolean hasAlien = false;
+    private String alienType = null; // "brown" or "purple"
 
     /**
      * Standard constructor for Cabin with explicit parameters.
@@ -68,23 +71,44 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
-    @Override
+    // Added support for alien tracking
+    public boolean hasAlien() {
+        return hasAlien;
+    }
+
+    public String getAlienType() {
+        return alienType;
+    }
+
+    public void setHasAlien(boolean hasAlien) {
+        this.hasAlien = hasAlien;
+    }
+
+    public void setAlienType(String alienType) {
+        this.alienType = alienType;
+    }
+
+    /**
+     * Constructor used for testing or simplified instantiation
+     */
+    public Cabin(boolean hasAlien, String alienType) {
+        super(Card.CABIN, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE);
+        this.hasAlien = hasAlien;
+        this.alienType = alienType;
+    }
+
+
+    // Optional: These can be implemented for game logic events if needed
     public void added() {
-        if(getShipBoard().getCondensedShip().getCabins().contains(this)){
-            throw new RuntimeException("Cabin already added to the ship.");
-        } else {
-            getShipBoard().getCondensedShip().addCabin(this);
-        }
+        // Called when the component is added to the ship
     }
 
-    @Override
     public void removed() {
-        if(!getShipBoard().getCondensedShip().getCabins().contains(this)){
-            throw new RuntimeException("Cabin not found in the ship.");
-        } else {
-            getShipBoard().getCondensedShip().removeCabin(this);
-        }
-
+        // Called when the component is removed from the ship
     }
-
+/*
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+    */
 }

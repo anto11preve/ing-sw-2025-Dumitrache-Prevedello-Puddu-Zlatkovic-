@@ -231,6 +231,55 @@ public class ShipBoard {
     }
 
     /**
+     * Keeps only the components connected to the given starting position.
+     * All other components will be removed from the board. This can be used after damage
+     * to preserve a specific part of the ship and remove all detached segments.
+     *
+     * @param origin the starting position of the ship part to preserve
+     */
+    public void keepOnlyConnectedFrom(Position origin) {
+        Set<Position> connected = new HashSet<>();
+        Queue<Position> toVisit = new LinkedList<>();
+        toVisit.add(origin);
+
+        while (!toVisit.isEmpty()) {
+            Position current = toVisit.poll();
+            if (connected.contains(current)) continue;
+            connected.add(current);
+
+            SpaceshipComponent currentComp = components[current.getX()][current.getY()];
+            if (currentComp == null) continue;
+
+            for (Side side : Side.values()) {
+                int[] offset = getOffset(side);
+                int adjRow = current.getX() + offset[0];
+                int adjCol = current.getY() + offset[1];
+
+                if (!isValidPosition(adjRow, adjCol)) continue;
+
+                SpaceshipComponent neighborComp = components[adjRow][adjCol];
+                if (neighborComp == null) continue;
+
+                ConnectorType thisConnector = currentComp.getConnectorAt(side);
+                ConnectorType neighborConnector = neighborComp.getConnectorAt(getOppositeSide(side));
+
+                if (connectorsAreCompatible(thisConnector, neighborConnector)) {
+                    toVisit.add(new Position(adjRow, adjCol));
+                }
+            }
+        }
+
+        for (int row = 0; row < components.length; row++) {
+            for (int col = 0; col < components[0].length; col++) {
+                Position pos = new Position(row, col);
+                if (!connected.contains(pos)) {
+                    components[row][col] = null;
+                }
+            }
+        }
+    }
+
+    /**
      * Performs a depth-first search to count connected components starting from a given cell.
      *
      * @param row the row to start from
@@ -454,7 +503,18 @@ public class ShipBoard {
      *
      * @return true if the ship structure is valid according to game rules, false otherwise
      */
-    public boolean validateShip() {
+    /**
+     * Validates the ship by checking:
+     * - Connector compatibility
+     * - Blocking of engines and cannons
+     * - Proper orientation of engines and cannons
+     * - Special rules for cabins, alien support, shields, and special cargo
+     *
+     * @param shipRear the direction considered the rear of the ship
+     * @param shipFront the direction considered the front of the ship
+     * @return true if the ship is valid, false otherwise
+     */
+    public boolean validateShip(Direction shipRear, Direction shipFront) {
         for (int x = 0; x < ROWS; x++) {
             for (int y = 0; y < COLS; y++) {
                 SpaceshipComponent comp = components[x][y];
@@ -485,11 +545,19 @@ public class ShipBoard {
                         System.out.printf("Errore: motore in (%d,%d) ha un modulo dietro\n", x, y);
                         return false;
                     }
+                    if (!comp.getOrientation().equals(shipRear)) {
+                        System.out.printf("Errore: motore in (%d,%d) non orientato verso il retro della nave\n", x, y);
+                        return false;
+                    }
                 }
 
                 if (card.hasCannon() && comp.getConnectorAt(Side.FRONT) != ConnectorType.NONE) {
                     if (x - 1 >= 0 && components[x - 1][y] != null) {
                         System.out.printf("Errore: cannone in (%d,%d) bloccato da un modulo davanti\n", x, y);
+                        return false;
+                    }
+                    if (!comp.getOrientation().equals(shipFront)) {
+                        System.out.printf("Errore: cannone in (%d,%d) non orientato verso la parte frontale della nave\n", x, y);
                         return false;
                     }
                 }

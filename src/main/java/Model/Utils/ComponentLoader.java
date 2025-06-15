@@ -1,44 +1,36 @@
 package Model.Utils;
 
-import Model.Ship.Components.ComponentFactory;
 import Model.Ship.Components.SpaceshipComponent;
-import com.google.gson.*;
+import Model.Factories.ComponentFactory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Utility class to load spaceship components from a JSON file.
- * Parses spaceship_components.json and creates components using the ComponentFactory.
+ * Loads spaceship components from a JSON file and returns them as a shuffled array.
  */
 public class ComponentLoader {
 
     private static final String COMPONENTS_PATH = "src/main/resources/spaceship_components.json";
 
-    /**
-     * Loads all spaceship components from JSON.
-     * @return List of SpaceshipComponent objects parsed from file.
-     */
-    public static List<SpaceshipComponent> loadAllComponents() {
-        List<SpaceshipComponent> components = new ArrayList<>();
-        try {
-            JsonElement jsonElement = JsonParser.parseReader(new FileReader(COMPONENTS_PATH));
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
+    public static SpaceshipComponent[] loadComponents() {
+        try (FileReader reader = new FileReader(COMPONENTS_PATH)) {
+            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+            List<SpaceshipComponent> components = new ArrayList<>();
 
-            for (JsonElement element : jsonArray) {
-                JsonObject jsonObject = element.getAsJsonObject();
-                SpaceshipComponent component = ComponentFactory.fromJson(jsonObject);
-                if (component != null) {
-                    components.add(component);
-                }
+            for (JsonElement el : array) {
+                components.add(ComponentFactory.fromJson(el.getAsJsonObject()));
             }
-        } catch (FileNotFoundException e) {
-            System.err.println("Components file not found: " + COMPONENTS_PATH);
+
+            Collections.shuffle(components);
+            return components.toArray(new SpaceshipComponent[0]);
         } catch (Exception e) {
-            System.err.println("Error loading components: " + e.getMessage());
+            throw new RuntimeException("Failed to load spaceship components from JSON", e);
         }
-        return components;
     }
 }

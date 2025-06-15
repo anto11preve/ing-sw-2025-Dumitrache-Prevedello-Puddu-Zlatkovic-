@@ -136,4 +136,9 @@ public class CardDeck implements Iterable<AdventureCardFilip> {
     public Iterator<AdventureCardFilip> iterator() {
         return peekCards().iterator();
     }
+
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
 }
