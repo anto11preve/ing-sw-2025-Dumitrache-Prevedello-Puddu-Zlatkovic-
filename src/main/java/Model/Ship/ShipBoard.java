@@ -503,7 +503,18 @@ public class ShipBoard {
      *
      * @return true if the ship structure is valid according to game rules, false otherwise
      */
-    public boolean validateShip() {
+    /**
+     * Validates the ship by checking:
+     * - Connector compatibility
+     * - Blocking of engines and cannons
+     * - Proper orientation of engines and cannons
+     * - Special rules for cabins, alien support, shields, and special cargo
+     *
+     * @param shipRear the direction considered the rear of the ship
+     * @param shipFront the direction considered the front of the ship
+     * @return true if the ship is valid, false otherwise
+     */
+    public boolean validateShip(Direction shipRear, Direction shipFront) {
         for (int x = 0; x < ROWS; x++) {
             for (int y = 0; y < COLS; y++) {
                 SpaceshipComponent comp = components[x][y];
@@ -534,11 +545,19 @@ public class ShipBoard {
                         System.out.printf("Errore: motore in (%d,%d) ha un modulo dietro\n", x, y);
                         return false;
                     }
+                    if (!comp.getOrientation().equals(shipRear)) {
+                        System.out.printf("Errore: motore in (%d,%d) non orientato verso il retro della nave\n", x, y);
+                        return false;
+                    }
                 }
 
                 if (card.hasCannon() && comp.getConnectorAt(Side.FRONT) != ConnectorType.NONE) {
                     if (x - 1 >= 0 && components[x - 1][y] != null) {
                         System.out.printf("Errore: cannone in (%d,%d) bloccato da un modulo davanti\n", x, y);
+                        return false;
+                    }
+                    if (!comp.getOrientation().equals(shipFront)) {
+                        System.out.printf("Errore: cannone in (%d,%d) non orientato verso la parte frontale della nave\n", x, y);
                         return false;
                     }
                 }
