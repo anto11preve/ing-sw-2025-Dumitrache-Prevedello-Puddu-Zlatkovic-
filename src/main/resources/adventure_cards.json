@@ -1,1358 +1,747 @@
 [
   {
-    "id": "trial_1",
-    "name": "Trial Card 1",
-    "type": "HAZARD",
+    "id": 1,
+    "type": "OpenSpace",
     "level": "TRIAL",
-    "description": "Light hazard to test ship systems.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "minor_damage"
+    "originalLevel": "LEVEL1",
+    "description": "Nothing happens.",
+    "imagePath": "assets/cards/trial/card_1.png"
+  },
+  {
+    "id": 2,
+    "type": "MeteorSwarm",
+    "level": "TRIAL",
+    "originalLevel": "LEVEL1",
+    "description": "Small meteors from the front.",
+    "incomingDirection": "FRONT",
+    "smallMeteors": 2,
+    "largeMeteors": 0,
+    "imagePath": "assets/cards/trial/card_2.png"
+  },
+  {
+    "id": 3,
+    "type": "Planets",
+    "level": "TRIAL",
+    "originalLevel": "LEVEL1",
+    "description": "Trade at nearby planets.",
+    "planets": [
+      {
+        "name": "Trialon",
+        "goods": [
+          "RED",
+          "BLUE"
+        ]
+      }
     ],
-    "imagePath": "assets/cards/trial/card_1.png",
-    "requiresPlayerChoice": false
+    "imagePath": "assets/cards/trial/card_3.png"
   },
   {
-    "id": "trial_2",
-    "name": "Trial Card 2",
-    "type": "EVENT",
+    "id": 4,
+    "type": "OpenSpace",
     "level": "TRIAL",
-    "description": "A calm trial scenario for new captains.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "imagePath": "assets/cards/trial/card_2.png",
-    "requiresPlayerChoice": false
+    "originalLevel": "LEVEL1",
+    "description": "Peaceful region of space.",
+    "imagePath": "assets/cards/trial/card_4.png"
   },
   {
-    "id": "trial_3",
-    "name": "Trial Card 3",
-    "type": "HAZARD",
+    "id": 5,
+    "type": "MeteorSwarm",
     "level": "TRIAL",
-    "description": "Light hazard to test ship systems.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "minor_damage"
-    ],
-    "imagePath": "assets/cards/trial/card_3.png",
-    "requiresPlayerChoice": false
+    "originalLevel": "LEVEL1",
+    "description": "Meteors from the right.",
+    "incomingDirection": "RIGHT",
+    "smallMeteors": 3,
+    "largeMeteors": 1,
+    "imagePath": "assets/cards/trial/card_5.png"
   },
   {
-    "id": "trial_4",
-    "name": "Trial Card 4",
-    "type": "EVENT",
+    "id": 6,
+    "type": "Pirates",
     "level": "TRIAL",
-    "description": "A calm trial scenario for new captains.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "imagePath": "assets/cards/trial/card_4.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "trial_5",
-    "name": "Trial Card 5",
-    "type": "HAZARD",
-    "level": "TRIAL",
-    "description": "Light hazard to test ship systems.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "minor_damage"
-    ],
-    "imagePath": "assets/cards/trial/card_5.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "trial_6",
-    "name": "Trial Card 6",
-    "type": "EVENT",
-    "level": "TRIAL",
-    "description": "A calm trial scenario for new captains.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "imagePath": "assets/cards/trial/card_6.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "trial_7",
-    "name": "Trial Card 7",
-    "type": "HAZARD",
-    "level": "TRIAL",
-    "description": "Light hazard to test ship systems.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "minor_damage"
-    ],
-    "imagePath": "assets/cards/trial/card_7.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "trial_8",
-    "name": "Trial Card 8",
-    "type": "EVENT",
-    "level": "TRIAL",
-    "description": "A calm trial scenario for new captains.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "imagePath": "assets/cards/trial/card_8.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "level1_1",
-    "name": "Level 1 Card 1",
-    "type": "HAZARD",
-    "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
+    "originalLevel": "LEVEL1",
+    "description": "Pirates attack.",
+    "power": 3,
+    "reward": {
+      "credits": 2
     },
-    "imagePath": "assets/cards/i/card_1.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "level1_2",
-    "name": "Level 1 Card 2",
-    "type": "HAZARD",
-    "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
+    "penalty": {
+      "days": 1
     },
-    "imagePath": "assets/cards/i/card_2.png",
-    "requiresPlayerChoice": false
+    "imagePath": "assets/cards/trial/card_6.png"
   },
   {
-    "id": "level1_3",
-    "name": "Level 1 Card 3",
-    "type": "REWARD",
-    "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_3.png",
-    "requiresPlayerChoice": true
+    "id": 7,
+    "type": "Stardust",
+    "level": "TRIAL",
+    "originalLevel": "LEVEL1",
+    "description": "Stardust damages exposed components.",
+    "imagePath": "assets/cards/trial/card_7.png"
   },
   {
-    "id": "level1_4",
-    "name": "Level 1 Card 4",
-    "type": "EVENT",
-    "level": "LEVEL1",
-    "description": "Navigate a minor asteroid field.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_4.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "level1_5",
-    "name": "Level 1 Card 5",
-    "type": "HAZARD",
-    "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
+    "id": 8,
+    "type": "AbandonedShip",
+    "level": "TRIAL",
+    "originalLevel": "LEVEL1",
+    "description": "You find an abandoned ship.",
+    "reward": {
+      "crew": 1
     },
-    "imagePath": "assets/cards/i/card_5.png",
-    "requiresPlayerChoice": false
+    "imagePath": "assets/cards/trial/card_8.png"
   },
   {
-    "id": "level1_6",
-    "name": "Level 1 Card 6",
-    "type": "REWARD",
+    "id": 9,
+    "type": "OpenSpace",
     "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_6.png",
-    "requiresPlayerChoice": true
+    "description": "Nothing happens.",
+    "imagePath": "assets/cards/i/card_1.png"
   },
   {
-    "id": "level1_7",
-    "name": "Level 1 Card 7",
-    "type": "HAZARD",
+    "id": 10,
+    "type": "MeteorSwarm",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
+    "description": "Small meteors from the front.",
+    "incomingDirection": "FRONT",
+    "smallMeteors": 2,
+    "largeMeteors": 0,
+    "imagePath": "assets/cards/i/card_2.png"
+  },
+  {
+    "id": 11,
+    "type": "Planets",
+    "level": "LEVEL1",
+    "description": "Trade at nearby planets.",
+    "planets": [
+      {
+        "name": "Trialon",
+        "goods": [
+          "RED",
+          "BLUE"
+        ]
+      }
     ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
+    "imagePath": "assets/cards/i/card_3.png"
+  },
+  {
+    "id": 12,
+    "type": "OpenSpace",
+    "level": "LEVEL1",
+    "description": "Peaceful region of space.",
+    "imagePath": "assets/cards/i/card_4.png"
+  },
+  {
+    "id": 13,
+    "type": "MeteorSwarm",
+    "level": "LEVEL1",
+    "description": "Meteors from the right.",
+    "incomingDirection": "RIGHT",
+    "smallMeteors": 3,
+    "largeMeteors": 1,
+    "imagePath": "assets/cards/i/card_5.png"
+  },
+  {
+    "id": 14,
+    "type": "Pirates",
+    "level": "LEVEL1",
+    "description": "Pirates attack.",
+    "power": 3,
+    "reward": {
+      "credits": 2
     },
-    "imagePath": "assets/cards/i/card_7.png",
-    "requiresPlayerChoice": false
+    "penalty": {
+      "days": 1
+    },
+    "imagePath": "assets/cards/i/card_6.png"
   },
   {
-    "id": "level1_8",
-    "name": "Level 1 Card 8",
-    "type": "EVENT",
+    "id": 15,
+    "type": "Stardust",
     "level": "LEVEL1",
-    "description": "Navigate a minor asteroid field.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_8.png",
-    "requiresPlayerChoice": false
+    "description": "Stardust damages exposed components.",
+    "imagePath": "assets/cards/i/card_7.png"
   },
   {
-    "id": "level1_9",
-    "name": "Level 1 Card 9",
-    "type": "REWARD",
+    "id": 16,
+    "type": "AbandonedShip",
     "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "You find an abandoned ship.",
+    "reward": {
+      "crew": 1
+    },
+    "imagePath": "assets/cards/i/card_8.png"
+  },
+  {
+    "id": 17,
+    "type": "Smugglers",
+    "level": "LEVEL1",
+    "description": "Smugglers spotted!",
     "imagePath": "assets/cards/i/card_9.png",
-    "requiresPlayerChoice": true
+    "power": 3
   },
   {
-    "id": "level1_10",
-    "name": "Level 1 Card 10",
-    "type": "HAZARD",
+    "id": 18,
+    "type": "AbandonedStation",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
-    },
+    "description": "You find a derelict station.",
     "imagePath": "assets/cards/i/card_10.png",
-    "requiresPlayerChoice": false
+    "reward": {
+      "cargo": 2
+    }
   },
   {
-    "id": "level1_11",
-    "name": "Level 1 Card 11",
-    "type": "HAZARD",
+    "id": 19,
+    "type": "CombatZone",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
-    },
+    "description": "You enter a combat zone.",
     "imagePath": "assets/cards/i/card_11.png",
-    "requiresPlayerChoice": false
+    "reward": {
+      "credits": 3
+    },
+    "penalty": {
+      "days": 2
+    },
+    "power": 4
   },
   {
-    "id": "level1_12",
-    "name": "Level 1 Card 12",
-    "type": "REWARD",
+    "id": 20,
+    "type": "MeteorSwarm",
     "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Meteors from the rear.",
     "imagePath": "assets/cards/i/card_12.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "REAR",
+    "smallMeteors": 2,
+    "largeMeteors": 1
   },
   {
-    "id": "level1_13",
-    "name": "Level 1 Card 13",
-    "type": "HAZARD",
+    "id": 21,
+    "type": "Slavers",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
-    },
+    "description": "Slavers demand crew.",
     "imagePath": "assets/cards/i/card_13.png",
-    "requiresPlayerChoice": false
-  },
-  {
-    "id": "level1_14",
-    "name": "Level 1 Card 14",
-    "type": "HAZARD",
-    "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
+    "reward": {
+      "credits": 2
     },
-    "imagePath": "assets/cards/i/card_14.png",
-    "requiresPlayerChoice": false
+    "penalty": {
+      "crewLoss": 1
+    },
+    "power": 4
   },
   {
-    "id": "level1_15",
-    "name": "Level 1 Card 15",
-    "type": "REWARD",
+    "id": 22,
+    "type": "OpenSpace",
     "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_15.png",
-    "requiresPlayerChoice": true
+    "description": "Space is calm.",
+    "imagePath": "assets/cards/i/card_14.png"
   },
   {
-    "id": "level1_16",
-    "name": "Level 1 Card 16",
-    "type": "EVENT",
+    "id": 23,
+    "type": "Stardust",
     "level": "LEVEL1",
-    "description": "Navigate a minor asteroid field.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "metadata": null,
+    "description": "Thick stardust field.",
+    "imagePath": "assets/cards/i/card_15.png"
+  },
+  {
+    "id": 24,
+    "type": "MeteorSwarm",
+    "level": "LEVEL1",
+    "description": "Meteors from the left.",
     "imagePath": "assets/cards/i/card_16.png",
-    "requiresPlayerChoice": false
+    "incomingDirection": "LEFT",
+    "smallMeteors": 1,
+    "largeMeteors": 2
   },
   {
-    "id": "level1_17",
-    "name": "Level 1 Card 17",
-    "type": "HAZARD",
+    "id": 25,
+    "type": "CombatZone",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
-    },
+    "description": "Fight or flee.",
     "imagePath": "assets/cards/i/card_17.png",
-    "requiresPlayerChoice": false
+    "reward": {
+      "credits": 4
+    },
+    "penalty": {
+      "days": 1
+    },
+    "power": 5
   },
   {
-    "id": "level1_18",
-    "name": "Level 1 Card 18",
-    "type": "REWARD",
+    "id": 26,
+    "type": "Planets",
     "level": "LEVEL1",
-    "description": "You encounter a trading post.",
-    "effect": "gain_goods",
-    "conditions": [
-      "has_cargo"
-    ],
-    "rewards": [
-      "goods"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "More planets!",
     "imagePath": "assets/cards/i/card_18.png",
-    "requiresPlayerChoice": true
+    "planets": [
+      {
+        "name": "X-7",
+        "goods": [
+          "GREEN",
+          "YELLOW"
+        ]
+      }
+    ]
   },
   {
-    "id": "level1_19",
-    "name": "Level 1 Card 19",
-    "type": "HAZARD",
+    "id": 27,
+    "type": "AbandonedShip",
     "level": "LEVEL1",
-    "description": "Meteor storm hits from the left.",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_damage"
-    ],
-    "metadata": {
-      "direction": "LEFT",
-      "small": 3,
-      "large": 0
-    },
+    "description": "Abandoned ship spotted.",
     "imagePath": "assets/cards/i/card_19.png",
-    "requiresPlayerChoice": false
+    "reward": {
+      "crew": 2
+    }
   },
   {
-    "id": "level1_20",
-    "name": "Level 1 Card 20",
-    "type": "EVENT",
+    "id": 28,
+    "type": "OpenSpace",
     "level": "LEVEL1",
-    "description": "Navigate a minor asteroid field.",
-    "effect": "none",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/i/card_20.png",
-    "requiresPlayerChoice": false
+    "description": "Nothing to report.",
+    "imagePath": "assets/cards/i/card_20.png"
   },
   {
-    "id": "level2_1",
-    "name": "Level 2 Card 1",
-    "type": "REWARD",
+    "id": 29,
+    "type": "OpenSpace",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
-    "imagePath": "assets/cards/ii/card_1.png",
-    "requiresPlayerChoice": true
+    "description": "Nothing happens in deep space.",
+    "imagePath": "assets/cards/ii/card_1.png"
   },
   {
-    "id": "level2_2",
-    "name": "Level 2 Card 2",
-    "type": "ENEMY",
+    "id": 30,
+    "type": "MeteorSwarm",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "FRONT"
-    },
+    "description": "Large meteors from the front.",
     "imagePath": "assets/cards/ii/card_2.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "FRONT",
+    "smallMeteors": 2,
+    "largeMeteors": 2
   },
   {
-    "id": "level2_3",
-    "name": "Level 2 Card 3",
-    "type": "REWARD",
+    "id": 31,
+    "type": "Planets",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "You find new planets.",
     "imagePath": "assets/cards/ii/card_3.png",
-    "requiresPlayerChoice": true
+    "planets": [
+      {
+        "name": "Zeta",
+        "goods": [
+          "RED",
+          "GREEN"
+        ]
+      }
+    ]
   },
   {
-    "id": "level2_4",
-    "name": "Level 2 Card 4",
-    "type": "ENEMY",
+    "id": 32,
+    "type": "Pirates",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 5,
-      "direction": "FRONT"
-    },
+    "description": "Stronger pirates are approaching.",
     "imagePath": "assets/cards/ii/card_4.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 3
+    },
+    "penalty": {
+      "days": 2
+    },
+    "power": 5
   },
   {
-    "id": "level2_5",
-    "name": "Level 2 Card 5",
-    "type": "REWARD",
+    "id": 33,
+    "type": "AbandonedShip",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "You board a damaged ship.",
     "imagePath": "assets/cards/ii/card_5.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "crew": 2
+    }
   },
   {
-    "id": "level2_6",
-    "name": "Level 2 Card 6",
-    "type": "ENEMY",
+    "id": 34,
+    "type": "Stardust",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 4,
-      "direction": "REAR"
-    },
-    "imagePath": "assets/cards/ii/card_6.png",
-    "requiresPlayerChoice": true
+    "description": "Radiation storms and stardust.",
+    "imagePath": "assets/cards/ii/card_6.png"
   },
   {
-    "id": "level2_7",
-    "name": "Level 2 Card 7",
-    "type": "REWARD",
+    "id": 35,
+    "type": "Smugglers",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Cunning smugglers spotted.",
     "imagePath": "assets/cards/ii/card_7.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 3
+    },
+    "penalty": {
+      "cargoLoss": 1
+    },
+    "power": 4
   },
   {
-    "id": "level2_8",
-    "name": "Level 2 Card 8",
-    "type": "ENEMY",
+    "id": 36,
+    "type": "Slavers",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "FRONT"
-    },
+    "description": "Slavers try to abduct your crew.",
     "imagePath": "assets/cards/ii/card_8.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 2
+    },
+    "penalty": {
+      "crewLoss": 2
+    },
+    "power": 5
   },
   {
-    "id": "level2_9",
-    "name": "Level 2 Card 9",
-    "type": "REWARD",
+    "id": 37,
+    "type": "CombatZone",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Heavy combat zone.",
     "imagePath": "assets/cards/ii/card_9.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 5
+    },
+    "penalty": {
+      "days": 2
+    },
+    "power": 6
   },
   {
-    "id": "level2_10",
-    "name": "Level 2 Card 10",
-    "type": "ENEMY",
+    "id": 38,
+    "type": "Epidemic",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 5,
-      "direction": "FRONT"
-    },
+    "description": "Contagion spreads onboard.",
     "imagePath": "assets/cards/ii/card_10.png",
-    "requiresPlayerChoice": true
+    "penalty": {
+      "crewLoss": 1
+    }
   },
   {
-    "id": "level2_11",
-    "name": "Level 2 Card 11",
-    "type": "REWARD",
+    "id": 39,
+    "type": "MeteorSwarm",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Meteor barrage from left.",
     "imagePath": "assets/cards/ii/card_11.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "LEFT",
+    "smallMeteors": 3,
+    "largeMeteors": 2
   },
   {
-    "id": "level2_12",
-    "name": "Level 2 Card 12",
-    "type": "ENEMY",
+    "id": 40,
+    "type": "AbandonedStation",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 4,
-      "direction": "REAR"
-    },
+    "description": "Exploration opportunity.",
     "imagePath": "assets/cards/ii/card_12.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "cargo": 3
+    }
   },
   {
-    "id": "level2_13",
-    "name": "Level 2 Card 13",
-    "type": "REWARD",
+    "id": 41,
+    "type": "Pirates",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Well-armed pirates block your path.",
     "imagePath": "assets/cards/ii/card_13.png",
-    "requiresPlayerChoice": true
-  },
-  {
-    "id": "level2_14",
-    "name": "Level 2 Card 14",
-    "type": "ENEMY",
-    "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "FRONT"
+    "reward": {
+      "credits": 4
     },
-    "imagePath": "assets/cards/ii/card_14.png",
-    "requiresPlayerChoice": true
+    "penalty": {
+      "days": 2
+    },
+    "power": 6
   },
   {
-    "id": "level2_15",
-    "name": "Level 2 Card 15",
-    "type": "REWARD",
+    "id": 42,
+    "type": "OpenSpace",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Calm sector with nothing happening.",
+    "imagePath": "assets/cards/ii/card_14.png"
+  },
+  {
+    "id": 43,
+    "type": "Planets",
+    "level": "LEVEL2",
+    "description": "Friendly planet for trading.",
     "imagePath": "assets/cards/ii/card_15.png",
-    "requiresPlayerChoice": true
+    "planets": [
+      {
+        "name": "Velox",
+        "goods": [
+          "YELLOW",
+          "BLUE"
+        ]
+      }
+    ]
   },
   {
-    "id": "level2_16",
-    "name": "Level 2 Card 16",
-    "type": "ENEMY",
+    "id": 44,
+    "type": "Stardust",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 5,
-      "direction": "FRONT"
-    },
-    "imagePath": "assets/cards/ii/card_16.png",
-    "requiresPlayerChoice": true
+    "description": "Star debris covers your hull.",
+    "imagePath": "assets/cards/ii/card_16.png"
   },
   {
-    "id": "level2_17",
-    "name": "Level 2 Card 17",
-    "type": "REWARD",
+    "id": 45,
+    "type": "CombatZone",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Another violent skirmish zone.",
     "imagePath": "assets/cards/ii/card_17.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 4
+    },
+    "penalty": {
+      "days": 3
+    },
+    "power": 5
   },
   {
-    "id": "level2_18",
-    "name": "Level 2 Card 18",
-    "type": "ENEMY",
+    "id": 46,
+    "type": "MeteorSwarm",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 4,
-      "direction": "REAR"
-    },
+    "description": "Meteor strike from rear.",
     "imagePath": "assets/cards/ii/card_18.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "REAR",
+    "smallMeteors": 2,
+    "largeMeteors": 1
   },
   {
-    "id": "level2_19",
-    "name": "Level 2 Card 19",
-    "type": "REWARD",
+    "id": 47,
+    "type": "AbandonedShip",
     "level": "LEVEL2",
-    "description": "You find an abandoned freighter.",
-    "effect": "gain_crew",
-    "conditions": [
-      "has_cabin"
-    ],
-    "rewards": [
-      "crew"
-    ],
-    "penalties": [],
-    "metadata": null,
+    "description": "Unmanned ship drifting nearby.",
     "imagePath": "assets/cards/ii/card_19.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "crew": 1
+    }
   },
   {
-    "id": "level2_20",
-    "name": "Level 2 Card 20",
-    "type": "ENEMY",
+    "id": 48,
+    "type": "Epidemic",
     "level": "LEVEL2",
-    "description": "Enemy ship approaches!",
-    "effect": "combat",
-    "conditions": [
-      "has_cannons"
-    ],
-    "rewards": [
-      "credits"
-    ],
-    "penalties": [
-      "take_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "FRONT"
-    },
+    "description": "Illness weakens your crew.",
     "imagePath": "assets/cards/ii/card_20.png",
-    "requiresPlayerChoice": true
+    "penalty": {
+      "crewLoss": 2
+    }
   },
   {
-    "id": "level3_1",
-    "name": "Level 3 Card 1",
-    "type": "HAZARD",
+    "id": 49,
+    "type": "OpenSpace",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 7,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
-    "imagePath": "assets/cards/iii/card_1.png",
-    "requiresPlayerChoice": true
+    "description": "No activity in this quadrant.",
+    "imagePath": "assets/cards/iii/card_1.png"
   },
   {
-    "id": "level3_2",
-    "name": "Level 3 Card 2",
-    "type": "ENEMY",
+    "id": 50,
+    "type": "MeteorSwarm",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 8,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Massive meteor storm from front.",
     "imagePath": "assets/cards/iii/card_2.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "FRONT",
+    "smallMeteors": 3,
+    "largeMeteors": 2
   },
   {
-    "id": "level3_3",
-    "name": "Level 3 Card 3",
-    "type": "HAZARD",
+    "id": 51,
+    "type": "Planets",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 9,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
+    "description": "Exotic planets to trade with.",
     "imagePath": "assets/cards/iii/card_3.png",
-    "requiresPlayerChoice": true
+    "planets": [
+      {
+        "name": "Orion-3",
+        "goods": [
+          "RED",
+          "YELLOW"
+        ]
+      }
+    ]
   },
   {
-    "id": "level3_4",
-    "name": "Level 3 Card 4",
-    "type": "ENEMY",
+    "id": 52,
+    "type": "Pirates",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Elite pirate squad attacks.",
     "imagePath": "assets/cards/iii/card_4.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 5
+    },
+    "penalty": {
+      "days": 3
+    },
+    "power": 7
   },
   {
-    "id": "level3_5",
-    "name": "Level 3 Card 5",
-    "type": "HAZARD",
+    "id": 53,
+    "type": "AbandonedShip",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 7,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "High-tech abandoned ship found.",
     "imagePath": "assets/cards/iii/card_5.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "crew": 2
+    }
   },
   {
-    "id": "level3_6",
-    "name": "Level 3 Card 6",
-    "type": "ENEMY",
+    "id": 54,
+    "type": "Stardust",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 8,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
-    "imagePath": "assets/cards/iii/card_6.png",
-    "requiresPlayerChoice": true
+    "description": "Thick stardust reduces ship integrity.",
+    "imagePath": "assets/cards/iii/card_6.png"
   },
   {
-    "id": "level3_7",
-    "name": "Level 3 Card 7",
-    "type": "HAZARD",
+    "id": 55,
+    "type": "Smugglers",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 9,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Advanced smugglers detected.",
     "imagePath": "assets/cards/iii/card_7.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 4
+    },
+    "penalty": {
+      "cargoLoss": 2
+    },
+    "power": 5
   },
   {
-    "id": "level3_8",
-    "name": "Level 3 Card 8",
-    "type": "ENEMY",
+    "id": 56,
+    "type": "Slavers",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Heavily armed slaver craft.",
     "imagePath": "assets/cards/iii/card_8.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 3
+    },
+    "penalty": {
+      "crewLoss": 2
+    },
+    "power": 6
   },
   {
-    "id": "level3_9",
-    "name": "Level 3 Card 9",
-    "type": "HAZARD",
+    "id": 57,
+    "type": "CombatZone",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 7,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
+    "description": "High-risk combat engagement.",
     "imagePath": "assets/cards/iii/card_9.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 6
+    },
+    "penalty": {
+      "days": 3
+    },
+    "power": 7
   },
   {
-    "id": "level3_10",
-    "name": "Level 3 Card 10",
-    "type": "ENEMY",
+    "id": 58,
+    "type": "Epidemic",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 8,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Crew health crisis!",
     "imagePath": "assets/cards/iii/card_10.png",
-    "requiresPlayerChoice": true
+    "penalty": {
+      "crewLoss": 3
+    }
   },
   {
-    "id": "level3_11",
-    "name": "Level 3 Card 11",
-    "type": "HAZARD",
+    "id": 59,
+    "type": "MeteorSwarm",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 9,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Meteor storm from left.",
     "imagePath": "assets/cards/iii/card_11.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "LEFT",
+    "smallMeteors": 2,
+    "largeMeteors": 2
   },
   {
-    "id": "level3_12",
-    "name": "Level 3 Card 12",
-    "type": "ENEMY",
+    "id": 60,
+    "type": "AbandonedStation",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
+    "description": "Valuable tech in an abandoned station.",
     "imagePath": "assets/cards/iii/card_12.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "cargo": 4
+    }
   },
   {
-    "id": "level3_13",
-    "name": "Level 3 Card 13",
-    "type": "HAZARD",
+    "id": 61,
+    "type": "Pirates",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 7,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Coordinated pirate assault.",
     "imagePath": "assets/cards/iii/card_13.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 6
+    },
+    "penalty": {
+      "days": 2
+    },
+    "power": 8
   },
   {
-    "id": "level3_14",
-    "name": "Level 3 Card 14",
-    "type": "ENEMY",
+    "id": 62,
+    "type": "OpenSpace",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 8,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
-    "imagePath": "assets/cards/iii/card_14.png",
-    "requiresPlayerChoice": true
+    "description": "Drifting in silence.",
+    "imagePath": "assets/cards/iii/card_14.png"
   },
   {
-    "id": "level3_15",
-    "name": "Level 3 Card 15",
-    "type": "HAZARD",
+    "id": 63,
+    "type": "Planets",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 9,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
+    "description": "Wealthy planets welcome you.",
     "imagePath": "assets/cards/iii/card_15.png",
-    "requiresPlayerChoice": true
+    "planets": [
+      {
+        "name": "Aurora",
+        "goods": [
+          "BLUE",
+          "GREEN"
+        ]
+      }
+    ]
   },
   {
-    "id": "level3_16",
-    "name": "Level 3 Card 16",
-    "type": "ENEMY",
+    "id": 64,
+    "type": "Stardust",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
-    "imagePath": "assets/cards/iii/card_16.png",
-    "requiresPlayerChoice": true
+    "description": "Ship hull scraped by stellar debris.",
+    "imagePath": "assets/cards/iii/card_16.png"
   },
   {
-    "id": "level3_17",
-    "name": "Level 3 Card 17",
-    "type": "HAZARD",
+    "id": 65,
+    "type": "CombatZone",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 7,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Deadly battleground ahead.",
     "imagePath": "assets/cards/iii/card_17.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "credits": 5
+    },
+    "penalty": {
+      "days": 3
+    },
+    "power": 6
   },
   {
-    "id": "level3_18",
-    "name": "Level 3 Card 18",
-    "type": "ENEMY",
+    "id": 66,
+    "type": "MeteorSwarm",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 8,
-      "direction": "FRONT",
-      "large": 2,
-      "small": 2
-    },
+    "description": "Meteor strike from rear.",
     "imagePath": "assets/cards/iii/card_18.png",
-    "requiresPlayerChoice": true
+    "incomingDirection": "REAR",
+    "smallMeteors": 2,
+    "largeMeteors": 2
   },
   {
-    "id": "level3_19",
-    "name": "Level 3 Card 19",
-    "type": "HAZARD",
+    "id": 67,
+    "type": "AbandonedShip",
     "level": "LEVEL3",
-    "description": "Heavy meteor shower ahead!",
-    "effect": "meteor_swarm",
-    "conditions": [],
-    "rewards": [],
-    "penalties": [
-      "component_loss"
-    ],
-    "metadata": {
-      "power": 9,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Find survivors in damaged ship.",
     "imagePath": "assets/cards/iii/card_19.png",
-    "requiresPlayerChoice": true
+    "reward": {
+      "crew": 1
+    }
   },
   {
-    "id": "level3_20",
-    "name": "Level 3 Card 20",
-    "type": "ENEMY",
+    "id": 68,
+    "type": "Epidemic",
     "level": "LEVEL3",
-    "description": "You enter a hostile sector!",
-    "effect": "enemy_fleet",
-    "conditions": [
-      "has_shields"
-    ],
-    "rewards": [
-      "credits",
-      "reputation"
-    ],
-    "penalties": [
-      "critical_damage"
-    ],
-    "metadata": {
-      "power": 6,
-      "direction": "LEFT",
-      "large": 1,
-      "small": 2
-    },
+    "description": "Infection spreads rapidly.",
     "imagePath": "assets/cards/iii/card_20.png",
-    "requiresPlayerChoice": true
+    "penalty": {
+      "crewLoss": 2
+    }
   }
 ]
