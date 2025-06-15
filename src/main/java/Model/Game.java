@@ -1,51 +1,53 @@
 package Model;
 
-import Controller.Enums.MatchLevel;
-import Controller.State;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.FlightBoard;
 import Model.Ship.Components.SpaceshipComponent;
+import Controller.Enums.MatchLevel;
+import Controller.State;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the main Game class, managing players, the flight board, the component pool,
- * and overall match state.
- * This class unifies responsibilities previously split across Game and GameBuilder.
+ * Represents a game session of Galaxy Trucker.
+ * Manages players, the tile pool, the flight board, and overall game state.
  */
 public class Game {
-
-    private final List<Player> players; // All players in the current game
-    private final FlightBoard flightBoard; // The central game board (flight phase)
-    private final List<SpaceshipComponent> componentsPool; // Pool of tiles to use during the building phase
-    private final MatchLevel level; // Match difficulty level
+    // List of players in the game
+    private final List<Player> players;
+    // Difficulty level of the match (Trial, Level 2, etc.)
+    private final MatchLevel level;
+    // Fixed-size array of spaceship components (exactly 156 tiles)
+    private final SpaceshipComponent[] tiles;
+    // FlightBoard containing the adventure cards deck
+    private final FlightBoard flightBoard;
+    // Current game state (e.g., BUILDING, FLIGHT, etc.)
     private State state;
-    private boolean error = false;
+    // Error flag used to track game invalid state
+    private boolean error;
 
     /**
-     * Constructor to initialize the game with all required elements.
+     * Constructs a new Game instance.
      *
-     * @param players list of players
-     * @param level match difficulty
-     * @param componentsPool list of spaceship components
-     * @param adventureCards the deck of adventure cards for the flight phase
+     * @param players        list of players
+     * @param level          match difficulty level
+     * @param tiles          array of spaceship components (must be length 156)
+     * @param adventureCards list of adventure cards
      */
     public Game(List<Player> players, MatchLevel level,
-                List<SpaceshipComponent> componentsPool,
+                SpaceshipComponent[] tiles,
                 List<AdventureCardFilip> adventureCards) {
         if (players == null || players.isEmpty())
             throw new IllegalArgumentException("Player list must not be empty");
         if (level == null)
             throw new IllegalArgumentException("Match level must not be null");
-        if (componentsPool == null || componentsPool.isEmpty())
-            throw new IllegalArgumentException("Component pool must not be empty");
-        if (componentsPool.size() != 156)
+        if (tiles == null || tiles.length != 156)
             throw new IllegalArgumentException("There must be exactly 156 spaceship components.");
 
         this.players = players;
         this.level = level;
-        this.componentsPool = componentsPool;
+        this.tiles = tiles;
         this.flightBoard = new FlightBoard(adventureCards.toArray(new AdventureCardFilip[0]));
     }
 
@@ -99,26 +101,34 @@ public class Game {
     }
 
     /**
-     * Picks a component from the pool by index and removes it.
+     * Picks a component from the array by index and removes it.
      *
      * @param index the index of the component
      * @return the component removed
      */
     public SpaceshipComponent pickComponent(int index) {
-        if (index < 0 || index >= componentsPool.size())
+        if (index < 0 || index >= tiles.length || tiles[index] == null)
             throw new IndexOutOfBoundsException("Invalid component index");
-        return componentsPool.remove(index);
+        SpaceshipComponent picked = tiles[index];
+        tiles[index] = null;
+        return picked;
     }
 
     /**
-     * Adds a component back into the pool.
+     * Adds a component back into the first available slot.
      *
      * @param component the component to add
      */
     public void addComponent(SpaceshipComponent component) {
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null");
-        this.componentsPool.add(component);
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] == null) {
+                tiles[i] = component;
+                return;
+            }
+        }
+        throw new IllegalStateException("No space left to add the component");
     }
 
     /**
@@ -128,8 +138,8 @@ public class Game {
      */
     public List<SpaceshipComponent> viewVisibleComponents() {
         List<SpaceshipComponent> visible = new ArrayList<>();
-        for (SpaceshipComponent c : componentsPool) {
-            if (c.isVisible()) visible.add(c);
+        for (SpaceshipComponent c : tiles) {
+            if (c != null && c.isVisible()) visible.add(c);
         }
         return visible;
     }
@@ -152,20 +162,39 @@ public class Game {
         return this.level;
     }
 
+    /**
+     * Sets the current game state.
+     *
+     * @param phase new game state
+     */
     public void setState(State phase) {
         this.state = phase;
     }
 
+    /**
+     * Returns the current game state.
+     *
+     * @return game state
+     */
     public State getState() {
         return state;
     }
 
+    /**
+     * Returns whether the game is in an error state.
+     *
+     * @return true if an error occurred
+     */
     public boolean isError() {
         return error;
     }
 
+    /**
+     * Sets the error state.
+     *
+     * @param error true if an error occurred
+     */
     public void setError(boolean error) {
         this.error = error;
     }
 }
-
