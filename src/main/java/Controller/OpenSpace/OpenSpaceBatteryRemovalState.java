@@ -4,7 +4,10 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
+import Model.Enums.Direction;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
@@ -56,48 +59,59 @@ public class OpenSpaceBatteryRemovalState extends State {
      * @param coordinates the coordinates of the battery compartment to remove a battery from
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         int placesGained = declaredPower*2;
+        Controller controller = context.getController();
 
         if(itemType != ItemType.BATTERIES){
-            throw new IllegalArgumentException("Invalid item type, only BATTERIES are allowed");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid item type, only BATTERIES are allowed");
         }
 
         if(coordinates == null){
-            throw new IllegalArgumentException("Invalid coordinates type, coordinates is null");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid coordinates type, coordinates is null");
         }
 
         if(declaredPower < 0){
-            throw new IllegalArgumentException("Invalid declared power type, declared power is negative");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid declared power type, declared power is negative");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-           throw new IllegalArgumentException("It's not your turn to throw the dice.");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("It's not your turn to throw the dice.");
+        }
 
+        placesGained += player.getShipBoard().calculateThrust(Direction.DOWN);//??
         //TODO: placesGained += player.getShipBoard().getBaseEnginePower();
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
+        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
+        }
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
         declaredPower--;
         if(declaredPower == 0){
 
-            // TODO: Aggiornare la posizione del giocatore sommando placesGained
+            controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
 
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){         //passati tutti
-                controller.setState(new FlightPhase(controller));
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
             }
             else{       //manca qualcuno da gestire
-                controller.setState(new OpenSpaceEngineDeclarationState(context));
+                controller.getModel().setState(new OpenSpaceEngineDeclarationState(context));
+                controller.getModel().setError(false);
             }
         }
         else{       //rimuovi altra batteria
-            controller.setState(new OpenSpaceBatteryRemovalState(context, declaredPower));
+            controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, declaredPower));
+            controller.getModel().setError(false);
         }
     }
 

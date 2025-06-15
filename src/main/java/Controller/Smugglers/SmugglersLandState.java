@@ -3,6 +3,7 @@ package Controller.Smugglers;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Good;
 import Model.Player;
 import Model.Ship.Components.CargoHold;
@@ -41,37 +42,46 @@ public class SmugglersLandState extends State{
      * @param CargoHoldIndex the index within the cargo hold to place the good
      */
     @Override
-    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex){
+    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
 
         if(coordinates == null){
-            throw new IllegalArgumentException("Invalid coordinates");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid coordinates");
         }
 
         if(goodIndex < 0 || goodIndex >= context.getGoods().size()){
+            controller.getModel().setError(true);
             throw new IndexOutOfBoundsException("Invalid goodIndex");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
+        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {  //non è un CargoHold
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Invalid component type, expected CargoHold");
+        }
 
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
-           throw new NullPointerException("Good not found");
+            controller.getModel().setError(true);
+           throw new InvalidParameters("Good not found");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Cannot add good to the cargo hold");
         }
 
         context.removeGood(selectedGood);
-        controller.setState(new SmugglersLandState(context));
+        controller.getModel().setState(new SmugglersLandState(context));
+        controller.getModel().setError(false);
     }
 
     /**
@@ -84,32 +94,38 @@ public class SmugglersLandState extends State{
      * @param newIndex the target index in the destination cargo hold
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
+            controller.getModel().setError(true);
            throw new InvalidContextualAction("Invalid components, expected CargoHolds");
         }
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            throw new NullPointerException("Good not found");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Good not found");
         }
 
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Cannot add good to the cargo hold");
         }
         oldCargoHold.removeGood(oldIndex);
-        controller.setState(new SmugglersLandState(context));
+        controller.getModel().setState(new SmugglersLandState(context));
+        controller.getModel().setError(false);
     }
 
     /**
@@ -119,15 +135,19 @@ public class SmugglersLandState extends State{
      * @param playerName the name of the player finishing the reward phase
      */
     @Override
-    public void end(String playerName){
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
         if(context.getSpecialPlayers().isEmpty()){
-            controller.setState(new FlightPhase(controller));
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
         }else{
-            controller.setState(new SmugglersGoodsRemovalState(context)); //manca qualcuno da gestire
+            controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //manca qualcuno da gestire
+            controller.getModel().setError(false);
         }
     }
 }

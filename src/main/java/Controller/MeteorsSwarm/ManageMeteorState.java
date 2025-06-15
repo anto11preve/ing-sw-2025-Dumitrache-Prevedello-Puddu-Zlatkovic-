@@ -3,6 +3,7 @@ package Controller.MeteorsSwarm;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.Meteor;
@@ -23,10 +24,10 @@ public class ManageMeteorState extends State {
     /**
      * The context of the game, which contains the current state and player information.
      */
-    private Context context;
+    private final Context context;
 
     /** The row or column index (depending on the meteor's direction) targeted by the meteor. */
-    private int number;
+    private final int number;
 
     /** Flag indicating whether a component of the ship has been hit. */
     private boolean hit = false;
@@ -50,16 +51,18 @@ public class ManageMeteorState extends State {
      * @param playerName the name of the player whose turn is ending
      */
     @Override
-    public void end(String playerName) throws InvalidMethodParameters {
+    public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
+            controller.getModel().setError(true);
             throw new InvalidMethodParameters("Player " + playerName + " is not in turn.");
         }
 
         Meteor meteor = (Meteor) context.getProjectile(0);
         if (meteor == null) {
-            throw new NullPointerException("Meteors are empty");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Meteors are empty");
         }
 
         SpaceshipComponent component = null;
@@ -70,7 +73,7 @@ public class ManageMeteorState extends State {
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        player.getShipBoard().removeComponent(coordinates);;
+                        player.getShipBoard().removeComponent(coordinates);
                         player.addJunk();
                     }
                 }
@@ -117,7 +120,7 @@ public class ManageMeteorState extends State {
         }
         boolean cannonFound = false;
 
-        /// if he gets hit by a meteor, check if he has a cannon that can be used to protect the ship (in case of a big meteor), or a shield (in case of a small meteor)
+        // if he gets hit by a meteor, check if he has a cannon that can be used to protect the ship (in case of a big meteor), or a shield (in case of a small meteor)
         if(hit){
             if(meteor.isBig()){
 
@@ -198,7 +201,8 @@ public class ManageMeteorState extends State {
                 if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component == null || component.getConnectorAt(meteor.getSide()) ==null)))){
                     boolean brokenShip = player.getShipBoard().checkIntegrity();
                     if (brokenShip) {
-                        controller.setState(new MeteorsCheckShipState(context));
+                        controller.getModel().setState(new MeteorsCheckShipState(context));
+                        controller.getModel().setError(false);
                         return;
                     }
                 }
@@ -206,12 +210,15 @@ public class ManageMeteorState extends State {
                 if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
                     context.removeProjectile(meteor);
                     if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                        controller.setState(new FlightPhase(controller));
+                        controller.getModel().setState(new FlightPhase(controller));
+                        controller.getModel().setError(false);
                         return;
                     }
-                    controller.setState(new MeteorsState(context));
+                    controller.getModel().setState(new MeteorsState(context));
+                    controller.getModel().setError(false);
                 } else {
-                    controller.setState(new ManageMeteorState(context,number));
+                    controller.getModel().setState(new ManageMeteorState(context,number));
+                    controller.getModel().setError(false);
                 }
 
 
@@ -323,17 +330,15 @@ public class ManageMeteorState extends State {
             if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
                 context.removeProjectile(meteor);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                    controller.setState(new FlightPhase(controller));
+                    controller.getModel().setState(new FlightPhase(controller));
                     return;
                 }
-                controller.setState(new MeteorsState(context));
-                return;
+                controller.getModel().setState(new MeteorsState(context));
             } else {
-                controller.setState(new ManageMeteorState(context, number));
-                return;
+                controller.getModel().setState(new ManageMeteorState(context, number));
             }
         } else {
-            return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
+            return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o scudi
         }
     }
 }

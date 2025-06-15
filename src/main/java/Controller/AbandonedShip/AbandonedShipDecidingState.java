@@ -3,7 +3,9 @@ package Controller.AbandonedShip;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
@@ -44,20 +46,22 @@ public class AbandonedShipDecidingState extends State {
      * @param playerName the name of the player choosing to skip the reward.
      */
     @Override
-    public void skipReward(String playerName){
+    public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer == controller.getModel().getFlightBoard().getTurnOrder()[0]){  //se è il suo turno
-            context.removePlayer(currentPlayer);
-            if(context.getPlayers().isEmpty()){         //se skippano tutti....
-                controller.setState(new FlightPhase(controller));
-            }
-            else{
-                controller.setState(new AbandonedShipDecidingState(context));
-            }
+        if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to skip the reward.");
+        }
 
-        }else{
-            throw new IllegalArgumentException("It's not your turn to skip the reward.");
+        context.removePlayer(currentPlayer);
+        if(context.getPlayers().isEmpty()){         //se skippano tutti....
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+        }
+        else{
+            controller.getModel().setState(new AbandonedShipDecidingState(context));
+            controller.getModel().setError(false);
         }
 
     }
@@ -72,19 +76,24 @@ public class AbandonedShipDecidingState extends State {
      * @param rewardType the type of reward chosen (has to be credits).
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType) {
+    public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidParameters {
 
-        if(rewardType != RewardType.CREDITS){
-            throw new IllegalArgumentException("Invalid reward type. Only credits are accepted.");
-        }
         Controller controller = context.getController();
+        if(rewardType != RewardType.CREDITS){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid reward type. Only credits are accepted.");
+        }
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn to take the reward.");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to take the reward.");
+        }
+
         player.deltaCredits(context.getCredits());
 
-        // TODO: Implement the logic to remove days from the player
+        controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
 
-        controller.setState(new AbandonedShipCrewRemovalState(context));
+        controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
+        controller.getModel().setError(false);
     }
 }

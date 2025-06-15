@@ -1,5 +1,6 @@
 package Model.Ship.Components;
 
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
@@ -141,4 +142,23 @@ public class Cannon extends SpaceshipComponent {
         return getEffectivePower(direction); // cannon-specific logic
     }
 
+
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getCannons().contains(this)){
+            throw new RuntimeException("Cannon already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().addCannon(this);
+        }
+    }
+
+    @Override
+    public void removed() {
+        if(!getShipBoard().getCondensedShip().getCannons().contains(this)){
+            throw new RuntimeException("Cannon not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().removeCannon(this);
+        }
+
+    }
 }

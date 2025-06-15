@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -57,27 +58,34 @@ public class SmugglersBatteryRemovalState extends State{
      * @param coordinates the coordinates of the battery compartment
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
+        Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            throw new IllegalArgumentException("Item type must be BATTERIES");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Item type must be BATTERIES");
         }
 
         if(coordinates == null){
-            throw new IllegalArgumentException("Invalid coordinates");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid coordinates");
         }
 
         if(declaredPower <0){
-            throw new IllegalArgumentException("Invalid declared power");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid declared power");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
+        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not a valid battery compartment");
+        }
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -85,30 +93,36 @@ public class SmugglersBatteryRemovalState extends State{
         actualPower++;
         if(declaredPower == 0){
             if(actualPower > context.getPower()){
-                controller.setState(new SmugglersLandState(context));
+                controller.getModel().setState(new SmugglersLandState(context));
+                controller.getModel().setError(false);
             } else if(actualPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                    controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                    controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire
-                    controller.setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                    controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                    controller.getModel().setError(false);
                 }
             }
             else{
                 context.removePlayer(player);
                 context.addSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                    controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                    controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire
-                    controller.setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                    controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                    controller.getModel().setError(false);
                 }
             }
 
         }
         else{       //rimuovi altra batteria
-            controller.setState(new SlaversBatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setError(false);
         }
     }
 
@@ -120,21 +134,26 @@ public class SmugglersBatteryRemovalState extends State{
      * @param rewardType must be {@link RewardType#CREDITS}
      */
     @Override
-    public void getReward(String playerName, RewardType rewardType){
+    public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
+        Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
-            throw new IllegalArgumentException("Reward type must be CREDITS");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Reward type must be CREDITS");
         }
 
         if(declaredPower < 0){
-            throw new IllegalArgumentException("Invalid declared power");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid declared power");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
         if(actualPower > context.getPower() && declaredPower == 0){
-            controller.setState(new SmugglersLandState(context));
+            controller.getModel().setState(new SmugglersLandState(context));
+            controller.getModel().setError(false);
         }
 
     }

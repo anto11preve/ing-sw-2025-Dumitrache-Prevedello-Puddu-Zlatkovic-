@@ -3,10 +3,7 @@ package Model.Ship;
 import Model.Enums.Crewmates;
 import Model.Enums.Direction;
 import Model.Enums.Good;
-import Model.Ship.Components.BatteryCompartment;
-import Model.Ship.Components.Cabin;
-import Model.Ship.Components.Cannon;
-import Model.Ship.Components.CargoHold;
+import Model.Ship.Components.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,19 +11,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CondensedShip {
-    private List<Cabin> cabins;
-    private List<BatteryCompartment> batteryCompartments;
-    private List<CargoHold> cargoHolds;
-    private List<Cannon> cannons;
-    private EnginesCounter engines;
-    private AlienCounter aliens;
-    private ShieldCounter shields;
+    private final List<Cabin> cabins;
+    private final List<BatteryCompartment> batteryCompartments;
+    private final List<CargoHold> cargoHolds;
+    private final List<Cannon> cannons;
+    private final List<AlienLifeSupport> alienSupports;
+    private final EnginesCounter engines;
+    private final AlienCounter aliens;
+    private final ShieldCounter shields;
 
     public CondensedShip() {
         this.cabins = new ArrayList<>();
         this.batteryCompartments = new ArrayList<>();
         this.cargoHolds = new ArrayList<>();
         this.cannons = new ArrayList<>();
+        this.alienSupports = new ArrayList<>();
         this.engines = new EnginesCounter();
         this.aliens = new AlienCounter();
         this.shields = new ShieldCounter();
@@ -134,12 +133,8 @@ public class CondensedShip {
     public List<BatteryCompartment> getBatteryCompartments() {
         return batteryCompartments;
     }
-    public void addBatteryCompartment(BatteryCompartment batteryCompartment) {
-        batteryCompartments.add(batteryCompartment);
-    }
-    public void removeBatteryCompartment(BatteryCompartment batteryCompartment) {
-        batteryCompartments.remove(batteryCompartment);
-    }
+    public void addBatteryCompartment(BatteryCompartment batteryCompartment) { batteryCompartments.add(batteryCompartment); }
+    public void removeBatteryCompartment(BatteryCompartment batteryCompartment) { batteryCompartments.remove(batteryCompartment); }
 
     public List<CargoHold> getCargoHolds() {
         return cargoHolds;
@@ -160,6 +155,10 @@ public class CondensedShip {
     public void removeCannon(Cannon cannon) {
         cannons.remove(cannon);
     }
+
+    public List<AlienLifeSupport> getAlienSupports() { return alienSupports; }
+    public void addAlienSupport(AlienLifeSupport alienSupport) { alienSupports.add(alienSupport); }
+    public void removeAlienSupport(AlienLifeSupport alienSupport) { alienSupports.remove(alienSupport); }
 
     public EnginesCounter getEngines() {
         return engines;

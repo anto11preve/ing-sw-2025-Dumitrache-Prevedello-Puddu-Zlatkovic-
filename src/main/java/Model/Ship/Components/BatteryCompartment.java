@@ -1,7 +1,9 @@
 package Model.Ship.Components;
 
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -61,15 +63,22 @@ public class BatteryCompartment extends SpaceshipComponent {
         }
     }
 
-    /*
-    public void added() {
-        // to do
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getBatteryCompartments().contains(this)){
+            throw new RuntimeException("Battery Compartment already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().addBatteryCompartment(this);
+        }
     }
+
+    @Override
     public void removed() {
-        // to do
+        if(!getShipBoard().getCondensedShip().getBatteryCompartments().contains(this)){
+            throw new RuntimeException("Battery Compartment not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().removeBatteryCompartment(this);
+        }
+
     }
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }

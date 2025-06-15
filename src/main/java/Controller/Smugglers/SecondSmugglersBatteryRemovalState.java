@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
@@ -44,24 +45,31 @@ public class SecondSmugglersBatteryRemovalState extends State{
      * @param coordinates the coordinates of the battery compartment
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
+        Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         if(coordinates == null){
-            throw new IllegalArgumentException("Invalid coordinates");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid coordinates");
         }
         if(amount <= 0){
-            throw new IllegalArgumentException("Invalid amount, must be non negative");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid amount, must be non negative");
         }
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component))   //non è un Battery
+        if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not a valid battery compartment");
+        }
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
@@ -69,12 +77,15 @@ public class SecondSmugglersBatteryRemovalState extends State{
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
-                controller.setState(new FlightPhase(controller));
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
             } else {
-                controller.setState(new SmugglersGoodsRemovalState(context));
+                controller.getModel().setState(new SmugglersGoodsRemovalState(context));
+                controller.getModel().setError(false);
             }
         } else {
-            controller.setState(new SecondSmugglersBatteryRemovalState(context, amount));
+            controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+            controller.getModel().setError(false);
         }
     }
 }

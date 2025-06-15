@@ -1,9 +1,12 @@
 package Controller;
 
+import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.*;
 import Model.Board.AdventureCards.Components.Planet;
+import Model.Board.AdventureCards.Penalties.*;
 import Model.Board.AdventureCards.Projectiles.Meteor;
 import Model.Board.AdventureCards.Projectiles.Projectile;
+import Model.Enums.CardLevel;
 import Model.Enums.Good;
 import Model.Player;
 
@@ -24,7 +27,6 @@ public class Context {
     private int credits;
     private int daysLost;
 
-    //un costruttore specifico per ogni carta avventura?
 
     public Context(Controller controller) {
         this.controller = controller;
@@ -43,14 +45,20 @@ public class Context {
     public Context(Controller controller, AbandonedStation card) {
         this(controller);
         this.crewmates = card.getCrew();
-        /// TODO:this.goods = new ArrayList<>(card.getLandingReward().iterator()); //come funziona iterator???
+        this.goods = new ArrayList<>();
+        for(Good good : card.getLandingReward()) {
+            this.goods.add(good);
+        }
         this.daysLost = card.getLandingPenalty().getAmount();
 
     }
 
     public Context(Controller controller, MeteorSwarm card) {
         this(controller);
-        /// TODO:this.projectiles = new ArrayList<>(card.iterator());
+        this.projectiles = new ArrayList<>();
+        for(Meteor meteor : card) {
+            this.projectiles.add(meteor);
+        }
 
     }
 
@@ -63,7 +71,10 @@ public class Context {
         this(controller);
         this.credits = card.getWinReward().getAmount();
         this.daysLost = card.getWinPenalty().getAmount();
-        /// TODO:this.projectiles = new ArrayList<>(card.getLossPenalty().iterator());
+        this.projectiles = new ArrayList<>();
+        for (Projectile projectile : card.getLossPenalty()) {
+            this.projectiles.add(projectile);
+        }
         this.power = card.getPower();
 
     }
@@ -71,8 +82,10 @@ public class Context {
     public Context(Controller controller, Planets card) {
         this(controller);
         this.daysLost = card.getLandingPenalty().getAmount();
-        /// TODO:this.planets = new ArrayList<>(card.iterator());
-
+        this.planets = new ArrayList<>();
+        for (Planet planet : card) {
+            this.planets.add(planet);
+        }
     }
 
     public Context(Controller controller, Slavers card) {
@@ -86,15 +99,32 @@ public class Context {
 
     public Context(Controller controller, Smugglers card) {
         this(controller);
-        /// TODO:this.goods = new ArrayList<>(card.getWinReward().iterator());
+        this.goods = new ArrayList<>();
+        for (Good good : card.getWinReward()) {
+            this.goods.add(good);
+        }
         this.daysLost = card.getWinPenalty().getAmount();
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();
     }
 
-    public Context(Controller controller, CombatZone card) {
+    public Context(Controller controller, CombatZone card) throws InvalidParameters {
         this(controller);
-        /// TODO:
+        if( card.getLevel() == CardLevel.LEVEL_ONE){
+            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
+            this.crewmates = ((CrewPenalty) card.iterator().next().getPenalty()).getAmount();
+            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
+                this.projectiles.add(projectile);
+            }
+        } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
+            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
+            this.crewmates = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
+            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
+                this.projectiles.add(projectile);
+            }
+        } else {
+            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
+        }
 
     }
 
@@ -169,11 +199,6 @@ public class Context {
         return credits;
     }
 
-    public void removeCredit() {
-        if (credits > 0) {
-            credits--;
-        }
-    }
 
     public int getDaysLost() {
         return daysLost;
@@ -183,11 +208,6 @@ public class Context {
         return requiredGoods;
     }
 
-    public void removeRequiredGood() {
-        if (requiredGoods > 0) {
-            requiredGoods--;
-        }
-    }
 
     public int getPower() {
         return power;

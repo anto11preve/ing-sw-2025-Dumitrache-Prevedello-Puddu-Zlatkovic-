@@ -4,6 +4,8 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
+import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
 
@@ -43,44 +45,56 @@ public class SmugglersPowerDeclarationState extends State {
      * @param amount the number of cannons the player wants to use
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
+        Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
-            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            throw new IllegalArgumentException("Invalid amount, must be non-negative");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid amount, must be non-negative");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
-            throw new IllegalArgumentException("It's not your turn to declare power");
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to declare power");
         }
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
                 player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons() < amount){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not enough cannons to declare");
         }
         if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not enough batteries to declare");
         }
 
-        int basePower = 69; //da sistemare
-        ///TODO: int basePower = player.getBasePower();
+        int basePower = 0;
+        basePower += player.getShipBoard().calculateFirepower(Direction.UP);
+        basePower += player.getShipBoard().calculateFirepower(Direction.DOWN);
+        basePower += player.getShipBoard().calculateFirepower(Direction.LEFT);
+        basePower += player.getShipBoard().calculateFirepower(Direction.RIGHT);
 
         if(context.getPower() > (basePower + amount)){
             if(context.getSpecialPlayers().contains(player)){
+                controller.getModel().setError(true);
                 throw new InvalidContextualAction("Player already declared power");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){
-                controller.setState(new SmugglersGoodsRemovalState(context));  //tutti i giocatori gestiti
+                controller.getModel().setState(new SmugglersGoodsRemovalState(context));  //tutti i giocatori gestiti
+                controller.getModel().setError(false);
             }else{
-                controller.setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                controller.getModel().setError(false);
             }
         }else{
-            controller.setState(new SmugglersBatteryRemovalState(context, amount, basePower)); //rimuovi batteria
+            controller.getModel().setState(new SmugglersBatteryRemovalState(context, amount, basePower)); //rimuovi batteria
+            controller.getModel().setError(false);
         }
     }
 }

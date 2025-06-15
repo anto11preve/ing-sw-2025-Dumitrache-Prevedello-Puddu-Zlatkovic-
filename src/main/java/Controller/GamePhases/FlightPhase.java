@@ -2,6 +2,7 @@ package Controller.GamePhases;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.AdventureCard;
 import Model.Board.AdventureCards.AdventureCardFilip;
@@ -18,27 +19,41 @@ public class FlightPhase extends State {
     }
 
     @Override
-    public void pickNextCard(String playerName) {
+    public void onEnter() {
+        for(Player p: this.getController().getModel().getFlightBoard().getTurnOrder()){
+            if(p.getShipBoard().getCondensedShip().getTotalCrew() == 0){
+                this.getController().getModel().getFlightBoard().removePlayingPlayer(p);
+            }
+
+            CardDeck deck;
+            deck = this.getController().getModel().getFlightBoard().getUpcomingCardDeck();
+            if(deck.peekCards().isEmpty() || this.getController().getModel().getFlightBoard().getTurnOrder().length == 0){
+                this.getController().getModel().setState(new RewardsPhase(this.getController()));
+                this.getController().getModel().setError(false);
+            }
+        }
+    }
+
+    @Override
+    public void pickNextCard(String playerName) throws InvalidContextualAction, InvalidParameters {
         Controller controller = this.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer != controller.getModel().getFlightBoard().getTurnOrder()[0]){
-            throw new IllegalArgumentException("It's not your turn to pick the next card.");
+        if(!currentPlayer.equals(controller.getModel().getFlightBoard().getTurnOrder()[0])){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to pick the next card.");
         }
         CardDeck deck;
         deck = controller.getModel().getFlightBoard().getUpcomingCardDeck();
-        if(!deck.peekCards().isEmpty()) {
-            AdventureCardFilip card = deck.popCard();
-            card.accept(new CardResolverVisitor(), controller);
-        } else {
-            throw new InvalidContextualAction("No cards available to pick.");
-        }
+        AdventureCardFilip card = deck.popCard();
+        card.accept(new CardResolverVisitor(), controller);
+        controller.getModel().setError(false);
     }
 
     @Override
     public void leaveRace(String playerName){
         Controller controller = this.getController();
-        controller.getModel().removePlayer(playerName);
-
-        //
+        Player player = controller.getModel().getPlayer(playerName);
+        controller.getModel().getFlightBoard().removePlayingPlayer(player);
+        controller.getModel().setState(new FlightPhase(controller));
     }
 }

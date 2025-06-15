@@ -2,6 +2,7 @@ package Controller.Pirates;
 
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Player;
 import Controller.Context;
@@ -43,21 +44,24 @@ public class PiratesCannonShotsState extends State{
      * @param playerName the name of the player rolling the dice
      */
     @Override
-    public void throwDices(String playerName) {
+    public void throwDices(String playerName) throws InvalidContextualAction, InvalidParameters {
+        Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("No projectiles available for cannon shots.");
         }
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
-            throw new IllegalArgumentException("It's not the player's turn");
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not the player's turn");
         }
         Random rand = new Random();
         int dado1 = controller.getModel().rollDice(); // numero tra 1 e 6
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
-        controller.setState(new PiratesManageShotState(context, number, 0));
+        controller.getModel().setState(new PiratesManageShotState(context, number, 0));
+        controller.getModel().setError(false);
 
     }
 }

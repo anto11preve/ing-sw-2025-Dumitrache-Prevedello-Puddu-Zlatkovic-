@@ -3,6 +3,7 @@ package Controller.AbandonedStation;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Enums.Good;
 import Model.Player;
@@ -44,29 +45,36 @@ public class AbandonedStationLandState extends State {
      * @param CargoHoldIndex the index within the cargo hold where the good should be placed
      */
     @Override
-    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex){
+    public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            return; // Handle the case where it's not the player's turn
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to remove crew members.");
+        }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component))   //non è un CargoHold
-            return;
+        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
+            controller.getModel().setError(true);//non è un CargoHold
+            throw new InvalidContextualAction("Not a valid cargo hold coordinates.");
+        }
 
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
-            return; // Handle the case where the good is not found
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
-            return; // Handle the case where the good cannot be added to the cargo hold
+            controller.getModel().setError(true);
+            throw new InvalidContextualAction("Failed to place good in cargo hold at specified index.");
         }
 
         context.removeGood(selectedGood);
-        controller.setState(new AbandonedStationLandState(context));
+        controller.getModel().setState(new AbandonedStationLandState(context));
+        controller.getModel().setError(false);
     }
 
     /**
@@ -82,34 +90,40 @@ public class AbandonedStationLandState extends State {
      * @param newIndex     the index where the good should be placed in the target cargo hold
      */
     @Override
-    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex){
+    public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn to move the good.");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to move the good.");
+        }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
         if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
-            throw new IllegalArgumentException("Invalid cargo hold coordinates.");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid cargo hold coordinates.");
         }
 
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            throw new NullPointerException("Selected good is null.");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Invalid cargo hold coordinates.");
         }
 
         oldCargoHold.removeGood(oldIndex);
-        controller.setState(new AbandonedStationLandState(context));
+        controller.getModel().setState(new AbandonedStationLandState(context));
+        controller.getModel().setError(false);
     }
 
     /**
@@ -118,12 +132,15 @@ public class AbandonedStationLandState extends State {
      * @param playerName the name of the player ending their action
      */
     @Override
-    public void end(String playerName){
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn to pass.");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to pass.");
+        }
 
-        controller.setState(new FlightPhase(controller));
+        controller.getModel().setState(new FlightPhase(controller));
+        controller.getModel().setError(false);
     }
 }

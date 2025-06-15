@@ -3,6 +3,7 @@ package Controller.Planets;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Player;
@@ -62,29 +63,35 @@ public class ChoosePlanetState extends State {
      * @param name       the name of the chosen planet
      */
     @Override
-    public void choosePlanet(String playerName, String name) {
+    public void choosePlanet(String playerName, String name) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn to choose a planet");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn to choose a planet");
+        }
 
         Planet chosenPlanet = context.getPlanet(name);
         if(chosenPlanet == null) {
-            throw new NullPointerException("Planet not found");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Planet not found");
         }
 
         if(chosenPlanet.isOccupied()) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Planet is already occupied");
         }
 
         chosenPlanet.setOccupied();
         if(chosenPlanets.contains(chosenPlanet)){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Planet already chosen");
         } else {
             chosenPlanets.add(chosenPlanet);
         }
 
         if(context.getSpecialPlayers().contains(player)) {
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Player already chosen a planet");
         }
 
@@ -92,9 +99,11 @@ public class ChoosePlanetState extends State {
         context.removePlayer(player);
 
         if(context.getPlayers().isEmpty() || new HashSet<>(chosenPlanets).containsAll(context.getPlanets())) { // Handle the case where all players have chosen a planet, or all the planets has been chosen
-            controller.setState(new PlanetsLandState(context, chosenPlanets));
+            controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+            controller.getModel().setError(false);
         } else {
-            controller.setState(new ChoosePlanetState(context, chosenPlanets));
+            controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
+            controller.getModel().setError(false);
         }
     }
 
@@ -106,13 +115,16 @@ public class ChoosePlanetState extends State {
      * @param playerName the name of the player skipping the choice
      */
     @Override
-    public void end(String playerName) {
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(player != controller.getModel().getFlightBoard().getTurnOrder()[0])
-            throw new IllegalArgumentException("It's not your turn");
+        if(!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not your turn");
+        }
 
         context.removePlayer(player);
-        controller.setState(new ChoosePlanetState(context, chosenPlanets));
+        controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
+        controller.getModel().setError(false);
     }
 }

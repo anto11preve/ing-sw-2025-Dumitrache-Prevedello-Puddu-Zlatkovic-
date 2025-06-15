@@ -4,9 +4,11 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Controller.Slavers.SlaversCrewRemovalState;
 import Controller.Slavers.SlaversPowerDeclarationState;
+import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
 
@@ -47,46 +49,58 @@ public class PiratesPowerDeclarationState extends State {
      * @param amount     the amount of power the player is declaring
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) {
+    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
+        Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
-            throw new IllegalArgumentException("Invalid double type, expected CANNONS");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            throw new IllegalArgumentException("Negative amount");
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Negative amount");
         }
 
-        Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != controller.getModel().getFlightBoard().getTurnOrder()[0]) {
-            throw new IllegalArgumentException("It's not the player's turn");
+        if (!player.equals(context.getPlayers().getFirst())) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
                 player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons() < amount){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not enough cannons to declare");
         }
 
         if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount){
+            controller.getModel().setError(true);
             throw new InvalidContextualAction("Not enough batteries to declare");
         }
 
-        int basePower = 69; //da correggere
-        ///TODO: basePower = player.getShipBoard().getBasePower();
+        int basePower = 0;
+        basePower += player.getShipBoard().calculateFirepower(Direction.UP);
+        basePower += player.getShipBoard().calculateFirepower(Direction.DOWN);
+        basePower += player.getShipBoard().calculateFirepower(Direction.LEFT);
+        basePower += player.getShipBoard().calculateFirepower(Direction.RIGHT);
 
         if(context.getPower() > (basePower + amount)){
             if(context.getSpecialPlayers().contains(player)){
+                controller.getModel().setError(true);
                 throw new InvalidContextualAction("Player is already marked");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){
-                controller.setState(new PiratesCannonShotsState(context));  //tutti i giocatori gestiti
+                controller.getModel().setState(new PiratesCannonShotsState(context));  //tutti i giocatori gestiti
+                controller.getModel().setError(false);
             }else{
-                controller.setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
+                controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
+                controller.getModel().setError(false);
             }
         }else{
-            controller.setState(new PiratesBatteryRemovalState(context, amount, basePower)); //rimuovi batteria
+            controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, basePower)); //rimuovi batteria
+            controller.getModel().setError(false);
         }
     }
 }

@@ -3,6 +3,7 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Crewmates;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -67,18 +68,23 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
-    /*
-    // Optional: These can be implemented for game logic events if needed
+    @Override
     public void added() {
-        // Called when the component is added to the ship
+        if(getShipBoard().getCondensedShip().getCabins().contains(this)){
+            throw new RuntimeException("Cabin already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().addCabin(this);
+        }
     }
 
+    @Override
     public void removed() {
-        // Called when the component is removed from the ship
+        if(!getShipBoard().getCondensedShip().getCabins().contains(this)){
+            throw new RuntimeException("Cabin not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().removeCabin(this);
+        }
+
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }

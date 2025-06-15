@@ -3,6 +3,7 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Good;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -95,15 +96,22 @@ public class CargoHold extends SpaceshipComponent {
         }
     }
 
-    /*
-    public void added() {
-        // to do
+    @Override
+    public void added(){
+        if(getShipBoard().getCondensedShip().getCargoHolds().contains(this)){
+            throw new RuntimeException("Cargo Hold already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().addCargoHold(this);
+        }
     }
+
+    @Override
     public void removed() {
-        // to do
+        if(!getShipBoard().getCondensedShip().getCargoHolds().contains(this)){
+            throw new RuntimeException("Cargo Hold not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().removeCargoHold(this);
+        }
+
     }
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }
