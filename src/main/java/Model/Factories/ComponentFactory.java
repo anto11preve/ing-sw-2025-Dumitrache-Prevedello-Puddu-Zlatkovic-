@@ -24,10 +24,10 @@ public class ComponentFactory {
             case "Cannon" -> new Cannon(obj);
             case "CargoHold" -> new CargoHold(obj);
             case "Battery" -> new BatteryCompartment(obj);
-            case "Shield" -> new Shield(obj);
-            case "AlienCabin" -> new AlienCabin(obj);
-            case "DoubleCannon" -> new DoubleCannon(obj);
-            case "DoubleEngine" -> new DoubleEngine(obj);
+            case "Shield" -> new ShieldGenerator(obj);
+            case "AlienLifeSupport" -> new AlienLifeSupport(obj);
+            case "DoubleCannon" -> new Cannon(obj);
+            case "DoubleEngine" -> new Engine(obj);
             default -> throw new IllegalArgumentException("Unknown component type: " + type);
         };
     }
