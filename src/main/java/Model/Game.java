@@ -1,15 +1,18 @@
 package Model;
 
 import Model.Board.AdventureCards.AdventureCardFilip;
+import Model.Board.CardDeck;
 import Model.Board.FlightBoard;
-import Model.Ship.Components.SpaceshipComponent;
+import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
 import Controller.State;
+import Model.Ship.Components.SpaceshipComponent;
 import Model.AdventureCardLoader;
 import Model.Utils.ComponentLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a game session of Galaxy Trucker.
@@ -21,7 +24,7 @@ public class Game {
     private final SpaceshipComponent[] tiles;
     private final FlightBoard flightBoard;
     private State state;
-    private boolean error;
+    private boolean error = false;
 
     /**
      * Constructs a new Game instance based only on the match level.
@@ -36,8 +39,28 @@ public class Game {
         this.players = new ArrayList<>();
         this.level = level;
         this.tiles = ComponentLoader.loadComponents();
+
         List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level);
-        this.flightBoard = new FlightBoard(cards.toArray(new AdventureCardFilip[0]));
+
+        if (level == MatchLevel.TRIAL) {
+            List<AdventureCardFilip> learnerCards = cards.stream()
+                    .filter(c -> c.getLevel() == CardLevel.LEARNER)
+                    .limit(8)
+                    .collect(Collectors.toList());
+            this.flightBoard = new FlightBoard(learnerCards.toArray(new AdventureCardFilip[0]));
+        } else {
+            List<AdventureCardFilip> peekable1 = cards.subList(0, 4);
+            List<AdventureCardFilip> peekable2 = cards.subList(4, 8);
+            List<AdventureCardFilip> peekable3 = cards.subList(8, 12);
+            List<AdventureCardFilip> hidden = cards.subList(12, 16);
+
+            List<CardDeck> peekableDecks = new ArrayList<>();
+            peekableDecks.add(new CardDeck(peekable1));
+            peekableDecks.add(new CardDeck(peekable2));
+            peekableDecks.add(new CardDeck(peekable3));
+
+            this.flightBoard = new FlightBoard(hidden.toArray(new AdventureCardFilip[0]), peekableDecks);
+        }
     }
 
     public SpaceshipComponent[] getTiles() {
