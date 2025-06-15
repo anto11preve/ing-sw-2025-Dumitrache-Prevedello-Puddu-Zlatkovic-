@@ -57,7 +57,7 @@ public class AdventureCardLoader {
      * @param level the difficulty level of the match
      * @return list of cards for the selected level
      */
-    public static List<AdventureCardFilip> loadCardsForLevel(MatchLevel level) {
+    public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level) {
         List<AdventureCardFilip> allCards = loadCards("adventure_cards.json");
 
         return switch (level) {
