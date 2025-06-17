@@ -20,9 +20,6 @@ public class OpenSpace extends AdventureCardFilip {
     }
 
     public OpenSpace(JsonObject json) {
-        super(
-                json.get("id").getAsInt(),
-                Model.Enums.CardLevel.valueOf(json.get("level").getAsString())
-        );
+        super(json);
     }
 }

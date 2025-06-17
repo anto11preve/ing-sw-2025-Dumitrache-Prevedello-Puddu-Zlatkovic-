@@ -43,8 +43,8 @@ public class AdventureCardLoaderTest {
     }
 
     @Test
-    public void testLoadCardsForLevel_trial() {
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadCardsForLevel(MatchLevel.TRIAL);
+    public void testLoadAdventureCards_trial() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.TRIAL);
 
         assertNotNull(cards);
         assertEquals(8, cards.size());
@@ -54,8 +54,8 @@ public class AdventureCardLoaderTest {
     }
 
     @Test
-    public void testLoadCardsForLevel_level2() {
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadCardsForLevel(MatchLevel.LEVEL2);
+    public void testLoadAdventureCards_level2() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.LEVEL2);
 
         assertNotNull(cards);
         assertEquals(16, cards.size());

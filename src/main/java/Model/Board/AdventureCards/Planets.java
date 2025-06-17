@@ -43,24 +43,32 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     }
 
     public Planets(JsonObject json) {
-        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+        super(json);
         this.planetList = new ArrayList<>();
 
-        JsonArray array = json.getAsJsonArray("planets");
-        for (JsonElement elem : array) {
-            JsonObject obj = elem.getAsJsonObject();
+        if (json.has("planets")) {
+            JsonArray array = json.getAsJsonArray("planets");
+            for (JsonElement elem : array) {
+                JsonObject obj = elem.getAsJsonObject();
 
-            List<Good> goods = new ArrayList<>();
-            for (JsonElement g : obj.getAsJsonArray("goods")) {
-                goods.add(Good.valueOf(g.getAsString()));
+                List<Good> goods = new ArrayList<>();
+                if (obj.has("goods")) {
+                    for (JsonElement g : obj.getAsJsonArray("goods")) {
+                        goods.add(Good.valueOf(g.getAsString()));
+                    }
+                }
+
+                String name = obj.has("name") ? obj.get("name").getAsString() : "Unknown Planet";
+                this.planetList.add(new Planet(name, goods));
             }
-
-            // Since the Planet class expects (String name, List<Good> goods)
-            String name = "Planet-" + obj.get("id").getAsInt();
-            this.planetList.add(new Planet(name, goods));
         }
 
-        this.landingPenalty = new DaysPenalty(json.getAsJsonObject("landingPenalty").get("value").getAsInt());
+        // Default landing penalty
+        int days = 0;
+        if (json.has("landingPenalty") && json.getAsJsonObject("landingPenalty").has("value")) {
+            days = json.getAsJsonObject("landingPenalty").get("value").getAsInt();
+        }
+        this.landingPenalty = new DaysPenalty(days);
     }
 
 

@@ -12,9 +12,9 @@ public class Epidemic extends AdventureCardFilip {
     }
 
     public Epidemic(JsonObject json) {
-        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
-        if (json.has("crewLost")) {
-            this.crewLost = json.get("crewLost").getAsInt();
+        super(json);
+        if (json.has("penalty") && json.getAsJsonObject("penalty").has("crewLoss")) {
+            this.crewLost = json.getAsJsonObject("penalty").get("crewLoss").getAsInt();
         }
     }
 

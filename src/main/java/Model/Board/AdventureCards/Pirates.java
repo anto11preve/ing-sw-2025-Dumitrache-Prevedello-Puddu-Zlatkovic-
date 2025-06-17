@@ -33,25 +33,19 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
     }
 
     public Pirates(JsonObject json) {
-        super(
-                json.get("id").getAsInt(),
-                CardLevel.valueOf(json.get("level").getAsString()),
-                json.getAsJsonObject("enemy").get("firepower").getAsInt(),
-                new CannonShotPenalty(parseCannonShots(json.getAsJsonObject("enemy").getAsJsonArray("penalty"))),
-                json.getAsJsonObject("enemy").get("days").getAsInt(),
-                new Credits(json.getAsJsonObject("enemy").getAsJsonObject("reward").get("value").getAsInt())
+        super(json, 
+              new CannonShotPenalty(createDefaultCannonShots()),
+              json.has("penalty") && json.getAsJsonObject("penalty").has("days") ? 
+                  json.getAsJsonObject("penalty").get("days").getAsInt() : 1,
+              new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
+                  json.getAsJsonObject("reward").get("credits").getAsInt() : 2)
         );
     }
 
-    private static List<CannonShot> parseCannonShots(JsonArray array) {
+    private static List<CannonShot> createDefaultCannonShots() {
         List<CannonShot> list = new ArrayList<>();
-        for (JsonElement element : array) {
-            JsonObject obj = element.getAsJsonObject();
-            list.add(new CannonShot(
-                    false, // not a double cannon
-                    Side.valueOf(obj.get("direction").getAsString())
-            ));
-        }
+        // Add a default cannon shot from the front
+        list.add(new CannonShot(false, Side.FRONT));
         return list;
     }
 

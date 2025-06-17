@@ -39,7 +39,7 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
      * Parses the number of large and small meteors and the direction.
      */
     public MeteorSwarm(JsonObject json) {
-        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+        super(json);
 
         Side incomingDirection = Side.valueOf(json.get("incomingDirection").getAsString());
         int large = json.get("largeMeteors").getAsInt();

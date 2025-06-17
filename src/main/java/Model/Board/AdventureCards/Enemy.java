@@ -25,6 +25,22 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
         this.winPenalty = new DaysPenalty(days);
         this.winReward = winReward;
     }
+    
+    /**
+     * Constructor for creating an Enemy from a JSON object.
+     * This is meant to be used by subclasses.
+     * 
+     * @param json the JSON object containing the card data
+     * @param lossPenalty the penalty if the player loses
+     * @param winReward the reward if the player wins
+     */
+    protected Enemy(JsonObject json, P lossPenalty, int days, R winReward) {
+        super(json);
+        this.power = json.get("power").getAsInt();
+        this.lossPenalty = lossPenalty;
+        this.winPenalty = new DaysPenalty(days);
+        this.winReward = winReward;
+    }
 
     public final int getPower() {
         return power;

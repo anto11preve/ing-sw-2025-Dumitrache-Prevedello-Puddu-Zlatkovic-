@@ -41,28 +41,52 @@ public class Game {
         this.tiles = ComponentLoader.loadComponents();
 
         List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level);
+        if (cards == null || cards.isEmpty()) {
+            throw new IllegalStateException("Failed to load adventure cards");
+        }
 
         if (level == MatchLevel.TRIAL) {
             List<AdventureCardFilip> learnerCards = cards.stream()
                     .filter(c -> c.getLevel() == CardLevel.LEARNER)
-                    .limit(8)
                     .collect(Collectors.toList());
+            
+            if (learnerCards.size() < 8) {
+                throw new IllegalStateException("Not enough LEARNER cards available. Found: " + learnerCards.size());
+            }
+            
+            // Take only the first 8 cards
+            learnerCards = learnerCards.subList(0, 8);
             CardDeck hiddenDeck = new CardDeck(learnerCards);
-
-            this.flightBoard = new FlightBoard(hiddenDeck);
+            this.flightBoard = new FlightBoard(this.players, hiddenDeck, level);
         } else {
-            List<AdventureCardFilip> peekable1 = cards.subList(0, 4);
-            List<AdventureCardFilip> peekable2 = cards.subList(4, 8);
-            List<AdventureCardFilip> peekable3 = cards.subList(8, 12);
-            List<AdventureCardFilip> hidden = cards.subList(12, 16);
+            List<AdventureCardFilip> level1Cards = cards.stream()
+                    .filter(c -> c.getLevel() == CardLevel.LEVEL_ONE)
+                    .collect(Collectors.toList());
+            List<AdventureCardFilip> level2Cards = cards.stream()
+                    .filter(c -> c.getLevel() == CardLevel.LEVEL_TWO)
+                    .collect(Collectors.toList());
+            
+            if (level1Cards.size() < 8 || level2Cards.size() < 8) {
+                throw new IllegalStateException(String.format(
+                    "Not enough cards for LEVEL2 game. Found: LEVEL_ONE=%d, LEVEL_TWO=%d", 
+                    level1Cards.size(), level2Cards.size()));
+            }
+            
+            // Take first 4 cards from each level
+            List<AdventureCardFilip> peekable1 = level1Cards.subList(0, 4);
+            List<AdventureCardFilip> peekable2 = level1Cards.subList(4, 8);
+            List<AdventureCardFilip> peekable3 = level2Cards.subList(0, 4);
+            List<AdventureCardFilip> hidden = level2Cards.subList(4, 8);
 
-            List<CardDeck> peekableDecks = new ArrayList<>();
-            peekableDecks.add(new CardDeck(peekable1));
-            peekableDecks.add(new CardDeck(peekable2));
-            peekableDecks.add(new CardDeck(peekable3));
-            CardDeck hiddenDeck = new CardDeck(hidden);
-
-            this.flightBoard = new FlightBoard(hiddenDeck, peekableDecks);
+            // Combine all cards into one deck for the FlightBoard constructor
+            List<AdventureCardFilip> allCards = new ArrayList<>();
+            allCards.addAll(peekable1);
+            allCards.addAll(peekable2);
+            allCards.addAll(peekable3);
+            allCards.addAll(hidden);
+            CardDeck combinedDeck = new CardDeck(allCards);
+            
+            this.flightBoard = new FlightBoard(this.players, combinedDeck, level);
         }
     }
 

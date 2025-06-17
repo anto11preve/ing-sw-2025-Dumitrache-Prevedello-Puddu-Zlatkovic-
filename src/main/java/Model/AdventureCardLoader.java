@@ -2,6 +2,7 @@ package Model;
 
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Factories.AdventureCardFactory;
+import Model.Enums.CardLevel;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,8 +18,26 @@ import java.util.stream.Collectors;
 
 /**
  * Loads and builds adventure cards from a unified JSON file.
+ * Supports test injection for unit testing.
  */
 public class AdventureCardLoader {
+
+    private static List<AdventureCardFilip> testCards = null;
+
+    /**
+     * Injects test cards for testing purposes.
+     * @param cards list of mock or test adventure cards
+     */
+    public static void setTestCards(List<AdventureCardFilip> cards) {
+        testCards = cards;
+    }
+
+    /**
+     * Clears test cards so normal loading is restored.
+     */
+    public static void clearTestCards() {
+        testCards = null;
+    }
 
     /**
      * Loads all adventure cards from a JSON file using the specified resource path.
@@ -53,36 +72,37 @@ public class AdventureCardLoader {
     /**
      * Loads and filters cards based on the match level from a single JSON file.
      * Builds the deck according to the official Galaxy Trucker rules.
+     * Uses testCards if injected.
      *
      * @param level the difficulty level of the match
      * @return list of cards for the selected level
      */
     public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level) {
+        if (testCards != null) return testCards;
+        
         List<AdventureCardFilip> allCards = loadCards("adventure_cards.json");
+        
+        if (allCards == null) {
+            return new ArrayList<>();
+        }
 
         return switch (level) {
             case TRIAL -> allCards.stream()
-                    .filter(card -> card.getLevel().toString().equals("TRIAL"))
+                    .filter(card -> card.getLevel() == CardLevel.LEARNER)
                     .collect(Collectors.toList());
 
             case LEVEL2 -> {
-                List<AdventureCardFilip> level1 = allCards.stream()
-                        .filter(card -> card.getLevel().toString().equals("LEVEL1"))
-                        .limit(4)
+                List<AdventureCardFilip> level1Cards = allCards.stream()
+                        .filter(card -> card.getLevel() == CardLevel.LEVEL_ONE)
                         .collect(Collectors.toList());
-                List<AdventureCardFilip> level2 = allCards.stream()
-                        .filter(card -> card.getLevel().toString().equals("LEVEL2"))
-                        .limit(4)
-                        .collect(Collectors.toList());
-                List<AdventureCardFilip> level3 = allCards.stream()
-                        .filter(card -> card.getLevel().toString().equals("LEVEL3"))
-                        .limit(4)
+                        
+                List<AdventureCardFilip> level2Cards = allCards.stream()
+                        .filter(card -> card.getLevel() == CardLevel.LEVEL_TWO)
                         .collect(Collectors.toList());
 
                 List<AdventureCardFilip> combined = new ArrayList<>();
-                combined.addAll(level1);
-                combined.addAll(level2);
-                combined.addAll(level3);
+                combined.addAll(level1Cards);
+                combined.addAll(level2Cards);
                 Collections.shuffle(combined);
                 yield combined;
             }

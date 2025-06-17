@@ -20,7 +20,7 @@ public class Stardust extends AdventureCardFilip {
     }
 
     public Stardust(JsonObject json) {
-        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+        super(json);
     }
 
 }

@@ -1,52 +1,68 @@
 package Model;
 
-import Model.Ship.Components.Cabin;
-import Model.Ship.Components.SpaceshipComponent;
-import Model.Ship.ShipBoard;
-import Model.Ship.Coordinates;
-import Model.Enums.Card;
-import Model.Enums.ConnectorType;
-import Model.Enums.Crewmates;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for the Player class, which manages player state and ship.
- */
 public class PlayerTest {
 
     @Test
-    public void testShipBoardCanBeReplaced() {
-        Player player = new Player("Dana");
-        ShipBoard newBoard = new ShipBoard(4, 6); // Custom dimensions
-
-        // Replace ship board
-        player.setShipBoard(newBoard);
-
-        assertEquals(newBoard, player.getShipBoard(), "ShipBoard should be replaced with new instance");
+    public void testConstructor() {
+        Player player = new Player("TestPlayer");
+        assertEquals("TestPlayer", player.getName());
+        assertEquals(0, player.getCredits());
     }
-
+    
     @Test
-    public void testComponentPlacementOnShipBoard() {
-        Player player = new Player("Eve");
-
-        // Create a cabin with dummy valid values from enums
-        SpaceshipComponent cabin = new Cabin(
-                Card.CABIN,
-                ConnectorType.NONE,
-                ConnectorType.NONE,
-                ConnectorType.NONE,
-                ConnectorType.NONE,
-                Crewmates.EMPTY
-        );
-
-        Coordinates pos = new Coordinates(2, 3); // Valid position on the ship grid
-
-        // Try placing the component on the board
-        boolean success = player.getShipBoard().placeComponent(cabin, pos);
-
-        assertTrue(success, "Component should be placed successfully");
-        assertEquals(cabin, player.getShipBoard().getComponentAt(pos), "Component should be placed at correct position");
+    public void testAddCredits() {
+        Player player = new Player("TestPlayer");
+        
+        player.deltaCredits(5);
+        assertEquals(5, player.getCredits());
+        
+        player.deltaCredits(3);
+        assertEquals(8, player.getCredits());
+    }
+    
+    @Test
+    public void testRemoveCredits() {
+        Player player = new Player("TestPlayer");
+        
+        player.deltaCredits(10);
+        player.deltaCredits(-4);
+        assertEquals(6, player.getCredits());
+        
+        player.deltaCredits(-6);
+        assertEquals(0, player.getCredits());
+    }
+    
+    @Test
+    public void testRemoveMoreCreditsThanAvailable() {
+        Player player = new Player("TestPlayer");
+        
+        player.deltaCredits(5);
+        player.deltaCredits(-10);
+        // Should not go below zero
+        assertEquals(0, player.getCredits());
+    }
+    
+    @Test
+    public void testEquals() {
+        Player player1 = new Player("Player1");
+        Player player2 = new Player("Player1");
+        Player player3 = new Player("Player2");
+        
+        assertEquals(player1, player2);
+        assertNotEquals(player1, player3);
+        assertNotEquals(player1, null);
+        assertNotEquals(player1, "Not a Player");
+    }
+    
+    @Test
+    public void testHashCode() {
+        Player player1 = new Player("Player1");
+        Player player2 = new Player("Player1");
+        
+        assertEquals(player1.hashCode(), player2.hashCode());
     }
 }

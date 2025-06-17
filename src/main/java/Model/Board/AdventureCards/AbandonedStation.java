@@ -47,17 +47,21 @@ public class AbandonedStation extends AdventureCardFilip {
     }
 
     public AbandonedStation(JsonObject json) {
-        super(json.get("id").getAsInt(), CardLevel.valueOf(json.get("level").getAsString()));
+        super(json);
 
-        this.crew = json.get("crewRequired").getAsInt();
-        int days = json.get("days").getAsInt();
+        // Default values
+        this.crew = json.has("crewRequired") ? json.get("crewRequired").getAsInt() : 1;
+        int days = json.has("days") ? json.get("days").getAsInt() : 0;
         this.landingPenalty = new DaysPenalty(days);
 
-        // Parse goods from reward
-        JsonArray goodsArray = json.getAsJsonObject("reward").getAsJsonArray("value");
+        // Parse cargo from reward
         List<Good> parsedGoods = new ArrayList<>();
-        for (JsonElement g : goodsArray) {
-            parsedGoods.add(Good.valueOf(g.getAsString()));
+        if (json.has("reward") && json.getAsJsonObject("reward").has("cargo")) {
+            int cargoCount = json.getAsJsonObject("reward").get("cargo").getAsInt();
+            // Add default goods based on cargo count
+            for (int i = 0; i < cargoCount; i++) {
+                parsedGoods.add(Good.RED); // Default good
+            }
         }
         this.landingReward = new Goods(parsedGoods);
     }
