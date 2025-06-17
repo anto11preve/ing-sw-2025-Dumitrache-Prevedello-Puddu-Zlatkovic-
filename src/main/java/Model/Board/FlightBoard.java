@@ -72,12 +72,13 @@ public class FlightBoard {
      * @see CardDeck
      * @see AssertionError
      */
-    public FlightBoard(AdventureCardFilip[] hiddenCards) throws AssertionError {
+    public FlightBoard(CardDeck hiddenCards) throws AssertionError {
         this.cellNumber = 18;
         this.timer = null;
         this.peekableCardDecks = null;
 
-        this.hiddenCardDeck = new CardDeck(hiddenCards);
+
+        this.hiddenCardDeck = hiddenCards;
 
         assert (this.hiddenCardDeck.peekCards().size() == 8);
 

@@ -47,7 +47,8 @@ public class FlightBoardTest {
 
     @Test
     public void testLearnerConstructorSetsCorrectValues() {
-        FlightBoard board = new FlightBoard(learnerCards);
+
+        FlightBoard board = new FlightBoard(new CardDeck(learnerCards));
         assertEquals(18, board.getCellNumber(), "Learner board should have 18 cells");
         assertNotNull(board.getHiddenCardDeck(), "Hidden card deck should not be null");
         assertNull(board.getTimer(), "Learner board should not have a timer");
@@ -80,7 +81,7 @@ public class FlightBoardTest {
 
     @Test
     public void testSetStartingPositionsLearner() throws InvalidMethodParameters {
-        FlightBoard board = new FlightBoard(learnerCards);
+        FlightBoard board = new FlightBoard(new CardDeck(learnerCards));
         Player p = new Player("Carol");
         board.setStartingPositions(p, 2);
         assertEquals(2, board.getPosition(p));

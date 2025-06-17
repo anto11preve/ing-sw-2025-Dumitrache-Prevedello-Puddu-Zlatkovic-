@@ -47,7 +47,9 @@ public class Game {
                     .filter(c -> c.getLevel() == CardLevel.LEARNER)
                     .limit(8)
                     .collect(Collectors.toList());
-            this.flightBoard = new FlightBoard(learnerCards.toArray(new AdventureCardFilip[0]));
+            CardDeck hiddenDeck = new CardDeck(learnerCards);
+
+            this.flightBoard = new FlightBoard(hiddenDeck);
         } else {
             List<AdventureCardFilip> peekable1 = cards.subList(0, 4);
             List<AdventureCardFilip> peekable2 = cards.subList(4, 8);
@@ -58,8 +60,9 @@ public class Game {
             peekableDecks.add(new CardDeck(peekable1));
             peekableDecks.add(new CardDeck(peekable2));
             peekableDecks.add(new CardDeck(peekable3));
+            CardDeck hiddenDeck = new CardDeck(hidden);
 
-            this.flightBoard = new FlightBoard(hidden.toArray(new AdventureCardFilip[0]), peekableDecks);
+            this.flightBoard = new FlightBoard(hiddenDeck, peekableDecks);
         }
     }
 
