@@ -6,7 +6,6 @@ import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
-import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.FlightBoard;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
@@ -15,7 +14,6 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +118,7 @@ import java.util.Map;
         ShipBoard shipBoard = currrentPlayer.getShipBoard();
 
         // Check if the coordinates are valid
-        if (!validCoordinates.containsKey(coordinates.getX()) || !validCoordinates.get(coordinates.getX()).contains(coordinates.getY())) {
+        if (!validCoordinates.containsKey(coordinates.getI()) || !validCoordinates.get(coordinates.getI()).contains(coordinates.getJ())) {
             throw new InvalidParameters("Invalid coordinates");
         }
         // Check if the coordinates correspond to a valid component

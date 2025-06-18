@@ -114,6 +114,18 @@ import java.util.Map;
             CondensedShip condensedShip = player.getShipBoard().getCondensedShip();
 
             if (matchLevel== MatchLevel.LEVEL2) {
+
+                //Since the central cabin can only contain humans, we need to set it to cannot contain purple or brown aliens
+                SpaceshipComponent centralTile = player.getShipBoard().getComponent(new Coordinates(7,7));
+                if((centralTile != null) && !condensedShip.getCabins().contains(centralTile)) {
+                    Cabin centralCabin = (Cabin) centralTile;
+                    centralCabin.setCanContainPurple(false);
+                    centralCabin.setCanContainBrown(false);
+                }else{
+                    throw new RuntimeException("Bug: Central tile not found by PlaceAlienState for player, either null or not a cabin");
+                }
+
+
                 boolean localCanContainBrown = condensedShip.canContainBrown();
                 boolean localCanContainPurple = condensedShip.canContainPurple();
 

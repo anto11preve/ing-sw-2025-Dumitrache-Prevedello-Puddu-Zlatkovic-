@@ -36,7 +36,7 @@ public class BuildingState extends State {
     /** Map of players who have finished assembly with their starting position */
     Map<Integer, Player> finishedPlayers = new HashMap<>();
 
-    /** Valid coordinates for component placement based on game level */
+    /** Valid coordinates for component placement based on game level, key is the row i, values are the corresponding valid columns */
     Map<Integer, List<Integer>> validCoordinates = new HashMap<>();
 
     /**
@@ -181,7 +181,7 @@ public class BuildingState extends State {
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
-            if(!validCoordinates.containsKey(coordinates.getX()) || !validCoordinates.get(coordinates.getX()).contains(coordinates.getY())){
+            if(!validCoordinates.containsKey(coordinates.getI()) || !validCoordinates.get(coordinates.getI()).contains(coordinates.getJ())){
                 throw new InvalidParameters("Invalid coordinates");
             }
             if(currentPlayer.getShipBoard().getComponent(coordinates)!=null){
@@ -209,7 +209,7 @@ public class BuildingState extends State {
                     if (activeTile == null) {
                         throw new InvalidCommand("No active component");
                     }
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
                         throw new InvalidParameters("Invalid position, must be connected to existing components");
                     }
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -221,7 +221,7 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().getFirst();
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
                         throw new InvalidParameters("Invalid position, must be connected to existing components");
                     }
                     currentPlayer.getShipBoard().removeReservedComponent(1);
@@ -237,7 +237,7 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().get(1);
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getY()-5, coordinates.getX()-4)){
+                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
                         throw new InvalidParameters("Invalid position, must be connected to existing components");
                     }
                     currentPlayer.getShipBoard().removeReservedComponent(2);

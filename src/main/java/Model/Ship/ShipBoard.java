@@ -1,13 +1,8 @@
 package Model.Ship;
 
-import Model.Enums.ConnectorType;
+import Model.Enums.*;
 import Model.Exceptions.InvalidMethodParameters;
-import Model.Enums.Direction;
-import Model.Enums.Side;
-import Model.Enums.Card;
-import Model.Ship.Components.Cannon;
-import Model.Ship.Components.Engine;
-import Model.Ship.Components.ShieldGenerator;
+import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Utils.Position;
 import Model.Utils.DirectionSideUtils;
@@ -31,20 +26,21 @@ public class ShipBoard {
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
+        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+        centralCabin.setShipBoard(this);
+        components[2][3] = centralCabin;
+        centralCabin.added();
+
         this.activeComponent = null;
         this.reservedComponents = new ArrayList<>();
         this.condensedShip = new CondensedShip();
     }
 
-    /**
-     * Overloaded constructor to support variable size ships (for different levels).
-     */
-    public ShipBoard(int rows, int cols) {
-        this.components = new SpaceshipComponent[rows][cols];
-        this.activeComponent = null;
-        this.reservedComponents = new ArrayList<>();
-        this.condensedShip = new CondensedShip();
+    public CondensedShip getCondensedShip() {
+        return condensedShip;
     }
+
+
     /**
      * Places a spaceship component on the board at the specified coordinates.
      * Ensures the placement is within board bounds, the position is unoccupied,
@@ -55,13 +51,13 @@ public class ShipBoard {
      * @throws InvalidMethodParameters if the position is invalid, already occupied, or not connected properly.
      */
     public void addComponent(SpaceshipComponent component, Coordinates coordinates) throws InvalidMethodParameters {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
 
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
-        if (components[y][x] != null) throw new InvalidMethodParameters("Position already occupied");
-        if (isConnectedToExistingComponents(component, x, y)) {
-            components[y][x] = component;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[i][j] != null) throw new InvalidMethodParameters("Position already occupied");
+        if (isConnectedToExistingComponents(component, i, j)) {
+            components[i][j] = component;
         }else{
             throw new InvalidMethodParameters("Component not connected to existing components");
         }
@@ -76,12 +72,12 @@ public class ShipBoard {
      * @throws InvalidMethodParameters if the coordinates are invalid
      */
     public void removeComponent(Coordinates coordinates) throws InvalidMethodParameters {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
 
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
-        if (components[y][x] != null) {
-            components[y][x] = null;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[i][j] != null) {
+            components[i][j] = null;
         }
     }
 
@@ -347,10 +343,10 @@ public class ShipBoard {
      * @return the component at the specified location, or null if out of bounds or empty
      */
     public SpaceshipComponent getComponent(Coordinates coordinates) {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
-        return components[y][x];
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) return null;
+        return components[i][j];
     }
 
     /**
@@ -364,7 +360,7 @@ public class ShipBoard {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if (components[i][j] == goalComponent) {
-                    return new Coordinates(j+4, i+5);
+                    return new Coordinates(i+5, j+4);
                 }
             }
         }
@@ -702,37 +698,6 @@ public class ShipBoard {
 
 
     /**
-     * Attempts to place a component on the board using full connection logic.
-     * Returns true if placement is valid and performed, false otherwise.
-     */
-    public boolean placeComponent(SpaceshipComponent component, Coordinates coordinates) {
-        int x = coordinates.getX() - 4;
-        int y = coordinates.getY() - 5;
-
-        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return false;
-        if (components[y][x] != null) return false;
-        if (!isConnectedToExistingComponents(component, y, x) && !isEmpty()) return false;
-
-        components[y][x] = component;
-        return true;
-    }
-
-    /**
-     * Returns the component at the given coordinates, or null if empty/out of bounds.
-     */
-    public SpaceshipComponent getComponentAt(Coordinates coordinates) {
-        int x = coordinates.getX() - 4;
-        int y = coordinates.getY() - 5;
-
-        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return null;
-        return components[y][x];
-    }
-
-    public CondensedShip getCondensedShip() {
-        return condensedShip;
-    }
-
-    /**
      * Adds a component to the reserved components list.
      * Throws an exception if more than 2 are reserved.
      * @param component the component to reserve
@@ -754,11 +719,11 @@ public class ShipBoard {
 
     /**
      * Removes a reserved component by index.
+     *
      * @param index the index to remove
-     * @return the removed component
      */
-    public SpaceshipComponent removeReservedComponent(int index) {
-        return reservedComponents.remove(index);
+    public void removeReservedComponent(int index) {
+        reservedComponents.remove(index);
     }
 
     /**

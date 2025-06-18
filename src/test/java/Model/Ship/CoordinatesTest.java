@@ -9,8 +9,8 @@ public class CoordinatesTest {
     @Test
     public void testConstructor() {
         Coordinates coordinates = new Coordinates(3, 4);
-        assertEquals(3, coordinates.getX());
-        assertEquals(4, coordinates.getY());
+        assertEquals(3, coordinates.getI());
+        assertEquals(4, coordinates.getJ());
     }
     
     @Test
