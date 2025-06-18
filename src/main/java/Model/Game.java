@@ -3,11 +3,11 @@ package Model;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.CardDeck;
 import Model.Board.FlightBoard;
+import Model.Enums.Card;
 import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
 import Controller.State;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.AdventureCardLoader;
 import Model.Utils.ComponentLoader;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class Game {
             // Take only the first 8 cards
             learnerCards = learnerCards.subList(0, 8);
             CardDeck hiddenDeck = new CardDeck(learnerCards);
-            this.flightBoard = new FlightBoard(this.players, hiddenDeck, level);
+            this.flightBoard = new FlightBoard(hiddenDeck);
         } else {
             List<AdventureCardFilip> level1Cards = cards.stream()
                     .filter(c -> c.getLevel() == CardLevel.LEVEL_ONE)
@@ -71,22 +71,33 @@ public class Game {
                     "Not enough cards for LEVEL2 game. Found: LEVEL_ONE=%d, LEVEL_TWO=%d", 
                     level1Cards.size(), level2Cards.size()));
             }
-            
-            // Take first 4 cards from each level
-            List<AdventureCardFilip> peekable1 = level1Cards.subList(0, 4);
-            List<AdventureCardFilip> peekable2 = level1Cards.subList(4, 8);
-            List<AdventureCardFilip> peekable3 = level2Cards.subList(0, 4);
-            List<AdventureCardFilip> hidden = level2Cards.subList(4, 8);
 
-            // Combine all cards into one deck for the FlightBoard constructor
-            List<AdventureCardFilip> allCards = new ArrayList<>();
-            allCards.addAll(peekable1);
-            allCards.addAll(peekable2);
-            allCards.addAll(peekable3);
-            allCards.addAll(hidden);
-            CardDeck combinedDeck = new CardDeck(allCards);
+            List<CardDeck> pickableDecks = new ArrayList<>();
             
-            this.flightBoard = new FlightBoard(this.players, combinedDeck, level);
+            // Creates 4 lists of AdventureCardFilip, each containg 1 card of level1 and 2 of level2
+            List<AdventureCardFilip> peekable1 = level1Cards.subList(0, 1);
+            peekable1.addAll(level2Cards.subList(0, 2));
+            CardDeck peekableDeck1 = new CardDeck(peekable1);
+            pickableDecks.add(peekableDeck1);
+
+            List<AdventureCardFilip> peekable2 = level1Cards.subList(1, 2);
+            peekable2.addAll(level2Cards.subList(2, 4));
+            CardDeck peekableDeck2 = new CardDeck(peekable2);
+            pickableDecks.add(peekableDeck2);
+
+            List<AdventureCardFilip> peekable3 = level1Cards.subList(2, 3);
+            peekable3.addAll(level2Cards.subList(4, 6));
+            CardDeck peekableDeck3 = new CardDeck(peekable3);
+            pickableDecks.add(peekableDeck3);
+
+
+            List<AdventureCardFilip> hidden = level1Cards.subList(3, 4);
+            hidden.addAll(level2Cards.subList(6, 8));
+            CardDeck hiddenDeck = new CardDeck(hidden);
+
+
+            
+            this.flightBoard = new FlightBoard(hiddenDeck, pickableDecks);
         }
     }
 
