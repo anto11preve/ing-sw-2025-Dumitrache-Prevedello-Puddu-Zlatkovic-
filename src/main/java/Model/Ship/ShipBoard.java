@@ -49,6 +49,7 @@ public class ShipBoard {
      * Places a spaceship component on the board at the specified coordinates.
      * Ensures the placement is within board bounds, the position is unoccupied,
      * and the component is properly connected to existing components via compatible connectors.
+     * Updates the CondensedShip and calls added() on the component if placement is successful.
      *
      * @param component The spaceship component to add.
      * @param coordinates The position on the board where the component should be placed.
@@ -62,6 +63,8 @@ public class ShipBoard {
         if (components[y][x] != null) throw new InvalidMethodParameters("Position already occupied");
         if (isConnectedToExistingComponents(component, x, y)) {
             components[y][x] = component;
+            component.setShipBoard(this);
+            component.added();
         }else{
             throw new InvalidMethodParameters("Component not connected to existing components");
         }
@@ -70,6 +73,7 @@ public class ShipBoard {
     /**
      * Removes a spaceship component from the board at the given coordinates.
      * Translates logical coordinates into grid indices and clears the position if it contains a component.
+     * Calls removed() on the component to update the CondensedShip.
      * Throws an exception if coordinates are out of bounds.
      *
      * @param coordinates the location from which to remove the component
@@ -81,6 +85,9 @@ public class ShipBoard {
 
         if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
         if (components[y][x] != null) {
+            SpaceshipComponent component = components[y][x];
+            component.removed();
+            component.setShipBoard(null);
             components[y][x] = null;
         }
     }
@@ -751,6 +758,7 @@ public class ShipBoard {
 
     /**
      * Attempts to place a component on the board using full connection logic.
+     * Updates the CondensedShip and calls added() on the component if placement is successful.
      * Returns true if placement is valid and performed, false otherwise.
      */
     public boolean placeComponent(SpaceshipComponent component, Coordinates coordinates) {
@@ -762,6 +770,8 @@ public class ShipBoard {
         if (!isConnectedToExistingComponents(component, y, x) && !isEmpty()) return false;
 
         components[y][x] = component;
+        component.setShipBoard(this);
+        component.added();
         return true;
     }
 
