@@ -6,12 +6,16 @@ import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
+import Model.Board.AdventureCards.AdventureCardFilip;
+import Model.Board.FlightBoard;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Game;
 import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,10 @@ import java.util.Map;
 
         super(controller);
 
+
+
+
+
         MatchLevel matchLevel=controller.getMatchLevel();
         if(matchLevel== MatchLevel.TRIAL){
 
@@ -60,13 +68,22 @@ import java.util.Map;
             throw new IllegalArgumentException("Invalid match level");
         }
 
-        List<Player> allPlayers= this.getController().getModel().getPlayers();
+        Game model= this.getController().getModel();
+        FlightBoard flightBoard= model.getFlightBoard();
+
+        flightBoard.setUpcomingCardDeck();
+
+
+
+
+        List<Player> allPlayers= model.getPlayers();
         for (Player player : allPlayers) {
             ShipBoard shipBoard=player.getShipBoard();
             if(!shipBoard.validateShip()){
                 playersWithInvalidShip.add(player);
             }
         }
+
     }
 
     /**

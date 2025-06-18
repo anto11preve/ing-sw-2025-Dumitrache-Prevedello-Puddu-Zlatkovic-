@@ -83,6 +83,7 @@ public class BuildingState extends State {
     @Override
     public void getComponent(String name, int index) throws InvalidCommand, InvalidParameters {
         Game model= this.getController().getModel();
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         Timer timer= model.getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
@@ -128,6 +129,7 @@ public class BuildingState extends State {
         if(this.getController().getMatchLevel()==MatchLevel.TRIAL){
             throw new InvalidCommand("Trial deck");
         }
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
@@ -167,6 +169,7 @@ public class BuildingState extends State {
     public void placeComponent(String name, ComponentOrigin origin, Coordinates coordinates, Direction orientation) throws InvalidCommand, InvalidParameters {
         Timer timer= this.getController().getModel().getFlightBoard().getTimer();
         Game model= this.getController().getModel();
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
@@ -279,6 +282,7 @@ public class BuildingState extends State {
         }
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
@@ -330,6 +334,7 @@ public class BuildingState extends State {
 
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         if(timer!=null && timer.getPhase()==Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
@@ -374,6 +379,7 @@ public class BuildingState extends State {
     public void finishBuilding(String name, int position) throws InvalidCommand, InvalidParameters {
         Game model= this.getController().getModel();
         Timer timer= model.getFlightBoard().getTimer();
+        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
         if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
