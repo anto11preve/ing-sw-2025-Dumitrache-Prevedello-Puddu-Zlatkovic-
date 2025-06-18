@@ -7,8 +7,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the ShieldGenerator component which protects the ship from damage.
+ * Tests shield orientation and blocking functionality.
+ */
 public class ShieldGeneratorTest {
 
+    /**
+     * Tests the constructor to ensure a new ShieldGenerator is properly initialized:
+     * - The component type should be SHIELD_GENERATOR
+     * - The default orientation should be UP
+     * - The shield direction should match the specified direction
+     */
     @Test
     public void testConstructor() {
         ShieldGenerator shield = new ShieldGenerator(Card.SHIELD_GENERATOR, 
@@ -23,6 +33,12 @@ public class ShieldGeneratorTest {
         assertEquals(Direction.UP, shield.getDirection());
     }
     
+    /**
+     * Tests the shield's blocking functionality:
+     * - A shield should block damage from its facing direction
+     * - A shield should not block damage from other directions
+     * - After changing direction, the shield should block from the new direction
+     */
     @Test
     public void testBlocks() {
         ShieldGenerator shield = new ShieldGenerator(Card.SHIELD_GENERATOR, 

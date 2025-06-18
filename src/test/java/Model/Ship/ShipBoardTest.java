@@ -12,8 +12,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the ShipBoard class which manages the spaceship's grid, component placement,
+ * connections between components, and ship capabilities like firepower and thrust.
+ */
 public class ShipBoardTest {
 
+    /**
+     * Tests the constructor to ensure a new ShipBoard is properly initialized:
+     * - The board should be empty
+     * - No active component should be set
+     */
     @Test
     public void testConstructor() {
         ShipBoard board = new ShipBoard();
@@ -21,6 +30,12 @@ public class ShipBoardTest {
         assertNull(board.getActiveComponent());
     }
     
+    /**
+     * Tests adding a component to the board:
+     * - The first component can be placed anywhere on the board
+     * - After adding, the board should not be empty
+     * - The component should be retrievable at the specified coordinates
+     */
     @Test
     public void testAddComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
@@ -36,6 +51,11 @@ public class ShipBoardTest {
         assertEquals(component, board.getComponent(coords));
     }
     
+    /**
+     * Tests that adding a component at invalid coordinates throws an exception:
+     * - Coordinates outside the board boundaries should be rejected
+     * - The method should throw InvalidMethodParameters
+     */
     @Test
     public void testAddComponentInvalidPosition() {
         ShipBoard board = new ShipBoard();
@@ -48,6 +68,12 @@ public class ShipBoardTest {
         assertThrows(InvalidMethodParameters.class, () -> board.addComponent(component, coords));
     }
     
+    /**
+     * Tests removing a component from the board:
+     * - After adding a component, the board should not be empty
+     * - After removing the component, the board should be empty again
+     * - The removeComponent method should properly clear the position
+     */
     @Test
     public void testRemoveComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
@@ -63,6 +89,12 @@ public class ShipBoardTest {
         assertTrue(board.isEmpty());
     }
     
+    /**
+     * Tests setting and getting the active component:
+     * - Initially, no active component should be set
+     * - After setting an active component, getActiveComponent should return it
+     * - This tests the component selection functionality used during ship building
+     */
     @Test
     public void testSetActiveComponent() {
         ShipBoard board = new ShipBoard();
@@ -76,6 +108,13 @@ public class ShipBoardTest {
         assertEquals(component, board.getActiveComponent());
     }
     
+    /**
+     * Tests calculating the ship's firepower based on cannon components:
+     * - A regular cannon facing UP should provide 1 firepower when ship faces UP
+     * - The same cannon should provide 0 firepower when ship faces DOWN
+     * - A double cannon facing RIGHT should provide 2 firepower when ship faces RIGHT
+     * - The total firepower should be the sum of all active cannons facing the ship's direction
+     */
     @Test
     public void testCalculateFirepower() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
@@ -108,6 +147,13 @@ public class ShipBoardTest {
         assertEquals(2, board.calculateFirepower(Direction.RIGHT));
     }
     
+    /**
+     * Tests calculating the ship's thrust based on engine components:
+     * - An engine facing UP provides thrust in the DOWN direction
+     * - A double engine provides twice the thrust of a regular engine
+     * - The total thrust should be the sum of all engines facing the ship's rear direction
+     * - Engines not facing the ship's rear direction should not contribute thrust
+     */
     @Test
     public void testCalculateThrust() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();

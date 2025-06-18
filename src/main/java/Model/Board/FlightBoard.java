@@ -186,19 +186,6 @@ public class FlightBoard {
         return playerPositions.get(player);
     }
 
-    public FlightBoard(List<Player> players, CardDeck deck, MatchLevel level) {
-        this.cellNumber = (level == MatchLevel.TRIAL) ? 18 : 24;
-        this.timer = (level == MatchLevel.LEVEL2) ? new Timer() : null;
-        this.hiddenCardDeck = deck;
-        this.peekableCardDecks = (level == MatchLevel.LEVEL2) ? new ArrayList<>() : null;
-        this.upcomingCardDeck = null;
-        this.playerPositions = new HashMap<>();
-        for (Player p : players) {
-            playerPositions.put(p, 0);
-        }
-        this.ffPlayers = new ArrayList<>();
-    }
-
 
     public void updatePosition(Player player, int position) {
         playerPositions.put(player, position);

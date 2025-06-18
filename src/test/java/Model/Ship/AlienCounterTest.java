@@ -12,8 +12,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the AlienCounter class which tracks alien presence on the ship.
+ * Tests alien flag management and crew counting functionality.
+ */
 public class AlienCounterTest {
 
+    /**
+     * Tests the constructor to ensure a new AlienCounter is properly initialized:
+     * - No aliens should be present initially
+     * - Both brown and purple alien flags should be false
+     */
     @Test
     public void testConstructor() {
         AlienCounter counter = new AlienCounter();
@@ -21,6 +30,12 @@ public class AlienCounterTest {
         assertFalse(counter.hasPurpleAlien());
     }
     
+    /**
+     * Tests setting alien presence flags:
+     * - Each alien type can be set independently
+     * - Setting one alien type should not affect the other
+     * - Flags can be toggled between true and false
+     */
     @Test
     public void testSetAliens() {
         AlienCounter counter = new AlienCounter();
@@ -38,6 +53,13 @@ public class AlienCounterTest {
         assertTrue(counter.hasPurpleAlien());
     }
     
+    /**
+     * Tests counting aliens and their impact on crew capacity:
+     * - Each alien type should be detected in cabins
+     * - Empty cabins should not affect the count
+     * - The total count should reflect the crew capacity used by aliens
+     * - Alien presence flags should be updated based on the count
+     */
     @Test
     public void testCount() {
         AlienCounter counter = new AlienCounter();

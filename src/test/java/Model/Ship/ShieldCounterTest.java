@@ -4,8 +4,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the ShieldCounter class which tracks shields in different directions.
+ * Tests shield counting functionality for all four cardinal directions.
+ */
 public class ShieldCounterTest {
 
+    /**
+     * Tests the constructor to ensure a new ShieldCounter is properly initialized:
+     * - Shield counts in all directions should start at zero
+     */
     @Test
     public void testConstructor() {
         ShieldCounter counter = new ShieldCounter();
@@ -15,6 +23,12 @@ public class ShieldCounterTest {
         assertEquals(0, counter.getWestShields());
     }
     
+    /**
+     * Tests setting shield counts in different directions:
+     * - Shield counts can be set independently for each direction
+     * - Each direction's count is tracked separately
+     * - Setting one direction doesn't affect other directions
+     */
     @Test
     public void testSetShields() {
         ShieldCounter counter = new ShieldCounter();
