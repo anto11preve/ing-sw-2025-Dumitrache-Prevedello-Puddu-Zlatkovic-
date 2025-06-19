@@ -188,7 +188,7 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Coordinates already occupied");
             }
 
-            //inside the switch case is also checked if the component is not connected to a tile already placed, since it's not valid
+            //inside the switch case is also checked if the component is not adjacent to a tile already placed, since it's not valid
             //it can be checked only after the component is selected, since the connectors and the orientation are not known before
 
 
@@ -209,8 +209,8 @@ public class BuildingState extends State {
                     if (activeTile == null) {
                         throw new InvalidCommand("No active component");
                     }
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
-                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+                    if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
+                        throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
                     currentPlayer.getShipBoard().setActiveComponent(null);
                     break;
@@ -221,8 +221,8 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().getFirst();
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
-                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+                    if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
+                        throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
                     currentPlayer.getShipBoard().removeReservedComponent(1);
 
@@ -237,8 +237,9 @@ public class BuildingState extends State {
                     }
 
                     activeTile= currentPlayer.getShipBoard().getReservedComponents().get(1);
-                    if(!currentPlayer.getShipBoard().isConnectedToExistingComponents(activeTile, coordinates.getI()-5, coordinates.getJ()-4)){
-                        throw new InvalidParameters("Invalid position, must be connected to existing components");
+
+                    if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
+                        throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
                     currentPlayer.getShipBoard().removeReservedComponent(2);
 

@@ -16,7 +16,13 @@ public class EnginesCounter {
         this.singleEngines = singleEngines;
     }
     public void incrementSingleEngines() {this.singleEngines++;}
-    public void decrementSingleEngines() {this.singleEngines--;}
+    public void decrementSingleEngines() {
+        if(this.singleEngines > 0){
+            this.singleEngines--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement single engines below zero.");
+        }
+    }
 
     public int getDoubleEngines() {
         return doubleEngines;
@@ -25,5 +31,11 @@ public class EnginesCounter {
         this.doubleEngines = doubleEngines;
     }
     public void incrementDoubleEngines() {this.doubleEngines++;}
-    public void decrementDoubleEngines() {this.doubleEngines--;}
+    public void decrementDoubleEngines() {
+        if(this.doubleEngines > 0){
+            this.doubleEngines--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement double engines below zero.");
+        }
+    }
 }

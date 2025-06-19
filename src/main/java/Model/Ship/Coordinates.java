@@ -36,4 +36,8 @@ public class Coordinates {
         //calculate manhattan distance
         return Math.abs(this.i - other.i) + Math.abs(this.j - other.j);
     }
+
+    /*
+
+     */
 }
