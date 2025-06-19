@@ -19,6 +19,8 @@ public class ShieldCounter {
     public void setNorthShields(int northShields) {
         this.northShields = northShields;
     }
+    public void incrementNorthShields() {this.northShields++;}
+    public void decrementNorthShields() {this.northShields--;}
 
     public int getEastShields() {
         return eastShields;
@@ -26,6 +28,8 @@ public class ShieldCounter {
     public void setEastShields(int eastShields) {
         this.eastShields = eastShields;
     }
+    public void incrementEastShields() {this.eastShields++;}
+    public void decrementEastShields() {this.eastShields--;}
 
     public int getSouthShields() {
         return southShields;
@@ -33,6 +37,8 @@ public class ShieldCounter {
     public void setSouthShields(int southShields) {
         this.southShields = southShields;
     }
+    public void incrementSouthShields() {this.southShields++;}
+    public void decrementSouthShields() {this.southShields--;}
 
     public int getWestShields() {
         return westShields;
@@ -40,4 +46,6 @@ public class ShieldCounter {
     public void setWestShields(int westShields) {
         this.westShields = westShields;
     }
+    public void incrementWestShields() {this.westShields++;}
+    public void decrementWestShields() {this.westShields--;}
 }

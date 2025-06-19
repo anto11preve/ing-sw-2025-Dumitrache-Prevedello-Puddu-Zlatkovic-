@@ -15,6 +15,7 @@ public class CondensedShip {
     private final List<BatteryCompartment> batteryCompartments;
     private final List<CargoHold> cargoHolds;
     private final List<Cannon> cannons;
+    private final List<Engine> enginesList;
     private final List<AlienLifeSupport> alienSupports;
     private final EnginesCounter engines;
     private final AlienCounter aliens;
@@ -26,6 +27,7 @@ public class CondensedShip {
         this.cargoHolds = new ArrayList<>();
         this.cannons = new ArrayList<>();
         this.alienSupports = new ArrayList<>();
+        this.enginesList = new ArrayList<>();
         this.engines = new EnginesCounter();
         this.aliens = new AlienCounter();
         this.shields = new ShieldCounter();
@@ -159,6 +161,16 @@ public class CondensedShip {
     public List<AlienLifeSupport> getAlienSupports() { return alienSupports; }
     public void addAlienSupport(AlienLifeSupport alienSupport) { alienSupports.add(alienSupport); }
     public void removeAlienSupport(AlienLifeSupport alienSupport) { alienSupports.remove(alienSupport); }
+
+    public List<Engine> getEnginesList() {
+        return enginesList;
+    }
+    public void addEngine(Engine engine) {
+        enginesList.add(engine);
+    }
+    public void removeEngine(Engine engine) {
+        enginesList.remove(engine);
+    }
 
     public EnginesCounter getEngines() {
         return engines;
