@@ -64,14 +64,19 @@ public abstract class SpaceshipComponent {
         }
     }
 
+    /**
+     * Rotates the current orientation 90 degrees clockwise.
+     *
+     * @param dir the current direction
+     * @return the new direction after rotation
+     */
     private Direction rotateClockwise(Direction dir) {
-        switch (dir) {
-            case UP: return Direction.RIGHT;
-            case RIGHT: return Direction.DOWN;
-            case DOWN: return Direction.LEFT;
-            case LEFT: return Direction.UP;
-            default: return dir;
-        }
+        return switch (dir) {
+            case UP -> Direction.RIGHT;
+            case RIGHT -> Direction.DOWN;
+            case DOWN -> Direction.LEFT;
+            case LEFT -> Direction.UP;
+        };
     }
 
     /**
@@ -86,29 +91,32 @@ public abstract class SpaceshipComponent {
      */
     public ConnectorType getConnectorAt(Side side) {
         // Map the logical side based on the current rotation
-        Side rotatedSide = getRotatedSide(side);
-        switch (rotatedSide) {
-            case FRONT: return frontConnector;
-            case REAR: return rearConnector;
-            case LEFT: return leftConnector;
-            case RIGHT: return rightConnector;
-            default: return null;
-        }
+        //Side rotatedSide = getRotatedSide(side); // TODO: secondo me considerava il modo che avevo pensato io di gestire l'orientazione, ma per come l'ha impelementato ora, si bugga e basta
+        //switch (rotatedSide) {
+        return switch (side) {
+            case FRONT -> frontConnector;
+            case REAR -> rearConnector;
+            case LEFT -> leftConnector;
+            case RIGHT -> rightConnector;
+        };
     }
 
-    private Side getRotatedSide(Side side) {
-        int rotations = orientation.ordinal() % 4;
-        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
-        int idx = -1;
-        for (int i = 0; i < order.length; i++) {
-            if (order[i] == side) {
-                idx = i;
-                break;
-            }
-        }
-        if (idx == -1) return side;
-        return order[(idx + rotations) % 4];
-    }
+
+// TODO: non serve più, ma lo lascio per ora per sicurezza
+//
+//    private Side getRotatedSide(Side side) {
+//        int rotations = orientation.ordinal() % 4;
+//        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
+//        int idx = -1;
+//        for (int i = 0; i < order.length; i++) {
+//            if (order[i] == side) {
+//                idx = i;
+//                break;
+//            }
+//        }
+//        if (idx == -1) return side;
+//        return order[(idx + rotations) % 4];
+//    }
 
     public ShipBoard getShipBoard() {
         return shipBoard;
@@ -121,9 +129,9 @@ public abstract class SpaceshipComponent {
     /**
      * Hooks for lifecycle events: override in subclasses if needed.
      */
-    public void added() {
-        // to be implemented if needed
-    }
+    public abstract void added();
+    public abstract void removed();
+
 
     /**
      * Default firepower of a component is 0.
@@ -131,7 +139,7 @@ public abstract class SpaceshipComponent {
      */
     public int getFirepower(Direction direction) {
         return 0;
-    }
+    } //TODO: serve?
 
     /**
      * Default implementation: components that are not engines do not produce thrust.
@@ -141,7 +149,7 @@ public abstract class SpaceshipComponent {
      */
     public int getThrust(Direction shipRear) {
         return 0;
-    }
+    } //TODO: serve?
 
     /**
      * Default behavior: components do not block incoming fire.
@@ -151,20 +159,14 @@ public abstract class SpaceshipComponent {
      */
     public boolean blocks(Direction incoming) {
         return false;
-    }
+    } //TODO: serve?
 
 
 
-    public void removed() {
-        // to be implemented if needed
-    }
 
-    public void reserved() {
-        // to be implemented if needed
-    }
 
-    /* TODO: implement this method
-    public Direction getOrientation() {
-        return null;
-    }*/
+//    public void reserved() {
+//        // to be implemented if needed
+//    }
+
 }

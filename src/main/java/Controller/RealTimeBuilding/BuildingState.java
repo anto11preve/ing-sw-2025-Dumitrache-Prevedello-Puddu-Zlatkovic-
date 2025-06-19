@@ -252,7 +252,10 @@ public class BuildingState extends State {
 
 
             }
-            activeTile.setOrientation(orientation);
+
+            while (activeTile.getOrientation()!=orientation) {
+                activeTile.rotate();
+            }
 
             activeTile.setShipBoard(currentPlayer.getShipBoard());
             activeTile.added();
