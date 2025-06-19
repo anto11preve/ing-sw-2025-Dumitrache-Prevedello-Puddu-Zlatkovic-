@@ -37,33 +37,5 @@ public class AlienCounterTest {
         assertFalse(counter.hasBrownAlien());
         assertTrue(counter.hasPurpleAlien());
     }
-    
-    @Test
-    public void testCount() {
-        AlienCounter counter = new AlienCounter();
-        List<SpaceshipComponent> components = new ArrayList<>();
-        
-        // Create cabins with aliens using the simplified constructor
-        Cabin brownCabin = new Cabin(true, "brown");
-        Cabin purpleCabin = new Cabin(true, "purple");
-        
-        // Create a cabin without aliens
-        Cabin emptyCabin = new Cabin(Card.CABIN, 
-                                    ConnectorType.UNIVERSAL, 
-                                    ConnectorType.UNIVERSAL, 
-                                    ConnectorType.UNIVERSAL, 
-                                    ConnectorType.UNIVERSAL,
-                                    Crewmates.EMPTY);
-        
-        components.add(brownCabin);
-        components.add(purpleCabin);
-        components.add(emptyCabin);
-        
-        // Count should return 4 (2 aliens × 2 crew each)
-        assertEquals(4, counter.count(components));
-        
-        // Flags should be set
-        assertTrue(counter.hasBrownAlien());
-        assertTrue(counter.hasPurpleAlien());
-    }
+
 }

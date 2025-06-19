@@ -15,10 +15,15 @@ public class EnginesCounter {
     public void setSingleEngines(int singleEngines) {
         this.singleEngines = singleEngines;
     }
+    public void incrementSingleEngines() {this.singleEngines++;}
+    public void decrementSingleEngines() {this.singleEngines--;}
+
     public int getDoubleEngines() {
         return doubleEngines;
     }
     public void setDoubleEngines(int doubleEngines) {
         this.doubleEngines = doubleEngines;
     }
+    public void incrementDoubleEngines() {this.doubleEngines++;}
+    public void decrementDoubleEngines() {this.doubleEngines--;}
 }

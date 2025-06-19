@@ -209,9 +209,11 @@ import java.util.Map;
 
         if (type == CrewType.BROWN_ALIEN) {
             cabin.setOccupants(Crewmates.BROWN_ALIEN);
+            shipBoard.getCondensedShip().getAliens().setBrownAlien(true);
             canInsertAliens.insertedBrown();
         } else if (type == CrewType.PURPLE_ALIEN) {
             cabin.setOccupants(Crewmates.PURPLE_ALIEN);
+            shipBoard.getCondensedShip().getAliens().setPurpleAlien(true);
             canInsertAliens.insertedPurple();
         }
         // if both aliens are placed, remove the player from the map

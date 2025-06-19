@@ -88,14 +88,6 @@ public class Cabin extends SpaceshipComponent {
         this.alienType = alienType;
     }
 
-    /**
-     * Constructor used for testing or simplified instantiation
-     */
-    public Cabin(boolean hasAlien, String alienType) {
-        super(Card.CABIN, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE);
-        this.hasAlien = hasAlien;
-        this.alienType = alienType;
-    }
 
 
     // Optional: These can be implemented for game logic events if needed
