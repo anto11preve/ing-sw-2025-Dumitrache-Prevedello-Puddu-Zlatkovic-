@@ -138,6 +138,12 @@ public class Cannon extends SpaceshipComponent {
     }
 
     @Override
+    public int getFirepower(Direction direction) {
+        return getEffectivePower(direction); // cannon-specific logic
+    }
+
+
+    @Override
     public void added(){
         if(getShipBoard().getCondensedShip().getCannons().contains(this)){
             throw new RuntimeException("Cannon already added to the ship.");

@@ -1,36 +1,42 @@
 package Model.Utils;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for the Position class.
- * Position represents a cell coordinate on the ship board grid.
- */
 public class PositionTest {
 
     @Test
-    public void testConstructorAndGetters() {
-        Position pos = new Position(2, 5);
-        assertEquals(2, pos.getX(), "getX() should return the correct row");
-        assertEquals(5, pos.getY(), "getY() should return the correct column");
+    public void testConstructor() {
+        Position position = new Position(3, 4);
+        assertEquals(3, position.getX());
+        assertEquals(4, position.getY());
     }
-
+    
     @Test
-    public void testEqualsAndHashCode() {
-        Position p1 = new Position(3, 4);
-        Position p2 = new Position(3, 4);
-        Position p3 = new Position(1, 2);
-
-        assertEquals(p1, p2, "Positions with same coordinates should be equal");
-        assertNotEquals(p1, p3, "Positions with different coordinates should not be equal");
-        assertEquals(p1.hashCode(), p2.hashCode(), "Equal positions should have same hash code");
+    public void testEquals() {
+        Position position1 = new Position(3, 4);
+        Position position2 = new Position(3, 4);
+        Position position3 = new Position(5, 6);
+        
+        assertEquals(position1, position2);
+        assertNotEquals(position1, position3);
+        assertNotEquals(position1, null);
+        assertNotEquals(position1, "Not a Position");
     }
-
+    
     @Test
-    public void testNotEqualsWithNullOrDifferentClass() {
-        Position pos = new Position(1, 1);
-        assertNotEquals(null, pos, "Position should not be equal to null");
-        assertNotEquals("Some string", pos, "Position should not be equal to object of another class");
+    public void testHashCode() {
+        Position position1 = new Position(3, 4);
+        Position position2 = new Position(3, 4);
+        
+        assertEquals(position1.hashCode(), position2.hashCode());
+    }
+    
+    @Test
+    public void testToString() {
+        Position position = new Position(3, 4);
+        String expected = "Position{x=3, y=4}";
+        assertEquals(expected, position.toString());
     }
 }

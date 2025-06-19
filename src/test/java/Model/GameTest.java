@@ -1,125 +1,133 @@
 package Model;
 
 import Controller.Enums.MatchLevel;
-import Model.Board.AdventureCards.AdventureCardFilip;
-import Model.Game;
-import Model.Player;
+import Model.Board.FlightBoard;
 import Model.Ship.Components.SpaceshipComponent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameTest {
-
-    private Game game;
-    private List<Player> players;
-    private List<SpaceshipComponent> componentPool;
-    private List<AdventureCardFilip> adventureCards;
-
-    @BeforeEach
-    void setUp() {
-        players = new ArrayList<>();
-        players.add(new Player("Alice"));
-        players.add(new Player("Bob"));
-
-        componentPool = new ArrayList<>();
-        SpaceshipComponent dummyComponent = new SpaceshipComponent() {
-            @Override
-            public boolean isVisible() {
-                return true;
-            }
-        };
-
-        for (int i = 0; i < 5; i++) {
-            componentPool.add(dummyComponent);
-        }
-
-        adventureCards = new ArrayList<>();
-
-        game = new Game(players, MatchLevel.TRIAL, componentPool, adventureCards);
-    }
+public class GameTest {
 
     @Test
-    void testAddPlayer() {
-        game.addPlayer("Charlie");
-        assertNotNull(game.getPlayer("Charlie"));
-        assertEquals(3, game.getPlayers().size());
+    public void testConstructor() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        assertNotNull(game.getTiles());
+        assertNotNull(game.getFlightBoard());
+        assertEquals(MatchLevel.TRIAL, game.getLevel());
+        assertTrue(game.getPlayers().isEmpty());
+        assertFalse(game.isError());
     }
-
+    
     @Test
-    void testRemovePlayer() {
-        game.removePlayer("Bob");
-        assertNull(game.getPlayer("Bob"));
+    public void testAddPlayer() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        game.addPlayer("Player1");
+        game.addPlayer("Player2");
+        
+        assertEquals(2, game.getPlayers().size());
+        assertEquals("Player1", game.getPlayers().get(0).getName());
+        assertEquals("Player2", game.getPlayers().get(1).getName());
+    }
+    
+    @Test
+    public void testRemovePlayer() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        game.addPlayer("Player1");
+        game.addPlayer("Player2");
+        
+        assertEquals(2, game.getPlayers().size());
+        
+        game.removePlayer("Player1");
+        
         assertEquals(1, game.getPlayers().size());
+        assertEquals("Player2", game.getPlayers().get(0).getName());
     }
-
+    
     @Test
-    void testGetPlayer() {
-        Player p = game.getPlayer("Alice");
-        assertNotNull(p);
-        assertEquals("Alice", p.getName());
+    public void testGetPlayer() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        game.addPlayer("Player1");
+        game.addPlayer("Player2");
+        
+        Player player1 = game.getPlayer("Player1");
+        assertNotNull(player1);
+        assertEquals("Player1", player1.getName());
+        
+        Player player3 = game.getPlayer("Player3");
+        assertNull(player3);
     }
-
+    
     @Test
-    void testGetPlayers() {
-        List<Player> list = game.getPlayers();
-        assertEquals(2, list.size());
-    }
-
-    @Test
-    void testRollDice() {
+    public void testRollDice() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        // Roll the dice 100 times and check that the result is always between 1 and 6
         for (int i = 0; i < 100; i++) {
-            int roll = game.rollDice();
-            assertTrue(roll >= 1 && roll <= 6);
+            int result = game.rollDice();
+            assertTrue(result >= 1 && result <= 6);
         }
     }
-
+    
     @Test
-    void testPickComponent() {
-        SpaceshipComponent picked = game.pickComponent(0);
-        assertNotNull(picked);
-        assertEquals(4, game.viewVisibleComponents().size());
-    }
-
-    @Test
-    void testPickComponentInvalidIndex() {
-        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(-1));
-        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(100));
-    }
-
-    @Test
-    void testAddComponent() {
-        SpaceshipComponent dummy = new SpaceshipComponent() {
-            @Override
-            public boolean isVisible() {
-                return true;
+    public void testPickComponent() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        // Get the tiles
+        SpaceshipComponent[] tiles = game.getTiles();
+        
+        // Find a non-null tile
+        int index = -1;
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] != null) {
+                index = i;
+                break;
             }
-        };
-        game.addComponent(dummy);
-        assertEquals(6, game.viewVisibleComponents().size());
+        }
+        
+        // If we found a non-null tile, pick it
+        if (index != -1) {
+            SpaceshipComponent component = game.pickComponent(index);
+            assertNotNull(component);
+            assertNull(game.getTiles()[index]);
+        }
+        
+        // Test picking an invalid index
+        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(tiles.length));
     }
-
+    
     @Test
-    void testViewVisibleComponents() {
-        List<SpaceshipComponent> visible = game.viewVisibleComponents();
-        assertEquals(5, visible.size());
+    public void testViewVisibleComponents() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        // Initially, there should be no visible components
+        assertTrue(game.viewVisibleComponents().isEmpty());
+        
+        // Make some components visible
+        SpaceshipComponent[] tiles = game.getTiles();
+        int count = 0;
+        for (int i = 0; i < tiles.length && count < 3; i++) {
+            if (tiles[i] != null) {
+                tiles[i].setVisible();
+                count++;
+            }
+        }
+        
+        // Now there should be some visible components
+        assertEquals(count, game.viewVisibleComponents().size());
     }
-
+    
     @Test
-    void testGetFlightBoard() {
-        assertNotNull(game.getFlightboard());
-    }
-
-    @Test
-    void testConstructorWithInvalidArguments() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(null, MatchLevel.TRIAL, componentPool, adventureCards));
-        assertThrows(IllegalArgumentException.class, () -> new Game(new ArrayList<>(), MatchLevel.TRIAL, componentPool, adventureCards));
-        assertThrows(IllegalArgumentException.class, () -> new Game(players, null, componentPool, adventureCards));
-        assertThrows(IllegalArgumentException.class, () -> new Game(players, MatchLevel.TRIAL, null, adventureCards));
-        assertThrows(IllegalArgumentException.class, () -> new Game(players, MatchLevel.TRIAL, new ArrayList<>(), adventureCards));
+    public void testGetFlightBoard() {
+        Game game = new Game(MatchLevel.TRIAL);
+        
+        FlightBoard board = game.getFlightBoard();
+        assertNotNull(board);
+        assertEquals(18, board.getCellNumber()); // Trial board has 18 cells
     }
 }

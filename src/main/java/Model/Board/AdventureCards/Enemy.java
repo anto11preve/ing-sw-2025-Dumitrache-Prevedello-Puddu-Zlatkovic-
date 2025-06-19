@@ -1,9 +1,12 @@
 package Model.Board.AdventureCards;
 
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
+import Model.Board.AdventureCards.Penalties.GoodsPenalty;
 import Model.Board.AdventureCards.Penalties.Penalty;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Board.AdventureCards.Rewards.Reward;
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 /**
  * @param <P> Penalty inflicted upon the player if the card is not beaten
@@ -18,6 +21,22 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
     public Enemy(int id, CardLevel level, int power, P lossPenalty, int days, R winReward) {
         super(id, level);
         this.power = power;
+        this.lossPenalty = lossPenalty;
+        this.winPenalty = new DaysPenalty(days);
+        this.winReward = winReward;
+    }
+    
+    /**
+     * Constructor for creating an Enemy from a JSON object.
+     * This is meant to be used by subclasses.
+     * 
+     * @param json the JSON object containing the card data
+     * @param lossPenalty the penalty if the player loses
+     * @param winReward the reward if the player wins
+     */
+    protected Enemy(JsonObject json, P lossPenalty, int days, R winReward) {
+        super(json);
+        this.power = json.get("power").getAsInt();
         this.lossPenalty = lossPenalty;
         this.winPenalty = new DaysPenalty(days);
         this.winReward = winReward;
@@ -38,4 +57,6 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
     public final R getWinReward() {
         return winReward;
     }
+
+
 }

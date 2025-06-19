@@ -18,7 +18,7 @@ import Model.Ship.Coordinates;
 
 public class CombatZone1ManageShotState extends State {
     private final Context context;
-    private final int number;
+    private final int number; //TODO: non controlla se il numero è valido o se è out of bounds, occhio perchè getComponent ritorna null se non trova il componente
     boolean hit = false;
 
     public CombatZone1ManageShotState(Context context,  int number) {
@@ -43,8 +43,9 @@ public class CombatZone1ManageShotState extends State {
 
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
-                for (int i = 5; i <= 9; i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                for (int i = 5; (i <= 9)&&(!hit); i++) {
+                    //TODO: conviene metttere il controllo sul ciclo for come ho fatto qui in tutti i cicli perchè senno il colo rimove un intera riga/colonna quando arriva
+                    Coordinates coordinates = new Coordinates(number, i); //TODO: mi sa che da quando ho modificato le coordinate, non funziona più, basta invertire i e number ma il bug c'era in ogni caso perchè a volte era usata in un modo a volte in un altro
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;

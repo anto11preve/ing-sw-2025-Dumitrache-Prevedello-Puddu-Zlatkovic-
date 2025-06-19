@@ -3,6 +3,7 @@ package Model.Board.AdventureCards;
 import Model.Board.AdventureCards.Penalties.CrewPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 public class Slavers extends Enemy<CrewPenalty, Credits> {
     public Slavers(int id, CardLevel level, int power, int crew, int days, int credits) {
@@ -17,5 +18,16 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
     @Override
     public final String getDescription() {
         return "";
+    }
+
+    public Slavers(JsonObject json) {
+        super(json,
+              new CrewPenalty(json.has("penalty") && json.getAsJsonObject("penalty").has("crewLoss") ? 
+                  json.getAsJsonObject("penalty").get("crewLoss").getAsInt() : 1),
+              json.has("penalty") && json.getAsJsonObject("penalty").has("days") ? 
+                  json.getAsJsonObject("penalty").get("days").getAsInt() : 0,
+              new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
+                  json.getAsJsonObject("reward").get("credits").getAsInt() : 2)
+        );
     }
 }

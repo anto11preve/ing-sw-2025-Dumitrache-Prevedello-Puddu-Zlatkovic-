@@ -1,16 +1,14 @@
 package Model.Board.AdventureCards;
 
 import Model.Board.AdventureCards.Penalties.GoodsPenalty;
-import Model.Board.AdventureCards.Rewards.Goods;
+import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
-import Model.Enums.Good;
+import com.google.gson.JsonObject;
 
-import java.util.List;
+public class Smugglers extends Enemy<GoodsPenalty, Credits> {
 
-public class Smugglers extends Enemy<GoodsPenalty, Goods> {
-
-    public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, List<Good> goods) {
-        super(id, level, power, new GoodsPenalty(lostGoods), days, new Goods(goods));
+    public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, int credits) {
+        super(id, level, power, new GoodsPenalty(lostGoods), days, new Credits(credits));
     }
 
     @Override
@@ -22,4 +20,20 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
     public final String getDescription() {
         return "";
     }
+
+    public Smugglers(JsonObject json) {
+        super(json,
+              new GoodsPenalty(json.has("penalty") && json.getAsJsonObject("penalty").has("cargoLoss") ? 
+                  json.getAsJsonObject("penalty").get("cargoLoss").getAsInt() : 1),
+              json.has("penalty") && json.getAsJsonObject("penalty").has("days") ? 
+                  json.getAsJsonObject("penalty").get("days").getAsInt() : 0,
+              new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
+                  json.getAsJsonObject("reward").get("credits").getAsInt() : 3)
+        );
+    }
+
+    // Method removed as it's no longer needed
+
+
+
 }

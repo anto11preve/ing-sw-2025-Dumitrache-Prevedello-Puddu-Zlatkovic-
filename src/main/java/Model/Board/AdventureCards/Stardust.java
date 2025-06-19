@@ -1,6 +1,7 @@
 package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
+import com.google.gson.JsonObject;
 
 public class Stardust extends AdventureCardFilip {
 
@@ -17,4 +18,9 @@ public class Stardust extends AdventureCardFilip {
     public final String getDescription() {
         return "";
     }
+
+    public Stardust(JsonObject json) {
+        super(json);
+    }
+
 }

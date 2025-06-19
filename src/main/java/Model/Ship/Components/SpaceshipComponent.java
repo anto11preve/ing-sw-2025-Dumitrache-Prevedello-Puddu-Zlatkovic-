@@ -52,12 +52,7 @@ public abstract class SpaceshipComponent {
         leftConnector = rearConnector;
         rearConnector = rightConnector;
         rightConnector = temp;
-        switch (orientation){
-            case UP: orientation = Direction.RIGHT; break;
-            case RIGHT: orientation = Direction.DOWN; break;
-            case DOWN: orientation = Direction.LEFT; break;
-            case LEFT: orientation = Direction.UP; break;
-        }
+        orientation = rotateClockwise(orientation);
     }
 
     /**
@@ -67,6 +62,21 @@ public abstract class SpaceshipComponent {
         while (this.orientation != orientation) {
             rotate();
         }
+    }
+
+    /**
+     * Rotates the current orientation 90 degrees clockwise.
+     *
+     * @param dir the current direction
+     * @return the new direction after rotation
+     */
+    private Direction rotateClockwise(Direction dir) {
+        return switch (dir) {
+            case UP -> Direction.RIGHT;
+            case RIGHT -> Direction.DOWN;
+            case DOWN -> Direction.LEFT;
+            case LEFT -> Direction.UP;
+        };
     }
 
     /**
@@ -80,37 +90,20 @@ public abstract class SpaceshipComponent {
      * Returns the connector type at a given side considering current orientation.
      */
     public ConnectorType getConnectorAt(Side side) {
-        switch (side) {
-            case FRONT: return frontConnector;
-            case REAR: return rearConnector;
-            case LEFT: return leftConnector;
-            case RIGHT: return rightConnector;
-            default: return null;
-        }
+        // Map the logical side based on the current rotation
+        //Side rotatedSide = getRotatedSide(side); // TODO: secondo me considerava il modo che avevo pensato io di gestire l'orientazione, ma per come l'ha impelementato ora, si bugga e basta
+        //switch (rotatedSide) {
+        return switch (side) {
+            case FRONT -> frontConnector;
+            case REAR -> rearConnector;
+            case LEFT -> leftConnector;
+            case RIGHT -> rightConnector;
+        };
     }
-//    private Direction rotateClockwise(Direction dir) {
-//        switch (dir) {
-//            case UP: return Direction.RIGHT;
-//            case RIGHT: return Direction.DOWN;
-//            case DOWN: return Direction.LEFT;
-//            case LEFT: return Direction.UP;
-//            default: return dir;
-//        }
 
-//    }
 
-//    public ConnectorType getConnectorAt(Side side) {
-//        // Map the logical side based on the current rotation
-//        Side rotatedSide = getRotatedSide(side);
-//        switch (rotatedSide) {
-//            case FRONT: return frontConnector;
-//            case REAR: return rearConnector;
-//            case LEFT: return leftConnector;
-//            case RIGHT: return rightConnector;
-//            default: return null;
-//        }
-//    }
-
+// TODO: non serve più, ma lo lascio per ora per sicurezza
+//
 //    private Side getRotatedSide(Side side) {
 //        int rotations = orientation.ordinal() % 4;
 //        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
@@ -136,16 +129,44 @@ public abstract class SpaceshipComponent {
     /**
      * Hooks for lifecycle events: override in subclasses if needed.
      */
-    public void added() throws RuntimeException {
-        // to be implemented if needed
-    }
+    public abstract void added();
+    public abstract void removed();
 
-    public void removed() throws RuntimeException {
-        // to be implemented if needed
-    }
 
-    public void reserved() {
-        // to be implemented if needed
-    }
+    /**
+     * Default firepower of a component is 0.
+     * Override this method in subclasses like Cannon.
+     */
+    public int getFirepower(Direction direction) {
+        return 0;
+    } //TODO: serve?
+
+    /**
+     * Default implementation: components that are not engines do not produce thrust.
+     *
+     * @param shipRear the direction that represents the rear of the ship
+     * @return the amount of thrust produced (0 by default)
+     */
+    public int getThrust(Direction shipRear) {
+        return 0;
+    } //TODO: serve?
+
+    /**
+     * Default behavior: components do not block incoming fire.
+     *
+     * @param incoming the direction of incoming fire
+     * @return true if this component blocks it (false by default)
+     */
+    public boolean blocks(Direction incoming) {
+        return false;
+    } //TODO: serve?
+
+
+
+
+
+//    public void reserved() {
+//        // to be implemented if needed
+//    }
 
 }

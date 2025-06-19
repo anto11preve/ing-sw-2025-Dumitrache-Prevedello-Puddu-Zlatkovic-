@@ -1,20 +1,72 @@
 package Model.Ship.Components;
 
-import org.junit.jupiter.api.Test;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
-
+import Model.Enums.Direction;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CannonTest {
+public class CannonTest {
 
     @Test
-    void doubleCannon() {
-        Cannon cannon = new Cannon(Card.CANNON, ConnectorType.DOUBLE, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, true);
-        assertTrue(cannon.isDouble());
-
-        Cannon cannon2 = new Cannon(Card.CANNON, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, ConnectorType.DOUBLE, ConnectorType.DOUBLE, false);
-        assertFalse(cannon2.isDouble());
+    public void testConstructor() {
+        Cannon cannon = new Cannon(Card.CANNON, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL,
+                                  false);
+        
+        assertEquals(Card.CANNON, cannon.getType());
+        assertEquals(Direction.UP, cannon.getOrientation());
+        assertFalse(cannon.isDouble());
+    }
+    
+    @Test
+    public void testGetFirepower() {
+        Cannon cannon = new Cannon(Card.CANNON, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL,
+                                  false);
+        
+        // Cannon should have firepower in its facing direction
+        assertEquals(1, cannon.getFirepower(Direction.UP));
+        assertEquals(0, cannon.getFirepower(Direction.DOWN));
+        assertEquals(0, cannon.getFirepower(Direction.LEFT));
+        assertEquals(0, cannon.getFirepower(Direction.RIGHT));
+        
+        // Test after rotation
+        cannon.rotate(); // Now facing RIGHT
+        assertEquals(0, cannon.getFirepower(Direction.UP));
+        assertEquals(0, cannon.getFirepower(Direction.DOWN));
+        assertEquals(0, cannon.getFirepower(Direction.LEFT));
+        assertEquals(1, cannon.getFirepower(Direction.RIGHT));
+    }
+    
+    @Test
+    public void testDoubleCannon() {
+        Cannon cannon = new Cannon(Card.DOUBLE_CANNON, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL, 
+                                  ConnectorType.UNIVERSAL,
+                                  true);
+        
+        // Double cannon should have double firepower when activated
+        cannon.activate();
+        assertEquals(2, cannon.getFirepower(Direction.UP));
+        assertEquals(0, cannon.getFirepower(Direction.DOWN));
+        
+        // Test after rotation
+        cannon.rotate(); // Now facing RIGHT
+        assertEquals(0, cannon.getFirepower(Direction.UP));
+        assertEquals(2, cannon.getFirepower(Direction.RIGHT));
+        
+        // Test deactivation
+        cannon.deactivate();
+        assertEquals(0, cannon.getFirepower(Direction.RIGHT));
     }
 }

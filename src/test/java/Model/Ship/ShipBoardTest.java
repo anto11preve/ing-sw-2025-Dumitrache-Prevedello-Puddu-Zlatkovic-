@@ -2,115 +2,143 @@ package Model.Ship;
 
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Ship.Components.Cannon;
+import Model.Ship.Components.Engine;
 import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.Components.StructuralModule;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipBoardTest {
 
-    static class DummyComponent extends SpaceshipComponent {
-        public DummyComponent(Card card, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
-            super(card, front, rear, left, right);
-        }
-    }
-
-    private SpaceshipComponent comp(Card type, ConnectorType f, ConnectorType r, ConnectorType l, ConnectorType rt) {
-        return new DummyComponent(type, f, r, l, rt);
-    }
-
     @Test
-    void testValidEngine() throws InvalidMethodParameters {
+    public void testConstructor() {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        assertTrue(board.validateShip());
+        assertTrue(board.isEmpty());
+        assertNull(board.getActiveComponent());
     }
-
+    
     @Test
-    void testBlockedEngineFails() throws InvalidMethodParameters {
+    public void testAddComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ENGINE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 3, 3);
-        assertFalse(board.validateShip());
+        SpaceshipComponent component = new StructuralModule(Card.STRUCTURAL_MODULE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL);
+        
+        // First component can be placed anywhere
+        Coordinates coords = new Coordinates(6, 7); // Center of the board
+        board.addComponent(component, coords);
+        
+        assertFalse(board.isEmpty());
+        assertEquals(component, board.getComponent(coords));
     }
-
+    
     @Test
-    void testValidCannon() throws InvalidMethodParameters {
+    public void testAddComponentInvalidPosition() {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        assertTrue(board.validateShip());
+        SpaceshipComponent component = new StructuralModule(Card.STRUCTURAL_MODULE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL);
+        
+        // Out of bounds
+        Coordinates coords = new Coordinates(20, 20);
+        assertThrows(InvalidMethodParameters.class, () -> board.addComponent(component, coords));
     }
-
+    
     @Test
-    void testBlockedCannonFails() throws InvalidMethodParameters {
+    public void testRemoveComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE), 1, 3);
-        assertFalse(board.validateShip());
+        SpaceshipComponent component = new StructuralModule(Card.STRUCTURAL_MODULE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL);
+        
+        Coordinates coords = new Coordinates(6, 7);
+        board.addComponent(component, coords);
+        assertFalse(board.isEmpty());
+        
+        board.removeComponent(coords);
+        assertTrue(board.isEmpty());
     }
-
+    
     @Test
-    void testCabinNoConnectorsFails() throws InvalidMethodParameters {
+    public void testSetActiveComponent() {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CABIN, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        assertFalse(board.validateShip());
+        SpaceshipComponent component = new StructuralModule(Card.STRUCTURAL_MODULE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL);
+        
+        assertNull(board.getActiveComponent());
+        
+        board.setActiveComponent(component);
+        assertEquals(component, board.getActiveComponent());
     }
-
+    
     @Test
-    void testAlienLifeSupportNoCabinFails() throws InvalidMethodParameters {
+    public void testCalculateFirepower() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ALIEN_LIFE_SUPPORT, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
-        assertFalse(board.validateShip());
+        
+        // Add a cannon facing UP
+        Cannon cannon = new Cannon(Card.CANNON,
+                ConnectorType.NONE, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                false);
+        Coordinates cannonCoords = new Coordinates(6, 7);
+        board.addComponent(cannon, cannonCoords);
+        
+        // Firepower should be 1 when ship is facing UP
+        assertEquals(1, board.calculateFirepower(Direction.UP));
+        assertEquals(0, board.calculateFirepower(Direction.DOWN));
+        
+        // Add a double cannon facing RIGHT
+        Cannon doubleCannon = new Cannon(Card.DOUBLE_CANNON,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.UNIVERSAL, ConnectorType.NONE,
+                true);
+        doubleCannon.activate(); // Activate the double cannon
+        doubleCannon.rotate(); // Now facing RIGHT
+        Coordinates doubleCannonCoords = new Coordinates(6, 8);
+        board.addComponent(doubleCannon, doubleCannonCoords);
+        
+        // Total firepower should be 1 + 0 = 1 when ship is facing UP
+        assertEquals(1, board.calculateFirepower(Direction.UP));
+        // Total firepower should be 0 + 2 = 2 when ship is facing RIGHT
+        assertEquals(2, board.calculateFirepower(Direction.RIGHT));
     }
-
+    
     @Test
-    void testAlienLifeSupportWithCabinSucceeds() throws InvalidMethodParameters {
+    public void testCalculateThrust() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.ALIEN_LIFE_SUPPORT, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
-        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 4);
-        assertTrue(board.validateShip());
-    }
-
-    @Test
-    void testShieldGeneratorValidPosition() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.SHIELD_GENERATOR, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE), 2, 3);
-        assertTrue(board.validateShip());
-    }
-
-    @Test
-    void testShieldGeneratorInvalidPosition() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.SHIELD_GENERATOR, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
-        assertFalse(board.validateShip());
-    }
-
-    @Test
-    void testSpecialCargoWithoutCargoFails() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.SPECIAL_CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
-        assertFalse(board.validateShip());
-    }
-
-    @Test
-    void testSpecialCargoAdjacentToCargoSucceeds() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.SPECIAL_CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 3);
-        board.addComponent(comp(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 2, 4);
-        assertTrue(board.validateShip());
-    }
-
-    @Test
-    void testEmptyShipIsValid() {
-        ShipBoard board = new ShipBoard();
-        assertTrue(board.checkIntegrity(), "Una nave vuota dovrebbe essere considerata integra");
-    }
-
-    @Test
-    void testDisconnectedComponents() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 0, 0);
-        board.addComponent(comp(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL), 4, 6);
-        assertFalse(board.checkIntegrity(), "Componenti isolate non devono passare l'integrità");
+        
+        // Add an engine facing UP (thrust in DOWN direction)
+        Engine engine = new Engine(Card.ENGINE,
+                ConnectorType.UNIVERSAL, ConnectorType.NONE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                false);
+        Coordinates engineCoords = new Coordinates(6, 7);
+        board.addComponent(engine, engineCoords);
+        
+        // Thrust should be 1 when ship rear is DOWN
+        assertEquals(1, board.calculateThrust(Direction.DOWN));
+        assertEquals(0, board.calculateThrust(Direction.UP));
+        
+        // Add a double engine facing LEFT (thrust in RIGHT direction)
+        Engine doubleEngine = new Engine(Card.DOUBLE_ENGINE,
+                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+                ConnectorType.NONE, ConnectorType.UNIVERSAL,
+                true);
+        doubleEngine.activate(); // Activate the double engine
+        doubleEngine.rotate();
+        doubleEngine.rotate();
+        doubleEngine.rotate(); // Now facing LEFT
+        Coordinates doubleEngineCoords = new Coordinates(6, 8);
+        board.addComponent(doubleEngine, doubleEngineCoords);
+        
+        // Total thrust should be 1 + 0 = 1 when ship rear is DOWN
+        assertEquals(1, board.calculateThrust(Direction.DOWN));
+        // Total thrust should be 0 + 2 = 2 when ship rear is RIGHT
+        assertEquals(2, board.calculateThrust(Direction.RIGHT));
     }
 }

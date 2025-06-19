@@ -4,8 +4,14 @@ import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Enums.CardLevel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import Model.Enums.Good;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     private final List<Planet> planetList;
@@ -35,4 +41,35 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     public Iterator<Planet> iterator() {
         return this.planetList.iterator();
     }
+
+    public Planets(JsonObject json) {
+        super(json);
+        this.planetList = new ArrayList<>();
+
+        if (json.has("planets")) {
+            JsonArray array = json.getAsJsonArray("planets");
+            for (JsonElement elem : array) {
+                JsonObject obj = elem.getAsJsonObject();
+
+                List<Good> goods = new ArrayList<>();
+                if (obj.has("goods")) {
+                    for (JsonElement g : obj.getAsJsonArray("goods")) {
+                        goods.add(Good.valueOf(g.getAsString()));
+                    }
+                }
+
+                String name = obj.has("name") ? obj.get("name").getAsString() : "Unknown Planet";
+                this.planetList.add(new Planet(name, goods));
+            }
+        }
+
+        // Default landing penalty
+        int days = 0;
+        if (json.has("landingPenalty") && json.getAsJsonObject("landingPenalty").has("value")) {
+            days = json.getAsJsonObject("landingPenalty").get("value").getAsInt();
+        }
+        this.landingPenalty = new DaysPenalty(days);
+    }
+
+
 }

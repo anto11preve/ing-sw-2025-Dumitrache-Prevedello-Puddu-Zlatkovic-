@@ -1,35 +1,66 @@
 package Model;
 
-import Model.Board.AdventureCards.AdventureCard;
+import Model.Board.AdventureCards.AdventureCardFilip;
+import Controller.Enums.MatchLevel;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AdventureCardLoaderTest {
 
     @Test
-    void testLoadAdventureCards() {
-        List<AdventureCard> cards = AdventureCardLoader.loadCards("adventure_cards_complete.json");
-        assertNotNull(cards, "La lista di carte non dovrebbe essere null");
-        assertFalse(cards.isEmpty(), "La lista di carte non dovrebbe essere vuota");
-        assertNotNull(cards.get(0).getName(), "La prima carta dovrebbe avere un nome");
+    public void testLoadCards_trialPath_success() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadCards("adventure_cards_trial.json");
+
+        assertNotNull(cards, "List should not be null when file exists");
+        assertEquals(8, cards.size(), "TRIAL file should contain exactly 8 cards");
+
+        for (AdventureCardFilip card : cards) {
+            assertNotNull(card.getName(), "Card name must not be null");
+            assertTrue(card.getId() > 0, "Card ID must be positive");
+        }
     }
 
     @Test
-    void testCardWithOptions() {
-        List<AdventureCard> cards = AdventureCardLoader.loadCards("adventure_cards_complete.json");
-        AdventureCard cardWithOptions = cards.stream()
-                .filter(c -> c.isRequiresPlayerChoice() && c.getOptions() != null && !c.getOptions().isEmpty())
-                .findFirst()
-                .orElse(null);
+    public void testLoadCards_level2Path_success() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadCards("adventure_cards_level2.json");
 
-        assertNotNull(cardWithOptions, "Dovrebbe esistere almeno una carta con opzioni");
-        assertNotNull(cardWithOptions.getOptions().get(0).getLabel(), "L'opzione dovrebbe avere del testo");
+        assertNotNull(cards, "List should not be null when file exists");
+        assertEquals(16, cards.size(), "LEVEL2 file should contain exactly 16 cards");
+
+        for (AdventureCardFilip card : cards) {
+            assertNotNull(card.getDescription(), "Card description should not be null");
+        }
     }
 
     @Test
-    void testInvalidFileReturnsNull() {
-        List<AdventureCard> result = AdventureCardLoader.loadCards("non_esiste.json");
-        assertNull(result, "Il caricamento di un file non esistente dovrebbe restituire null");
+    public void testLoadCards_invalidPath_returnsNull() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadCards("non_existent_file.json");
+
+        assertNull(cards, "If file does not exist, method should return null");
+    }
+
+    @Test
+    public void testLoadAdventureCards_trial() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.TRIAL);
+
+        assertNotNull(cards);
+        assertEquals(8, cards.size());
+        for (AdventureCardFilip card : cards) {
+            assertEquals(MatchLevel.TRIAL, card.getLevel());
+        }
+    }
+
+    @Test
+    public void testLoadAdventureCards_level2() {
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.LEVEL2);
+
+        assertNotNull(cards);
+        assertEquals(16, cards.size());
+        for (AdventureCardFilip card : cards) {
+            assertEquals(MatchLevel.LEVEL2, card.getLevel());
+        }
     }
 }
