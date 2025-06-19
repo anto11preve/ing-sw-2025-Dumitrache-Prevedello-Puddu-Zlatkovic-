@@ -113,7 +113,7 @@ public class PiratesManageShotState extends State{
         if(hit){
             boolean brokenShip = player.getShipBoard().checkIntegrity();
             if (brokenShip) {
-                controller.getModel().setState(new PiratesCheckShipState(context));
+                controller.getModel().setState(new PiratesCheckShipState(context, number, turn));
                 return;
             }
         }

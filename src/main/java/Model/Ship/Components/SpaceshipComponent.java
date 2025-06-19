@@ -52,7 +52,12 @@ public abstract class SpaceshipComponent {
         leftConnector = rearConnector;
         rearConnector = rightConnector;
         rightConnector = temp;
-        orientation = rotateClockwise(orientation);
+        switch (orientation){
+            case UP: orientation = Direction.RIGHT; break;
+            case RIGHT: orientation = Direction.DOWN; break;
+            case DOWN: orientation = Direction.LEFT; break;
+            case LEFT: orientation = Direction.UP; break;
+        }
     }
 
     /**

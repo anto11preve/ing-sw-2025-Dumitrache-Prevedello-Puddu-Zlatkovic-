@@ -4,13 +4,14 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Player;
 
 public class CombatZone1EngineDeclarationState extends State {
-    private Context context;
-    private int worst;
+    private final Context context;
+    private final int worst;
 
     public CombatZone1EngineDeclarationState(Context context) {
         this.context = context;
@@ -20,6 +21,15 @@ public class CombatZone1EngineDeclarationState extends State {
     public CombatZone1EngineDeclarationState(Context context, int worst) {
         this.context = context;
         this.worst = worst;
+    }
+
+    @Override
+    public void onEnter() {
+        Controller controller = context.getController();
+        if(controller.getModel().getFlightBoard().getTurnOrder().length == 1){
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+        }
     }
 
     @Override

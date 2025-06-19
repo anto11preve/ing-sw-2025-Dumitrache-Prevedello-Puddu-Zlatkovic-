@@ -63,7 +63,7 @@ public abstract class State {
         throw new InvalidCommand("Invalid command: pickNextCard");
     }
 
-    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
+    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: deleteComponent");
     }
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
