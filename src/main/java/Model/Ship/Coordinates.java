@@ -24,4 +24,16 @@ public class Coordinates {
                 ", j=" + j +
                 '}';
     }
+
+
+    /**
+     * Calculates the Manhattan distance between this coordinate and another coordinate.
+     *
+     * @param other the other coordinate to calculate the distance to
+     * @return the Manhattan distance
+     */
+    public int manhattanDistance(Coordinates other) {
+        //calculate manhattan distance
+        return Math.abs(this.i - other.i) + Math.abs(this.j - other.j);
+    }
 }

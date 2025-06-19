@@ -251,6 +251,51 @@ public class ShipBoard {
         return visitedComponents == totalComponents;
     }
 
+    public boolean areComponentsConnected(SpaceshipComponent a, SpaceshipComponent b) {
+        if (a == null || b == null) return false;
+
+        Coordinates aCoords = getIndex(a);
+        Coordinates bCoords = getIndex(b);
+
+        if (aCoords.getI() == -1 || bCoords.getI() == -1) return false; // one of the components is not on the board
+
+        if(aCoords.manhattanDistance(bCoords) != 1) return false; // components are not adjacent
+
+        // Check if the connectors are compatible
+
+        int deltaRow = bCoords.getI() - aCoords.getI();
+        int deltaCol = bCoords.getJ() - aCoords.getJ();
+
+        ConnectorType aConnector;
+        ConnectorType bConnector;
+
+        if(deltaRow==1){
+            //b is at the right of a
+            aConnector = a.getConnectorAt(Side.RIGHT);
+            bConnector = b.getConnectorAt(Side.LEFT);
+        } else if (deltaRow==-1) {
+            //b is at the left of a
+            aConnector = a.getConnectorAt(Side.LEFT);
+            bConnector = b.getConnectorAt(Side.RIGHT);
+        } else {
+           if (deltaCol==-1) {
+                //b is below a
+                aConnector = a.getConnectorAt(Side.REAR);
+                bConnector = b.getConnectorAt(Side.FRONT);
+            } else if (deltaCol==1) {
+               //b is above a
+               aConnector = a.getConnectorAt(Side.FRONT);
+               bConnector = b.getConnectorAt(Side.REAR);
+           }else{
+               throw new RuntimeException("Error in areComponentsConnected: components are not adjacent, even though they checked by manhattan distance");
+           }
+        }
+
+
+        return connectorsAreConnected(aConnector, bConnector);
+
+    }
+
     /**
      * Performs a depth-first search to count connected components starting from a given cell.
      *
