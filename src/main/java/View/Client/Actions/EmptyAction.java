@@ -2,6 +2,7 @@ package View.Client.Actions;
 
 import View.Client.ClientState;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ public class EmptyAction implements Action {
             }
 
             @Override
-            public Set<String> getArguments() {
-                return Set.of();
+            public List<String> getArguments() {
+                return List.of();
             }
         };
     }

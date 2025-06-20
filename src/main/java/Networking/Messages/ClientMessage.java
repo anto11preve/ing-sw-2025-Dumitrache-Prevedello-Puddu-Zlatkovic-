@@ -1,5 +1,6 @@
 package Networking.Messages;
 
+import Networking.Agent;
 import Networking.Network;
 import View.Client.Actions.Action;
 import View.Client.Client;
@@ -11,7 +12,16 @@ public class ClientMessage implements Message{
         this.action = action;
     }
 
-    public void handle(Client client, Network network) {
+    @Override
+    public void handle(Agent agent, Network network) {
+        final Client client;
+
+        try{
+            client = (Client) agent;
+        }catch (ClassCastException e){
+            return;
+        }
+
         client.execute(action);
     }
 }

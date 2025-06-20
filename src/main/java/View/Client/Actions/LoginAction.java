@@ -2,8 +2,8 @@ package View.Client.Actions;
 
 import View.Client.ClientState;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class LoginAction implements Action {
     private final String username;
@@ -26,8 +26,8 @@ public class LoginAction implements Action {
             }
 
             @Override
-            public Set<String> getArguments() {
-                return Set.of("username");
+            public List<String> getArguments() {
+                return List.of("username");
             }
         };
     }

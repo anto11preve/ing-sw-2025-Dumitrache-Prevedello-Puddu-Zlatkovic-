@@ -2,8 +2,8 @@ package View.Client.Actions;
 
 import View.Client.ClientState;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ConnectAction implements Action {
     private final String hostname;
@@ -16,7 +16,6 @@ public class ConnectAction implements Action {
 
         this.useRMI = useRMI;
     }
-
 
     @Override
     public ClientState execute(ClientState state) {
@@ -40,8 +39,8 @@ public class ConnectAction implements Action {
             }
 
             @Override
-            public Set<String> getArguments() {
-                return Set.of("hostname", "port", "use-RMI");
+            public List<String> getArguments() {
+                return List.of("hostname", "port", "use-RMI");
             }
         };
     }

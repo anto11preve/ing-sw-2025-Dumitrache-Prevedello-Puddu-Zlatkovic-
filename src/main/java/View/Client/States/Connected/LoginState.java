@@ -26,11 +26,12 @@ public class LoginState extends ConnectedState {
 
     @Override
     public ClientState login(String username){
-        return this.send(new LoginMessage(username));
-    }
+        final ClientState sendResult = this.send(new LoginMessage(username));
 
-    @Override
-    public ClientState loginSuccess(String username){
-        return new GameSelectionState(this.getNetwork(), username);
+        if(sendResult.isDone()){
+            return sendResult;
+        }
+
+        return new LoginUnsureState(this.getNetwork(), username);
     }
 }

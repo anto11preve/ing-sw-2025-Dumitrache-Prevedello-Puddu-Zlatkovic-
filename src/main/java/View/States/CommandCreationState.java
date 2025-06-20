@@ -5,31 +5,31 @@ import View.Client.Actions.ActionConstructor;
 import View.Client.Actions.EmptyAction;
 import View.Client.Client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CommandCreationState implements ViewState {
-    private final Client client;
     private final ActionConstructor actionConstructor;
     private final Set<String> requiredArguments;
     private final Map<String, String> providedArguments;
 
-    public CommandCreationState(Client client, ActionConstructor actionConstructor) {
-        this.client = client;
+    public CommandCreationState(ActionConstructor actionConstructor) {
         this.actionConstructor = actionConstructor;
 
         this.requiredArguments = new HashSet<>(actionConstructor.getArguments());
 
-        /*TODO: make this view agnostic*/
-        System.out.println("Arguments are:");
+        this.providedArguments = new HashMap<>();
 
-        for(String arg : this.requiredArguments){
-            System.out.println(arg);
+        this.listArguments();
+    }
+
+    public void listArguments(){
+        final List<String> list = new ArrayList<>();
+        for(String argName : this.actionConstructor.getArguments()){
+            final String argValue = this.providedArguments.get(argName);
+            list.add(argName + ": " + (argValue == null ? "_empty_": argValue));
         }
 
-        this.providedArguments = new HashMap<>();
+        Client.client.showOptions("arguments", list);
     }
 
     public void addArgument(String argName, String argValue){
@@ -39,7 +39,6 @@ public class CommandCreationState implements ViewState {
     @Override
     public void callback(String line) {
         final String argName = line.split(" ")[0];
-        final String argValue = line.split(" ")[1];
         System.out.println("callback of CommandCreationState");
 
         if(argName.equalsIgnoreCase("send")){
@@ -49,7 +48,12 @@ public class CommandCreationState implements ViewState {
 
         for(String arg : this.requiredArguments){
             if(argName.equalsIgnoreCase(arg)){
-                this.addArgument(arg, argValue);
+                try {
+                    final String argValue = line.split(" ")[1];
+                    this.addArgument(arg, argValue);
+                }catch (ArrayIndexOutOfBoundsException e){
+                    System.err.println("Warning: No argument was provided");
+                }
                 return;
             }
         }
@@ -64,6 +68,6 @@ public class CommandCreationState implements ViewState {
             action = new EmptyAction();
         }
 
-        this.client.execute(action);
+        Client.client.execute(action);
     }
 }

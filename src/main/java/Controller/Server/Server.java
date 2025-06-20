@@ -182,17 +182,19 @@ public class Server implements Agent {
     }
 
     public int createGame(MatchLevel matchLevel){
-        synchronized(games){
+        synchronized(this.games){
             final int gameId = this.nextGameId++;
 
-            games.put(gameId, new Controller(matchLevel, gameId));
+            this.games.put(gameId, new Controller(matchLevel, gameId));
 
             return gameId;
         }
     }
 
     public Controller getGame(int gameId) {
-        return games.get(gameId);
+        synchronized (this.games) {
+            return this.games.get(gameId);
+        }
     }
 
     public void put(int gameId, Controller game) {

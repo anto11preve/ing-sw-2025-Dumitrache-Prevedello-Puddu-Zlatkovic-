@@ -16,10 +16,11 @@ public abstract class ConnectedState implements ClientState {
     }
 
     @Override
-    public ClientState send(Message message){
+    public final ClientState send(Message message){
         if(!this.network.send(message)){
             return this.stop();
         }
+
         return this;
     }
 

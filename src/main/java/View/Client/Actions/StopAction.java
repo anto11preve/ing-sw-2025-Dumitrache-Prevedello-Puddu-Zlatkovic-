@@ -2,8 +2,8 @@ package View.Client.Actions;
 
 import View.Client.ClientState;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class StopAction implements Action {
 
@@ -21,7 +21,7 @@ public class StopAction implements Action {
             }
 
             @Override
-            public Set<String> getArguments() {
+            public List<String> getArguments() {
                 return null;
             }
         };

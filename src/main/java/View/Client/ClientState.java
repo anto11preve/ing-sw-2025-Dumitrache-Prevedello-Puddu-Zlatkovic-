@@ -21,6 +21,10 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke loginSuccess on " + this.getClass().getName());
     }
 
+    default ClientState loginFailed(String username){
+        throw new UnsupportedOperationException("Cannot invoke loginFailed on " + this.getClass().getName());
+    }
+
     default ClientState send(Message message){
         throw new UnsupportedOperationException("Cannot invoke send on " + this.getClass().getName());
     }

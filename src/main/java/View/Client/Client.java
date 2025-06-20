@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Client implements Agent {
+    public static Client client;
     private final View view;
     private ClientState state;
 
@@ -26,19 +27,20 @@ public class Client implements Agent {
 
         final String port = Utils.getOption("--port", args);
 
-        final Client client = new Client((useGui) ? new GUI() : new TUI(), hostname, port);
+        client = new Client((useGui) ? new GUI() : new TUI(), hostname, port);
 
         client.run();
     }
 
     private Client(final View view, final String hostname, final String port) {
+        /*TODO: make the arguments not be ignored*/
         this.view = view;
-        this.state = new ConnectingState(this);
-        this.view.setState(new ChooseState(this));
+        this.state = new ConnectingState();
     }
 
     @Override
     public void run() {
+        this.view.setState(new ChooseState());
         view.run();
     }
 
@@ -52,7 +54,7 @@ public class Client implements Agent {
         if(this.state.isDone()){
             this.view.setState(new StopState());
         }else {
-            this.view.setState(new ChooseState(this));
+            this.view.setState(new ChooseState());
         }
         final Function<Integer, String> function = Object::toString;
 
@@ -78,6 +80,6 @@ public class Client implements Agent {
         }
 
         //the command needs to be created with arguments
-        this.view.setState(new CommandCreationState(this, actionConstructor));
+        this.view.setState(new CommandCreationState(actionConstructor));
     }
 }

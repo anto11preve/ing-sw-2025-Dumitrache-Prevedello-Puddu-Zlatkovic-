@@ -12,12 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectingState implements ClientState {
-    private final Client client;
-
-    public ConnectingState(Client client){
-        this.client = client;
-    }
-
     @Override
     public ClientState connect(String hostname, Integer port, boolean useRMI) {
         final Network network;
@@ -28,7 +22,7 @@ public class ConnectingState implements ClientState {
             return this;
         }
 
-        new Handler<>(this.client, network).start();
+        new Handler<>(Client.client, network).start();
         return new LoginState(network);
     }
 
