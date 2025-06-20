@@ -142,24 +142,27 @@ import java.util.Map;
         // add junk
         currrentPlayer.addJunk();
 
-        //check if the ship is now valid and if so remove the player from the list
+        //check if the ship is now valid and if so remove the player from the list, and set the ship as valid
         if (shipBoard.validateShip()) {
             playersWithInvalidShip.remove(currrentPlayer);
-        }
+            shipBoard.setValid(true);
 
-        // If all players have valid ships, change state to PlaceAlienState
-        if (allPlayersHaveValidShips()) {
+            // If all players have valid ships, change state to PlaceAlienState
+            if (allPlayersHaveValidShips()) {
 
-            PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
+                PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
 
 
-            if(placeAlienState.allPlayersHavePlacedAliens()){
-                //if no players can place aliens, set FlightPhase
-                this.getController().getModel().setState(new FlightPhase(this.getController()));
-            }else{
-                this.getController().getModel().setState(placeAlienState);
+                if(placeAlienState.allPlayersHavePlacedAliens()){
+                    //if no players can place aliens, set FlightPhase
+                    this.getController().getModel().setState(new FlightPhase(this.getController()));
+                }else{
+                    this.getController().getModel().setState(placeAlienState);
+                }
             }
         }
+
+
 
     }
 

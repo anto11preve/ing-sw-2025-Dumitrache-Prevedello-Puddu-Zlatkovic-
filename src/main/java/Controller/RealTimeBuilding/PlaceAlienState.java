@@ -219,11 +219,12 @@ import java.util.Map;
             shipBoard.getCondensedShip().getAliens().setPurpleAlien(true);
             canInsertAliens.insertedPurple();
         }
-        // if both aliens are placed, remove the player from the map, and fill all remaining cabins with humans
+        // if both aliens are placed, remove the player from the map, and fill all remaining cabins with humans, furthermore set the ship as valid
 
         if (!canInsertAliens.getCanInstertBrown() && !canInsertAliens.getCanInsertPurple()) {
             playersAlienAvailability.remove(currentPlayer);
             fillCabinsWithHumans(shipBoard.getCondensedShip());
+            shipBoard.setValid(true);
         }
 
         // If the map is empty, change the state to the next one
