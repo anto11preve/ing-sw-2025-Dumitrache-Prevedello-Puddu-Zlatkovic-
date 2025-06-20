@@ -19,7 +19,8 @@ public class Cannon extends SpaceshipComponent {
     private final int basePower;
     private Direction orientation;
     private boolean hasAlien;
-    private boolean activated; // ✅ NEW: whether the cannon has been activated with a battery
+    private boolean activated; //whether the cannon has been activated with a battery
+    private String imagePath;
 
     public Cannon(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
@@ -39,14 +40,19 @@ public class Cannon extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
-        this.isDouble = json.get("isDoubleCannon").getAsBoolean();
-        this.requiresBattery = json.get("requiresBattery").getAsBoolean();
-        this.basePower = json.get("cannonStrength").getAsInt();
-        this.orientation = Direction.UP;
-        this.hasAlien = false;
-        this.activated = !isDouble; // single cannons default to active
+        this.isDouble        = json.get("isDoubleCannon").getAsBoolean();
+        this.requiresBattery = this.isDouble;              // double → battery needed
+        this.basePower       = isDouble ? 2 : 1;            // double → 2 strength
+        this.orientation     = Direction.UP;                // default
+        this.hasAlien        = false;                       // none by default
+        this.activated       = !isDouble;                   // single = active, double = inactive
+
+        this.imagePath = json.get("imagePath").getAsString();
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 //    public void setOrientation(Direction dir) {
 //        this.orientation = dir;
 //    }

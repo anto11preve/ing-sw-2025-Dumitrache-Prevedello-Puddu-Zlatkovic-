@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
  */
 public class AlienLifeSupport extends SpaceshipComponent {
     private final AlienColor color; // Indicates which alien color this life support supports
+    private String imagePath;
 
     /**
      * Constructor with explicit parameters.
@@ -35,6 +36,11 @@ public class AlienLifeSupport extends SpaceshipComponent {
         );
 
         this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
+        this.imagePath = json.get("imagePath").getAsString();
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     /**

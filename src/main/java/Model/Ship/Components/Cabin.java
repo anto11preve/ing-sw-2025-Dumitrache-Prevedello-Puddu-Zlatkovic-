@@ -14,6 +14,7 @@ public class Cabin extends SpaceshipComponent {
     private Crewmates occupants;
     private boolean canContainBrown;   // True if the cabin can host brown aliens
     private boolean canContainPurple;  // True if the cabin can host purple aliens
+    private String imagePath;
 
     // New fields to support aliens actually present in the cabin
     private boolean hasAlien = false;
@@ -40,11 +41,11 @@ public class Cabin extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
 
-        this.occupants = Crewmates.EMPTY; // No crew by default when loading from JSON
+        this.imagePath = json.get("imagePath").getAsString();
+    }
 
-        // Parse abilities from JSON if present
-        this.canContainBrown = json.has("abilities") && json.getAsJsonArray("abilities").toString().contains("can_host_brown");
-        this.canContainPurple = json.has("abilities") && json.getAsJsonArray("abilities").toString().contains("can_host_purple");
+    public String getImagePath() {
+        return imagePath;
     }
 
     public boolean getCanContainBrown() {

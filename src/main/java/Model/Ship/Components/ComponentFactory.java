@@ -19,7 +19,6 @@ public class ComponentFactory {
 
         switch (type) {
             case "CABIN":
-            case "LUXURY_CABIN":
             case "CREW_MODULE":
                 return new Cabin(json);
 

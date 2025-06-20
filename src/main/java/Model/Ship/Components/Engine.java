@@ -17,11 +17,8 @@ public class Engine extends SpaceshipComponent {
 
     private final boolean isDouble;
     private final int baseEnginePower;
-    private final int energyCost;
     private final boolean requiresBattery;
     private final String imagePath;
-    private final String animationPath;
-    private final List<String> abilities;
     private boolean hasAlien;
     private boolean activated; //   whether the engine has been activated with a battery
 
@@ -29,11 +26,8 @@ public class Engine extends SpaceshipComponent {
         super(type, front, rear, left, right);
         this.isDouble = isDouble;
         this.baseEnginePower = isDouble ? 2 : 1;
-        this.energyCost = 0;
         this.requiresBattery = isDouble;
         this.imagePath = "";
-        this.animationPath = "";
-        this.abilities = new ArrayList<>();
         this.hasAlien = false;
         this.activated = !isDouble; // single engines are always "activated"
     }
@@ -46,19 +40,15 @@ public class Engine extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
-
-        this.isDouble = json.has("isDoubleEngine") && json.get("isDoubleEngine").getAsBoolean();
-        this.baseEnginePower = json.get("enginePower").getAsInt();
-        this.energyCost = json.get("energyCost").getAsInt();
-        this.requiresBattery = json.get("requiresBattery").getAsBoolean();
-        this.imagePath = json.get("imagePath").getAsString();
-        this.animationPath = json.get("animationPath").getAsString();
-        this.abilities = new ArrayList<>();
-        for (JsonElement e : json.getAsJsonArray("abilities")) {
-            abilities.add(e.getAsString());
-        }
-        this.hasAlien = false;
-        this.activated = !isDouble; // single engines default to active
+        // JSON provides exactly this flag
+        this.isDouble = json.get("isDoubleEngine").getAsBoolean();
+        // Power: 2 for double, 1 for single
+        this.baseEnginePower = isDouble ? 2 : 1;
+        // Only doubles require a battery
+        this.requiresBattery  = isDouble;
+        // Single engines start active; doubles start inactive
+        this.activated        = !isDouble;
+        this.imagePath        = json.get("imagePath").getAsString();
     }
 
     public boolean isDoubleEngine() {
@@ -114,9 +104,6 @@ public class Engine extends SpaceshipComponent {
         return hasAlien ? baseEnginePower + 1 : baseEnginePower;
     }
 
-    public int getEnergyCost() {
-        return energyCost;
-    }
 
     public boolean requiresBattery() {
         return requiresBattery;
@@ -126,13 +113,6 @@ public class Engine extends SpaceshipComponent {
         return imagePath;
     }
 
-    public String getAnimationPath() {
-        return animationPath;
-    }
-
-    public List<String> getAbilities() {
-        return abilities;
-    }
 
     public Direction getThrustDirection() {
         return getOrientation();

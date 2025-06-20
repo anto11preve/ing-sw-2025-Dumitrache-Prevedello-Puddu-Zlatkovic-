@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 public class ShieldGenerator extends SpaceshipComponent {
 
     private Direction direction; // The direction this shield protects (e.g., FRONT, LEFT)
+    private String imagePath;
 
     /**
      * Constructor with explicit parameters.
@@ -40,10 +41,12 @@ public class ShieldGenerator extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
 
-        // Read the direction property for shield orientation
-        this.direction = Direction.valueOf(json.get("direction").getAsString().toUpperCase());
+        this.imagePath = json.get("imagePath").getAsString();
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
     /**
      * Returns the direction the shield is facing.
      * @return the shield's Direction

@@ -14,6 +14,7 @@ public class CargoHold extends SpaceshipComponent {
     private final int capacity;        // Number of slots available in the hold
     private Good[] goods;              // Goods currently stored in the cargo hold
     private boolean isSpecial;         // True if this cargo hold can carry red goods
+    private String imagePath;
 
     /**
      * Constructor using explicit parameters.
@@ -38,10 +39,16 @@ public class CargoHold extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
 
-        this.capacity = json.has("cargoCapacity") ? json.get("cargoCapacity").getAsInt() : 2; // Default to 2 if unspecified
-        this.goods = new Good[capacity];
-        this.isSpecial = json.has("isSpecial") && json.get("isSpecial").getAsBoolean();
+        this.capacity  = json.get("cargoCapacity").getAsInt();
+        this.isSpecial = json.get("isSpecial").getAsBoolean();
+        this.goods     = new Good[this.capacity];
+        this.imagePath = json.get("imagePath").getAsString();
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
 
     public int getCapacity() {
         return capacity;

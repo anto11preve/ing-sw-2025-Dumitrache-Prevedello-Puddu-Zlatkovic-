@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 public class BatteryCompartment extends SpaceshipComponent {
     private final int capacity;  // Maximum number of batteries the compartment can hold
     private int batteries;       // Current number of batteries available
-
+    private String imagePath;
     /**
      * Standard constructor for BatteryCompartment with explicit parameters.
      */
@@ -36,8 +36,13 @@ public class BatteryCompartment extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
 
-        this.capacity = json.has("capacity") ? json.get("capacity").getAsInt() : 2; // Default to 2 if unspecified
+        this.capacity  = json.get("capacity").getAsInt();
         this.batteries = this.capacity;
+        this.imagePath = json.get("imagePath").getAsString();
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public int getCapacity() {
