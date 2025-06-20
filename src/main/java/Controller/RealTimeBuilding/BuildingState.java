@@ -434,18 +434,23 @@ public class BuildingState extends State {
                 } else {
                     //if it's a level2 game, set FixShipState that will allow players to fix their ships
                     FixShipState fixShipState= new FixShipState(this.getController());
-                    this.getController().getModel().setState(fixShipState);
 
                     if(fixShipState.allPlayersHaveValidShips()){
-                        //if all players already have valid ships, set PlaceAlienState
+
+                        //if all players already have valid ships, checks if they can place aliens
                         PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-                        this.getController().getModel().setState(placeAlienState);
 
                         if(placeAlienState.allPlayersHavePlacedAliens()){
                             //if no players can place aliens, set FlightPhase
                             this.getController().getModel().setState(new FlightPhase(this.getController()));
+                        }else{
+                            //if at least one player can place aliens, stay in PlaceAlienState
+                            this.getController().getModel().setState(placeAlienState);
                         }
 
+                    }else{
+                        //if not all players have valid ships, goes in FixShipState
+                        this.getController().getModel().setState(fixShipState);
                     }
 
                 }

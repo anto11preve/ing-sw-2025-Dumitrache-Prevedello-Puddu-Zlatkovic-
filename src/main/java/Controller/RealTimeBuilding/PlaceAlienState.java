@@ -131,12 +131,15 @@ import java.util.Map;
 
                 if (localCanContainBrown || localCanContainPurple) {
                     playersAlienAvailability.put(player, new CanInsertAliens(localCanContainBrown, localCanContainPurple));
+                    player.getShipBoard().setValid(false);
                 }else{
                     fillCabinsWithHumans(condensedShip);
+                    player.getShipBoard().setValid(true);
                 }
 
             }else{
                 fillCabinsWithHumans(condensedShip);
+                player.getShipBoard().setValid(true);
             }
 
         }
@@ -216,7 +219,7 @@ import java.util.Map;
             shipBoard.getCondensedShip().getAliens().setPurpleAlien(true);
             canInsertAliens.insertedPurple();
         }
-        // if both aliens are placed, remove the player from the map
+        // if both aliens are placed, remove the player from the map, and fill all remaining cabins with humans
 
         if (!canInsertAliens.getCanInstertBrown() && !canInsertAliens.getCanInsertPurple()) {
             playersAlienAvailability.remove(currentPlayer);

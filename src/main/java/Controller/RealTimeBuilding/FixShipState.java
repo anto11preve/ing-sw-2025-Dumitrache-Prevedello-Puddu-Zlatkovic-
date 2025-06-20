@@ -79,6 +79,9 @@ import java.util.Map;
             ShipBoard shipBoard=player.getShipBoard();
             if(!shipBoard.validateShip()){
                 playersWithInvalidShip.add(player);
+                player.getShipBoard().setValid(false);
+            }else{
+                player.getShipBoard().setValid(true);
             }
         }
 
@@ -148,11 +151,13 @@ import java.util.Map;
         if (allPlayersHaveValidShips()) {
 
             PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-            this.getController().getModel().setState(placeAlienState);
+
 
             if(placeAlienState.allPlayersHavePlacedAliens()){
                 //if no players can place aliens, set FlightPhase
                 this.getController().getModel().setState(new FlightPhase(this.getController()));
+            }else{
+                this.getController().getModel().setState(placeAlienState);
             }
         }
 

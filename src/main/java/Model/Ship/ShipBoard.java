@@ -26,6 +26,7 @@ public class ShipBoard {
     private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
+    private boolean isValid = false;
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
@@ -43,6 +44,13 @@ public class ShipBoard {
         return condensedShip;
     }
 
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
 
     /**
      * Places a spaceship component on the board at the specified coordinates.
