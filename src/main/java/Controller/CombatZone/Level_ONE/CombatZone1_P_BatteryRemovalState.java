@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Exceptions.InvalidMethodParameters;
@@ -14,65 +15,71 @@ import Model.Ship.Coordinates;
 
 public class CombatZone1_P_BatteryRemovalState extends State {
     private Context context;
-    private int declaredPower;
-    private int actualPower;
-    private int worst;
+    private double declaredPower;
+    private int batteries;
+    private double worst;
 
-    public CombatZone1_P_BatteryRemovalState(Context context, int declaredPower, int actualPower) {
+    public CombatZone1_P_BatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
     }
 
-    public CombatZone1_P_BatteryRemovalState(Context context, int declaredPower, int actualPower, int worst) {
+    public CombatZone1_P_BatteryRemovalState(Context context, double declaredPower, int batteries, double worst) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
         this.worst = worst;
     }
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null");
+            throw new InvalidParameters("Coordinates cannot be null");
+        }
+
+        if(batteries < 0){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid number of batteries");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {
-            controller.getModel().setError(true);//non è un Battery
-            throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
-        }
+        if (batteries > 0) {
+            SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
+            if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+                controller.getModel().setError(true);
+                throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
+            }
 
-        BatteryCompartment compartment = (BatteryCompartment) component;
-        compartment.removeBattery();
-        declaredPower--;
-        actualPower++;
-        if(declaredPower == 0){
+            BatteryCompartment compartment = (BatteryCompartment) component;
+            compartment.removeBattery();
+            batteries--;
+        }
+        if(batteries == 0){
             if(context.getSpecialPlayers().isEmpty()){
                 context.addSpecialPlayer(player);
             } else {
-                if(actualPower > worst){
+                if(declaredPower > worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
-                    worst = actualPower;
+                    worst = declaredPower;
                 }
             }
             context.removePlayer(player);
@@ -85,7 +92,7 @@ public class CombatZone1_P_BatteryRemovalState extends State {
             }
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new CombatZone1_P_BatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new CombatZone1_P_BatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }

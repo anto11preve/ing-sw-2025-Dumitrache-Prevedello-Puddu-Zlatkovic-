@@ -11,20 +11,20 @@ import Model.Player;
 
 public class CombatZone2EngineDeclarationState extends State {
     private Context context;
-    private int worst;
+    private double worst;
 
     public CombatZone2EngineDeclarationState(Context context) {
         this.context = context;
         this.worst = -1;
     }
 
-    public CombatZone2EngineDeclarationState(Context context, int worst) {
+    public CombatZone2EngineDeclarationState(Context context, double worst) {
         this.context = context;
         this.worst = worst;
     }
 
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);
@@ -43,16 +43,42 @@ public class CombatZone2EngineDeclarationState extends State {
         }
 
 
-        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount || player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines() < amount) {
+        int batteries = 0;
+        double minPower = player.getShipBoard().getCondensedShip().getBaseThrust();
+        double maxPower = player.getShipBoard().getCondensedShip().getMaxThrust();
+
+        if (amount < minPower || amount > maxPower) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Not enough batteries or double engines to declare.");
+            throw new InvalidParameters("Declared amount is out of bounds");
+        }
+
+
+        if ((amount % 1) != (minPower % 1)) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
+        }
+
+        int delta = (int) (amount - minPower);
+
+        if(delta % 2 != 0) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Cannot reach the declared amount with double engines");
+        }
+
+        int doubleRequired = delta / 2;
+
+        if(player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines()>=doubleRequired){
+            batteries = doubleRequired;
+        } else {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Not enough double engines to declare this amount");
         }
 
         if(worst < 0){
-            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, 0));
+            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries));
             controller.getModel().setError(false);
         } else {
-            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, 0, worst));
+            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries, worst));
             controller.getModel().setError(false);
         }
     }

@@ -1,5 +1,6 @@
 package Model.Ship.Components;
 
+import Model.Enums.AlienColor;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Crewmates;
@@ -12,12 +13,12 @@ import com.google.gson.JsonObject;
  */
 public class Cabin extends SpaceshipComponent {
     private Crewmates occupants;
-    private boolean canContainBrown;   // True if the cabin can host brown aliens
-    private boolean canContainPurple;  // True if the cabin can host purple aliens
+    private int canContainBrown;   // True if the cabin can host brown aliens
+    private int canContainPurple;  // True if the cabin can host purple aliens
 
     // New fields to support aliens actually present in the cabin
-    private boolean hasAlien = false;
-    private String alienType = null; // "brown" or "purple"
+    private boolean hasAlien = false; //TODO: serve?
+    private String alienType = null; // "brown" or "purple" TODO: serve?
 
     /**
      * Standard constructor for Cabin with explicit parameters.
@@ -48,19 +49,62 @@ public class Cabin extends SpaceshipComponent {
     }
 
     public boolean getCanContainBrown() {
-        return canContainBrown;
+        return canContainBrown>0;
     }
 
     public boolean getCanContainPurple() {
-        return canContainPurple;
+        return canContainPurple>0;
     }
 
-    public void setCanContainBrown(boolean canContainBrown) {
+    public void setCanContainBrown(int canContainBrown) {
         this.canContainBrown = canContainBrown;
     }
 
-    public void setCanContainPurple(boolean canContainPurple) {
+    public void setCanContainPurple(int canContainPurple) {
         this.canContainPurple = canContainPurple;
+    }
+
+    public void incrementCanContainBrown() {
+        this.canContainBrown++;
+    }
+    public void incrementCanContainPurple() {
+        this.canContainPurple++;
+    }
+
+    public void decrementCanContainBrown() {
+        if (this.canContainBrown > 0) {
+            this.canContainBrown--;
+            if(this.occupants==Crewmates.BROWN_ALIEN) {
+
+                if (this.canContainBrown == 0) {
+                    this.hasAlien = false; // Reset alien presence if no brown support left
+                    this.alienType = null; // Reset alien type
+                    this.occupants = Crewmates.EMPTY;
+                    this.getShipBoard().getCondensedShip().getAliens().setBrownAlien(false);
+                }
+
+            }
+        } else {
+            throw new IllegalArgumentException("Can't decrement canContainBrown below zero");
+        }
+    }
+
+    public void decrementCanContainPurple() {
+        if (this.canContainPurple > 0) {
+            this.canContainPurple--;
+            if(this.occupants==Crewmates.PURPLE_ALIEN) {
+
+                if (this.canContainPurple == 0) {
+                    this.hasAlien = false; // Reset alien presence if no purple support left
+                    this.alienType = null; // Reset alien type
+                    this.occupants = Crewmates.EMPTY;
+                    this.getShipBoard().getCondensedShip().getAliens().setPurpleAlien(false);
+                }
+
+            }
+        } else {
+            throw new IllegalArgumentException("Can't decrement canContainPurple below zero");
+        }
     }
 
     public void setOccupants(Crewmates occupants) {
@@ -98,17 +142,30 @@ public class Cabin extends SpaceshipComponent {
     }
 
 
-    // Optional: These can be implemented for game logic events if needed
+    @Override
     public void added() {
-        // Called when the component is added to the ship
+        if(getShipBoard().getCondensedShip().getCabins().contains(this)){
+            throw new RuntimeException("Cabin already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().addCabin(this);
+        }
+        for(AlienLifeSupport alienLifeSupport : getShipBoard().getCondensedShip().getAlienLifeSupports()) {
+            if(getShipBoard().areComponentsConnected(this, alienLifeSupport)) {
+                if(alienLifeSupport.getColor() == AlienColor.BROWN){
+                    this.incrementCanContainBrown();
+                } else if(alienLifeSupport.getColor() == AlienColor.PURPLE) {
+                    this.incrementCanContainPurple();
+                }
+            }
+        }
     }
 
+    @Override
     public void removed() {
-        // Called when the component is removed from the ship
+        if (!getShipBoard().getCondensedShip().getCabins().contains(this)) {
+            throw new RuntimeException("Cabin not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().removeCabin(this);
+        }
     }
-/*
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-    */
 }

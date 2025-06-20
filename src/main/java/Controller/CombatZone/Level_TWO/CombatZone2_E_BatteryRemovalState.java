@@ -15,20 +15,20 @@ import Model.Ship.Coordinates;
 
 public class CombatZone2_E_BatteryRemovalState extends State {
     private Context context;
-    private int declaredPower;
-    private int actualPower;
-    private int worst;
+    private double declaredPower;
+    private int batteries;
+    private double worst;
 
-    public CombatZone2_E_BatteryRemovalState(Context context, int declaredPower, int actualPower) {
+    public CombatZone2_E_BatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
     }
 
-    public CombatZone2_E_BatteryRemovalState(Context context, int declaredPower, int actualPower, int worst) {
+    public CombatZone2_E_BatteryRemovalState(Context context, double declaredPower, int batteries, double worst) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
         this.worst = worst;
     }
 
@@ -50,30 +50,36 @@ public class CombatZone2_E_BatteryRemovalState extends State {
             throw new InvalidParameters("Coordinates cannot be null");
         }
 
+        if (batteries < 0) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters(" Number of batteries cannot be negative");
+        }
+
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
 
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
-            throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
-        }
+        if (batteries > 0) {
+            SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
+            if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+                controller.getModel().setError(true);
+                throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
+            }
 
-        BatteryCompartment compartment = (BatteryCompartment) component;
-        compartment.removeBattery();
-        declaredPower--;
-        actualPower++;
-        if(declaredPower == 0){
+            BatteryCompartment compartment = (BatteryCompartment) component;
+            compartment.removeBattery();
+            batteries--;
+        }
+        if(batteries == 0){
             if(context.getSpecialPlayers().isEmpty()){
                 context.addSpecialPlayer(player);
             } else {
-                if(actualPower > worst){
+                if(declaredPower > worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
-                    worst = actualPower;
+                    worst = declaredPower;
                 }
             }
             context.removePlayer(player);
@@ -86,7 +92,7 @@ public class CombatZone2_E_BatteryRemovalState extends State {
             }
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }

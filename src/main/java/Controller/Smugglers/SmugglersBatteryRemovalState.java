@@ -26,11 +26,11 @@ public class SmugglersBatteryRemovalState extends State{
     /**
      * The declared power of the player.
      */
-    private int declaredPower;
+    private double declaredPower;
     /**
      * The actual power of the player.
      */
-    private int actualPower;
+    private int batteries;
 
     /**
      * Constructor to initialize the state with the current game context and power values.
@@ -39,10 +39,10 @@ public class SmugglersBatteryRemovalState extends State{
      * @param declaredPower the declared power of the player
      * @param actualPower   the actual power of the player
      */
-    public SmugglersBatteryRemovalState(Context context, int declaredPower, int actualPower) {
+    public SmugglersBatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
     }
 
     /**
@@ -89,13 +89,12 @@ public class SmugglersBatteryRemovalState extends State{
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
-        declaredPower--;
-        actualPower++;
-        if(declaredPower == 0){
-            if(actualPower > context.getPower()){
+        batteries--;
+        if(batteries == 0){
+            if(declaredPower > context.getPower()){
                 controller.getModel().setState(new SmugglersLandState(context));
                 controller.getModel().setError(false);
-            } else if(actualPower == context.getPower()){
+            } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
@@ -121,7 +120,7 @@ public class SmugglersBatteryRemovalState extends State{
 
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }
@@ -151,7 +150,7 @@ public class SmugglersBatteryRemovalState extends State{
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn");
         }
-        if(actualPower > context.getPower() && declaredPower == 0){
+        if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new SmugglersLandState(context));
             controller.getModel().setError(false);
         }

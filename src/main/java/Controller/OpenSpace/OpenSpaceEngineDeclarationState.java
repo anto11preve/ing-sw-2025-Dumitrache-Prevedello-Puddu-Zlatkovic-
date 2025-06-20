@@ -47,7 +47,7 @@ public class OpenSpaceEngineDeclarationState extends State {
      * @param amount     the number of double engines the player wants to use
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);
@@ -65,14 +65,42 @@ public class OpenSpaceEngineDeclarationState extends State {
             throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
-        //TODO: Se il giocatore ha potenza motrice base 0, lascia la partita
+        int batteries = 0;
+        double minPower = player.getShipBoard().getCondensedShip().getBaseThrust();
+        double maxPower = player.getShipBoard().getCondensedShip().getMaxThrust();
 
-        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount || player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines() < amount) {
+        if (amount < minPower || amount > maxPower) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Not enough batteries or double engines to declare.");
+            throw new InvalidParameters("Declared amount is out of bounds");
         }
 
-        controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount));
+
+        if ((amount % 1) != (minPower % 1)) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
+        }
+
+        int delta = (int) (amount - minPower);
+
+        if(delta % 2 != 0) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Cannot reach the declared amount with double engines");
+        }
+
+        int doubleRequired = delta / 2;
+
+        if(player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines()>=doubleRequired){
+            batteries = doubleRequired;
+        } else {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Not enough double engines to declare this amount");
+        }
+
+
+        //TODO: Se il giocatore ha potenza motrice base 0, lascia la partita
+
+
+        controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount, batteries));
         controller.getModel().setError(false);
     }
 

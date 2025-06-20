@@ -79,7 +79,7 @@ public abstract class State {
     public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: useItem");
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
+    public void declaresDouble(String name, DoubleType doubleType, double amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: declaresDouble");
     }
     //ho finito di fare qualunque cosa stia facendo

@@ -188,4 +188,50 @@ public class CondensedShip {
         return false;
     }
 
+    public double getBasePower(){
+        double power = 0;
+        for(Cannon cannon : this.getCannons()){
+            if(!cannon.isDouble()){
+                if(cannon.getOrientation()== Direction.UP){
+                    power++;
+                } else {
+                    power+=0.5;
+                }
+            }
+        }
+        if(power>0){
+            if(this.getAliens().hasPurpleAlien()){
+                power+=2;
+            }
+        }
+        return power;
+    }
+
+    public double getMaxPower(){
+        double power = getBasePower();
+        DoubleCannonsCounter doubleCannons = this.getTotalDoubleCannons();
+        power += doubleCannons.getFrontCannons() * 2;
+        power += doubleCannons.getOtherCannons();
+
+        return power;
+    }
+
+    public double getBaseThrust(){
+        double thrust = 0;
+        thrust += this.getEngines().getSingleEngines();
+        if(thrust>0){
+            if(this.getAliens().hasBrownAlien()){
+                thrust += 2;
+            }
+        }
+        return thrust;
+    }
+
+    public double getMaxThrust(){
+        double thrust = getBaseThrust();
+        thrust += this.getEngines().getDoubleEngines() * 2;
+        return thrust;
+    }
+
+
 }
