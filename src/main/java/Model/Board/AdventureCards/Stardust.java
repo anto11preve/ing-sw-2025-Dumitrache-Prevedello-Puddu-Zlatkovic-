@@ -4,7 +4,7 @@ import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
 
 public class Stardust extends AdventureCardFilip {
-    private String imagePath;
+
 
     public Stardust(int id, CardLevel level) {
         super(id, level);
@@ -22,10 +22,10 @@ public class Stardust extends AdventureCardFilip {
 
     public Stardust(JsonObject json) {
         super(json);
-        this.imagePath = json.get("imagePath").getAsString();
     }
 
-    public String getImagePath() {
-        return imagePath;
+    @Override
+    public void visualize() {
+        super.visualize();
     }
 }

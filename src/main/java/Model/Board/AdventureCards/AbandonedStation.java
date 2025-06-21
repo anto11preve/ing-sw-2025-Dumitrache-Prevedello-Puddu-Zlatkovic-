@@ -65,4 +65,22 @@ public class AbandonedStation extends AdventureCardFilip {
         }
         this.landingReward = new Goods(parsedGoods);
     }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Crew Required:   " + crew);
+        System.out.println("Landing Delay:   " + landingPenalty);
+
+        // Count goods by iterating, and collect them into a list for printing
+        int goodsCount = 0;
+        StringBuilder goodsList = new StringBuilder();
+        for (Good g : landingReward) {
+            goodsCount++;
+            goodsList.append(g).append(" ");
+        }
+        System.out.println("Reward Goods:    " + goodsCount);
+        System.out.println("  Goods List:    " + goodsList.toString().trim());
+    }
+
 }

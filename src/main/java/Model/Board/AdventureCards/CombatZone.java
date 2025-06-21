@@ -104,4 +104,50 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
         }
     }
 
+    @Override
+    public void visualize() {
+        // 1) Print the generic card info
+        super.visualize();
+
+        // 2) Print each combat line
+        System.out.println("Combat Lines:");
+        for (int i = 0; i < lines.size(); i++) {
+            CombatZoneLine line = lines.get(i);
+            Penalty         pen  = line.getPenalty();
+            Criteria        crit = line.getOrderingCriteria();
+
+            System.out.printf(" [%d] Criteria: %s%n", i + 1, crit);
+
+            // Simple penalties: rely on toString()
+            if (pen instanceof DaysPenalty ||
+                    pen instanceof CrewPenalty ||
+                    pen instanceof GoodsPenalty) {
+
+                System.out.printf("      Penalty: %s%n", pen);
+
+            }
+            // CannonShotPenalty: iterable of CannonShot
+            else if (pen instanceof CannonShotPenalty) {
+                CannonShotPenalty csp = (CannonShotPenalty) pen;
+                int count = 0;
+                System.out.printf("      Shots:%n");
+                for (CannonShot shot : csp) {
+                    count++;
+                    System.out.printf(
+                            "        #%d → large=%s, dir=%s%n",
+                            count,
+                            shot.isBig(),
+                            shot.getSide()
+                    );
+                }
+                if (count == 0) {
+                    System.out.println("        (no shots)");
+                }
+            }
+            // Fallback
+            else {
+                System.out.printf("      Unknown penalty type: %s%n", pen);
+            }
+        }
+    }
 }

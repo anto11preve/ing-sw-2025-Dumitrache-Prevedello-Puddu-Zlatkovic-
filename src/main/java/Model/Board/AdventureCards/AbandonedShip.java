@@ -74,4 +74,14 @@ public class AbandonedShip extends AdventureCardFilip {
         this.landingPenalty = new DaysPenalty(days);
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Nave Abbandonata");
+        System.out.println("Crew: " + this.winPenalty.getAmount());
+        System.out.println("Credits: " + this.landingReward.getAmount());
+        System.out.println("Days: " + this.landingPenalty.getAmount());
+        System.out.println("---------------------------------------");
+    }
+
 }

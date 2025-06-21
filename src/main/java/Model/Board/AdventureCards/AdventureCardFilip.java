@@ -26,6 +26,14 @@ public abstract class AdventureCardFilip {
                 : "";               // or null
     }
 
+    public void visualize(){
+        System.out.println("==========================");
+        System.out.println("ID: " + this.id);
+        System.out.println("Nome: " + this.getName());
+        System.out.println("Livello: " + this.level);
+        System.out.println("Immagine: " + this.imagePath);
+    }
+
     public String getImagePath() {
         return imagePath;
     }

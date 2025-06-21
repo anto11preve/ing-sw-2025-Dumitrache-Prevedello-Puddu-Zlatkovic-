@@ -18,6 +18,13 @@ public class Epidemic extends AdventureCardFilip {
         }
     }
 
+    @Override
+    public void visualize() {
+        // 1) Generic card info: ID, name, level, description, imagePath
+        super.visualize();
+        System.out.println("Crew Lost:       " + crewLost);
+    }
+
     public int getCrewLost() {
         return crewLost;
     }

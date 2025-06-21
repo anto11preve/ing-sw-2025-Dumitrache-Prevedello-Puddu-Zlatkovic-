@@ -49,8 +49,6 @@ public class CargoHold extends SpaceshipComponent {
         System.out.println("Cargo Hold Capacity: " + capacity);
         System.out.println("Cargo Hold Special: " + isSpecial);
         System.out.println("Goods in Cargo Hold:");
-        for (int i = 0; i < goods.length; i++) {}
-        for (Good good : goods) {}
         System.out.println("==========================");
         System.out.printf("\n\n\n\n");
     }

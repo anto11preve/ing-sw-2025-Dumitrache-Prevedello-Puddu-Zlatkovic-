@@ -50,4 +50,20 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
         }
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Total Meteors:  " + meteors.size());
+        System.out.println("Details:");
+        for (int i = 0; i < meteors.size(); i++) {
+            Meteor m = meteors.get(i);
+            System.out.printf(
+                    "  #%d → large=%s, dir=%s%n",
+                    i + 1,
+                    m.isBig(),
+                    m.getSide()
+            );
+        }
+    }
+
 }
