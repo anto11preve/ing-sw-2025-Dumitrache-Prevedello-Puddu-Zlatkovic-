@@ -1,5 +1,6 @@
 package Controller.CombatZone.Level_TWO;
 
+import Controller.CombatZone.Level_ONE.CombatZone1_P_BatteryRemovalState;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
@@ -12,13 +13,19 @@ import Model.Player;
 
 public class CombatZone2PowerDeclarationState extends State {
     private Context context;
+    private double worst = -1;
 
     public CombatZone2PowerDeclarationState(Context context) {
         this.context = context;
     }
 
+    public CombatZone2PowerDeclarationState(Context context, double worst) {
+        this.context = context;
+        this.worst = worst;
+    }
+
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
 
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
@@ -37,17 +44,57 @@ public class CombatZone2PowerDeclarationState extends State {
             throw new InvalidParameters("It's not the player's turn");
         }
 
-        if(player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons()*2 +
-                player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons() < amount){
+
+        int batteries = 0;
+        double minPower = player.getShipBoard().getCondensedShip().getBasePower();
+        double maxPower = player.getShipBoard().getCondensedShip().getMaxPower();
+
+        if (amount < minPower || amount > maxPower) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Not enough cannons to declare");
+            throw new InvalidParameters("Declared amount is out of bounds");
         }
 
-        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < amount){
+
+        if ((amount % 1) != (minPower % 1)) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Not enough batteries to declare");
+            throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
         }
-        controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0));
-        controller.getModel().setError(false);
+
+        int delta = (int) (amount - minPower);
+
+        int frontCannons = player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getFrontCannons();
+        int otherCannons = player.getShipBoard().getCondensedShip().getTotalDoubleCannons().getOtherCannons();
+
+        int doubleRequired = delta / 2;
+        if (doubleRequired <= frontCannons) {
+            batteries += doubleRequired;
+            delta -= doubleRequired * 2;
+        } else {
+            batteries += frontCannons;
+            delta -= doubleRequired * 2;
+        }
+
+        if (delta > 0) {
+
+            if (delta <= otherCannons) {
+                batteries += delta;
+            } else {
+                controller.getModel().setError(true);
+                throw new InvalidParameters("Not enough double cannons to declare this amount");
+            }
+
+        }
+
+        if(batteries > player.getShipBoard().getCondensedShip().getTotalBatteries()){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Not enough batteries to declare this amount");
+        }
+        if(worst < 0){
+            controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0));
+            controller.getModel().setError(false);
+        } else {
+            controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0, worst));
+            controller.getModel().setError(false);
+        }
     }
 }

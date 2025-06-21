@@ -57,7 +57,7 @@ public class SlaversRewardsState extends State{
 
         player.deltaCredits(context.getCredits());
 
-        controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
+        controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());
 
         context.removePlayer(player);
 

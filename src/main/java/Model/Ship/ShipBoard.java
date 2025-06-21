@@ -551,50 +551,51 @@ public class ShipBoard {
         }
     }
 
-    /**
-     * Calculates the total firepower of the ship.
-     * Considers all cannon components and their orientation relative to the ship's forward direction.
-     *
-     *
-     * @return the sum of effective power from all cannons
-     */
 
-    public int calculateFirepower(Direction shipForward) {
-        int firepower = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                SpaceshipComponent component = components[row][col];
-                if (component != null) {
-                    firepower += component.getFirepower(shipForward);
-                }
-            }
-        }
-        return firepower;
-    }
-
-
-    /**
-     * Calculates total thrust considering engine orientation.
-     */
-    /**
-     * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
-     * Only engines that face the specified rear direction contribute their engine power.
-     *
-     * @param shipRear the direction that represents the rear of the ship
-     * @return the total thrust value from all correctly oriented engines
-     */
-    public int calculateThrust(Direction shipRear) {
-        int thrust = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                SpaceshipComponent component = components[row][col];
-                if (component != null) {
-                    thrust += component.getThrust(shipRear);
-                }
-            }
-        }
-        return thrust;
-    }
+//    /**
+//     * Calculates the total firepower of the ship.
+//     * Considers all cannon components and their orientation relative to the ship's forward direction.
+//     *
+//     *
+//     * @return the sum of effective power from all cannons
+//     */
+//
+//    public int calculateFirepower(Direction shipForward) {
+//        int firepower = 0;
+//        for (int row = 0; row < ROWS; row++) {
+//            for (int col = 0; col < COLS; col++) {
+//                SpaceshipComponent component = components[row][col];
+//                if (component != null) {
+//                    firepower += component.getFirepower(shipForward);
+//                }
+//            }
+//        }
+//        return firepower;
+//    }
+//
+//
+//    /**
+//     * Calculates total thrust considering engine orientation.
+//     */
+//    /**
+//     * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
+//     * Only engines that face the specified rear direction contribute their engine power.
+//     *
+//     * @param shipRear the direction that represents the rear of the ship
+//     * @return the total thrust value from all correctly oriented engines
+//     */
+//    public int calculateThrust(Direction shipRear) {
+//        int thrust = 0;
+//        for (int row = 0; row < ROWS; row++) {
+//            for (int col = 0; col < COLS; col++) {
+//                SpaceshipComponent component = components[row][col];
+//                if (component != null) {
+//                    thrust += component.getThrust(shipRear);
+//                }
+//            }
+//        }
+//        return thrust;
+//    }
 
 
 
@@ -618,16 +619,23 @@ public class ShipBoard {
 
         Direction incomingDirection = DirectionSideUtils.convertSideToDirection(incomingSide);
 
-        for (Side side : Side.values()) {
-            int[] offset = getOffset(side);
-            int adjRow = row + offset[0];
-            int adjCol = col + offset[1];
-            if (isValidPosition(adjRow, adjCol)) {
-                SpaceshipComponent neighbor = components[adjRow][adjCol];
-                if (neighbor != null && neighbor.blocks(incomingDirection)) {
+        switch (incomingDirection){
+            case UP:
+                if(condensedShip.getShields().getNorthShields() > 0)
                     return true;
-                }
-            }
+                break;
+            case RIGHT:
+                if(condensedShip.getShields().getEastShields() > 0)
+                    return true;
+                break;
+            case DOWN:
+                if(condensedShip.getShields().getSouthShields() > 0)
+                    return true;
+                break;
+            case LEFT:
+                if(condensedShip.getShields().getWestShields() > 0)
+                    return true;
+                break;
         }
         return false;
     }

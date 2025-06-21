@@ -83,7 +83,7 @@ public class CardResolverVisitor {
                 }
             }
             RegularPenalty penalty = (RegularPenalty) Ccard.iterator().next().getPenalty();
-            controller.getModel().getFlightBoard().deltaFlightDays(currentPlayer, penalty.getAmount());
+            controller.getModel().getFlightBoard().deltaFlightDays(currentPlayer, -penalty.getAmount());
             controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
             controller.getModel().setError(false);
         } else if( Ccard.getLevel() == CardLevel.LEVEL_TWO) {

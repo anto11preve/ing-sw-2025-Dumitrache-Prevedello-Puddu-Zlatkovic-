@@ -114,7 +114,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
         model.getState().pickNextCard(name);
     }
-    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
+    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         model.getState().deleteComponent(name, coordinates);
     }
     public void leaveRace(String name) throws InvalidCommand, InvalidParameters {
@@ -129,7 +129,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     public void useItem(String name, ItemType itemType, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().useItem(name, itemType, coordinates);
     }
-    public void declaresDouble(String name, DoubleType doubleType, int amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
+    public void declaresDouble(String name, DoubleType doubleType, double amount) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         model.getState().declaresDouble(name, doubleType, amount);
     }
     public void end(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {

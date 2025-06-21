@@ -29,7 +29,9 @@ public class OpenSpaceBatteryRemovalState extends State {
     /**
      * The number of batteries that must be removed to confirm the use of double engines.
      */
-    private int declaredPower;
+    private double declaredPower;
+
+    private int batteries;
 
     /**
      * Constructs an OpenSpaceBatteryRemovalState with the specified context and declared power.
@@ -37,9 +39,10 @@ public class OpenSpaceBatteryRemovalState extends State {
      * @param context      The context providing access to the current game context.
      * @param declaredPower The number of batteries that must be removed.
      */
-    public OpenSpaceBatteryRemovalState(Context context, int declaredPower) {
+    public OpenSpaceBatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
+        this.batteries = batteries;
     }
 
 
@@ -60,7 +63,6 @@ public class OpenSpaceBatteryRemovalState extends State {
      */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
-        int placesGained = declaredPower*2;
         Controller controller = context.getController();
 
         if(itemType != ItemType.BATTERIES){
@@ -78,26 +80,31 @@ public class OpenSpaceBatteryRemovalState extends State {
             throw new InvalidParameters("Invalid declared power type, declared power is negative");
         }
 
+        if(batteries < 0){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid batteries type, batteries negative");
+        }
+
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to throw the dice.");
         }
 
-        placesGained += player.getShipBoard().calculateThrust(Direction.DOWN);//??
-        //TODO: placesGained += player.getShipBoard().getBaseEnginePower();
-        SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
-            throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
+        if (batteries > 0) {
+            SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
+            if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+                controller.getModel().setError(true);
+                throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
+            }
+
+            BatteryCompartment compartment = (BatteryCompartment) component;
+            compartment.removeBattery();
+            batteries--;
         }
+        if(batteries == 0){
 
-        BatteryCompartment compartment = (BatteryCompartment) component;
-        compartment.removeBattery();
-        declaredPower--;
-        if(declaredPower == 0){
-
-            controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
+            controller.getModel().getFlightBoard().deltaFlightDays(player, (int) declaredPower);
 
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){         //passati tutti
@@ -110,7 +117,7 @@ public class OpenSpaceBatteryRemovalState extends State {
             }
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, declaredPower));
+            controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }

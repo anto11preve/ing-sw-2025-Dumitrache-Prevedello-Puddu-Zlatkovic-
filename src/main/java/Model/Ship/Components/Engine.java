@@ -1,12 +1,8 @@
 package Model.Ship.Components;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
-import Model.Enums.Direction;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class representing an engine module for the spaceship.
@@ -17,16 +13,12 @@ public class Engine extends SpaceshipComponent {
 
     private final boolean isDouble;
     private final int baseEnginePower;
-    private final boolean requiresBattery;
-    private final List<String> abilities;
     private boolean hasAlien;
 
     public Engine(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
         this.isDouble = isDouble;
         this.baseEnginePower = isDouble ? 2 : 1;
-        this.requiresBattery = isDouble;
-        this.abilities = new ArrayList<>();
         this.hasAlien = false;
     }
 
@@ -41,14 +33,6 @@ public class Engine extends SpaceshipComponent {
 
         this.isDouble = json.has("isDoubleEngine") && json.get("isDoubleEngine").getAsBoolean();
         this.baseEnginePower = json.get("enginePower").getAsInt();
-        this.energyCost = json.get("energyCost").getAsInt();
-        this.requiresBattery = json.get("requiresBattery").getAsBoolean();
-        this.imagePath = json.get("imagePath").getAsString();
-        this.animationPath = json.get("animationPath").getAsString();
-        this.abilities = new ArrayList<>();
-        for (JsonElement e : json.getAsJsonArray("abilities")) {
-            abilities.add(e.getAsString());
-        }
         this.hasAlien = false;
     }
 
@@ -63,14 +47,6 @@ public class Engine extends SpaceshipComponent {
         return baseEnginePower;
     }
 
-    public Direction getThrustDirection() {
-        return getOrientation();
-    }
-
-    public boolean isCorrectlyOriented(Direction shipRear) {
-        return getThrustDirection() == shipRear;
-    }
-
     public boolean hasAlien() {
         return hasAlien;
     }
@@ -80,12 +56,31 @@ public class Engine extends SpaceshipComponent {
     }
 
     @Override
-    public void added() {
-        System.out.println("Engine added → Power: " + baseEnginePower + ", orientation: " + getOrientation());
+    public void added(){
+        if(getShipBoard().getCondensedShip().getEnginesList().contains(this)){
+            throw new RuntimeException("Cargo Hold already added to the ship.");
+        } else {
+            getShipBoard().getCondensedShip().getEnginesList().add(this);
+            if(isDouble){
+                getShipBoard().getCondensedShip().getEngines().incrementSingleEngines();
+            } else {
+                getShipBoard().getCondensedShip().getEngines().incrementDoubleEngines();
+            }
+        }
     }
 
     @Override
     public void removed() {
-        System.out.println("Engine removed → Clearing thrust contribution.");
+        if(!getShipBoard().getCondensedShip().getEnginesList().contains(this)){
+            throw new RuntimeException("Cargo Hold not found in the ship.");
+        } else {
+            getShipBoard().getCondensedShip().getEnginesList().remove(this);
+            if(isDouble){
+                getShipBoard().getCondensedShip().getEngines().decrementSingleEngines();
+            } else {
+                getShipBoard().getCondensedShip().getEngines().decrementDoubleEngines();
+            }
+        }
+
     }
 }
