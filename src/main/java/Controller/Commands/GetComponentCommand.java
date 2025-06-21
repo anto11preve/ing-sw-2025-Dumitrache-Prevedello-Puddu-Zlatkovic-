@@ -16,11 +16,10 @@ public class GetComponentCommand extends Command {
      * Constructs a new GetComponentCommand.
      *
      * @param playerName the name of the player getting the component
-     * @param gameID the ID of the game session
      * @param index the index of the component to retrieve
      */
-    public GetComponentCommand(String playerName, int gameID, int index) {
-        super(playerName, gameID);
+    public GetComponentCommand(String playerName, int index) {
+        super(playerName);
         this.index = index;
     }
     

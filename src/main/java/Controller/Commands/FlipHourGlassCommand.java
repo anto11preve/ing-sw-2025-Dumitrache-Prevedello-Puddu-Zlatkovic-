@@ -14,10 +14,9 @@ public class FlipHourGlassCommand extends Command {
      * Constructs a new FlipHourGlassCommand.
      *
      * @param playerName the name of the player flipping the hourglass
-     * @param gameID the ID of the game session
      */
-    public FlipHourGlassCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public FlipHourGlassCommand(String playerName) {
+        super(playerName);
     }
     
     /**

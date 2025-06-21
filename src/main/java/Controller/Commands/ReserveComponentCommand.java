@@ -14,10 +14,9 @@ public class ReserveComponentCommand extends Command {
      * Constructs a new ReserveComponentCommand.
      *
      * @param playerName the name of the player reserving the component
-     * @param gameID the ID of the game session
      */
-    public ReserveComponentCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public ReserveComponentCommand(String playerName) {
+        super(playerName);
     }
     
     /**

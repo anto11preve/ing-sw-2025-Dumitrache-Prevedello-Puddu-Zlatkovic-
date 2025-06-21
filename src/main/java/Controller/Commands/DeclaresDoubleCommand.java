@@ -21,12 +21,11 @@ public class DeclaresDoubleCommand extends Command {
      * Constructs a new DeclaresDoubleCommand.
      *
      * @param playerName the name of the player making the declaration
-     * @param gameID the ID of the game session
      * @param doubleType the type of double component
      * @param amount the amount to declare
      */
-    public DeclaresDoubleCommand(String playerName, int gameID, DoubleType doubleType, int amount) {
-        super(playerName, gameID);
+    public DeclaresDoubleCommand(String playerName, DoubleType doubleType, int amount) {
+        super(playerName);
         this.doubleType = doubleType;
         this.amount = amount;
     }

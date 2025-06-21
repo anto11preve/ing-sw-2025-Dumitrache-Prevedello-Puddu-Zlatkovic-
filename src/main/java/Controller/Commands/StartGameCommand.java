@@ -20,11 +20,10 @@ public class StartGameCommand extends Command {
      * Constructs a new StartGameCommand.
      *
      * @param playerName the name of the player creating the game
-     * @param gameID the ID for the new game session
      * @param level the difficulty level of the game
      */
-    public StartGameCommand(String playerName, int gameID, MatchLevel level) {
-        super(playerName, gameID);
+    public StartGameCommand(String playerName, MatchLevel level) {
+        super(playerName);
         this.level = level;
     }
 

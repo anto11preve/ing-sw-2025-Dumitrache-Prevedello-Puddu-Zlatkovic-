@@ -23,14 +23,13 @@ public class PlaceComponentCommand extends Command {
      * Constructs a new PlaceComponentCommand.
      *
      * @param playerName the name of the player placing the component
-     * @param gameID the ID of the game session
      * @param origin the origin of the component
      * @param coordinates the coordinates for placement
      * @param orientation the orientation of the component
      */
-    public PlaceComponentCommand(String playerName, int gameID, ComponentOrigin origin, 
-                               Coordinates coordinates, Direction orientation) {
-        super(playerName, gameID);
+    public PlaceComponentCommand(String playerName, ComponentOrigin origin,
+                                 Coordinates coordinates, Direction orientation) {
+        super(playerName);
         this.origin = origin;
         this.coordinates = coordinates;
         this.orientation = orientation;

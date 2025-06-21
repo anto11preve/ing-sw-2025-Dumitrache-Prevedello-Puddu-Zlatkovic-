@@ -18,11 +18,10 @@ public class DeleteComponentCommand extends Command {
      * Constructs a new DeleteComponentCommand.
      *
      * @param playerName the name of the player whose component is being deleted
-     * @param gameID the ID of the game session
      * @param coordinates the coordinates of the component to delete
      */
-    public DeleteComponentCommand(String playerName, int gameID, Coordinates coordinates) {
-        super(playerName, gameID);
+    public DeleteComponentCommand(String playerName, Coordinates coordinates) {
+        super(playerName);
         this.coordinates = coordinates;
     }
     

@@ -32,7 +32,7 @@ public class MoveGoodsCommand extends Command {
      */
     public MoveGoodsCommand(String playerName, int gameID, Coordinates oldCoordinates, 
                            Coordinates newCoordinates, int oldIndex, int newIndex) {
-        super(playerName, gameID);
+        super(playerName);
         this.oldCoordinates = oldCoordinates;
         this.newCoordinates = newCoordinates;
         this.oldIndex = oldIndex;

@@ -24,14 +24,13 @@ public class UseItemCommand extends Command {
      * Constructs a new UseItemCommand.
      *
      * @param playerName the name of the player using the item
-     * @param gameID the ID of the game session
      * @param itemType the type of item to use
      * @param coordinates the coordinates where to use the item
      * @param amount the amount of items to use
      */
-    public UseItemCommand(String playerName, int gameID, ItemType itemType, 
-                         Coordinates coordinates, int amount) {
-        super(playerName, gameID);
+    public UseItemCommand(String playerName, ItemType itemType,
+                          Coordinates coordinates, int amount) {
+        super(playerName);
         this.itemType = itemType;
         this.coordinates = coordinates;
         this.amount = amount;

@@ -22,14 +22,13 @@ public class GetGoodCommand extends Command {
      * Constructs a new GetGoodCommand.
      *
      * @param playerName the name of the player getting the good
-     * @param gameID the ID of the game session
      * @param goodIndex the index of the good to get
      * @param coordinates the coordinates of the cargo hold
      * @param cargoHoldIndex the index within the cargo hold
      */
-    public GetGoodCommand(String playerName, int gameID, int goodIndex, 
-                         Coordinates coordinates, int cargoHoldIndex) {
-        super(playerName, gameID);
+    public GetGoodCommand(String playerName, int goodIndex,
+                          Coordinates coordinates, int cargoHoldIndex) {
+        super(playerName);
         this.goodIndex = goodIndex;
         this.coordinates = coordinates;
         this.cargoHoldIndex = cargoHoldIndex;

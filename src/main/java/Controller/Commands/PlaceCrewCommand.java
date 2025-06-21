@@ -20,12 +20,11 @@ public class PlaceCrewCommand extends Command {
      * Constructs a new PlaceCrewCommand.
      *
      * @param playerName the name of the player placing crew
-     * @param gameID the ID of the game session
      * @param coordinates the coordinates of the target cabin
      * @param type the type of crew member to place
      */
-    public PlaceCrewCommand(String playerName, int gameID, Coordinates coordinates, CrewType type) {
-        super(playerName, gameID);
+    public PlaceCrewCommand(String playerName, Coordinates coordinates, CrewType type) {
+        super(playerName);
         this.coordinates = coordinates;
         this.type = type;
     }

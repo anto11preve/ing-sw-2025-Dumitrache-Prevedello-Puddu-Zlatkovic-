@@ -15,10 +15,9 @@ public class LoginCommand extends Command {
      * Constructs a new LoginCommand.
      *
      * @param playerName the name of the player attempting to login
-     * @param gameID the ID of the game session to join
      */
-    public LoginCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public LoginCommand(String playerName) {
+        super(playerName);
     }
 
     /**

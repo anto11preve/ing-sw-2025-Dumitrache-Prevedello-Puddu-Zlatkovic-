@@ -464,4 +464,10 @@ public class BuildingState extends State {
         }
 
     }
+
+    @Override
+    public List<String> getAvailableCommands(){
+        /*TODO: add all other commands*/
+        return List.of("FinishBuilding");
+    }
 }

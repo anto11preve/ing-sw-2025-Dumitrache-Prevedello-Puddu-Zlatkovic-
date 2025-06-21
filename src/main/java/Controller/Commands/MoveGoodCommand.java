@@ -24,15 +24,14 @@ public class MoveGoodCommand extends Command {
      * Constructs a new MoveGoodsCommand.
      *
      * @param playerName the name of the player moving goods
-     * @param gameID the ID of the game session
      * @param oldCoordinates the source coordinates
      * @param newCoordinates the destination coordinates
      * @param oldIndex the source index
      * @param newIndex the destination index
      */
-    public MoveGoodCommand(String playerName, int gameID, Coordinates oldCoordinates,
+    public MoveGoodCommand(String playerName, Coordinates oldCoordinates,
                            Coordinates newCoordinates, int oldIndex, int newIndex) {
-        super(playerName, gameID);
+        super(playerName);
         this.oldCoordinates = oldCoordinates;
         this.newCoordinates = newCoordinates;
         this.oldIndex = oldIndex;

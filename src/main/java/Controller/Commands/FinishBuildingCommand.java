@@ -4,6 +4,9 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for finishing ship building and choosing starting position.
  * Completes the building phase for a player.
@@ -16,11 +19,10 @@ public class FinishBuildingCommand extends Command {
      * Constructs a new FinishBuildingCommand.
      *
      * @param playerName the name of the player finishing building
-     * @param gameID the ID of the game session
      * @param position the desired starting position
      */
-    public FinishBuildingCommand(String playerName, int gameID, int position) {
-        super(playerName, gameID);
+    public FinishBuildingCommand(String playerName, int position) {
+        super(playerName);
         this.position = position;
     }
     
@@ -41,5 +43,34 @@ public class FinishBuildingCommand extends Command {
      */
     public int getPosition() {
         return position;
+    }
+
+    /**
+     *
+     * @return constructor for the FinishBuildingCommand
+     */
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(Map<String, String> args) throws IllegalArgumentException {
+                final String playerName = args.get("playerName");
+                if(playerName == null) {
+                    throw new IllegalArgumentException("playerName is required");
+                }
+                final int position;
+                try{
+                    position = Integer.parseInt(args.get("position"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the position. Did you provide an Integer?");
+                }
+
+                return new FinishBuildingCommand(playerName, position);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("playerName", "position");
+            }
+        };
     }
 }

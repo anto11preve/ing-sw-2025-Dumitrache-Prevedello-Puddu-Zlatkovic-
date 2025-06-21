@@ -17,11 +17,10 @@ public class ChoosePlanetCommand extends Command {
      * Constructs a new ChoosePlanetCommand.
      *
      * @param playerName the name of the player choosing the planet
-     * @param gameID the ID of the game session
      * @param planetName the name of the planet to choose
      */
-    public ChoosePlanetCommand(String playerName, int gameID, String planetName) {
-        super(playerName, gameID);
+    public ChoosePlanetCommand(String playerName, String planetName) {
+        super(playerName);
         this.planetName = planetName;
     }
     

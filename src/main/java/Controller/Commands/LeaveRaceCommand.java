@@ -14,10 +14,9 @@ public class LeaveRaceCommand extends Command {
      * Constructs a new LeaveRaceCommand.
      *
      * @param playerName the name of the player leaving the race
-     * @param gameID the ID of the game session
      */
-    public LeaveRaceCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public LeaveRaceCommand(String playerName) {
+        super(playerName);
     }
     
     /**

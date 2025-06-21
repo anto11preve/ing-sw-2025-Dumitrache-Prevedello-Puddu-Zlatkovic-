@@ -19,11 +19,10 @@ public class GetRewardCommand extends Command {
      * Constructs a new GetRewardCommand.
      *
      * @param playerName the name of the player claiming the reward
-     * @param gameID the ID of the game session
      * @param rewardType the type of reward to claim
      */
-    public GetRewardCommand(String playerName, int gameID, RewardType rewardType) {
-        super(playerName, gameID);
+    public GetRewardCommand(String playerName, RewardType rewardType) {
+        super(playerName);
         this.rewardType = rewardType;
     }
     

@@ -8,23 +8,15 @@ import Model.Exceptions.InvalidMethodParameters;
 
 public abstract class Command {
     private String PlayerName;
-    private int GameID;
 
-    public Command(String playerName, int gameID) {
+    public Command(String playerName) {
         PlayerName = playerName;
-        GameID = gameID;
     }
     public String getPlayerName() {
         return PlayerName;
     }
-    public int getGameID() {
-        return GameID;
-    }
     public void setPlayerName(String playerName) {
         PlayerName = playerName;
-    }
-    public void setGameID(int gameID) {
-        GameID = gameID;
     }
     public abstract void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction;
 

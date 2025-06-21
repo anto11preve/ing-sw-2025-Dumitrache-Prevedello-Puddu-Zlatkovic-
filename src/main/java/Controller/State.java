@@ -6,6 +6,8 @@ import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 //import java.util.Map;
 
 public abstract class State {
@@ -99,4 +101,6 @@ public abstract class State {
         throw new InvalidCommand("Invalid command: throwDices");
     }
 
+    /*TODO: implement this for all states*/
+    public abstract List<String> getAvailableCommands();
 }

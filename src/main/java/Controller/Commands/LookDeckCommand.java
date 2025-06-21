@@ -16,11 +16,10 @@ public class LookDeckCommand extends Command {
      * Constructs a new LookDeckCommand.
      *
      * @param playerName the name of the player looking at the deck
-     * @param gameID the ID of the game session
      * @param index the index of the deck to examine
      */
-    public LookDeckCommand(String playerName, int gameID, int index) {
-        super(playerName, gameID);
+    public LookDeckCommand(String playerName, int index) {
+        super(playerName);
         this.index = index;
     }
     

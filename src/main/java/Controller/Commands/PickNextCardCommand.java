@@ -15,10 +15,9 @@ public class PickNextCardCommand extends Command {
      * Constructs a new PickNextCardCommand.
      *
      * @param playerName the name of the player (leader) picking the card
-     * @param gameID the ID of the game session
      */
-    public PickNextCardCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public PickNextCardCommand(String playerName) {
+        super(playerName);
     }
     
     /**

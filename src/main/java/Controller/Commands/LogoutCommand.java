@@ -15,10 +15,9 @@ public class LogoutCommand extends Command {
      * Constructs a new LogoutCommand.
      *
      * @param playerName the name of the player attempting to logout
-     * @param gameID the ID of the game session to leave
      */
-    public LogoutCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public LogoutCommand(String playerName) {
+        super(playerName);
     }
 
     /**

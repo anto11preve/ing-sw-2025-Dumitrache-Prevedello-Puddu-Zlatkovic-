@@ -15,10 +15,9 @@ public class EndCommand extends Command {
      * Constructs a new EndCommand.
      *
      * @param playerName the name of the player ending their action
-     * @param gameID the ID of the game session
      */
-    public EndCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public EndCommand(String playerName) {
+        super(playerName);
     }
     
     /**

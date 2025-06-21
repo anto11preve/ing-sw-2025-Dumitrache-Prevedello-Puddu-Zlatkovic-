@@ -14,10 +14,9 @@ public class SkipRewardCommand extends Command {
      * Constructs a new SkipRewardCommand.
      *
      * @param playerName the name of the player skipping the reward
-     * @param gameID the ID of the game session
      */
-    public SkipRewardCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public SkipRewardCommand(String playerName) {
+        super(playerName);
     }
     
     /**

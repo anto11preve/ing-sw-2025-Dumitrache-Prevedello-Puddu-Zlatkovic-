@@ -16,10 +16,9 @@ public class ThrowDicesCommand extends Command {
      * Constructs a new ThrowDicesCommand.
      *
      * @param playerName the name of the player throwing the dice
-     * @param gameID the ID of the game session
      */
-    public ThrowDicesCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public ThrowDicesCommand(String playerName) {
+        super(playerName);
     }
     
     /**
