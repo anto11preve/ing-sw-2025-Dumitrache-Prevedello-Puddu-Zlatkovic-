@@ -119,8 +119,8 @@ import java.util.Map;
                 SpaceshipComponent centralTile = player.getShipBoard().getComponent(new Coordinates(7,7));
                 if((centralTile != null) && !condensedShip.getCabins().contains(centralTile)) {
                     Cabin centralCabin = (Cabin) centralTile;
-                    centralCabin.setCanContainPurple(false);
-                    centralCabin.setCanContainBrown(false);
+                    centralCabin.setCanContainPurple(0);
+                    centralCabin.setCanContainBrown(0);
                 }else{
                     throw new RuntimeException("Bug: Central tile not found by PlaceAlienState for player, either null or not a cabin");
                 }
