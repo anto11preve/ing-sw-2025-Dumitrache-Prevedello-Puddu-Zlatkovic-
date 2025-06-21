@@ -8,10 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import Model.Enums.Side;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> {
     private final List<Meteor> meteors;
+    private String imagePath;
 
     public MeteorSwarm(int id, CardLevel level, List<Meteor> meteors) {
         super(id, level);
@@ -40,18 +42,18 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
      */
     public MeteorSwarm(JsonObject json) {
         super(json);
-
-        Side incomingDirection = Side.valueOf(json.get("incomingDirection").getAsString());
-        int large = json.get("largeMeteors").getAsInt();
-        int small = json.get("smallMeteors").getAsInt();
-
-        // Construct meteor list from parsed data
         this.meteors = new ArrayList<>();
-        for (int i = 0; i < large; i++) {
-            meteors.add(new Meteor(true, incomingDirection)); // true = large meteor
+
+        for (JsonElement elem : json.getAsJsonArray("meteors")) {
+            JsonObject m = elem.getAsJsonObject();
+            boolean isLarge = m.get("large").getAsBoolean();
+            Side dir       = Side.valueOf(m.get("direction").getAsString());
+            meteors.add(new Meteor(isLarge, dir));
         }
-        for (int i = 0; i < small; i++) {
-            meteors.add(new Meteor(false, incomingDirection)); // false = small meteor
-        }
+        this.imagePath = json.get("imagePath").getAsString();
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 }

@@ -16,6 +16,7 @@ public class AbandonedStation extends AdventureCardFilip {
     private final int crew;
     private final Goods landingReward;
     private final DaysPenalty landingPenalty;
+    private String imagePath;
 
     public AbandonedStation(int id, CardLevel level, int crew, List<Good> goods, int days) {
         super(id, level);
@@ -64,6 +65,10 @@ public class AbandonedStation extends AdventureCardFilip {
             }
         }
         this.landingReward = new Goods(parsedGoods);
+        this.imagePath = json.get("imagePath").getAsString();
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 }

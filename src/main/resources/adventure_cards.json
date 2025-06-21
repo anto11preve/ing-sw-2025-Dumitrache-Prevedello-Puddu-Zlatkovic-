@@ -3,57 +3,105 @@
     "id": 1,
     "type": "OpenSpace",
     "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Nothing happens.",
-    "imagePath": "assets/cards/trial/card_1.png"
+    "imagePath": "src/main/resources/pics/cards/1.png"
   },
   {
     "id": 2,
     "type": "MeteorSwarm",
     "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Small meteors from the front.",
-    "incomingDirection": "FRONT",
-    "smallMeteors": 2,
-    "largeMeteors": 0,
-    "imagePath": "assets/cards/trial/card_2.png"
+    "meteors": [
+      { "large": true, "direction": "front" },
+      { "large": false, "direction": "left" },
+      { "large": false, "direction": "right" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/2.png"
   },
   {
     "id": 3,
     "type": "Planets",
     "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Trade at nearby planets.",
     "planets": [
       {
-        "name": "Trialon",
-        "goods": [
-          "RED",
-          "BLUE"
-        ]
+        "name": "Planet 1",
+        "goods": ["RED", "RED"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["RED", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["YELLOW"]
       }
     ],
-    "imagePath": "assets/cards/trial/card_3.png"
+    "landingPenalty": {
+      "value": 2
+    },
+    "imagePath": "src/main/resources/pics/cards/3.png"
   },
   {
     "id": 4,
-    "type": "OpenSpace",
+    "type": "Stardust",
     "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Peaceful region of space.",
-    "imagePath": "assets/cards/trial/card_4.png"
+    "imagePath": "src/main/resources/pics/cards/4.png"
   },
   {
-    "id": 5,
-    "type": "MeteorSwarm",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Meteors from the right.",
-    "incomingDirection": "RIGHT",
-    "smallMeteors": 3,
-    "largeMeteors": 1,
-    "imagePath": "assets/cards/trial/card_5.png"
+    "id":               "5",
+    "type":             "SMUGGLERS",
+    "level":            "ONE",
+    "enemyStrength":    4,
+    "stealGoodsOnLoss": 2,
+    "rewardGoods":    ["YELLOW","GREEN","BLUE"],
+    "dayCost":          1,
+    "imagePath":       "src/main/resources/pics/cards/5.jpg"
   },
+  {
+    "id":       "6",
+    "type":     "COMBAT_ZONE",
+    "level":    "ONE",
+    "lines": [
+      {
+        "criteria": "SHIELDS",
+        "penalty":  { "type": "DaysPenalty", "value": 3 }
+      },
+      {
+        "criteria": "ENGINE_POWER",
+        "penalty":  { "type": "CrewPenalty", "value": 2 }
+      },
+      {
+        "criteria": "CANNON_POWER",
+        "penalty": {
+          "type":       "ProjectilePenalty",
+          "smallShots": 1,
+          "largeShots": 1
+        }
+      }
+    ],
+    "imagePath":"src/main/resources/pics/cards/6.jpg"
+  },
+  {
+    "id":            "7",
+    "type":          "ABANDONED_SHIP",
+    "level":         "ONE",
+    "crewRequired":   3,
+    "reward": {
+      "credits":     4
+    },
+    "days":          1,
+    "imagePath":   "src/main/resources/pics/cards/7.jpg"
+  },
+  {
+    "id":            "8",
+    "type":          "ABANDONED_STATION",
+    "level":         "ONE",
+    "crewRequired":   5,
+    "days":           1,
+    "reward": {
+      "cargo":        2
+    },
+    "imagePath":    "src/main/resources/pics/cards/8.jpg"
+  },
+
   {
     "id": 6,
     "type": "Pirates",
@@ -68,14 +116,6 @@
       "days": 1
     },
     "imagePath": "assets/cards/trial/card_6.png"
-  },
-  {
-    "id": 7,
-    "type": "Stardust",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Stardust damages exposed components.",
-    "imagePath": "assets/cards/trial/card_7.png"
   },
   {
     "id": 8,
