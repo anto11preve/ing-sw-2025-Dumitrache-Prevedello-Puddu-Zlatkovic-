@@ -3,6 +3,7 @@ package Model.Factories;
 import Model.Ship.*;
 import Model.Ship.Components.*;
 import com.google.gson.JsonObject;
+import com.sun.jdi.connect.Connector;
 
 /**
  * Factory for dynamically creating specific SpaceshipComponent instances from a JsonObject.
@@ -26,8 +27,8 @@ public class ComponentFactory {
             case "Battery" -> new BatteryCompartment(obj);
             case "Shield" -> new ShieldGenerator(obj);
             case "AlienLifeSupport" -> new AlienLifeSupport(obj);
-            case "DoubleCannon" -> new Cannon(obj);
-            case "DoubleEngine" -> new Engine(obj);
+            case "StructuralModule" -> new StructuralModule(obj);
+            case "Empty" -> new StructuralModule(obj);
             default -> throw new IllegalArgumentException("Unknown component type: " + type);
         };
     }

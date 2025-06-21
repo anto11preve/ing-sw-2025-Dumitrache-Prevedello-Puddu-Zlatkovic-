@@ -19,6 +19,7 @@ public abstract class SpaceshipComponent {
     protected Direction orientation; // UP = standard, RIGHT = 90°, DOWN = 180°, LEFT = 270°
     private ShipBoard shipBoard;
     private boolean isVisible;
+    private String imagePath;
 
     public SpaceshipComponent(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
         this.type = type;
@@ -29,6 +30,7 @@ public abstract class SpaceshipComponent {
         this.orientation = Direction.UP; // Default orientation
         this.isVisible = false;
         this.shipBoard = null;
+        this.imagePath = imagePath;
     }
 
     public void setVisible() {
@@ -152,6 +154,15 @@ public abstract class SpaceshipComponent {
     public boolean blocks(Direction incoming) {
         return false;
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    protected void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 
 
 

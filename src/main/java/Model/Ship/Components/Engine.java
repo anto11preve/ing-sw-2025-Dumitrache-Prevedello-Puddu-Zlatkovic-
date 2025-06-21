@@ -18,7 +18,6 @@ public class Engine extends SpaceshipComponent {
     private final boolean isDouble;
     private final int baseEnginePower;
     private final boolean requiresBattery;
-    private final String imagePath;
     private boolean hasAlien;
     private boolean activated; //   whether the engine has been activated with a battery
 
@@ -27,7 +26,6 @@ public class Engine extends SpaceshipComponent {
         this.isDouble = isDouble;
         this.baseEnginePower = isDouble ? 2 : 1;
         this.requiresBattery = isDouble;
-        this.imagePath = "";
         this.hasAlien = false;
         this.activated = !isDouble; // single engines are always "activated"
     }
@@ -48,7 +46,6 @@ public class Engine extends SpaceshipComponent {
         this.requiresBattery  = isDouble;
         // Single engines start active; doubles start inactive
         this.activated        = !isDouble;
-        this.imagePath        = json.get("imagePath").getAsString();
     }
 
     public boolean isDoubleEngine() {
@@ -109,9 +106,6 @@ public class Engine extends SpaceshipComponent {
         return requiresBattery;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
 
 
     public Direction getThrustDirection() {

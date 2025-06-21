@@ -20,7 +20,6 @@ public class Cannon extends SpaceshipComponent {
     private Direction orientation;
     private boolean hasAlien;
     private boolean activated; //whether the cannon has been activated with a battery
-    private String imagePath;
 
     public Cannon(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
@@ -47,11 +46,6 @@ public class Cannon extends SpaceshipComponent {
         this.hasAlien        = false;                       // none by default
         this.activated       = !isDouble;                   // single = active, double = inactive
 
-        this.imagePath = json.get("imagePath").getAsString();
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 //    public void setOrientation(Direction dir) {
 //        this.orientation = dir;

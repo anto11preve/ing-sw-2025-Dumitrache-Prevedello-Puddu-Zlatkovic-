@@ -1,7 +1,7 @@
 [
   {
     "id": "0",
-    "type": "EMPTY",
+    "type": "Empty",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -12,7 +12,7 @@
   },
   {
     "id": "1",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "UNIVERSAL",
@@ -23,7 +23,7 @@
   },
   {
     "id": "2",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "UNIVERSAL",
@@ -34,7 +34,7 @@
   },
   {
     "id": "3",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "UNIVERSAL",
@@ -45,7 +45,7 @@
   },
   {
     "id": "4",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "UNIVERSAL",
@@ -56,7 +56,7 @@
   },
   {
     "id": "5",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -67,7 +67,7 @@
   },
   {
     "id": "6",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -78,7 +78,7 @@
   },
   {
     "id": "7",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -89,7 +89,7 @@
   },
   {
     "id": "8",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -100,7 +100,7 @@
   },
   {
     "id": "9",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -111,7 +111,7 @@
   },
   {
     "id": "10",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -122,7 +122,7 @@
   },
   {
     "id": "11",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -133,7 +133,7 @@
   },
   {
     "id": "12",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -144,7 +144,7 @@
   },
   {
     "id": "13",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -155,7 +155,7 @@
   },
   {
     "id": "14",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -166,7 +166,7 @@
   },
   {
     "id": "15",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -177,7 +177,7 @@
   },
   {
     "id": "16",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -188,7 +188,7 @@
   },
   {
     "id": "17",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -199,7 +199,7 @@
   },
   {
     "id": "18",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -210,7 +210,7 @@
   },
   {
     "id": "19",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -221,7 +221,7 @@
   },
   {
     "id": "20",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -232,7 +232,7 @@
   },
   {
     "id": "21",
-    "type": "CABIN",
+    "type": "Cabin",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -243,7 +243,7 @@
   },
   {
     "id": "22",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -255,7 +255,7 @@
   },
   {
     "id": "23",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -267,7 +267,7 @@
   },
   {
     "id": "24",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -279,7 +279,7 @@
   },
   {
     "id": "25",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -291,7 +291,7 @@
   },
   {
     "id": "26",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -303,7 +303,7 @@
   },
   {
     "id": "27",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -315,7 +315,7 @@
   },
   {
     "id": "28",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -327,7 +327,7 @@
   },
   {
     "id": "29",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -339,7 +339,7 @@
   },
   {
     "id": "30",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -351,7 +351,7 @@
   },
   {
     "id": "31",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -363,7 +363,7 @@
   },
   {
     "id": "32",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -375,7 +375,7 @@
   },
   {
     "id": "33",
-    "type": "ALIEN_LIFE_SUPPORT",
+    "type": "AlienLifeSupport",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -387,7 +387,7 @@
   },
   {
     "id": "34",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -399,7 +399,7 @@
   },
   {
     "id": "35",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -411,7 +411,7 @@
   },
   {
     "id": "36",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -423,7 +423,7 @@
   },
   {
     "id": "37",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -435,7 +435,7 @@
   },
   {
     "id": "38",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -447,7 +447,7 @@
   },
   {
     "id": "39",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -459,7 +459,7 @@
   },
   {
     "id": "40",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -471,7 +471,7 @@
   },
   {
     "id": "41",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -483,7 +483,7 @@
   },
   {
     "id": "42",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -495,7 +495,7 @@
   },
   {
     "id": "43",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -507,7 +507,7 @@
   },
   {
     "id": "44",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -519,7 +519,7 @@
   },
   {
     "id": "45",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -531,7 +531,7 @@
   },
   {
     "id": "46",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -543,7 +543,7 @@
   },
   {
     "id": "47",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -555,7 +555,7 @@
   },
   {
     "id": "48",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -567,7 +567,7 @@
   },
   {
     "id": "49",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -579,7 +579,7 @@
   },
   {
     "id": "50",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -591,7 +591,7 @@
   },
   {
     "id": "51",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -603,7 +603,7 @@
   },
   {
     "id": "52",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -615,7 +615,7 @@
   },
   {
     "id": "53",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -627,7 +627,7 @@
   },
   {
     "id": "54",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -639,7 +639,7 @@
   },
   {
     "id": "55",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -651,7 +651,7 @@
   },
   {
     "id": "56",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -663,7 +663,7 @@
   },
   {
     "id": "57",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -675,7 +675,7 @@
   },
   {
     "id": "58",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -687,7 +687,7 @@
   },
   {
     "id": "59",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -699,7 +699,7 @@
   },
   {
     "id": "60",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -711,7 +711,7 @@
   },
   {
     "id": "61",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -723,7 +723,7 @@
   },
   {
     "id": "62",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -735,7 +735,7 @@
   },
   {
     "id": "63",
-    "type": "ENGINE",
+    "type": "Engine",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -747,7 +747,7 @@
   },
   {
     "id": "64",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -759,7 +759,7 @@
   },
   {
     "id": "65",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -771,7 +771,7 @@
   },
   {
     "id": "66",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -783,7 +783,7 @@
   },
   {
     "id": "67",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -795,7 +795,7 @@
   },
   {
     "id": "68",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -807,7 +807,7 @@
   },
   {
     "id": "69",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -819,7 +819,7 @@
   },
   {
     "id": "70",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -831,7 +831,7 @@
   },
   {
     "id": "71",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -843,7 +843,7 @@
   },
   {
     "id": "72",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -855,7 +855,7 @@
   },
   {
     "id": "73",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -867,7 +867,7 @@
   },
   {
     "id": "74",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -879,7 +879,7 @@
   },
   {
     "id": "75",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -891,7 +891,7 @@
   },
   {
     "id": "76",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -903,7 +903,7 @@
   },
   {
     "id": "77",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -915,7 +915,7 @@
   },
   {
     "id": "78",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -927,7 +927,7 @@
   },
   {
     "id": "79",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -939,7 +939,7 @@
   },
   {
     "id": "80",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -951,7 +951,7 @@
   },
   {
     "id": "81",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -963,7 +963,7 @@
   },
   {
     "id": "82",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -975,7 +975,7 @@
   },
   {
     "id": "83",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -987,7 +987,7 @@
   },
   {
     "id": "84",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -999,7 +999,7 @@
   },
   {
     "id": "85",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -1011,7 +1011,7 @@
   },
   {
     "id": "86",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1023,7 +1023,7 @@
   },
   {
     "id": "87",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1035,7 +1035,7 @@
   },
   {
     "id": "88",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1047,7 +1047,7 @@
   },
   {
     "id": "89",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -1059,7 +1059,7 @@
   },
   {
     "id": "90",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1071,7 +1071,7 @@
   },
   {
     "id": "91",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -1083,7 +1083,7 @@
   },
   {
     "id": "92",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1095,7 +1095,7 @@
   },
   {
     "id": "93",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1107,7 +1107,7 @@
   },
   {
     "id": "94",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1119,7 +1119,7 @@
   },
   {
     "id": "95",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1131,7 +1131,7 @@
   },
   {
     "id": "96",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -1143,7 +1143,7 @@
   },
   {
     "id": "97",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -1155,7 +1155,7 @@
   },
   {
     "id": "98",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1167,7 +1167,7 @@
   },
   {
     "id": "99",
-    "type": "CANNON",
+    "type": "Cannon",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -1179,7 +1179,7 @@
   },
   {
     "id": "100",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "DOUBLE",
@@ -1191,7 +1191,7 @@
   },
   {
     "id": "101",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1203,7 +1203,7 @@
   },
   {
     "id": "102",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "SINGLE",
@@ -1215,7 +1215,7 @@
   },
   {
     "id": "103",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -1227,7 +1227,7 @@
   },
   {
     "id": "104",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1239,7 +1239,7 @@
   },
   {
     "id": "105",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "SINGLE",
@@ -1251,7 +1251,7 @@
   },
   {
     "id": "106",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "DOUBLE",
@@ -1263,7 +1263,7 @@
   },
   {
     "id": "107",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1275,7 +1275,7 @@
   },
   {
     "id": "108",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1287,7 +1287,7 @@
   },
   {
     "id": "109",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1299,7 +1299,7 @@
   },
   {
     "id": "110",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1311,7 +1311,7 @@
   },
   {
     "id": "111",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -1323,7 +1323,7 @@
   },
   {
     "id": "112",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -1335,7 +1335,7 @@
   },
   {
     "id": "113",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -1347,7 +1347,7 @@
   },
   {
     "id": "114",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -1359,7 +1359,7 @@
   },
   {
     "id": "115",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "DOUBLE",
       "rear": "SINGLE",
@@ -1371,7 +1371,7 @@
   },
   {
     "id": "116",
-    "type": "BATTERY_COMPARTMENT",
+    "type": "Battery",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1383,7 +1383,7 @@
   },
   {
     "id": "117",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1394,7 +1394,7 @@
   },
   {
     "id": "118",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "SINGLE",
       "rear": "NONE",
@@ -1405,7 +1405,7 @@
   },
   {
     "id": "119",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -1416,7 +1416,7 @@
   },
   {
     "id": "120",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -1427,7 +1427,7 @@
   },
   {
     "id": "121",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -1438,7 +1438,7 @@
   },
   {
     "id": "122",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "DOUBLE",
@@ -1449,7 +1449,7 @@
   },
   {
     "id": "123",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1460,7 +1460,7 @@
   },
   {
     "id": "124",
-    "type": "CONNECTOR",
+    "type": "StructuralModule",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "DOUBLE",
@@ -1471,7 +1471,7 @@
   },
   {
     "id": "125",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "UNIVERSAL",
@@ -1484,7 +1484,7 @@
   },
   {
     "id": "126",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "UNIVERSAL",
@@ -1497,7 +1497,7 @@
   },
   {
     "id": "127",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -1510,7 +1510,7 @@
   },
   {
     "id": "128",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1523,7 +1523,7 @@
   },
   {
     "id": "129",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1536,7 +1536,7 @@
   },
   {
     "id": "130",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1549,7 +1549,7 @@
   },
   {
     "id": "131",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1562,7 +1562,7 @@
   },
   {
     "id": "132",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -1575,7 +1575,7 @@
   },
   {
     "id": "133",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1588,7 +1588,7 @@
   },
   {
     "id": "134",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1601,7 +1601,7 @@
   },
   {
     "id": "135",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -1614,7 +1614,7 @@
   },
   {
     "id": "136",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1627,7 +1627,7 @@
   },
   {
     "id": "137",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -1640,7 +1640,7 @@
   },
   {
     "id": "138",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "SINGLE",
       "rear": "DOUBLE",
@@ -1653,7 +1653,7 @@
   },
   {
     "id": "139",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "SINGLE",
@@ -1666,7 +1666,7 @@
   },
   {
     "id": "140",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -1679,7 +1679,7 @@
   },
   {
     "id": "141",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1692,7 +1692,7 @@
   },
   {
     "id": "142",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -1705,7 +1705,7 @@
   },
   {
     "id": "143",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "NONE",
@@ -1718,7 +1718,7 @@
   },
   {
     "id": "144",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -1731,7 +1731,7 @@
   },
   {
     "id": "145",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
@@ -1744,7 +1744,7 @@
   },
   {
     "id": "146",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1757,7 +1757,7 @@
   },
   {
     "id": "147",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1770,7 +1770,7 @@
   },
   {
     "id": "148",
-    "type": "CARGO_HOLD",
+    "type": "CargoHold",
     "connectors": {
       "front": "NONE",
       "rear": "NONE",
@@ -1783,7 +1783,7 @@
   },
   {
     "id": "149",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -1794,7 +1794,7 @@
   },
   {
     "id": "150",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -1805,7 +1805,7 @@
   },
   {
     "id": "151",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "DOUBLE",
       "rear": "DOUBLE",
@@ -1816,7 +1816,7 @@
   },
   {
     "id": "152",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "NONE",
       "rear": "UNIVERSAL",
@@ -1827,7 +1827,7 @@
   },
   {
     "id": "153",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
@@ -1838,7 +1838,7 @@
   },
   {
     "id": "154",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "SINGLE",
       "rear": "SINGLE",
@@ -1849,7 +1849,7 @@
   },
   {
     "id": "155",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "NONE",
       "rear": "SINGLE",
@@ -1860,7 +1860,7 @@
   },
   {
     "id": "156",
-    "type": "SHIELD_GENERATOR",
+    "type": "Shield",
     "connectors": {
       "front": "NONE",
       "rear": "DOUBLE",
