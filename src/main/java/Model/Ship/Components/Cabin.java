@@ -44,8 +44,8 @@ public class Cabin extends SpaceshipComponent {
         this.occupants = Crewmates.EMPTY; // No crew by default when loading from JSON
 
         // Parse abilities from JSON if present
-        this.canContainBrown = json.has("abilities") && json.getAsJsonArray("abilities").toString().contains("can_host_brown");
-        this.canContainPurple = json.has("abilities") && json.getAsJsonArray("abilities").toString().contains("can_host_purple");
+        this.canContainBrown = 0;
+        this.canContainPurple = 0;
     }
 
     public boolean getCanContainBrown() {
@@ -141,7 +141,7 @@ public class Cabin extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addCabin(this);
         }
-        for(AlienLifeSupport alienLifeSupport : getShipBoard().getCondensedShip().getAlienLifeSupports()) {
+        for(AlienLifeSupport alienLifeSupport : getShipBoard().getCondensedShip().getAlienSupports()) {
             if(getShipBoard().areComponentsConnected(this, alienLifeSupport)) {
                 if(alienLifeSupport.getColor() == AlienColor.BROWN){
                     this.incrementCanContainBrown();
