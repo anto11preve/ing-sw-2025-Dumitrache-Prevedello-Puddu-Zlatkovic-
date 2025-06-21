@@ -31,16 +31,29 @@ public class CargoHold extends SpaceshipComponent {
      */
     public CargoHold(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.capacity = json.get("cargoCapacity").getAsInt();
-        this.isSpecial = json.get("isSpecial").getAsBoolean();
-        this.goods = new Good[this.capacity];
+        if (json.has("cargoCapacity")) {
+            this.capacity = json.get("cargoCapacity").getAsInt();
+            this.goods = new Good[this.capacity];
+        }else{
+            throw new RuntimeException("Missing cargoCapacity in CargoHold JSON configuration" +
+                    " at " + json.get("imagePath").getAsString());
+        }
+
+        if (json.has("isSpecial")) {
+            this.isSpecial = json.get("isSpecial").getAsBoolean();
+        } else {
+            throw new RuntimeException("Missing isSpecial in CargoHold JSON configuration" +
+                    " at " + json.get("imagePath").getAsString());
+        }
+
     }
 
     @Override

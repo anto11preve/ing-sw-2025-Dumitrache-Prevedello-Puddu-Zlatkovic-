@@ -20,15 +20,14 @@ public class ComponentFactory {
         String type = obj.get("type").getAsString();
 
         return switch (type) {
-            case "Cabin" -> new Cabin(obj);
-            case "Engine" -> new Engine(obj);
-            case "Cannon" -> new Cannon(obj);
-            case "CargoHold" -> new CargoHold(obj);
-            case "Battery" -> new BatteryCompartment(obj);
-            case "Shield" -> new ShieldGenerator(obj);
-            case "AlienLifeSupport" -> new AlienLifeSupport(obj);
-            case "StructuralModule" -> new StructuralModule(obj);
-            case "Empty" -> new StructuralModule(obj);
+            case "CABIN" -> new Cabin(obj);
+            case "ENGINE" -> new Engine(obj);
+            case "CANNON" -> new Cannon(obj);
+            case "CARGO_HOLD" -> new CargoHold(obj);
+            case "BATTERY_COMPARTMENT" -> new BatteryCompartment(obj);
+            case "SHIELD_GENERATOR" -> new ShieldGenerator(obj);
+            case "ALIEN_LIFE_SUPPORT" -> new AlienLifeSupport(obj);
+            case "STRUCTURAL_MODULE" -> new StructuralModule(obj);
             default -> throw new IllegalArgumentException("Unknown component type: " + type);
         };
     }

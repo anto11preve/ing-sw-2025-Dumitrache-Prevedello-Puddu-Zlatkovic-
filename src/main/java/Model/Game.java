@@ -8,6 +8,8 @@ import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
 import Model.ComponentLoader;
 import Controller.State;
+import Model.Enums.Side;
+import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 
 import java.util.ArrayList;
@@ -25,6 +27,17 @@ public class Game {
     private final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
+
+
+    public static void main(String[] args) {
+
+        SpaceshipComponent[] tiless = ComponentLoader.loadComponents();
+
+        for (SpaceshipComponent tile : tiless) {
+            tile.visualize();
+        }
+
+    }
 
     /**
      * Constructs a new Game instance based only on the match level.

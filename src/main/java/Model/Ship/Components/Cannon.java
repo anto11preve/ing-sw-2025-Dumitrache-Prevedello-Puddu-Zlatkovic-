@@ -23,13 +23,21 @@ public class Cannon extends SpaceshipComponent {
 
     public Cannon(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
-        this.isDouble = json.get("isDoubleCannon").getAsBoolean();
+
+
+        if (json.has("isDoubleCannon")) {
+            this.isDouble = json.get("isDoubleCannon").getAsBoolean();
+        }else{
+            throw new RuntimeException("Missing isDoubleCannon in Engine JSON configuration"+
+                    " at " + json.get("imagePath").getAsString());
+        }
     }
 
     @Override

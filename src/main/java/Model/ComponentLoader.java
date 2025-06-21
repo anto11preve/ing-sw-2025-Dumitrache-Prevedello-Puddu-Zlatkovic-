@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,10 @@ public class ComponentLoader {
 
             //Collections.shuffle(components);  //TODO: riaggiungere lo shuffle
             return components.toArray(new SpaceshipComponent[0]);
-        } catch (Exception e) {
+        } catch (FileNotFoundException e){
+            throw new RuntimeException("Spaceship components JSON file not found at: " + COMPONENTS_PATH, e);
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to load spaceship components from JSON", e);
         }
     }

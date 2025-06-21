@@ -28,15 +28,21 @@ public class BatteryCompartment extends SpaceshipComponent {
      */
     public BatteryCompartment(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.capacity  = json.get("capacity").getAsInt();
-        this.batteries = this.capacity;
+        if (json.has("capacity")) {
+            this.capacity  = json.get("capacity").getAsInt();
+            this.batteries = this.capacity;
+        }else{
+            throw new RuntimeException("Missing capacity in BatteryCompartment JSON configuration" +
+                    " at " + json.get("imagePath").getAsString());
+        }
 
     }
 
