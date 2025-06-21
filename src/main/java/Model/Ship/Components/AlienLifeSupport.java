@@ -6,6 +6,8 @@ import Model.Enums.AlienColor;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
+import java.io.PrintStream;
+
 /**
  * Represents an Alien Life Support component.
  * Supports specific alien crew members (brown or purple), enhancing nearby cabins.
@@ -38,6 +40,14 @@ public class AlienLifeSupport extends SpaceshipComponent {
 
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Alien Supports Color: " + color);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
+
     /**
      * Returns the color of alien this module supports.
      */
@@ -52,6 +62,15 @@ public class AlienLifeSupport extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addAlienSupport(this);
         }
+        for(Cabin cabin : getShipBoard().getCondensedShip().getCabins()) {
+            if(getShipBoard().areComponentsConnected(this, cabin)) {
+                if(this.getColor() == AlienColor.BROWN){
+                    cabin.incrementCanContainBrown();
+                } else if(this.getColor() == AlienColor.PURPLE) {
+                    cabin.incrementCanContainPurple();
+                }
+            }
+        }
     }
 
     @Override
@@ -60,6 +79,15 @@ public class AlienLifeSupport extends SpaceshipComponent {
             throw new RuntimeException("Alien Support not found in the ship.");
         } else {
             getShipBoard().getCondensedShip().removeAlienSupport(this);
+        }
+        for(Cabin cabin : getShipBoard().getCondensedShip().getCabins()) {
+            if(getShipBoard().areComponentsConnected(this, cabin)) {
+                if(this.getColor() == AlienColor.BROWN){
+                    cabin.decrementCanContainBrown();
+                } else if(this.getColor() == AlienColor.PURPLE) {
+                    cabin.decrementCanContainPurple();
+                }
+            }
         }
 
     }

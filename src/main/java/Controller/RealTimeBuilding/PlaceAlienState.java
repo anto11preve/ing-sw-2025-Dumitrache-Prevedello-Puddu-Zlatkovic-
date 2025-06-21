@@ -114,17 +114,32 @@ import java.util.Map;
             CondensedShip condensedShip = player.getShipBoard().getCondensedShip();
 
             if (matchLevel== MatchLevel.LEVEL2) {
+
+                //Since the central cabin can only contain humans, we need to set it to cannot contain purple or brown aliens
+                SpaceshipComponent centralTile = player.getShipBoard().getComponent(new Coordinates(7,7));
+                if((centralTile != null) && !condensedShip.getCabins().contains(centralTile)) {
+                    Cabin centralCabin = (Cabin) centralTile;
+                    centralCabin.setCanContainPurple(0);
+                    centralCabin.setCanContainBrown(0);
+                }else{
+                    throw new RuntimeException("Bug: Central tile not found by PlaceAlienState for player, either null or not a cabin");
+                }
+
+
                 boolean localCanContainBrown = condensedShip.canContainBrown();
                 boolean localCanContainPurple = condensedShip.canContainPurple();
 
                 if (localCanContainBrown || localCanContainPurple) {
                     playersAlienAvailability.put(player, new CanInsertAliens(localCanContainBrown, localCanContainPurple));
+                    player.getShipBoard().setValid(false);
                 }else{
                     fillCabinsWithHumans(condensedShip);
+                    player.getShipBoard().setValid(true);
                 }
 
             }else{
                 fillCabinsWithHumans(condensedShip);
+                player.getShipBoard().setValid(true);
             }
 
         }
@@ -197,16 +212,19 @@ import java.util.Map;
 
         if (type == CrewType.BROWN_ALIEN) {
             cabin.setOccupants(Crewmates.BROWN_ALIEN);
+            shipBoard.getCondensedShip().getAliens().setBrownAlien(true);
             canInsertAliens.insertedBrown();
         } else if (type == CrewType.PURPLE_ALIEN) {
             cabin.setOccupants(Crewmates.PURPLE_ALIEN);
+            shipBoard.getCondensedShip().getAliens().setPurpleAlien(true);
             canInsertAliens.insertedPurple();
         }
-        // if both aliens are placed, remove the player from the map
+        // if both aliens are placed, remove the player from the map, and fill all remaining cabins with humans, furthermore set the ship as valid
 
         if (!canInsertAliens.getCanInstertBrown() && !canInsertAliens.getCanInsertPurple()) {
             playersAlienAvailability.remove(currentPlayer);
             fillCabinsWithHumans(shipBoard.getCondensedShip());
+            shipBoard.setValid(true);
         }
 
         // If the map is empty, change the state to the next one

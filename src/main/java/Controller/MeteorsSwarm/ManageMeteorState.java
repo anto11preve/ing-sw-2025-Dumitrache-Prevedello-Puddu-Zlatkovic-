@@ -201,7 +201,7 @@ public class ManageMeteorState extends State {
                 if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component == null || component.getConnectorAt(meteor.getSide()) ==null)))){
                     boolean brokenShip = player.getShipBoard().checkIntegrity();
                     if (brokenShip) {
-                        controller.getModel().setState(new MeteorsCheckShipState(context));
+                        controller.getModel().setState(new MeteorsCheckShipState(context, number));
                         controller.getModel().setError(false);
                         return;
                     }

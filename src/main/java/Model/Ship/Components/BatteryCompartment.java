@@ -40,6 +40,15 @@ public class BatteryCompartment extends SpaceshipComponent {
 
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Battery Compartment Capacity: " + capacity);
+        System.out.println("Current Batteries: " + batteries);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
+
     public int getCapacity() {
         return capacity;
     }

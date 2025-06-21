@@ -69,6 +69,12 @@ public class CardResolverVisitor {
         CombatZone Ccard = (CombatZone) card;
         if(Ccard.getLevel() == CardLevel.LEVEL_ONE){
             int numPlayers = controller.getModel().getFlightBoard().getTurnOrder().length;
+            if(numPlayers == 1){
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+                return;
+            }
+
             Player currentPlayer = controller.getModel().getFlightBoard().getTurnOrder()[0];
             for(int i = 0; i<numPlayers; i++){
                 Player nextPlayer = controller.getModel().getFlightBoard().getTurnOrder()[(i+1)];
@@ -77,10 +83,12 @@ public class CardResolverVisitor {
                 }
             }
             RegularPenalty penalty = (RegularPenalty) Ccard.iterator().next().getPenalty();
-            controller.getModel().getFlightBoard().deltaFlightDays(currentPlayer, penalty.getAmount());
+            controller.getModel().getFlightBoard().deltaFlightDays(currentPlayer, -penalty.getAmount());
             controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
+            controller.getModel().setError(false);
         } else if( Ccard.getLevel() == CardLevel.LEVEL_TWO) {
             controller.getModel().setState(new CombatZone1EngineDeclarationState(context));
+            controller.getModel().setError(false);
         } else{
             throw new InvalidMethodParameters("Invalid card level for CombatZone: " + Ccard.getLevel());
         }

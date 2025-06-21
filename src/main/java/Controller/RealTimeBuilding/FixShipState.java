@@ -6,7 +6,9 @@ import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
+import Model.Board.FlightBoard;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Game;
 import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
@@ -39,6 +41,10 @@ import java.util.Map;
 
         super(controller);
 
+
+
+
+
         MatchLevel matchLevel=controller.getMatchLevel();
         if(matchLevel== MatchLevel.TRIAL){
 
@@ -60,13 +66,25 @@ import java.util.Map;
             throw new IllegalArgumentException("Invalid match level");
         }
 
-        List<Player> allPlayers= this.getController().getModel().getPlayers();
+        Game model= this.getController().getModel();
+        FlightBoard flightBoard= model.getFlightBoard();
+
+        flightBoard.setUpcomingCardDeck();
+
+
+
+
+        List<Player> allPlayers= model.getPlayers();
         for (Player player : allPlayers) {
             ShipBoard shipBoard=player.getShipBoard();
             if(!shipBoard.validateShip()){
                 playersWithInvalidShip.add(player);
+                player.getShipBoard().setValid(false);
+            }else{
+                player.getShipBoard().setValid(true);
             }
         }
+
     }
 
     /**
@@ -103,7 +121,7 @@ import java.util.Map;
         ShipBoard shipBoard = currrentPlayer.getShipBoard();
 
         // Check if the coordinates are valid
-        if (!validCoordinates.containsKey(coordinates.getX()) || !validCoordinates.get(coordinates.getX()).contains(coordinates.getY())) {
+        if (!validCoordinates.containsKey(coordinates.getI()) || !validCoordinates.get(coordinates.getI()).contains(coordinates.getJ())) {
             throw new InvalidParameters("Invalid coordinates");
         }
         // Check if the coordinates correspond to a valid component
@@ -124,22 +142,27 @@ import java.util.Map;
         // add junk
         currrentPlayer.addJunk();
 
-        //check if the ship is now valid and if so remove the player from the list
+        //check if the ship is now valid and if so remove the player from the list, and set the ship as valid
         if (shipBoard.validateShip()) {
             playersWithInvalidShip.remove(currrentPlayer);
-        }
+            shipBoard.setValid(true);
 
-        // If all players have valid ships, change state to PlaceAlienState
-        if (allPlayersHaveValidShips()) {
+            // If all players have valid ships, change state to PlaceAlienState
+            if (allPlayersHaveValidShips()) {
 
-            PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
-            this.getController().getModel().setState(placeAlienState);
+                PlaceAlienState placeAlienState= new PlaceAlienState(this.getController());
 
-            if(placeAlienState.allPlayersHavePlacedAliens()){
-                //if no players can place aliens, set FlightPhase
-                this.getController().getModel().setState(new FlightPhase(this.getController()));
+
+                if(placeAlienState.allPlayersHavePlacedAliens()){
+                    //if no players can place aliens, set FlightPhase
+                    this.getController().getModel().setState(new FlightPhase(this.getController()));
+                }else{
+                    this.getController().getModel().setState(placeAlienState);
+                }
             }
         }
+
+
 
     }
 

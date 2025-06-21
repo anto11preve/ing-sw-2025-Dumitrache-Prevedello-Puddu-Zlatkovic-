@@ -31,23 +31,23 @@ public class PiratesBatteryRemovalState extends State{
     /**
      * The declared power of the player, which is the amount of power they intend to use.
      */
-    private int declaredPower;
+    private double declaredPower;
     /**
      * The actual power of the player, which is the amount of power they have used.
      */
-    private int actualPower;
+    private int batteries;
 
     /**
      * Constructs a new PiratesBatteryRemovalState.
      *
      * @param context The context of the game.
      * @param declaredPower The declared power of the player.
-     * @param actualPower The actual power of the player.
+     * @param batteries The number of batteries the player has to remove.
      */
-    public PiratesBatteryRemovalState(Context context, int declaredPower, int actualPower) {
+    public PiratesBatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
     }
 
     /**
@@ -80,6 +80,11 @@ public class PiratesBatteryRemovalState extends State{
             throw new InvalidParameters("Coordinates cannot be null");
         }
 
+        if(batteries <= 0){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("No batteries to remove");
+        }
+
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
@@ -94,13 +99,12 @@ public class PiratesBatteryRemovalState extends State{
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
-        declaredPower--;
-        actualPower++;
-        if(declaredPower == 0){
-            if(actualPower > context.getPower()){
+        batteries--;
+        if(batteries == 0){
+            if(declaredPower > context.getPower()){
                 controller.getModel().setState(new PiratesRewardState(context));
                 controller.getModel().setError(false);
-            } else if(actualPower == context.getPower()){
+            } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
@@ -126,7 +130,7 @@ public class PiratesBatteryRemovalState extends State{
 
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new PiratesBatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }
@@ -155,7 +159,7 @@ public class PiratesBatteryRemovalState extends State{
             throw new InvalidParameters("It's not the player's turn");
         }
 
-        if(actualPower > context.getPower() && declaredPower == 0){
+        if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new PiratesRewardState(context));
             controller.getModel().setError(false);
         }

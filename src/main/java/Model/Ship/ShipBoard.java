@@ -1,16 +1,14 @@
 package Model.Ship;
 
-import Model.Enums.ConnectorType;
+import Model.Enums.*;
 import Model.Exceptions.InvalidMethodParameters;
-import Model.Enums.Direction;
-import Model.Enums.Side;
-import Model.Enums.Card;
+import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.Engine;
-import Model.Ship.Components.ShieldGenerator;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Utils.Position;
 import Model.Utils.DirectionSideUtils;
+import javafx.geometry.Orientation;
 
 
 import java.util.*;
@@ -28,67 +26,89 @@ public class ShipBoard {
     private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
+    private boolean isValid = false;
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
+        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+        centralCabin.setShipBoard(this);
+        components[2][3] = centralCabin;
+        centralCabin.added();
+
         this.activeComponent = null;
         this.reservedComponents = new ArrayList<>();
         this.condensedShip = new CondensedShip();
     }
 
-    /**
-     * Overloaded constructor to support variable size ships (for different levels).
-     */
-    public ShipBoard(int rows, int cols) {
-        this.components = new SpaceshipComponent[rows][cols];
-        this.activeComponent = null;
-        this.reservedComponents = new ArrayList<>();
-        this.condensedShip = new CondensedShip();
+    public CondensedShip getCondensedShip() {
+        return condensedShip;
     }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
     /**
      * Places a spaceship component on the board at the specified coordinates.
      * Ensures the placement is within board bounds, the position is unoccupied,
      * and the component is properly connected to existing components via compatible connectors.
-     * Updates the CondensedShip and calls added() on the component if placement is successful.
      *
      * @param component The spaceship component to add.
      * @param coordinates The position on the board where the component should be placed.
      * @throws InvalidMethodParameters if the position is invalid, already occupied, or not connected properly.
      */
     public void addComponent(SpaceshipComponent component, Coordinates coordinates) throws InvalidMethodParameters {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
 
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
-        if (components[y][x] != null) throw new InvalidMethodParameters("Position already occupied");
-        if (isConnectedToExistingComponents(component, x, y)) {
-            components[y][x] = component;
-            component.setShipBoard(this);
-            component.added();
-        }else{
-            throw new InvalidMethodParameters("Component not connected to existing components");
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[i][j] != null) throw new InvalidMethodParameters("Position already occupied");
+
+        components[i][j] = component;
+
+    }
+
+    /**
+     *  Checks if a position is adjacent to an existing component on the board.
+     *
+     * @param coordinates The position on the board to check.
+     * @return true if the component can be placed, false otherwise.
+     */
+    public boolean isAdjacentToExistingComponent(Coordinates coordinates) {
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        int row= coordinates.getI() - 5;
+        int col = coordinates.getJ() - 4;
+
+        for (int[] d : dirs) {
+            int newRow = row + d[0];
+            int newCol = col + d[1];
+            if (isValidPosition(newRow, newCol) && components[newRow][newCol] != null) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
      * Removes a spaceship component from the board at the given coordinates.
      * Translates logical coordinates into grid indices and clears the position if it contains a component.
-     * Calls removed() on the component to update the CondensedShip.
      * Throws an exception if coordinates are out of bounds.
      *
      * @param coordinates the location from which to remove the component
      * @throws InvalidMethodParameters if the coordinates are invalid
      */
     public void removeComponent(Coordinates coordinates) throws InvalidMethodParameters {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
 
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
-        if (components[y][x] != null) {
-            SpaceshipComponent component = components[y][x];
-            component.removed();
-            component.setShipBoard(null);
-            components[y][x] = null;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
+        if (components[i][j] != null) {
+            components[i][j] = null;
         }
     }
 
@@ -121,24 +141,20 @@ public class ShipBoard {
     /**
      * Checks if the given component can be connected to any existing component on the board
      * by verifying adjacent connectors for compatibility.
-     * Returns true if there is at least one valid connection to an existing component.
      *
      * @param component the component to place
      * @param row the target row in the board grid
      * @param col the target column in the board grid
-     * @return true if there is at least one valid connection to an existing component, false otherwise
+     * @return true if there is at least one compatible adjacent connector, false otherwise
      */
     public boolean isConnectedToExistingComponents(SpaceshipComponent component, int row, int col) {
-        // If the board is empty, the first component can be placed anywhere
-        if (isEmpty()) return true;
-        
         for (Side side : Side.values()) {
             int[] offset = getOffset(side);
             int adjRow = row + offset[0];
             int adjCol = col + offset[1];
             if (isValidPosition(adjRow, adjCol) && components[adjRow][adjCol] != null) {
                 SpaceshipComponent neighbor = components[adjRow][adjCol];
-                if (connectorsAreCompatible(
+                if (connectorsAreConnected(
                         component.getConnectorAt(side),
                         neighbor.getConnectorAt(getOppositeSide(side))
                 )) {
@@ -147,7 +163,12 @@ public class ShipBoard {
             }
         }
         return false;
+
+
+
     }
+
+
 
     /**
      * Returns the relative coordinate offset for a given side of a component.
@@ -182,19 +203,39 @@ public class ShipBoard {
     }
 
     /**
-     * Determines if two connectors are compatible with each other.
-     * Universal connectors are compatible with any type, NONE is not compatible with anything.
-     * Two single connectors can be adjacent but are not considered connected.
+     * Checks if two connector types are compatible.
+     * NONE is not compatible with anything, UNIVERSAL is compatible with everything except NONE,
+     * SINGLE is compatible with itself and UNIVERSAL, DOUBLE is compatible with itself and UNIVERSAL.
+     *
+     * @param a the first connector type
+     * @param b the second connector type
+     * @return true if the connectors are compatible, false otherwise
+     */
+    private boolean connectosAreCompatible(ConnectorType a, ConnectorType b) {
+        //NONE is compatible with NONE
+        // UNIVERSAL is compatible with anything that is not NONE
+        // SINGLE is compatible with itself and UNIVERSAL
+        // DOUBLE is compatible with itself and UNIVERSAL
+
+        if(a==b) return true; // same type is always compatible
+        if(a == ConnectorType.NONE || b == ConnectorType.NONE) return false; // NONE is not compatible with anything
+        if(a == ConnectorType.UNIVERSAL || b == ConnectorType.UNIVERSAL) return true; // UNIVERSAL is compatible with anything that is not NONE
+        return false;
+
+    }
+
+    /**
+     * Determines if two connectors are connected with each other. (this means that they are compatible)
+     * NONE is not connected with anything
+     * Universal connectors are compatible with any connector,
      *
      * @param a the first connector
      * @param b the second connector
-     * @return true if connectors are compatible and connected, false otherwise
+     * @return true if connectors are compatible, false otherwise
      */
-    private boolean connectorsAreCompatible(ConnectorType a, ConnectorType b) {
+    private boolean connectorsAreConnected(ConnectorType a, ConnectorType b) {
         if (a == ConnectorType.NONE || b == ConnectorType.NONE) return false;
         if (a == ConnectorType.UNIVERSAL || b == ConnectorType.UNIVERSAL) return true;
-        // Two single connectors can be adjacent but are not connected
-        if (a == ConnectorType.SINGLE && b == ConnectorType.SINGLE) return false;
         return a == b;
     }
 
@@ -218,7 +259,6 @@ public class ShipBoard {
     /**
      * Checks whether the ship is still structurally connected after potential damage.
      * Uses depth-first search to ensure all components are connected starting from the first one found.
-     * Only traverses through valid connections between components.
      *
      * @return true if all components are reachable and the ship is whole, false otherwise
      */
@@ -241,46 +281,131 @@ public class ShipBoard {
 
         if (totalComponents == 0) return true;
 
-        int visitedComponents = dfsWithValidConnections(startRow, startCol, visited);
+        int visitedComponents = dfs(startRow, startCol, visited);
         return visitedComponents == totalComponents;
     }
-    
+
+    public boolean areComponentsConnected(SpaceshipComponent a, SpaceshipComponent b) {
+        if (a == null || b == null) return false;
+
+        Coordinates aCoords = getIndex(a);
+        Coordinates bCoords = getIndex(b);
+
+        if (aCoords.getI() == -1 || bCoords.getI() == -1) return false; // one of the components is not on the board
+
+        if(aCoords.manhattanDistance(bCoords) != 1) return false; // components are not adjacent
+
+        // Check if the connectors are compatible
+
+        int deltaRow = bCoords.getI() - aCoords.getI();
+        int deltaCol = bCoords.getJ() - aCoords.getJ();
+
+        ConnectorType aConnector;
+        ConnectorType bConnector;
+
+        if(deltaRow==1){
+            //b is at the right of a
+            aConnector = a.getConnectorAt(Side.RIGHT);
+            bConnector = b.getConnectorAt(Side.LEFT);
+        } else if (deltaRow==-1) {
+            //b is at the left of a
+            aConnector = a.getConnectorAt(Side.LEFT);
+            bConnector = b.getConnectorAt(Side.RIGHT);
+        } else {
+           if (deltaCol==-1) {
+                //b is below a
+                aConnector = a.getConnectorAt(Side.REAR);
+                bConnector = b.getConnectorAt(Side.FRONT);
+            } else if (deltaCol==1) {
+               //b is above a
+               aConnector = a.getConnectorAt(Side.FRONT);
+               bConnector = b.getConnectorAt(Side.REAR);
+           }else{
+               throw new RuntimeException("Error in areComponentsConnected: components are not adjacent, even though they checked by manhattan distance");
+           }
+        }
+
+
+        return connectorsAreConnected(aConnector, bConnector);
+
+    }
+
     /**
-     * Performs a depth-first search to count connected components starting from a given cell,
-     * only traversing through valid connections between components.
+     * Performs a depth-first search to count connected components starting from a given cell.
      *
      * @param row the row to start from
      * @param col the column to start from
      * @param visited a matrix to mark visited cells
      * @return the total number of connected components found
      */
-    private int dfsWithValidConnections(int row, int col, boolean[][] visited) {
-        if (!isValidPosition(row, col)) return 0;
+    private int dfs(int row, int col, boolean[][] visited) {
+        //if (!isValidPosition(row, col)) return 0;
         if (visited[row][col] || components[row][col] == null) return 0;
 
         visited[row][col] = true;
         int count = 1;
-        
-        // Check all four directions with valid connections
-        for (Side side : Side.values()) {
-            int[] offset = getOffset(side);
-            int adjRow = row + offset[0];
-            int adjCol = col + offset[1];
-            
-            if (isValidPosition(adjRow, adjCol) && components[adjRow][adjCol] != null) {
-                SpaceshipComponent current = components[row][col];
-                SpaceshipComponent neighbor = components[adjRow][adjCol];
-                
-                // Only traverse if connectors are compatible
-                if (connectorsAreCompatible(
-                        current.getConnectorAt(side),
-                        neighbor.getConnectorAt(getOppositeSide(side))
-                )) {
-                    count += dfsWithValidConnections(adjRow, adjCol, visited);
-                }
+        SpaceshipComponent currentComponent = components[row][col];
+        // Explore each of the four directions, only if the tile in that direction is not null and it's connected with the current component
+
+        SpaceshipComponent nextComponent= components[row+1][col];
+        if(nextComponent!=null) {
+            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
+            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
+
+            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                return -1;
+                //-1 makes checkIntegrity return false,
+                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+            }
+
+            if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                count += dfs(row + 1, col, visited);
             }
         }
-        
+        nextComponent = components[row-1][col];
+
+        if(nextComponent!=null) {
+            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
+            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
+            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                return -1;
+                //-1 makes checkIntegrity return false,
+                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+            }
+            if (connectorsAreConnected(currentComponent.getConnectorAt(Side.FRONT), nextComponent.getConnectorAt(Side.REAR))) {
+                count += dfs(row - 1, col, visited);
+            }
+        }
+
+        nextComponent = components[row][col + 1];
+        if(nextComponent!=null) {
+
+            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.RIGHT);
+            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.LEFT);
+            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                return -1;
+                //-1 makes checkIntegrity return false,
+                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+            }
+
+            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.RIGHT), nextComponent.getConnectorAt(Side.LEFT))) {
+                count += dfs(row, col + 1, visited);
+            }
+        }
+        nextComponent = components[row][col - 1];
+        if(nextComponent!=null) {
+            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.LEFT);
+            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.RIGHT);
+            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                return -1;
+                //-1 makes checkIntegrity return false,
+                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+            }
+
+            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.LEFT), nextComponent.getConnectorAt(Side.RIGHT))) {
+                count += dfs(row, col - 1, visited);
+            }
+        }
         return count;
     }
 
@@ -288,7 +413,6 @@ public class ShipBoard {
      * Keeps only the components connected to the given starting position.
      * All other components will be removed from the board. This can be used after damage
      * to preserve a specific part of the ship and remove all detached segments.
-     * Only traverses through valid connections between components.
      *
      * @param origin the starting position of the ship part to preserve
      */
@@ -318,7 +442,7 @@ public class ShipBoard {
                 ConnectorType thisConnector = currentComp.getConnectorAt(side);
                 ConnectorType neighborConnector = neighborComp.getConnectorAt(getOppositeSide(side));
 
-                if (connectorsAreCompatible(thisConnector, neighborConnector)) {
+                if (connectorsAreConnected(thisConnector, neighborConnector)) {
                     toVisit.add(new Position(adjRow, adjCol));
                 }
             }
@@ -334,27 +458,7 @@ public class ShipBoard {
         }
     }
 
-    /**
-     * Performs a depth-first search to count connected components starting from a given cell.
-     * This version checks for physical adjacency without considering connector compatibility.
-     *
-     * @param row the row to start from
-     * @param col the column to start from
-     * @param visited a matrix to mark visited cells
-     * @return the total number of connected components found
-     */
-    private int dfs(int row, int col, boolean[][] visited) {
-        if (!isValidPosition(row, col)) return 0;
-        if (visited[row][col] || components[row][col] == null) return 0;
 
-        visited[row][col] = true;
-        int count = 1;
-        count += dfs(row + 1, col, visited);
-        count += dfs(row - 1, col, visited);
-        count += dfs(row, col + 1, visited);
-        count += dfs(row, col - 1, visited);
-        return count;
-    }
 
     /**
      * Calculates the rectangular boundary of the ship on the grid.
@@ -403,10 +507,10 @@ public class ShipBoard {
      * @return the component at the specified location, or null if out of bounds or empty
      */
     public SpaceshipComponent getComponent(Coordinates coordinates) {
-        int x = coordinates.getX()-4;
-        int y = coordinates.getY()-5;
-        if (x < 0 || x >= ROWS || y < 0 || y >= COLS) return null;
-        return components[y][x];
+        int i = coordinates.getI()-5;
+        int j = coordinates.getJ()-4;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) return null;
+        return components[i][j];
     }
 
     /**
@@ -420,7 +524,7 @@ public class ShipBoard {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if (components[i][j] == goalComponent) {
-                    return new Coordinates(j+4, i+5);
+                    return new Coordinates(i+5, j+4);
                 }
             }
         }
@@ -447,50 +551,51 @@ public class ShipBoard {
         }
     }
 
-    /**
-     * Calculates the total firepower of the ship.
-     * Considers all cannon components and their orientation relative to the ship's forward direction.
-     *
-     *
-     * @return the sum of effective power from all cannons
-     */
 
-    public int calculateFirepower(Direction shipForward) {
-        int firepower = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                SpaceshipComponent component = components[row][col];
-                if (component != null) {
-                    firepower += component.getFirepower(shipForward);
-                }
-            }
-        }
-        return firepower;
-    }
-
-
-    /**
-     * Calculates total thrust considering engine orientation.
-     */
-    /**
-     * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
-     * Only engines that face the specified rear direction contribute their engine power.
-     *
-     * @param shipRear the direction that represents the rear of the ship
-     * @return the total thrust value from all correctly oriented engines
-     */
-    public int calculateThrust(Direction shipRear) {
-        int thrust = 0;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                SpaceshipComponent component = components[row][col];
-                if (component != null) {
-                    thrust += component.getThrust(shipRear);
-                }
-            }
-        }
-        return thrust;
-    }
+//    /**
+//     * Calculates the total firepower of the ship.
+//     * Considers all cannon components and their orientation relative to the ship's forward direction.
+//     *
+//     *
+//     * @return the sum of effective power from all cannons
+//     */
+//
+//    public int calculateFirepower(Direction shipForward) {
+//        int firepower = 0;
+//        for (int row = 0; row < ROWS; row++) {
+//            for (int col = 0; col < COLS; col++) {
+//                SpaceshipComponent component = components[row][col];
+//                if (component != null) {
+//                    firepower += component.getFirepower(shipForward);
+//                }
+//            }
+//        }
+//        return firepower;
+//    }
+//
+//
+//    /**
+//     * Calculates total thrust considering engine orientation.
+//     */
+//    /**
+//     * Calculates the total thrust produced by all engines correctly oriented to the rear of the ship.
+//     * Only engines that face the specified rear direction contribute their engine power.
+//     *
+//     * @param shipRear the direction that represents the rear of the ship
+//     * @return the total thrust value from all correctly oriented engines
+//     */
+//    public int calculateThrust(Direction shipRear) {
+//        int thrust = 0;
+//        for (int row = 0; row < ROWS; row++) {
+//            for (int col = 0; col < COLS; col++) {
+//                SpaceshipComponent component = components[row][col];
+//                if (component != null) {
+//                    thrust += component.getThrust(shipRear);
+//                }
+//            }
+//        }
+//        return thrust;
+//    }
 
 
 
@@ -514,16 +619,23 @@ public class ShipBoard {
 
         Direction incomingDirection = DirectionSideUtils.convertSideToDirection(incomingSide);
 
-        for (Side side : Side.values()) {
-            int[] offset = getOffset(side);
-            int adjRow = row + offset[0];
-            int adjCol = col + offset[1];
-            if (isValidPosition(adjRow, adjCol)) {
-                SpaceshipComponent neighbor = components[adjRow][adjCol];
-                if (neighbor != null && neighbor.blocks(incomingDirection)) {
+        switch (incomingDirection){
+            case UP:
+                if(condensedShip.getShields().getNorthShields() > 0)
                     return true;
-                }
-            }
+                break;
+            case RIGHT:
+                if(condensedShip.getShields().getEastShields() > 0)
+                    return true;
+                break;
+            case DOWN:
+                if(condensedShip.getShields().getSouthShields() > 0)
+                    return true;
+                break;
+            case LEFT:
+                if(condensedShip.getShields().getWestShields() > 0)
+                    return true;
+                break;
         }
         return false;
     }
@@ -561,116 +673,88 @@ public class ShipBoard {
      */
     /**
      * Validates the ship by checking:
-     * - Structural integrity (all components are connected)
+     * - Connector compatibility
      * - Blocking of engines and cannons
      * - Proper orientation of engines and cannons
      * - Special rules for cabins, alien support, shields, and special cargo
      *
-     * @param shipRear the direction considered the rear of the ship
-     * @param shipFront the direction considered the front of the ship
      * @return true if the ship is valid, false otherwise
      */
-    public boolean validateShip(Direction shipRear, Direction shipFront) {
-        // First check structural integrity
-        if (!checkIntegrity()) {
-            System.out.println("Errore: la nave non è strutturalmente integra");
+    public boolean validateShip() {
+
+        if(!checkIntegrity()) {
+            System.out.println("La nave non è strutturalmente integra.");
             return false;
         }
-        
-        // Use component types for additional checks
-        for (int x = 0; x < ROWS; x++) {
-            for (int y = 0; y < COLS; y++) {
-                SpaceshipComponent comp = components[x][y];
-                if (comp == null) continue;
-                
-                Card cardType = comp.getType();
 
-                // Check engine orientation and blocking
-                if (cardType.hasEngine()) {
-                    if (x + 1 < ROWS && components[x + 1][y] != null) {
-                        System.out.printf("Errore: motore in (%d,%d) ha un modulo dietro\n", x, y);
-                        return false;
-                    }
-                    if (!comp.getOrientation().equals(shipRear)) {
-                        System.out.printf("Errore: motore in (%d,%d) non orientato verso il retro della nave\n", x, y);
-                        return false;
-                    }
-                }
+        //check that
 
-                // Check cannon orientation and blocking
-                if (cardType.hasCannon()) {
-                    if (x - 1 >= 0 && components[x - 1][y] != null) {
-                        System.out.printf("Errore: cannone in (%d,%d) bloccato da un modulo davanti\n", x, y);
-                        return false;
-                    }
-                    if (!comp.getOrientation().equals(shipFront)) {
-                        System.out.printf("Errore: cannone in (%d,%d) non orientato verso la parte frontale della nave\n", x, y);
-                        return false;
-                    }
-                }
 
-                // Check cabin connections
-                if (cardType == Card.CABIN) {
-                    if (comp.getConnectorAt(Side.FRONT) == ConnectorType.NONE
-                            && comp.getConnectorAt(Side.REAR) == ConnectorType.NONE
-                            && comp.getConnectorAt(Side.LEFT) == ConnectorType.NONE
-                            && comp.getConnectorAt(Side.RIGHT) == ConnectorType.NONE) {
-                        System.out.printf("Errore: CABINA in (%d,%d) non ha connessioni\n", x, y);
-                        return false;
-                    }
-                }
+        //controllare che tutti i motori siano orientati verso la parte posteriore della nave e che non abbiano alti pezzi nella posizione sotto di loro
 
-                // Check alien life support adjacency to cabin
-                if (cardType == Card.ALIEN_LIFE_SUPPORT) {
-                    boolean hasAdjacentCabin = false;
-                    int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}};
-                    for (int[] d : dirs) {
-                        int nx = x + d[0];
-                        int ny = y + d[1];
-                        if (nx >= 0 && nx < ROWS && ny >= 0 && ny < COLS) {
-                            SpaceshipComponent adj = components[nx][ny];
-                            if (adj != null && adj.getType() == Card.CABIN) {
-                                hasAdjacentCabin = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!hasAdjacentCabin) {
-                        System.out.printf("Errore: supporto alieno in (%d,%d) non adiacente a cabina\n", x, y);
-                        return false;
-                    }
-                }
 
-                // Check shield generator connections
-                if (cardType == Card.SHIELD_GENERATOR) {
-                    if (comp.getConnectorAt(Side.FRONT) == ConnectorType.NONE && comp.getConnectorAt(Side.REAR) == ConnectorType.NONE) {
-                        System.out.printf("Errore: generatore di scudi in (%d,%d) non connesso anteriormente o posteriormente\n", x, y);
-                        return false;
-                    }
-                }
+        for(Engine engine : condensedShip.getEnginesList()) {
+            if(!engine.getOrientation().equals(Direction.UP)) {
+                System.out.println("Motore non è orientato verso la parte posteriore della nave.");
+                return false;
+            }
 
-                // Check special cargo hold adjacency to regular cargo hold
-                if (cardType == Card.SPECIAL_CARGO_HOLD) {
-                    boolean hasCargoNearby = false;
-                    int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}};
-                    for (int[] d : dirs) {
-                        int nx = x + d[0];
-                        int ny = y + d[1];
-                        if (nx >= 0 && nx < ROWS && ny >= 0 && ny < COLS) {
-                            SpaceshipComponent adj = components[nx][ny];
-                            if (adj != null && adj.getType() == Card.CARGO_HOLD) {
-                                hasCargoNearby = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!hasCargoNearby) {
-                        System.out.printf("Errore: carico speciale in (%d,%d) non adiacente a carico normale\n", x, y);
-                        return false;
-                    }
-                }
+            Coordinates engineCoords = getIndex(engine);
+            int row = engineCoords.getI() - 5;
+            int col = engineCoords.getJ() - 4;
+
+            // Check the position below the engine
+            if (isValidPosition(row + 1, col) && components[row + 1][col] != null) {
+                System.out.println("Motore bloccato da un altro pezzo sotto di esso.");
+                return false;
             }
         }
+
+        //controllare che tutti i cannoni  non abbiano alti pezzi nella direzione in cui sparano
+
+
+        for (Cannon cannon : condensedShip.getCannons()) {
+            Coordinates cannonCoords = getIndex(cannon);
+            int row = cannonCoords.getI() - 5;
+            int col = cannonCoords.getJ() - 4;
+
+            // Check the direction the cannon is facing
+            Direction cannonDirection = cannon.getOrientation();
+
+            //crea un array di offset per la direzione del cannone, inizalizzandolo a 0, 0
+            int[] offset = new int[2];
+
+
+            switch (cannonDirection){
+                case UP:
+                    offset[0] = -1; // row offset for UP
+                    offset[1] = 0;  // col offset for UP
+                    break;
+                case DOWN:
+                    offset[0] = 1;  // row offset for DOWN
+                    offset[1] = 0;  // col offset for DOWN
+                    break;
+                case LEFT:
+                    offset[0] = 0;  // row offset for LEFT
+                    offset[1] = -1; // col offset for LEFT
+                    break;
+                case RIGHT:
+                    offset[0] = 0;  // row offset for RIGHT
+                    offset[1] = 1;  // col offset for RIGHT
+                    break;
+            }
+
+
+            int targetRow = row + offset[0];
+            int targetCol = col + offset[1];
+
+            if (isValidPosition(targetRow, targetCol) && components[targetRow][targetCol] != null) {
+                System.out.println("Cannon blocked by another piece in its firing direction.");
+                return false;
+            }
+
+        }
+
         System.out.println("Validazione nave completata con successo.");
         return true;
     }
@@ -739,7 +823,7 @@ public class ShipBoard {
                         isExposed = true;
                     } else {
                         ConnectorType neighborConnector = components[adjRow][adjCol].getConnectorAt(getOppositeSide(side));
-                        isExposed = !connectorsAreCompatible(connector, neighborConnector);
+                        isExposed = !connectorsAreConnected(connector, neighborConnector);
                     }
 
                     if (isExposed) {
@@ -755,40 +839,6 @@ public class ShipBoard {
         return exposedConnectors;
     }
 
-
-    /**
-     * Attempts to place a component on the board using full connection logic.
-     * Updates the CondensedShip and calls added() on the component if placement is successful.
-     * Returns true if placement is valid and performed, false otherwise.
-     */
-    public boolean placeComponent(SpaceshipComponent component, Coordinates coordinates) {
-        int x = coordinates.getX() - 4;
-        int y = coordinates.getY() - 5;
-
-        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return false;
-        if (components[y][x] != null) return false;
-        if (!isConnectedToExistingComponents(component, y, x) && !isEmpty()) return false;
-
-        components[y][x] = component;
-        component.setShipBoard(this);
-        component.added();
-        return true;
-    }
-
-    /**
-     * Returns the component at the given coordinates, or null if empty/out of bounds.
-     */
-    public SpaceshipComponent getComponentAt(Coordinates coordinates) {
-        int x = coordinates.getX() - 4;
-        int y = coordinates.getY() - 5;
-
-        if (x < 0 || x >= components[0].length || y < 0 || y >= components.length) return null;
-        return components[y][x];
-    }
-
-    public CondensedShip getCondensedShip() {
-        return condensedShip;
-    }
 
     /**
      * Adds a component to the reserved components list.
@@ -812,17 +862,16 @@ public class ShipBoard {
 
     /**
      * Removes a reserved component by index.
+     *
      * @param index the index to remove
-     * @return the removed component
      */
-    public SpaceshipComponent removeReservedComponent(int index) {
-        return reservedComponents.remove(index);
+    public void removeReservedComponent(int index) {
+        reservedComponents.remove(index);
     }
 
     /**
      * Removes all components that are no longer connected to the central part of the ship.
      * Performs a DFS from the center and removes anything not visited.
-     * Uses valid connections between components for traversal.
      */
     public void purgeDisconnectedComponents() {
         int centerRow = components.length / 2;
@@ -831,7 +880,7 @@ public class ShipBoard {
         if (components[centerRow][centerCol] == null) return;
 
         boolean[][] visited = new boolean[components.length][components[0].length];
-        dfsWithValidConnections(centerRow, centerCol, visited);
+        dfs(centerRow, centerCol, visited);
 
         for (int row = 0; row < components.length; row++) {
             for (int col = 0; col < components[0].length; col++) {

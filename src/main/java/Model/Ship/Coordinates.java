@@ -1,27 +1,43 @@
 package Model.Ship;
 
 public class Coordinates {
-    private int x;
-    private int y;
+    private int i;
+    private int j;
 
-    public Coordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Coordinates(int i, int j) {
+        this.i=i;
+        this.j=j;
     }
 
-    public int getX() {
-        return x;
+    public int getI() {
+        return i;
     }
 
-    public int getY() {
-        return y;
+    public int getJ() {
+        return j;
     }
 
     @Override
     public String toString() {
         return "Coordinates{" +
-                "x=" + x +
-                ", y=" + y +
+                "i=" + i +
+                ", j=" + j +
                 '}';
     }
+
+
+    /**
+     * Calculates the Manhattan distance between this coordinate and another coordinate.
+     *
+     * @param other the other coordinate to calculate the distance to
+     * @return the Manhattan distance
+     */
+    public int manhattanDistance(Coordinates other) {
+        //calculate manhattan distance
+        return Math.abs(this.i - other.i) + Math.abs(this.j - other.j);
+    }
+
+    /*
+
+     */
 }
