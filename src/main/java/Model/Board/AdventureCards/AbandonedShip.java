@@ -79,6 +79,7 @@ public class AbandonedShip extends AdventureCardFilip {
         super.visualize();
         System.out.println("Nave Abbandonata");
         System.out.println("Crew: " + this.winPenalty.getAmount());
+        //winpenalty generica serve dire che e in giorni etc...
         System.out.println("Credits: " + this.landingReward.getAmount());
         System.out.println("Days: " + this.landingPenalty.getAmount());
         System.out.println("---------------------------------------");

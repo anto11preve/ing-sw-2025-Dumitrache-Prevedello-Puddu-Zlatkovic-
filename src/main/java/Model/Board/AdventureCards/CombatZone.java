@@ -118,7 +118,7 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
 
             System.out.printf(" [%d] Criteria: %s%n", i + 1, crit);
 
-            // Simple penalties: rely on toString()
+            // Simple penalties: rely on toString() //
             if (pen instanceof DaysPenalty ||
                     pen instanceof CrewPenalty ||
                     pen instanceof GoodsPenalty) {

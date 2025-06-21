@@ -1,6 +1,7 @@
 package Model.Board.AdventureCards;
 
 import Model.Board.AdventureCards.Penalties.CannonShotPenalty;
+import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Penalties.GoodsPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
@@ -72,11 +73,11 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         super.visualize();
 
         // 2) Show the encounter power
-        System.out.println("Power:           " + getPower());
+        System.out.println("Power:                " + getPower());
 
         // 3) List each pirate shot from the loss penalty
         CannonShotPenalty shots = getLossPenalty();
-        System.out.println("Pirate Shots:");
+        System.out.println("Pirate Shots:         " + shots.getClass().getSimpleName());
         int idx = 0;
         for (CannonShot shot : shots) {
             idx++;
@@ -92,11 +93,19 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         }
 
         // 4) Days penalty when you win
-        System.out.println("Win Penalty:     " + getWinPenalty());
+        DaysPenalty dp = getWinPenalty();
+        System.out.printf(
+                "Win Penalty:          %s (type: %s)%n",
+                dp,
+                dp.getClass().getSimpleName()
+        );
 
         // 5) Credits reward when you win
-        System.out.println(
-                "Win Reward:      " + getWinReward().getAmount() + " credits"
+        Credits cr = getWinReward();
+        System.out.printf(
+                "Win Reward:           %d credits (type: %s)%n",
+                cr.getAmount(),
+                cr.getClass().getSimpleName()
         );
     }
 

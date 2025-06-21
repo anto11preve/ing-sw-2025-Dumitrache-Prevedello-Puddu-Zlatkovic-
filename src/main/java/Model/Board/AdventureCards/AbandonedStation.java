@@ -68,19 +68,37 @@ public class AbandonedStation extends AdventureCardFilip {
 
     @Override
     public void visualize() {
+        // 1) common header: ID, name, level, description, imagePath
         super.visualize();
-        System.out.println("Crew Required:   " + crew);
-        System.out.println("Landing Delay:   " + landingPenalty);
 
-        // Count goods by iterating, and collect them into a list for printing
+        // 2) crew required
+        System.out.println("Crew Required:       " + crew);
+
+        // 3) landing delay penalty and its type
+        System.out.printf(
+                "Landing Delay:       %s (type: %s)%n",
+                landingPenalty,
+                landingPenalty.getClass().getSimpleName()
+        );
+
+        // 4) reward goods count & list
         int goodsCount = 0;
-        StringBuilder goodsList = new StringBuilder();
+        String goodsList = "";
         for (Good g : landingReward) {
             goodsCount++;
-            goodsList.append(g).append(" ");
+            goodsList += g + " ";
         }
-        System.out.println("Reward Goods:    " + goodsCount);
-        System.out.println("  Goods List:    " + goodsList.toString().trim());
+        if (!goodsList.isEmpty()) {
+            goodsList = goodsList.trim();
+        }
+        System.out.println("Reward Goods:        " + goodsCount);
+        System.out.println("  Goods List:        " + (goodsList.isEmpty() ? "(none)" : goodsList));
+
+        // 5) reward type
+        System.out.println(
+                "Reward Type:         " + landingReward.getClass().getSimpleName()
+        );
     }
+
 
 }
