@@ -5,10 +5,9 @@ import Model.Board.CardDeck;
 import Model.Board.FlightBoard;
 import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
+import Model.ComponentLoader;
 import Controller.State;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.AdventureCardLoader;
-import Model.Utils.ComponentLoader;
 
 import java.util.ArrayList;
 import java.util.List;

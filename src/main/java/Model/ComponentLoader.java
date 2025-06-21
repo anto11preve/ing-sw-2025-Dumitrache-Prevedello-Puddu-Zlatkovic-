@@ -1,4 +1,4 @@
-package Model.Utils;
+package Model;
 
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Factories.ComponentFactory;
