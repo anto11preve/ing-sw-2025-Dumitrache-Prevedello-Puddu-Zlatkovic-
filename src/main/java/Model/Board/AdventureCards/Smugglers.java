@@ -32,4 +32,27 @@ public class Smugglers extends Enemy<GoodsPenalty, Credits> {
         );
 
     }
+
+    @Override
+    public void visualize() {
+        // 1) Print the shared AdventureCardFilip header
+        super.visualize();
+
+        // 2) Print the challenge power
+        System.out.println("Power:           " + getPower());
+
+        // 3) Print the loss penalty (GoodsPenalty)
+        System.out.println("Cargo Loss:      " + getLossPenalty());
+
+        // 4) Print the win penalty (DaysPenalty)
+        System.out.println("Win Penalty:     " + getWinPenalty());
+
+        // 5) Print the win reward (Credits)
+        System.out.println(
+                "Win Reward:      " + getWinReward().getAmount() + " credits"
+        );
+    }
+
+
+
 }

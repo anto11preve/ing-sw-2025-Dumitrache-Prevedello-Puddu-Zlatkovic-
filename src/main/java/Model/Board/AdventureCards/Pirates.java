@@ -66,9 +66,39 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         return shots;
     }
 
+    @Override
+    public void visualize() {
+        // 1) Common header (ID, Name, Level, Description, Image Path)
+        super.visualize();
 
+        // 2) Show the encounter power
+        System.out.println("Power:           " + getPower());
 
+        // 3) List each pirate shot from the loss penalty
+        CannonShotPenalty shots = getLossPenalty();
+        System.out.println("Pirate Shots:");
+        int idx = 0;
+        for (CannonShot shot : shots) {
+            idx++;
+            System.out.printf(
+                    "  #%d → large=%s, dir=%s%n",
+                    idx,
+                    shot.isBig(),
+                    shot.getSide()
+            );
+        }
+        if (idx == 0) {
+            System.out.println("  (no shots)");
+        }
 
+        // 4) Days penalty when you win
+        System.out.println("Win Penalty:     " + getWinPenalty());
+
+        // 5) Credits reward when you win
+        System.out.println(
+                "Win Reward:      " + getWinReward().getAmount() + " credits"
+        );
+    }
 
 
 }
