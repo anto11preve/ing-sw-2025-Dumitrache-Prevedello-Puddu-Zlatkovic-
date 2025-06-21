@@ -6,6 +6,8 @@ import Model.Enums.AlienColor;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
+import java.io.PrintStream;
+
 /**
  * Represents an Alien Life Support component.
  * Supports specific alien crew members (brown or purple), enhancing nearby cabins.
@@ -36,6 +38,14 @@ public class AlienLifeSupport extends SpaceshipComponent {
 
         this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
 
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Alien Supports Color: " + color);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
     /**

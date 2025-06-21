@@ -33,6 +33,21 @@ public abstract class SpaceshipComponent {
         this.imagePath = imagePath;
     }
 
+    public void visualize(){
+        System.out.println("==========================");
+        System.out.println("Visualizing component: " + type);
+        System.out.println("Image Path: " + imagePath);
+        System.out.println("Front Connector: " + frontConnector);
+        System.out.println("Rear Connector: " + rearConnector);
+        System.out.println("Left Connector: " + leftConnector);
+        System.out.println("Right Connector: " + rightConnector);
+        System.out.println("Orientation: " + orientation);
+        System.out.println("Visible: " + isVisible);
+        System.out.println("Ship Board: " + shipBoard);
+
+
+    }
+
     public void setVisible() {
         this.isVisible = true;
     }
