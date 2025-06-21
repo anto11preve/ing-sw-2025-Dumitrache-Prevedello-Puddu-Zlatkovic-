@@ -20,7 +20,13 @@ public class ShieldCounter {
         this.northShields = northShields;
     }
     public void incrementNorthShields() {this.northShields++;}
-    public void decrementNorthShields() {this.northShields--;}
+    public void decrementNorthShields() {
+        if(this.northShields > 0){
+            this.northShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement north shields below zero.");
+        }
+    }
 
     public int getEastShields() {
         return eastShields;
@@ -29,7 +35,13 @@ public class ShieldCounter {
         this.eastShields = eastShields;
     }
     public void incrementEastShields() {this.eastShields++;}
-    public void decrementEastShields() {this.eastShields--;}
+    public void decrementEastShields() {
+        if(this.eastShields > 0){
+            this.eastShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement double engines below zero.");
+        }
+    }
 
     public int getSouthShields() {
         return southShields;
@@ -38,7 +50,13 @@ public class ShieldCounter {
         this.southShields = southShields;
     }
     public void incrementSouthShields() {this.southShields++;}
-    public void decrementSouthShields() {this.southShields--;}
+    public void decrementSouthShields() {
+        if(this.southShields > 0){
+            this.southShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement south shields below zero.");
+        }
+    }
 
     public int getWestShields() {
         return westShields;
@@ -47,5 +65,11 @@ public class ShieldCounter {
         this.westShields = westShields;
     }
     public void incrementWestShields() {this.westShields++;}
-    public void decrementWestShields() {this.westShields--;}
+    public void decrementWestShields() {
+        if(this.westShields > 0){
+            this.westShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement west shields below zero.");
+        }
+    }
 }

@@ -26,6 +26,7 @@ public class ShipBoard {
     private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
+    private boolean isValid = false;
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
@@ -43,6 +44,13 @@ public class ShipBoard {
         return condensedShip;
     }
 
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
 
     /**
      * Places a spaceship component on the board at the specified coordinates.
@@ -59,11 +67,31 @@ public class ShipBoard {
 
         if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
         if (components[i][j] != null) throw new InvalidMethodParameters("Position already occupied");
-        if (isConnectedToExistingComponents(component, i, j)) {
-            components[i][j] = component;
-        }else{
-            throw new InvalidMethodParameters("Component not connected to existing components");
+
+        components[i][j] = component;
+
+    }
+
+    /**
+     *  Checks if a position is adjacent to an existing component on the board.
+     *
+     * @param coordinates The position on the board to check.
+     * @return true if the component can be placed, false otherwise.
+     */
+    public boolean isAdjacentToExistingComponent(Coordinates coordinates) {
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        int row= coordinates.getI() - 5;
+        int col = coordinates.getJ() - 4;
+
+        for (int[] d : dirs) {
+            int newRow = row + d[0];
+            int newCol = col + d[1];
+            if (isValidPosition(newRow, newCol) && components[newRow][newCol] != null) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -135,7 +163,12 @@ public class ShipBoard {
             }
         }
         return false;
+
+
+
     }
+
+
 
     /**
      * Returns the relative coordinate offset for a given side of a component.
@@ -250,6 +283,51 @@ public class ShipBoard {
 
         int visitedComponents = dfs(startRow, startCol, visited);
         return visitedComponents == totalComponents;
+    }
+
+    public boolean areComponentsConnected(SpaceshipComponent a, SpaceshipComponent b) {
+        if (a == null || b == null) return false;
+
+        Coordinates aCoords = getIndex(a);
+        Coordinates bCoords = getIndex(b);
+
+        if (aCoords.getI() == -1 || bCoords.getI() == -1) return false; // one of the components is not on the board
+
+        if(aCoords.manhattanDistance(bCoords) != 1) return false; // components are not adjacent
+
+        // Check if the connectors are compatible
+
+        int deltaRow = bCoords.getI() - aCoords.getI();
+        int deltaCol = bCoords.getJ() - aCoords.getJ();
+
+        ConnectorType aConnector;
+        ConnectorType bConnector;
+
+        if(deltaRow==1){
+            //b is at the right of a
+            aConnector = a.getConnectorAt(Side.RIGHT);
+            bConnector = b.getConnectorAt(Side.LEFT);
+        } else if (deltaRow==-1) {
+            //b is at the left of a
+            aConnector = a.getConnectorAt(Side.LEFT);
+            bConnector = b.getConnectorAt(Side.RIGHT);
+        } else {
+           if (deltaCol==-1) {
+                //b is below a
+                aConnector = a.getConnectorAt(Side.REAR);
+                bConnector = b.getConnectorAt(Side.FRONT);
+            } else if (deltaCol==1) {
+               //b is above a
+               aConnector = a.getConnectorAt(Side.FRONT);
+               bConnector = b.getConnectorAt(Side.REAR);
+           }else{
+               throw new RuntimeException("Error in areComponentsConnected: components are not adjacent, even though they checked by manhattan distance");
+           }
+        }
+
+
+        return connectorsAreConnected(aConnector, bConnector);
+
     }
 
     /**
@@ -600,11 +678,9 @@ public class ShipBoard {
      * - Proper orientation of engines and cannons
      * - Special rules for cabins, alien support, shields, and special cargo
      *
-     * @param shipRear the direction considered the rear of the ship
-     * @param shipFront the direction considered the front of the ship
      * @return true if the ship is valid, false otherwise
      */
-    public boolean validateShip(Direction shipRear, Direction shipFront) {
+    public boolean validateShip() {
 
         if(!checkIntegrity()) {
             System.out.println("La nave non è strutturalmente integra.");
@@ -616,11 +692,68 @@ public class ShipBoard {
 
         //controllare che tutti i motori siano orientati verso la parte posteriore della nave e che non abbiano alti pezzi nella posizione sotto di loro
 
-        //TODO: implementare controllo motori
+
+        for(Engine engine : condensedShip.getEnginesList()) {
+            if(!engine.getOrientation().equals(Direction.UP)) {
+                System.out.println("Motore non è orientato verso la parte posteriore della nave.");
+                return false;
+            }
+
+            Coordinates engineCoords = getIndex(engine);
+            int row = engineCoords.getI() - 5;
+            int col = engineCoords.getJ() - 4;
+
+            // Check the position below the engine
+            if (isValidPosition(row + 1, col) && components[row + 1][col] != null) {
+                System.out.println("Motore bloccato da un altro pezzo sotto di esso.");
+                return false;
+            }
+        }
 
         //controllare che tutti i cannoni  non abbiano alti pezzi nella direzione in cui sparano
 
-        //TODO: implementare controllo cannoni
+
+        for (Cannon cannon : condensedShip.getCannons()) {
+            Coordinates cannonCoords = getIndex(cannon);
+            int row = cannonCoords.getI() - 5;
+            int col = cannonCoords.getJ() - 4;
+
+            // Check the direction the cannon is facing
+            Direction cannonDirection = cannon.getOrientation();
+
+            //crea un array di offset per la direzione del cannone, inizalizzandolo a 0, 0
+            int[] offset = new int[2];
+
+
+            switch (cannonDirection){
+                case UP:
+                    offset[0] = -1; // row offset for UP
+                    offset[1] = 0;  // col offset for UP
+                    break;
+                case DOWN:
+                    offset[0] = 1;  // row offset for DOWN
+                    offset[1] = 0;  // col offset for DOWN
+                    break;
+                case LEFT:
+                    offset[0] = 0;  // row offset for LEFT
+                    offset[1] = -1; // col offset for LEFT
+                    break;
+                case RIGHT:
+                    offset[0] = 0;  // row offset for RIGHT
+                    offset[1] = 1;  // col offset for RIGHT
+                    break;
+            }
+
+
+            int targetRow = row + offset[0];
+            int targetCol = col + offset[1];
+
+            if (isValidPosition(targetRow, targetCol) && components[targetRow][targetCol] != null) {
+                System.out.println("Cannon blocked by another piece in its firing direction.");
+                return false;
+            }
+
+        }
 
         System.out.println("Validazione nave completata con successo.");
         return true;
