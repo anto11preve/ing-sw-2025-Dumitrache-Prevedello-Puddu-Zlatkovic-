@@ -11,6 +11,7 @@ public abstract class AdventureCardFilip {
     private final int id;
     private final CardLevel level;
     private String imagePath;
+    private String backCardImagePath;
 
     public AdventureCardFilip(int id, CardLevel level) {
         this.id = id;

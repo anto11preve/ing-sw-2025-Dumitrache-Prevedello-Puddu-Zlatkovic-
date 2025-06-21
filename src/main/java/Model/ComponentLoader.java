@@ -27,7 +27,7 @@ public class ComponentLoader {
                 components.add(ComponentFactory.fromJson(el.getAsJsonObject()));
             }
 
-            Collections.shuffle(components);
+            //Collections.shuffle(components);  //TODO: riaggiungere lo shuffle
             return components.toArray(new SpaceshipComponent[0]);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load spaceship components from JSON", e);

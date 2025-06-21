@@ -103,7 +103,7 @@ public class AdventureCardLoader {
                 List<AdventureCardFilip> combined = new ArrayList<>();
                 combined.addAll(level1Cards);
                 combined.addAll(level2Cards);
-                Collections.shuffle(combined);
+                //Collections.shuffle(combined); //TODO: riaggiungere lo shuffle
                 yield combined;
             }
         };
