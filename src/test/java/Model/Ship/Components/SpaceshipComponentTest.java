@@ -13,16 +13,28 @@ public class SpaceshipComponentTest {
     // Test implementation of SpaceshipComponent for testing
     private static class TestComponent extends SpaceshipComponent {
         public TestComponent() {
-            super(Card.STRUCTURAL_MODULE, 
-                  ConnectorType.UNIVERSAL, 
-                  ConnectorType.UNIVERSAL, 
-                  ConnectorType.UNIVERSAL, 
+            super(Card.STRUCTURAL_MODULE,
+                  ConnectorType.UNIVERSAL,
+                  ConnectorType.UNIVERSAL,
+                  ConnectorType.UNIVERSAL,
                   ConnectorType.UNIVERSAL);
+        }
+
+        @Override
+        public void added() {
+            // No specific implementation needed for this test
+        }
+        @Override
+        public void removed() {
+            // No specific implementation needed for this test
         }
     }
 
+
+
     @Test
     public void testConstructor() {
+
         SpaceshipComponent component = new TestComponent();
         assertEquals(Card.STRUCTURAL_MODULE, component.getType());
         assertEquals(Direction.UP, component.getOrientation());
@@ -83,18 +95,18 @@ public class SpaceshipComponentTest {
         assertEquals(ConnectorType.UNIVERSAL, component.getConnectorAt(Side.LEFT));
         assertEquals(ConnectorType.UNIVERSAL, component.getConnectorAt(Side.RIGHT));
     }
-    
-    @Test
-    public void testDefaultMethods() {
-        SpaceshipComponent component = new TestComponent();
-        
-        // Default firepower should be 0
-        assertEquals(0, component.getFirepower(Direction.UP));
-        
-        // Default thrust should be 0
-        assertEquals(0, component.getThrust(Direction.DOWN));
-        
-        // Default blocks should be false
-        assertFalse(component.blocks(Direction.LEFT));
-    }
+//    TODO: test inutili
+//    @Test
+//    public void testDefaultMethods() {
+//        SpaceshipComponent component = new TestComponent();
+//
+//        // Default firepower should be 0
+//        assertEquals(0, component.getFirepower(Direction.UP));
+//
+//        // Default thrust should be 0
+//        assertEquals(0, component.getThrust(Direction.DOWN));
+//
+//        // Default blocks should be false
+//        assertFalse(component.blocks(Direction.LEFT));
+//    }
 }

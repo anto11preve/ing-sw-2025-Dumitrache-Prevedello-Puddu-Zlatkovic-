@@ -12,25 +12,25 @@ import static org.junit.jupiter.api.Assertions.*;
         @Test
         void testGetCanContainBrown() {
             Cabin cabin = new Cabin(Card.CABIN, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-            cabin.setCanContainBrown(true);
+            cabin.setCanContainBrown(1);
             assertTrue(cabin.getCanContainBrown());
         }
 
         @Test
         void testSetCanContainBrown() {
             Cabin cabin = new Cabin(Card.CABIN, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-            cabin.setCanContainBrown(true);
+            cabin.setCanContainBrown(1);
             assertTrue(cabin.getCanContainBrown());
-            cabin.setCanContainBrown(false);
+            cabin.setCanContainBrown(0);
             assertFalse(cabin.getCanContainBrown());
         }
 
         @Test
         void testSetCanContainPurple() {
             Cabin cabin = new Cabin(Card.CABIN, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-            cabin.setCanContainPurple(true);
+            cabin.setCanContainPurple(1);
             assertTrue(cabin.getCanContainPurple());
-            cabin.setCanContainPurple(false);
+            cabin.setCanContainPurple(0);
             assertFalse(cabin.getCanContainPurple());
         }
 

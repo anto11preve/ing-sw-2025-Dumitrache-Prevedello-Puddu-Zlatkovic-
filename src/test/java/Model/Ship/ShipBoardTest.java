@@ -75,70 +75,70 @@ public class ShipBoardTest {
         board.setActiveComponent(component);
         assertEquals(component, board.getActiveComponent());
     }
-    
-    @Test
-    public void testCalculateFirepower() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        
-        // Add a cannon facing UP
-        Cannon cannon = new Cannon(Card.CANNON,
-                ConnectorType.NONE, ConnectorType.UNIVERSAL,
-                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
-                false);
-        Coordinates cannonCoords = new Coordinates(6, 7);
-        board.addComponent(cannon, cannonCoords);
-        
-        // Firepower should be 1 when ship is facing UP
-        assertEquals(1, board.calculateFirepower(Direction.UP));
-        assertEquals(0, board.calculateFirepower(Direction.DOWN));
-        
-        // Add a double cannon facing RIGHT
-        Cannon doubleCannon = new Cannon(Card.DOUBLE_CANNON,
-                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
-                ConnectorType.UNIVERSAL, ConnectorType.NONE,
-                true);
-        doubleCannon.activate(); // Activate the double cannon
-        doubleCannon.rotate(); // Now facing RIGHT
-        Coordinates doubleCannonCoords = new Coordinates(6, 8);
-        board.addComponent(doubleCannon, doubleCannonCoords);
-        
-        // Total firepower should be 1 + 0 = 1 when ship is facing UP
-        assertEquals(1, board.calculateFirepower(Direction.UP));
-        // Total firepower should be 0 + 2 = 2 when ship is facing RIGHT
-        assertEquals(2, board.calculateFirepower(Direction.RIGHT));
-    }
-    
-    @Test
-    public void testCalculateThrust() throws InvalidMethodParameters {
-        ShipBoard board = new ShipBoard();
-        
-        // Add an engine facing UP (thrust in DOWN direction)
-        Engine engine = new Engine(Card.ENGINE,
-                ConnectorType.UNIVERSAL, ConnectorType.NONE,
-                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
-                false);
-        Coordinates engineCoords = new Coordinates(6, 7);
-        board.addComponent(engine, engineCoords);
-        
-        // Thrust should be 1 when ship rear is DOWN
-        assertEquals(1, board.calculateThrust(Direction.DOWN));
-        assertEquals(0, board.calculateThrust(Direction.UP));
-        
-        // Add a double engine facing LEFT (thrust in RIGHT direction)
-        Engine doubleEngine = new Engine(Card.DOUBLE_ENGINE,
-                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
-                ConnectorType.NONE, ConnectorType.UNIVERSAL,
-                true);
-        doubleEngine.activate(); // Activate the double engine
-        doubleEngine.rotate();
-        doubleEngine.rotate();
-        doubleEngine.rotate(); // Now facing LEFT
-        Coordinates doubleEngineCoords = new Coordinates(6, 8);
-        board.addComponent(doubleEngine, doubleEngineCoords);
-        
-        // Total thrust should be 1 + 0 = 1 when ship rear is DOWN
-        assertEquals(1, board.calculateThrust(Direction.DOWN));
-        // Total thrust should be 0 + 2 = 2 when ship rear is RIGHT
-        assertEquals(2, board.calculateThrust(Direction.RIGHT));
-    }
+//    TODO: test inutili, non esitono più thrust e firepower, activate. Inooltre abbiamo riscirtto calulate firepower e calculate thrust. Vanno rifatti
+//    @Test
+//    public void testCalculateFirepower() throws InvalidMethodParameters {
+//        ShipBoard board = new ShipBoard();
+//
+//        // Add a cannon facing UP
+//        Cannon cannon = new Cannon(Card.CANNON,
+//                ConnectorType.NONE, ConnectorType.UNIVERSAL,
+//                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+//                false);
+//        Coordinates cannonCoords = new Coordinates(6, 7);
+//        board.addComponent(cannon, cannonCoords);
+//
+//        // Firepower should be 1 when ship is facing UP
+//        assertEquals(1, board.calculateFirepower(Direction.UP));
+//        assertEquals(0, board.calculateFirepower(Direction.DOWN));
+//
+//        // Add a double cannon facing RIGHT
+//        Cannon doubleCannon = new Cannon(Card.DOUBLE_CANNON,
+//                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+//                ConnectorType.UNIVERSAL, ConnectorType.NONE,
+//                true);
+//        doubleCannon.activate(); // Activate the double cannon
+//        doubleCannon.rotate(); // Now facing RIGHT
+//        Coordinates doubleCannonCoords = new Coordinates(6, 8);
+//        board.addComponent(doubleCannon, doubleCannonCoords);
+//
+//        // Total firepower should be 1 + 0 = 1 when ship is facing UP
+//        assertEquals(1, board.calculateFirepower(Direction.UP));
+//        // Total firepower should be 0 + 2 = 2 when ship is facing RIGHT
+//        assertEquals(2, board.calculateFirepower(Direction.RIGHT));
+//    }
+//
+//    @Test
+//    public void testCalculateThrust() throws InvalidMethodParameters {
+//        ShipBoard board = new ShipBoard();
+//
+//        // Add an engine facing UP (thrust in DOWN direction)
+//        Engine engine = new Engine(Card.ENGINE,
+//                ConnectorType.UNIVERSAL, ConnectorType.NONE,
+//                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+//                false);
+//        Coordinates engineCoords = new Coordinates(6, 7);
+//        board.addComponent(engine, engineCoords);
+//
+//        // Thrust should be 1 when ship rear is DOWN
+//        assertEquals(1, board.calculateThrust(Direction.DOWN));
+//        assertEquals(0, board.calculateThrust(Direction.UP));
+//
+//        // Add a double engine facing LEFT (thrust in RIGHT direction)
+//        Engine doubleEngine = new Engine(Card.DOUBLE_ENGINE,
+//                ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL,
+//                ConnectorType.NONE, ConnectorType.UNIVERSAL,
+//                true);
+//        doubleEngine.activate(); // Activate the double engine
+//        doubleEngine.rotate();
+//        doubleEngine.rotate();
+//        doubleEngine.rotate(); // Now facing LEFT
+//        Coordinates doubleEngineCoords = new Coordinates(6, 8);
+//        board.addComponent(doubleEngine, doubleEngineCoords);
+//
+//        // Total thrust should be 1 + 0 = 1 when ship rear is DOWN
+//        assertEquals(1, board.calculateThrust(Direction.DOWN));
+//        // Total thrust should be 0 + 2 = 2 when ship rear is RIGHT
+//        assertEquals(2, board.calculateThrust(Direction.RIGHT));
+//    }
 }
