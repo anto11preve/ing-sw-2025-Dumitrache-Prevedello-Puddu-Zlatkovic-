@@ -1,6 +1,7 @@
 package Model.Board.AdventureCards;
 
 import Model.Board.AdventureCards.Penalties.CrewPenalty;
+import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
@@ -33,21 +34,34 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
 
     @Override
     public void visualize() {
-        // 1) Print the shared header (ID, name, level, description, imagePath)
+        // 1) common header
         super.visualize();
 
-        // 2) Print the challenge power
-        System.out.println("Power:           " + getPower());
+        // 2) encounter power
+        System.out.println("Power:                " + getPower());
 
-        // 3) Print the loss penalty (CrewPenalty)
-        System.out.println("Crew Lost:       " + getLossPenalty());
+        // 3) loss penalty (CrewPenalty)
+        CrewPenalty cp = getLossPenalty();
+        System.out.printf(
+                "Loss Penalty:         %s (type: %s)%n",
+                cp,
+                cp.getClass().getSimpleName()
+        );
 
-        // 4) Print the win penalty (DaysPenalty)
-        System.out.println("Win Penalty:     " + getWinPenalty());
+        // 4) win penalty (DaysPenalty)
+        DaysPenalty dp = getWinPenalty();
+        System.out.printf(
+                "Win Penalty:          %s (type: %s)%n",
+                dp,
+                dp.getClass().getSimpleName()
+        );
 
-        // 5) Print the win reward (Credits)
-        System.out.println(
-                "Win Reward:      " + getWinReward().getAmount() + " credits"
+        // 5) win reward (Credits)
+        Credits cr = getWinReward();
+        System.out.printf(
+                "Win Reward:           %d credits (type: %s)%n",
+                cr.getAmount(),
+                cr.getClass().getSimpleName()
         );
     }
 

@@ -71,6 +71,7 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
         this.landingPenalty = new DaysPenalty(days);
 
     }
+
     @Override
     public void visualize() {
         super.visualize();
@@ -82,12 +83,40 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
             int idx = 0;
             for (Planet p : planetList) {
                 idx++;
-                // rely on Planet.toString() to include name and goods
-                System.out.printf("  #%d → %s%n", idx, p);
+                System.out.printf("  #%d → %s%n", idx, p.getName());
+
+                // --- Reflection to access private List<Good> goods ---
+                List<Good> goods;
+                try {
+                    java.lang.reflect.Field f = p.getClass().getDeclaredField("goods");
+                    f.setAccessible(true);
+                    //noinspection unchecked
+                    goods = (List<Good>) f.get(p);
+                } catch (Exception e) {
+                    // fallback if reflection fails
+                    goods = List.of();
+                }
+
+                // Build the goods line with plain String concatenation
+                String goodsLine = "";
+                for (Good g : goods) {
+                    goodsLine += g + " ";
+                }
+                goodsLine = goodsLine.trim();  // remove trailing space
+
+                if (goods.isEmpty()) {
+                    System.out.println("      Goods: (no goods)");
+                } else {
+                    System.out.println("      Goods: " + goodsLine);
+                }
             }
         }
 
         System.out.println("Landing Penalty: " + landingPenalty);
     }
+
+
+
+
 
 }
