@@ -52,11 +52,7 @@ public class FinishBuildingCommand extends Command {
     public static CommandConstructor getConstructor() {
         return new CommandConstructor() {
             @Override
-            public Command create(Map<String, String> args) throws IllegalArgumentException {
-                final String playerName = args.get("playerName");
-                if(playerName == null) {
-                    throw new IllegalArgumentException("playerName is required");
-                }
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
                 final int position;
                 try{
                     position = Integer.parseInt(args.get("position"));
@@ -64,12 +60,12 @@ public class FinishBuildingCommand extends Command {
                     throw new IllegalArgumentException("Could not parse the position. Did you provide an Integer?");
                 }
 
-                return new FinishBuildingCommand(playerName, position);
+                return new FinishBuildingCommand(username, position);
             }
 
             @Override
             public List<String> getArguments() {
-                return List.of("playerName", "position");
+                return List.of("position");
             }
         };
     }

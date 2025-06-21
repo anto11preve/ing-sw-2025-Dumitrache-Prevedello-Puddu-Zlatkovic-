@@ -6,11 +6,13 @@ import java.util.Map;
 public interface CommandConstructor {
     /**
      * Method that creates a new Command based on a map of argName->argValue
-     * @param args the map
+     *
+     * @param username
+     * @param args     the map
      * @return Command
      * @throws IllegalArgumentException if there is something wrong with the arguments
      */
-    Command create(Map<String, String> args) throws IllegalArgumentException;
+    Command create(String username, Map<String, String> args) throws IllegalArgumentException;
 
     /**
      *
