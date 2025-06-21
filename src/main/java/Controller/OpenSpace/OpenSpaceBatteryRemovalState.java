@@ -14,6 +14,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * Represents the state where a player must remove batteries from their ship to confirm
  * the use of double engines during the open space phase.
@@ -120,6 +122,10 @@ public class OpenSpaceBatteryRemovalState extends State {
             controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem" );
     }
 
 }

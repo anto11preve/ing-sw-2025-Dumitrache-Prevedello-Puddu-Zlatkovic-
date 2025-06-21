@@ -7,6 +7,9 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for claiming rewards from adventure cards.
  * Players can choose to claim goods or credits when eligible.
@@ -43,5 +46,35 @@ public class GetRewardCommand extends Command {
      */
     public RewardType getRewardType() {
         return rewardType;
+    }
+
+    public static CommandConstructor getGoodsConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+
+                return new GetRewardCommand(username, RewardType.GOODS);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
+    }
+
+    public static CommandConstructor getCreditsConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+
+                return new GetRewardCommand(username, RewardType.CREDITS);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
     }
 }

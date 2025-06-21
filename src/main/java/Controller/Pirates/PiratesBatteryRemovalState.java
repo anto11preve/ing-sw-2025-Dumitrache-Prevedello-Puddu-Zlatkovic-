@@ -16,6 +16,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.State;
 
+import java.util.List;
+
 /**
  * Represents the state where a player removes batteries to power up weapons
  * during the pirates encounter phase.
@@ -164,5 +166,10 @@ public class PiratesBatteryRemovalState extends State{
             controller.getModel().setError(false);
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem",
+                        "GetReward" );
     }
 }

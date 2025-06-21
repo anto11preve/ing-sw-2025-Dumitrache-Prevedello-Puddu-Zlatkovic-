@@ -6,6 +6,9 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for throwing dice during various game events.
  * Used for determining meteor impacts, combat results, and other random events.
@@ -29,5 +32,20 @@ public class ThrowDicesCommand extends Command {
     @Override
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         controller.throwDices(getPlayerName());
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+
+                return new ThrowDicesCommand(username);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
     }
 }

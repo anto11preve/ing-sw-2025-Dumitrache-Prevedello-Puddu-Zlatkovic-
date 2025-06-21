@@ -10,6 +10,7 @@ import Model.Board.CardDeck;
 import Model.Player;
 import Controller.CardResolverVisitor;
 
+import java.util.List;
 import java.util.Map;
 
 public class FlightPhase extends State {
@@ -55,5 +56,10 @@ public class FlightPhase extends State {
         Player player = controller.getModel().getPlayer(playerName);
         controller.getModel().getFlightBoard().removePlayingPlayer(player);
         controller.getModel().setState(new FlightPhase(controller));
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "PickNextCard",
+                        "LeaveRace");
     }
 }

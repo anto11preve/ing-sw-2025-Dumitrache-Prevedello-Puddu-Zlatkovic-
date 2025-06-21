@@ -7,6 +7,9 @@ import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Direction;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for placing a component on the ship board during building phase.
  * Handles component placement with proper connection validation.
@@ -70,5 +73,37 @@ public class PlaceComponentCommand extends Command {
      */
     public Direction getOrientation() {
         return orientation;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                //TODO: ComponentOrigin origin
+                final int row;
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                final int column;
+                try{
+                    column = Integer.parseInt(args.get("column"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                //TODO: Direction orientation
+
+                return new FinishBuildingCommand(username, ,
+                        new Coordinates(row, column));
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("");
+            }
+        };
     }
 }

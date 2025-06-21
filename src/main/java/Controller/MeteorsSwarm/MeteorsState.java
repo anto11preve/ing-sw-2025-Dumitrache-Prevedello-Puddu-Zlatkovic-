@@ -7,6 +7,7 @@ import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -46,5 +47,11 @@ public class MeteorsState extends State {
         controller.getModel().setState(new ManageMeteorState(context, number));
         controller.getModel().setError(false);
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "ThrowDices"
+        );
     }
 }

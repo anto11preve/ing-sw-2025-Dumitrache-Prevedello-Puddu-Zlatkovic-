@@ -16,6 +16,8 @@ import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 /**
  * Manages the resolution of a cannon shot fired by pirates at a special player during the flight phase.
  *
@@ -218,6 +220,11 @@ public class PiratesManageShotState extends State{
             ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "End",
+                        "UseItem");
     }
 
 }

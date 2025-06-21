@@ -8,6 +8,9 @@ import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for using items like batteries or crew during adventure resolution.
  * Handles activation of shields, double cannons, and crew sacrifices.
@@ -17,8 +20,7 @@ public class UseItemCommand extends Command {
     private final ItemType itemType;
     /** The coordinates where the item is used */
     private final Coordinates coordinates;
-    /** The amount of items to use */
-    private final int amount;
+
     
     /**
      * Constructs a new UseItemCommand.
@@ -29,11 +31,10 @@ public class UseItemCommand extends Command {
      * @param amount the amount of items to use
      */
     public UseItemCommand(String playerName, ItemType itemType,
-                          Coordinates coordinates, int amount) {
+                          Coordinates coordinates) {
         super(playerName);
         this.itemType = itemType;
         this.coordinates = coordinates;
-        this.amount = amount;
     }
     
     /**
@@ -63,13 +64,66 @@ public class UseItemCommand extends Command {
     public Coordinates getCoordinates() {
         return coordinates;
     }
-    
-    /**
-     * Gets the amount.
-     *
-     * @return the amount
-     */
-    public int getAmount() {
-        return amount;
+
+    public static CommandConstructor getBatteriesConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                //TODO: ItemType itemType
+
+                final int row;
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                final int column;
+                try{
+                    column = Integer.parseInt(args.get("column"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                return new UseItemCommand(username, ItemType.BATTERIES,
+                        new Coordinates(row, column));
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("", "row", "column");
+            }
+        };
+    }
+
+    public static CommandConstructor getCrewConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                //TODO: ItemType itemType
+
+                final int row;
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                final int column;
+                try{
+                    column = Integer.parseInt(args.get("column"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                return new UseItemCommand(username, ItemType.CREW,
+                        new Coordinates(row, column));
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("", "row", "column");
+            }
+        };
     }
 }

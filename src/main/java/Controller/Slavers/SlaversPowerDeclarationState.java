@@ -9,6 +9,8 @@ import Controller.State;
 import Model.Enums.Direction;
 import Model.Player;
 
+import java.util.List;
+
 /**
  * This state handles the declaration of cannon power by players during the "Slavers" encounter.
  * Players may attempt to use double cannons and batteries to surpass the slavers' power threshold.
@@ -130,5 +132,9 @@ public class SlaversPowerDeclarationState extends State {
             controller.getModel().setState(new SlaversBatteryRemovalState(context, amount, batteries)); //usa batterie
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "DeclaresDouble" );
     }
 }

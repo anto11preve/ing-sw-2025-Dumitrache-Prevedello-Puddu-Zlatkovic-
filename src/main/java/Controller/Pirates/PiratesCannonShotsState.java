@@ -7,6 +7,7 @@ import Controller.State;
 import Model.Player;
 import Controller.Context;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -63,5 +64,11 @@ public class PiratesCannonShotsState extends State{
         controller.getModel().setState(new PiratesManageShotState(context, number, 0));
         controller.getModel().setError(false);
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "ThrowDices"
+        );
     }
 }

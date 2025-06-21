@@ -12,6 +12,8 @@ import Model.Ship.Coordinates;
 import Controller.Context;
 import Controller.State;
 
+import java.util.List;
+
 public class SecondCombatZone2BatteryRemovalState extends State {
 
     private Context context;
@@ -72,5 +74,9 @@ public class SecondCombatZone2BatteryRemovalState extends State {
             controller.getModel().setState(new SecondCombatZone2BatteryRemovalState(context, amount));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem");
     }
 }

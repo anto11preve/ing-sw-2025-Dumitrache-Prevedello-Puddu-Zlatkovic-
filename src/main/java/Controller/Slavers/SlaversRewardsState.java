@@ -9,6 +9,8 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * This state manages the reward phase during the "Slavers" event, allowing players
  * who successfully surpassed the slavers' power to claim their reward (Credits),
@@ -94,5 +96,9 @@ public class SlaversRewardsState extends State{
             controller.getModel().setState(new FlightPhase(controller));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "GetReward", "SkipReward" );
     }
 }

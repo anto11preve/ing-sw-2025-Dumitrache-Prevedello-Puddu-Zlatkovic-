@@ -192,4 +192,10 @@ public class PlanetsLandState extends State {
         controller.getModel().setState(new FlightPhase(controller));
         controller.getModel().setError(false);
     }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "GetGood",
+                        "MoveGood",
+                        "End");
+    }
 }

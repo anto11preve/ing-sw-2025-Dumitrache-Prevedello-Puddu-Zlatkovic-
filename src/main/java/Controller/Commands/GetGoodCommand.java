@@ -6,6 +6,9 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for getting a specific good and placing it in a cargo hold.
  * Used during cargo collection phases from planets or rewards.
@@ -69,5 +72,47 @@ public class GetGoodCommand extends Command {
      */
     public int getCargoHoldIndex() {
         return cargoHoldIndex;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final int goodIndex;
+                try{
+                    goodIndex = Integer.parseInt(args.get("goodIndex"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the goodIndex. Did you provide an Integer?");
+                }
+
+                final int row;
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                final int column;
+                try{
+                    column = Integer.parseInt(args.get("column"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                final int cargoHoldIndex;
+                try{
+                    cargoHoldIndex = Integer.parseInt(args.get("cargoHoldIndex"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the cargoHoldIndex. Did you provide an Integer?");
+                }
+
+                return new GetGoodCommand(username, goodIndex, new Coordinates(row, column), cargoHoldIndex);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("goodIndex", "row", "column", "cargoHoldIndex");
+            }
+        };
     }
 }

@@ -12,6 +12,8 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 //TODO: cambiare firma
 public class PiratesCheckShipState extends State {
     private Context context;
@@ -64,6 +66,10 @@ public class PiratesCheckShipState extends State {
                 controller.getModel().setError(false);
             }
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "DeleteComponent" );
     }
 
 }

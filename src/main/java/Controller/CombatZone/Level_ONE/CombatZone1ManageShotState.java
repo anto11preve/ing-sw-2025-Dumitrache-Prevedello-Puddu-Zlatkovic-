@@ -16,6 +16,8 @@ import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone1ManageShotState extends State {
     private final Context context;
     private final int number; //TODO: non controlla se il numero è valido o se è out of bounds, occhio perchè getComponent ritorna null se non trova il componente
@@ -173,5 +175,12 @@ public class CombatZone1ManageShotState extends State {
             ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "End",
+            "UseItem"
+        );
     }
 }

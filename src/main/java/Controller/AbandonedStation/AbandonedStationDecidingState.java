@@ -10,6 +10,8 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * Represents the state in which players decide whether to accept or skip the reward
  * from encountering an abandoned station during the flight phase.
@@ -98,5 +100,13 @@ public class AbandonedStationDecidingState extends State {
             controller.getModel().setError(false);
             throw new InvalidContextualAction("The player doesn't have enough crew to take the reward"); //handle the situation where the player doesn't have enough crew)
         }
+    }
+
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "SkipReward",
+            "GetReward"
+        );
     }
 }

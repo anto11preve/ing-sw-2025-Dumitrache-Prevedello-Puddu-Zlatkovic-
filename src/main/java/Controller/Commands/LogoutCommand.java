@@ -5,6 +5,9 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for handling player logout from a game session.
  * Removes the player from the current game.
@@ -29,5 +32,20 @@ public class LogoutCommand extends Command {
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters {
 
         controller.logout(getPlayerName());
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+
+                return new LogoutCommand(username);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
     }
 }

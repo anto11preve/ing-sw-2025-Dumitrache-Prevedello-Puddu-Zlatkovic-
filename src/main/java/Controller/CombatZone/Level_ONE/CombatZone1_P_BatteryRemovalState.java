@@ -13,6 +13,8 @@ import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone1_P_BatteryRemovalState extends State {
     private Context context;
     private double declaredPower;
@@ -95,5 +97,9 @@ public class CombatZone1_P_BatteryRemovalState extends State {
             controller.getModel().setState(new CombatZone1_P_BatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem");
     }
 }

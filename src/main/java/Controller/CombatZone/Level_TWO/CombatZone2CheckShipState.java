@@ -13,6 +13,8 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone2CheckShipState extends State {
     private Context context;
 
@@ -55,5 +57,12 @@ public class CombatZone2CheckShipState extends State {
             controller.getModel().setState(new CombatZone2CheckShipState(context));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "deleteComponent",
+            "useItem"
+        );
     }
 }

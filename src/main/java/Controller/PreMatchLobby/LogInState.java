@@ -6,6 +6,8 @@ import Controller.RealTimeBuilding.BuildingState;
 import Controller.State;
 import Model.Player;
 
+import java.util.List;
+
 public class LogInState extends State {
 
 //    @Override
@@ -88,5 +90,11 @@ public class LogInState extends State {
 
         System.out.println("Game started by admin " + name);
         // You can add more logic here if needed
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "Login",
+                        "Logout",
+                        "StartGame");
     }
 }

@@ -15,6 +15,8 @@ import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 /**
  * Game state that handles the impact of a meteor on a player's spaceship.
  * This state checks if a component of the ship is hit, whether it is protected
@@ -340,5 +342,12 @@ public class ManageMeteorState extends State {
         } else {
             return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o scudi
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "End",
+            "UseItem"
+        );
     }
 }

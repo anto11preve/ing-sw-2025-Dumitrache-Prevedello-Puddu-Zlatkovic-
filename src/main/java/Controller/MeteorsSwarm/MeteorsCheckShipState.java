@@ -13,6 +13,8 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 //TODO: correggere firma
 public class MeteorsCheckShipState extends State {
     private Context context;
@@ -64,5 +66,9 @@ public class MeteorsCheckShipState extends State {
             controller.getModel().setState(new MeteorsCheckShipState(context, number));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "DeleteComponent");
     }
 }

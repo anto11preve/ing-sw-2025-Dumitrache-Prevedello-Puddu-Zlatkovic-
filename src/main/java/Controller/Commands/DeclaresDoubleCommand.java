@@ -7,6 +7,9 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for declaring the use of double components (engines or cannons).
  * Players declare how many double components they want to activate.
@@ -15,7 +18,7 @@ public class DeclaresDoubleCommand extends Command {
     /** The type of double component being declared */
     private final DoubleType doubleType;
     /** The amount of double components to activate */
-    private final int amount;
+    private final double amount;
     
     /**
      * Constructs a new DeclaresDoubleCommand.
@@ -24,7 +27,7 @@ public class DeclaresDoubleCommand extends Command {
      * @param doubleType the type of double component
      * @param amount the amount to declare
      */
-    public DeclaresDoubleCommand(String playerName, DoubleType doubleType, int amount) {
+    public DeclaresDoubleCommand(String playerName, DoubleType doubleType, double amount) {
         super(playerName);
         this.doubleType = doubleType;
         this.amount = amount;
@@ -54,7 +57,49 @@ public class DeclaresDoubleCommand extends Command {
      *
      * @return the amount
      */
-    public int getAmount() {
+    public double getAmount() {
         return amount;
+    }
+
+    public static CommandConstructor getCannonConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final Double amount;
+                try{
+                    amount = Double.parseDouble(args.get("amount"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the amount. Did you provide an Integer?");
+                }
+
+                return new DeclaresDoubleCommand(username, DoubleType.CANNONS ,amount);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("amount");
+            }
+        };
+    }
+
+    public static CommandConstructor getEngineConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final Double amount;
+                try{
+                    amount = Double.parseDouble(args.get("amount"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the amount. Did you provide an Integer?");
+                }
+
+                return new DeclaresDoubleCommand(username, DoubleType.ENGINES, amount);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("amount");
+            }
+        };
     }
 }

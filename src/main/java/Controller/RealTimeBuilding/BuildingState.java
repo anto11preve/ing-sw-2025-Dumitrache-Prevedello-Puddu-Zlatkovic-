@@ -468,6 +468,6 @@ public class BuildingState extends State {
     @Override
     public List<String> getAvailableCommands(){
         /*TODO: add all other commands*/
-        return List.of("FinishBuilding");
+        return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass");
     }
 }

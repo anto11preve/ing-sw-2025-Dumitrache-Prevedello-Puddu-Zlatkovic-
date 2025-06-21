@@ -4,6 +4,9 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for looking at predictable adventure card decks during building phase.
  * Players can preview upcoming adventure cards (Level 2 only).
@@ -40,5 +43,26 @@ public class LookDeckCommand extends Command {
      */
     public int getIndex() {
         return index;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final int index;
+                try{
+                    index = Integer.parseInt(args.get("index"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the index. Did you provide an Integer?");
+                }
+
+                return new LookDeckCommand(username, index);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("index");
+            }
+        };
     }
 }

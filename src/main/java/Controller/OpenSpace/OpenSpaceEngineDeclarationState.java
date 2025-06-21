@@ -8,6 +8,8 @@ import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Player;
 
+import java.util.List;
+
 /**
  * Represents the state in which a player may declare the use of double engines
  * during the open space phase of the game.
@@ -104,5 +106,8 @@ public class OpenSpaceEngineDeclarationState extends State {
         controller.getModel().setError(false);
     }
 
+    public List<String> getAvailableCommands(){
+        return List.of( "DeclaresDouble" );
+    }
 
 }

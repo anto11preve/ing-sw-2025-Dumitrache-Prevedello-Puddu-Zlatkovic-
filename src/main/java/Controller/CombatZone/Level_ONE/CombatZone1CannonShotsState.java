@@ -7,6 +7,7 @@ import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Player;
 
+import java.util.List;
 import java.util.Random;
 
 public class CombatZone1CannonShotsState extends State {
@@ -36,5 +37,11 @@ public class CombatZone1CannonShotsState extends State {
         controller.getModel().setState(new CombatZone1ManageShotState(context, number));
         controller.getModel().setError(false);
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "ThrowDices"
+        );
     }
 }
