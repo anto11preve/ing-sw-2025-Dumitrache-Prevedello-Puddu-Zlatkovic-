@@ -68,7 +68,7 @@ public class PlanetsLandState extends State {
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {   //non è un CargoHold
+        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {   //non è un CargoHold
             controller.getModel().setError(true);
             throw new InvalidParameters("The selected component is not a cargo hold");
         }
@@ -83,6 +83,17 @@ public class PlanetsLandState extends State {
             controller.getModel().setError(true);
             throw new InvalidContextualAction("The planet is not occupied");
         }
+        if(CargoHoldIndex < 0 || CargoHoldIndex >= cargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid cargo hold index");
+        }
+
+
+        if(goodIndex < 0) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid good index");
+        }
+
         Good selectedGood = null;   //da correggere
 
         int corrente = 0;
@@ -153,13 +164,20 @@ public class PlanetsLandState extends State {
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
+        if(oldComponent == null || newComponent == null ||
+                !player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("The selected components are not both a cargo hold");
+            throw new InvalidParameters("Invalid cargo hold coordinates.");
         }
+
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
+        if(oldIndex < 0 || oldIndex >= oldCargoHold.getCapacity() || newIndex < 0 || newIndex >= newCargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid cargo hold index.");
+        }
+
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);

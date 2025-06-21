@@ -31,6 +31,15 @@ public class OpenSpaceEngineDeclarationState extends State {
         this.context = context;
     }
 
+    @Override
+    public void onEnter() {
+        for(Player p : context.getPlayers()) {
+            if (p.getShipBoard().getCondensedShip().getTotalBatteries() == 0 && p.getShipBoard().getCondensedShip().getBaseThrust() == 0) {
+                context.getController().getModel().getFlightBoard().removePlayingPlayer(p);
+            }
+        }
+    }
+
     /**
      * Called when a player declares the use of double components, such as engines.
      * Only double engines are handled in this state.
@@ -96,8 +105,11 @@ public class OpenSpaceEngineDeclarationState extends State {
             throw new InvalidParameters("Not enough double engines to declare this amount");
         }
 
+        if(player.getShipBoard().getCondensedShip().getTotalBatteries() < batteries) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Not enough batteries to declare this amount");
+        }
 
-        //TODO: Se il giocatore ha potenza motrice base 0, lascia la partita
 
 
         controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount, batteries));
