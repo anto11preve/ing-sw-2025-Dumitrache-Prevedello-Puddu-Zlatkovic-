@@ -71,5 +71,23 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
         this.landingPenalty = new DaysPenalty(days);
 
     }
+    @Override
+    public void visualize() {
+        super.visualize();
+
+        System.out.println("Planets:");
+        if (planetList.isEmpty()) {
+            System.out.println("  (no planets)");
+        } else {
+            int idx = 0;
+            for (Planet p : planetList) {
+                idx++;
+                // rely on Planet.toString() to include name and goods
+                System.out.printf("  #%d → %s%n", idx, p);
+            }
+        }
+
+        System.out.println("Landing Penalty: " + landingPenalty);
+    }
 
 }
