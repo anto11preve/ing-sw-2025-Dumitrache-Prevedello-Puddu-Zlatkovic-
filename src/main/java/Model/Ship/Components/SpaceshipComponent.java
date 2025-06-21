@@ -20,6 +20,7 @@ public abstract class SpaceshipComponent {
     private ShipBoard shipBoard;
     private boolean isVisible;
     private String imagePath;
+    private final String backCardImagePath = "src/main/resources/images/Components/";
 
     public SpaceshipComponent(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
         this.type = type;

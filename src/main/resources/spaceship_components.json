@@ -1,16 +1,5 @@
 [
-  {
-    "id": "0",
-    "type": "Empty",
-    "connectors": {
-      "front": "NONE",
-      "rear": "NONE",
-      "left": "NONE",
-      "right": "NONE"
-    },
-    "imagePath": "src/main/resources/pics/tiles/0.png"
-  },
-  {
+    {
     "id": "1",
     "type": "Cabin",
     "connectors": {
@@ -487,8 +476,8 @@
     "connectors": {
       "front": "UNIVERSAL",
       "rear": "NONE",
-      "left": "DOUBLE",
-      "right": "NONE"
+      "left": "NONE",
+      "right": "DOUBLE"
     },
     "isDoubleEngine": false,
     "imagePath": "src/main/resources/pics/tiles/42.png"
@@ -1867,6 +1856,6 @@
       "left": "UNIVERSAL",
       "right": "DOUBLE"
     },
-    "imagePath": "src/main/resources/pics/tiles/149.png"
+    "imagePath": "src/main/resources/pics/tiles/156.png"
   }
 ]
