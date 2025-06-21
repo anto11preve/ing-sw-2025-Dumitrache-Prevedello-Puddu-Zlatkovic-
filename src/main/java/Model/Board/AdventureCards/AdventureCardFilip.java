@@ -3,27 +3,30 @@ package Model.Board.AdventureCards;
 import Controller.CardResolverVisitor;
 import Controller.Controller;
 import Model.Enums.CardLevel;
+import Model.Utils.CardLevelMapper;
 import com.google.gson.JsonObject;
 
 // Classe per la gestione delle carte avventura
 public abstract class AdventureCardFilip {
     private final int id;
     private final CardLevel level;
+    private String imagePath;
 
     public AdventureCardFilip(int id, CardLevel level) {
         this.id = id;
         this.level = level;
     }
-    
-    /**
-     * Constructor for creating an AdventureCardFilip from a JSON object.
-     * This is meant to be used by subclasses.
-     * 
-     * @param json the JSON object containing the card data
-     */
-    public AdventureCardFilip(com.google.gson.JsonObject json) {
-        this.id = json.get("id").getAsInt();
-        this.level = Model.Utils.CardLevelMapper.mapJsonLevelToCardLevel(json.get("level").getAsString());
+
+    public AdventureCardFilip(JsonObject json) {
+        this.id         = json.get("id").getAsInt();
+        this.level      = CardLevelMapper.mapJsonLevelToCardLevel(json.get("level").getAsString());
+        this.imagePath  = json.has("imagePath")
+                ? json.get("imagePath").getAsString()
+                : "";               // or null
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public final int getId() {

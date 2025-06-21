@@ -16,7 +16,6 @@ import com.google.gson.JsonObject;
 public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     private final List<Planet> planetList;
     private final DaysPenalty landingPenalty;
-    private String imagePath;
 
     public Planets(int id, CardLevel level, int days, List<Planet> planetList) {
         super(id, level);
@@ -70,11 +69,7 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
             days = json.getAsJsonObject("landingPenalty").get("value").getAsInt();
         }
         this.landingPenalty = new DaysPenalty(days);
-        this.imagePath = json.get("imagePath").getAsString();
-    }
 
-    public String getImagePath() {
-        return imagePath;
     }
 
 }

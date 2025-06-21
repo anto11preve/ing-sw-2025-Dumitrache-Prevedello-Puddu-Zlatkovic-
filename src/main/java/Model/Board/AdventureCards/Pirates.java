@@ -33,21 +33,39 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
     }
 
     public Pirates(JsonObject json) {
-        super(json, 
-              new CannonShotPenalty(createDefaultCannonShots()),
-              json.has("penalty") && json.getAsJsonObject("penalty").has("days") ? 
-                  json.getAsJsonObject("penalty").get("days").getAsInt() : 1,
-              new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
-                  json.getAsJsonObject("reward").get("credits").getAsInt() : 2)
+        super(
+                json,
+                // build the cannon‐shot list from JSON
+                new CannonShotPenalty(
+                        parseShots(
+                                json.getAsJsonObject("penalty")
+                                        .getAsJsonArray("shots")
+                        )
+                ),
+                // day cost
+                json.getAsJsonObject("penalty").has("days")
+                        ? json.getAsJsonObject("penalty").get("days").getAsInt()
+                        : 1,
+                // credit reward
+                new Credits(
+                        json.getAsJsonObject("reward").has("credits")
+                                ? json.getAsJsonObject("reward").get("credits").getAsInt()
+                                : 2
+                )
         );
     }
 
-    private static List<CannonShot> createDefaultCannonShots() {
-        List<CannonShot> list = new ArrayList<>();
-        // Add a default cannon shot from the front
-        list.add(new CannonShot(false, Side.FRONT));
-        return list;
+    private static List<CannonShot> parseShots(JsonArray arr) {
+        List<CannonShot> shots = new ArrayList<>();
+        for (JsonElement e : arr) {
+            JsonObject o    = e.getAsJsonObject();
+            boolean   large = o.get("isLarge").getAsBoolean();
+            Side      dir   = Side.valueOf(o.get("direction").getAsString());
+            shots.add(new CannonShot(large, dir));
+        }
+        return shots;
     }
+
 
 
 

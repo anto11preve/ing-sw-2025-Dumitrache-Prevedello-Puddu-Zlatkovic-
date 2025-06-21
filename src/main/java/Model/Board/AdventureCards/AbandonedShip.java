@@ -10,7 +10,6 @@ public class AbandonedShip extends AdventureCardFilip {
     private final CrewPenalty winPenalty;
     private final Credits landingReward;
     private final DaysPenalty landingPenalty;
-    private String imagePath;
 
     public AbandonedShip(int id, CardLevel level, int crew, int credits, int days) {
         super(id, level);
@@ -73,10 +72,5 @@ public class AbandonedShip extends AdventureCardFilip {
         this.winPenalty = new CrewPenalty(crew);
         this.landingReward = new Credits(credits);
         this.landingPenalty = new DaysPenalty(days);
-        this.imagePath = json.get("imagePath").getAsString();
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 }

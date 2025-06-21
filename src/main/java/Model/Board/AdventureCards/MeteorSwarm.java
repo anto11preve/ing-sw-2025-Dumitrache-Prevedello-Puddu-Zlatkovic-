@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 
 public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> {
     private final List<Meteor> meteors;
-    private String imagePath;
 
     public MeteorSwarm(int id, CardLevel level, List<Meteor> meteors) {
         super(id, level);
@@ -43,17 +42,12 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
     public MeteorSwarm(JsonObject json) {
         super(json);
         this.meteors = new ArrayList<>();
-
-        for (JsonElement elem : json.getAsJsonArray("meteors")) {
-            JsonObject m = elem.getAsJsonObject();
-            boolean isLarge = m.get("large").getAsBoolean();
-            Side dir       = Side.valueOf(m.get("direction").getAsString());
-            meteors.add(new Meteor(isLarge, dir));
+        for (JsonElement e : json.getAsJsonArray("meteors")) {
+            JsonObject m = e.getAsJsonObject();
+            boolean large = m.get("large").getAsBoolean();
+            Side dir     = Side.valueOf(m.get("direction").getAsString().toUpperCase());
+            this.meteors.add(new Meteor(large, dir));
         }
-        this.imagePath = json.get("imagePath").getAsString();
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
 }

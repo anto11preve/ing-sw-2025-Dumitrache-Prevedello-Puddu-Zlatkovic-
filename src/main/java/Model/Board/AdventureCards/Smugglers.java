@@ -6,7 +6,6 @@ import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
 
 public class Smugglers extends Enemy<GoodsPenalty, Credits> {
-    private String imagePath;
 
     public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, int credits) {
         super(id, level, power, new GoodsPenalty(lostGoods), days, new Credits(credits));
@@ -31,10 +30,6 @@ public class Smugglers extends Enemy<GoodsPenalty, Credits> {
               new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
                   json.getAsJsonObject("reward").get("credits").getAsInt() : 3)
         );
-        this.imagePath = json.get("imagePath").getAsString();
-    }
 
-    public String getImagePath() {
-        return imagePath;
     }
 }

@@ -4,7 +4,6 @@ import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
 
 public class OpenSpace extends AdventureCardFilip {
-    private String imagePath;
 
     public OpenSpace(int id, CardLevel level) {
         super(id, level);
@@ -22,11 +21,6 @@ public class OpenSpace extends AdventureCardFilip {
 
     public OpenSpace(JsonObject json) {
         super(json);
-        this.imagePath = json.get("imagePath").getAsString();
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 
 }
