@@ -144,10 +144,18 @@ public class FlightBoard {
         return upcomingCardDeck;
     }
 
+    /**
+     * Sets the upcoming card deck by combining all peekable card decks
+     * and the hidden card deck, shuffling them, and clearing the
+     * peekable card decks and the hidden card deck.
+     *
+     * @return true if the upcoming card deck was successfully set,
+     *         false if the timer is not in the last phase with no time left
+     */
     public boolean setUpcomingCardDeck() {
-        if (timer == null || !(timer.getPhase() == Timer.Phase.LAST_PHASE && timer.getTimeLeft() == 0.0f)) {
-            return false;
-        }
+//        if (timer == null || !(timer.getPhase() == Timer.Phase.LAST_PHASE && timer.getTimeLeft() == 0.0f)) {
+//            return false;
+//        }
         List<AdventureCardFilip> cards = new ArrayList<>();
         upcomingCardDeck = new CardDeck();
         // Aggiungi le carte dei peekableCardDecks
@@ -161,6 +169,8 @@ public class FlightBoard {
         while (!hiddenCardDeck.peekCards().isEmpty()) {
             upcomingCardDeck.pushCard(hiddenCardDeck.popCard());
         }
+
+        upcomingCardDeck.shuffleDeck();
 
         peekableCardDecks = null;
         hiddenCardDeck = null;
@@ -327,6 +337,5 @@ public class FlightBoard {
     public List<Player> getFinishedFlightPlayers() {
         return ffPlayers;
     }
-
 
 }

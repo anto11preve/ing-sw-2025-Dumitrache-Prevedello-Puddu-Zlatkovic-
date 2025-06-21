@@ -91,7 +91,7 @@ public class AbandonedStationDecidingState extends State {
 
         if(player.getShipBoard().getCondensedShip().getTotalCrew() >= context.getCrewmates()){
             player.deltaCredits(context.getCredits());
-            controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
+            controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());
             controller.getModel().setState(new AbandonedStationLandState(context));
             controller.getModel().setError(false);
         } else {

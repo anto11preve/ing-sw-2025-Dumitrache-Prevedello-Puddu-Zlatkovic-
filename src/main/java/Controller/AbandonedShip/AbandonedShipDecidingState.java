@@ -91,7 +91,7 @@ public class AbandonedShipDecidingState extends State {
 
         player.deltaCredits(context.getCredits());
 
-        controller.getModel().getFlightBoard().deltaFlightDays(player, context.getDaysLost());
+        controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());
 
         controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
         controller.getModel().setError(false);

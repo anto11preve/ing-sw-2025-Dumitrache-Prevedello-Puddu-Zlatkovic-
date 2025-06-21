@@ -19,12 +19,28 @@ public class ShieldCounter {
     public void setNorthShields(int northShields) {
         this.northShields = northShields;
     }
+    public void incrementNorthShields() {this.northShields++;}
+    public void decrementNorthShields() {
+        if(this.northShields > 0){
+            this.northShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement north shields below zero.");
+        }
+    }
 
     public int getEastShields() {
         return eastShields;
     }
     public void setEastShields(int eastShields) {
         this.eastShields = eastShields;
+    }
+    public void incrementEastShields() {this.eastShields++;}
+    public void decrementEastShields() {
+        if(this.eastShields > 0){
+            this.eastShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement double engines below zero.");
+        }
     }
 
     public int getSouthShields() {
@@ -33,11 +49,27 @@ public class ShieldCounter {
     public void setSouthShields(int southShields) {
         this.southShields = southShields;
     }
+    public void incrementSouthShields() {this.southShields++;}
+    public void decrementSouthShields() {
+        if(this.southShields > 0){
+            this.southShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement south shields below zero.");
+        }
+    }
 
     public int getWestShields() {
         return westShields;
     }
     public void setWestShields(int westShields) {
         this.westShields = westShields;
+    }
+    public void incrementWestShields() {this.westShields++;}
+    public void decrementWestShields() {
+        if(this.westShields > 0){
+            this.westShields--;
+        }else{
+            throw new IllegalArgumentException("Cannot decrement west shields below zero.");
+        }
     }
 }

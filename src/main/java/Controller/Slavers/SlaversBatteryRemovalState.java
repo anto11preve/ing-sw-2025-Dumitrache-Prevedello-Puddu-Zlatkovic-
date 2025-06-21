@@ -24,23 +24,23 @@ public class SlaversBatteryRemovalState extends State{
     /**
      * The declared power of the player.
      */
-    private int declaredPower;
+    private double declaredPower;
     /**
      * The actual power of the player.
      */
-    private int actualPower;
+    private int batteries;
 
     /**
      * Constructor to initialize the state with the current game context and power values.
      *
      * @param context       the shared game context
      * @param declaredPower the declared power of the player
-     * @param actualPower   the actual power of the player
+     * @param batteries     the number of batteries the player has to remove
      */
-    public SlaversBatteryRemovalState(Context context, int declaredPower, int actualPower) {
+    public SlaversBatteryRemovalState(Context context, double declaredPower, int batteries) {
         this.context = context;
         this.declaredPower = declaredPower;
-        this.actualPower = actualPower;
+        this.batteries = batteries;
     }
 
     /**
@@ -75,6 +75,11 @@ public class SlaversBatteryRemovalState extends State{
             throw new InvalidParameters("Coordinates are null");
         }
 
+        if(batteries <= 0){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("No batteries to remove");
+        }
+
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
@@ -89,12 +94,11 @@ public class SlaversBatteryRemovalState extends State{
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
-        declaredPower--;
-        actualPower++;
-        if(declaredPower == 0){
-            if(actualPower > context.getPower()){
+        batteries--;
+        if(batteries == 0){
+            if(declaredPower > context.getPower()){
                 controller.getModel().setState(new SlaversRewardsState(context));
-            } else if(actualPower == context.getPower()){
+            } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
@@ -120,7 +124,7 @@ public class SlaversBatteryRemovalState extends State{
 
         }
         else{       //rimuovi altra batteria
-            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, actualPower));
+            controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, batteries));
             controller.getModel().setError(false);
         }
     }
@@ -149,7 +153,7 @@ public class SlaversBatteryRemovalState extends State{
             throw new InvalidParameters("It's not your turn");
         }
 
-        if(actualPower > context.getPower() && declaredPower == 0){
+        if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new SlaversRewardsState(context));
             controller.getModel().setError(false);
         }

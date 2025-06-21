@@ -19,31 +19,6 @@ public class AlienCounter {
         this.purpleAlien = false;
     }
 
-    /**
-     * Counts the number of alien crew members on the ship.
-     * Also updates internal flags for brown and purple alien presence.
-     *
-     * @param components list of all components on the ship
-     * @return total number of alien crew
-     */
-    public int count(List<SpaceshipComponent> components) {
-        int alienCount = 0;
-
-        for (SpaceshipComponent c : components) {
-            if (c instanceof Cabin cabin && cabin.hasAlien()) {
-                alienCount += 2;
-
-                if ("brown".equalsIgnoreCase(cabin.getAlienType())) {
-                    this.brownAlien = true;
-                } else if ("purple".equalsIgnoreCase(cabin.getAlienType())) {
-                    this.purpleAlien = true;
-                }
-            }
-        }
-
-        return alienCount;
-    }
-
     public boolean hasBrownAlien() {
         return brownAlien;
     }

@@ -193,7 +193,7 @@ public class CondensedShipTest {
                                 ConnectorType.UNIVERSAL, 
                                 ConnectorType.UNIVERSAL,
                                 Crewmates.EMPTY);
-        cabin1.setCanContainPurple(true);
+        cabin1.setCanContainPurple(1);
         ship.addCabin(cabin1);
         
         // Add a cabin that can contain brown aliens
@@ -203,7 +203,7 @@ public class CondensedShipTest {
                                 ConnectorType.UNIVERSAL, 
                                 ConnectorType.UNIVERSAL,
                                 Crewmates.EMPTY);
-        cabin2.setCanContainBrown(true);
+        cabin2.setCanContainBrown(1);
         ship.addCabin(cabin2);
         
         // Ship should be able to contain both types of aliens

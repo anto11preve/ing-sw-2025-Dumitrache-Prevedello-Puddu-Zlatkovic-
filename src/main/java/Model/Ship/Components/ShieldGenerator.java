@@ -11,19 +11,11 @@ import com.google.gson.JsonObject;
  */
 public class ShieldGenerator extends SpaceshipComponent {
 
-    private Direction direction; // The direction this shield protects (e.g., FRONT, LEFT)
-
     /**
      * Constructor with explicit parameters.
      */
     public ShieldGenerator(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Direction direction) {
         super(type, front, rear, left, right);
-        this.direction = direction;
-    }
-
-    @Override
-    public boolean blocks(Direction incoming) {
-        return this.getDirection() == incoming;
     }
 
 
@@ -39,21 +31,51 @@ public class ShieldGenerator extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
-
-    }
-    /**
-     * Returns the direction the shield is facing.
-     * @return the shield's Direction
-     */
-    public Direction getDirection() {
-        return direction;
     }
 
-    /**
-     * Sets the direction the shield is facing.
-     * @param direction the new Direction
-     */
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+
+
+    @Override
+    public void added(){
+        switch(orientation) {
+            case UP:
+                getShipBoard().getCondensedShip().getShields().incrementNorthShields();
+                getShipBoard().getCondensedShip().getShields().incrementEastShields();
+                break;
+            case RIGHT:
+                getShipBoard().getCondensedShip().getShields().incrementSouthShields();
+                getShipBoard().getCondensedShip().getShields().incrementEastShields();
+                break;
+            case DOWN:
+                getShipBoard().getCondensedShip().getShields().incrementSouthShields();
+                getShipBoard().getCondensedShip().getShields().incrementWestShields();
+                break;
+            case LEFT:
+                getShipBoard().getCondensedShip().getShields().incrementNorthShields();
+                getShipBoard().getCondensedShip().getShields().incrementWestShields();
+                break;
+        }
+    }
+
+    @Override
+    public void removed() {
+        switch(orientation) {
+            case UP:
+                getShipBoard().getCondensedShip().getShields().decrementNorthShields();
+                getShipBoard().getCondensedShip().getShields().decrementEastShields();
+                break;
+            case RIGHT:
+                getShipBoard().getCondensedShip().getShields().decrementSouthShields();
+                getShipBoard().getCondensedShip().getShields().decrementEastShields();
+                break;
+            case DOWN:
+                getShipBoard().getCondensedShip().getShields().decrementSouthShields();
+                getShipBoard().getCondensedShip().getShields().decrementWestShields();
+                break;
+            case LEFT:
+                getShipBoard().getCondensedShip().getShields().decrementNorthShields();
+                getShipBoard().getCondensedShip().getShields().decrementWestShields();
+                break;
+        }
     }
 }

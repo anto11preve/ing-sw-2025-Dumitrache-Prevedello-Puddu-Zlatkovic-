@@ -51,20 +51,20 @@ public class AbandonedShip extends AdventureCardFilip {
         int crew = 1;
         int credits = 0;
         int days = 0;
-        
+
         // Parse from JSON if available
         if (json.has("crewRequired")) {
             crew = json.get("crewRequired").getAsInt();
         }
-        
+
         if (json.has("reward") && json.getAsJsonObject("reward").has("crew")) {
             crew = json.getAsJsonObject("reward").get("crew").getAsInt();
         }
-        
+
         if (json.has("reward") && json.getAsJsonObject("reward").has("credits")) {
             credits = json.getAsJsonObject("reward").get("credits").getAsInt();
         }
-        
+
         if (json.has("days")) {
             days = json.get("days").getAsInt();
         }
@@ -73,4 +73,5 @@ public class AbandonedShip extends AdventureCardFilip {
         this.landingReward = new Credits(credits);
         this.landingPenalty = new DaysPenalty(days);
     }
+
 }
