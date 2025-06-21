@@ -53,7 +53,7 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
         // Create a default combat zone line
         if (json.has("power")) {
             int power = json.get("power").getAsInt();
-            Criteria criteria = Criteria.CANNON_POWER;
+            Criteria criteria = Criteria.FIRE_POWER;
             
             Penalty penalty;
             if (json.has("penalty") && json.getAsJsonObject("penalty").has("days")) {

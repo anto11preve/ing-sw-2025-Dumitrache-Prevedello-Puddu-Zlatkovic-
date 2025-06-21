@@ -47,7 +47,7 @@ public class SlaversPowerDeclarationState extends State {
      * @param amount     the number of double cannons declared
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, int amount) throws InvalidContextualAction, InvalidParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
             controller.getModel().setError(true);

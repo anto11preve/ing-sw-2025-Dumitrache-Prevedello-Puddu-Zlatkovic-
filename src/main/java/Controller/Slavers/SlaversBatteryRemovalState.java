@@ -153,7 +153,7 @@ public class SlaversBatteryRemovalState extends State{
             throw new InvalidParameters("It's not your turn");
         }
 
-        if(actualPower > context.getPower() && declaredPower == 0){
+        if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new SlaversRewardsState(context));
             controller.getModel().setError(false);
         }

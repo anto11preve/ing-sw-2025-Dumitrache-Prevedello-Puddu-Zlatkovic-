@@ -30,4 +30,12 @@ public class StructuralModule extends SpaceshipComponent {
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
         );
     }
+
+    public void added(){
+
+    }
+
+    public void removed(){
+
+    }
 }
