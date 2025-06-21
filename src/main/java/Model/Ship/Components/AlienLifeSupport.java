@@ -51,6 +51,15 @@ public class AlienLifeSupport extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addAlienSupport(this);
         }
+        for(Cabin cabin : getShipBoard().getCondensedShip().getCabins()) {
+            if(getShipBoard().areComponentsConnected(this, cabin)) {
+                if(this.getColor() == AlienColor.BROWN){
+                    cabin.incrementCanContainBrown();
+                } else if(this.getColor() == AlienColor.PURPLE) {
+                    cabin.incrementCanContainPurple();
+                }
+            }
+        }
     }
 
     @Override
@@ -59,6 +68,15 @@ public class AlienLifeSupport extends SpaceshipComponent {
             throw new RuntimeException("Alien Support not found in the ship.");
         } else {
             getShipBoard().getCondensedShip().removeAlienSupport(this);
+        }
+        for(Cabin cabin : getShipBoard().getCondensedShip().getCabins()) {
+            if(getShipBoard().areComponentsConnected(this, cabin)) {
+                if(this.getColor() == AlienColor.BROWN){
+                    cabin.decrementCanContainBrown();
+                } else if(this.getColor() == AlienColor.PURPLE) {
+                    cabin.decrementCanContainPurple();
+                }
+            }
         }
 
     }
