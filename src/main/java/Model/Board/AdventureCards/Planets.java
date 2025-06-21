@@ -74,8 +74,10 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
 
     @Override
     public void visualize() {
+        // 1) print the shared header
         super.visualize();
 
+        // 2) print each planet from your in-memory list
         System.out.println("Planets:");
         if (planetList.isEmpty()) {
             System.out.println("  (no planets)");
@@ -85,19 +87,19 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                 idx++;
                 System.out.printf("  #%d → %s%n", idx, p.getName());
 
-                // --- Reflection to access private List<Good> goods ---
+                // reflection to read the private `goods` field
                 List<Good> goods;
                 try {
-                    java.lang.reflect.Field f = p.getClass().getDeclaredField("goods");
+                    java.lang.reflect.Field f =
+                            Planet.class.getDeclaredField("goods");
                     f.setAccessible(true);
                     //noinspection unchecked
                     goods = (List<Good>) f.get(p);
                 } catch (Exception e) {
-                    // fallback if reflection fails
-                    goods = List.of();
+                    goods = List.of();  // fallback if something goes wrong
                 }
 
-                // Build the goods line with plain String concatenation
+                // build a space-separated string of goods
                 String goodsLine = "";
                 for (Good g : goods) {
                     goodsLine += g + " ";
@@ -107,16 +109,19 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                 if (goods.isEmpty()) {
                     System.out.println("      Goods: (no goods)");
                 } else {
-                    System.out.println("      Goods: " + goodsLine);
+                    System.out.println("      Goods: " + goodsLine +
+                            " (" + goods.size() + " total)");
                 }
             }
         }
 
-        System.out.println("Landing Penalty: " + landingPenalty);
+        // 3) landing penalty and its type
+        System.out.printf(
+                "Landing Penalty:     %s (type: %s)%n",
+                landingPenalty,
+                landingPenalty.getClass().getSimpleName()
+        );
     }
-
-
-
 
 
 }

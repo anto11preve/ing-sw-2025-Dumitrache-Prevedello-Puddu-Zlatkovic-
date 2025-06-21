@@ -123,7 +123,11 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
                     pen instanceof CrewPenalty ||
                     pen instanceof GoodsPenalty) {
 
-                System.out.printf("      Penalty: %s%n", pen);
+                System.out.printf(
+                        "      Penalty: %s (type: %s)%n",
+                        pen,
+                        pen.getClass().getSimpleName()
+                );
 
             }
             // CannonShotPenalty: iterable of CannonShot
