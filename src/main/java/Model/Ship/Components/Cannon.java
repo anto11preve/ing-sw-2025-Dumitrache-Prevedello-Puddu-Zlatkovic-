@@ -38,6 +38,14 @@ public class Cannon extends SpaceshipComponent {
         this.hasAlien = false;
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Cannon Orientation: " + orientation);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
+
 //    public void setOrientation(Direction dir) {
 //        this.orientation = dir;
 //    }

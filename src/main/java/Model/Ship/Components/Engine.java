@@ -39,6 +39,14 @@ public class Engine extends SpaceshipComponent {
         this.baseEnginePower = isDouble ? 2 : 1;
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Engine is Double: " + isDouble);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
+
     public boolean isDoubleEngine() {
         return isDouble;
     }

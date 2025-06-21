@@ -33,7 +33,13 @@ public class ShieldGenerator extends SpaceshipComponent {
         );
     }
 
-
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Shield Generator Orientation: " + orientation);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
 
     @Override
     public void added(){

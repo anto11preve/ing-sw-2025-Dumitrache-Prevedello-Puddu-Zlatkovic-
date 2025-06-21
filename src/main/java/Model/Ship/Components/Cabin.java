@@ -48,6 +48,15 @@ public class Cabin extends SpaceshipComponent {
         this.canContainPurple = 0;
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Occupants: " + occupants);
+        System.out.println("Can Contain Brown: " + canContainBrown);
+        System.out.println("Can Contain Purple: " + canContainPurple);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
     public boolean getCanContainBrown() {
         return canContainBrown>0;
     }

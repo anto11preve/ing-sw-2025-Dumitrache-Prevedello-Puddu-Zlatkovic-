@@ -43,6 +43,14 @@ public class CargoHold extends SpaceshipComponent {
         this.goods = new Good[this.capacity];
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Cargo Hold Capacity: " + capacity);
+        System.out.println("Cargo Hold Special: " + isSpecial);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
 
     public int getCapacity() {
         return capacity;

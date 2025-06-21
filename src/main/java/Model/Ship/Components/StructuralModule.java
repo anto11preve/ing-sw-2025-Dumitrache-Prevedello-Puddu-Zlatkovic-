@@ -31,6 +31,14 @@ public class StructuralModule extends SpaceshipComponent {
         );
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Structural Module Orientation: " + orientation);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
+
     public void added(){
 
     }
