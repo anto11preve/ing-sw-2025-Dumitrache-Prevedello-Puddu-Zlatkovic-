@@ -42,6 +42,7 @@ public class Cannon extends SpaceshipComponent {
     public void visualize() {
         super.visualize();
         System.out.println("Cannon Orientation: " + orientation);
+        System.out.println("Cannon is Double: " + isDouble);
         System.out.println("==========================");
         System.out.printf("\n\n\n\n");
     }
