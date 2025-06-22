@@ -60,8 +60,11 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         List<CannonShot> shots = new ArrayList<>();
         for (JsonElement e : arr) {
             JsonObject o    = e.getAsJsonObject();
+            if(!o.has("isLarge") || !o.has("direction")) {
+                throw new IllegalArgumentException("Invalid cannon shot data: at id ");
+            }
             boolean   large = o.get("isLarge").getAsBoolean();
-            Side      dir   = Side.valueOf(o.get("direction").getAsString());
+            Side      dir   = Side.valueOf(o.get("direction").getAsString().toUpperCase());
             shots.add(new CannonShot(large, dir));
         }
         return shots;

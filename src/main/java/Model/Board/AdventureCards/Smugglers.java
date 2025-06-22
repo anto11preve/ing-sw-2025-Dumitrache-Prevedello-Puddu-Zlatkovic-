@@ -44,7 +44,8 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         );
 
         // 2) Now populate rewardGoods from JSON
-        rewardGoods.clear();
+        //rewardGoods.clear();
+        rewardGoods = new ArrayList<>();
         if (json.has("rewardGoods")) {
             for (JsonElement e : json.getAsJsonArray("rewardGoods")) {
                 rewardGoods.add(

@@ -31,6 +31,9 @@ public class Game {
 
     public static void main(String[] args) {
 
+        Game testGame = new Game(MatchLevel.TRIAL);
+        Game testGame2 = new Game(MatchLevel.LEVEL2);
+
         SpaceshipComponent[] tiless = ComponentLoader.loadComponents();
 
         for (SpaceshipComponent tile : tiless) {
