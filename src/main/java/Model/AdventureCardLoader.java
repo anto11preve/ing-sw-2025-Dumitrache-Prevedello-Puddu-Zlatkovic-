@@ -85,7 +85,7 @@ public class AdventureCardLoader {
      * @param level the difficulty level of the match
      * @return list of cards for the selected level
      */
-    public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level) {
+    public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level, boolean shuffle) {
         //if (testCards != null) return testCards;
         
         List<AdventureCardFilip> allCards = loadCards();
@@ -111,7 +111,10 @@ public class AdventureCardLoader {
                 List<AdventureCardFilip> combined = new ArrayList<>();
                 combined.addAll(level1Cards);
                 combined.addAll(level2Cards);
-                //Collections.shuffle(combined); //TODO: riaggiungere lo shuffle
+
+                if (shuffle) {
+                    Collections.shuffle(combined);
+                }
                 yield combined;
             }
         };

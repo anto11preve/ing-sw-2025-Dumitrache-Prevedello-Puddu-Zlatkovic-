@@ -8,8 +8,10 @@ import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
 import Model.ComponentLoader;
 import Controller.State;
+import Model.Enums.ConnectorType;
 import Model.Enums.Side;
 import Model.Ship.Components.Cabin;
+import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 
 import java.util.ArrayList;
@@ -31,14 +33,37 @@ public class Game {
 
     public static void main(String[] args) {
 
-        Game testGame = new Game(MatchLevel.TRIAL);
-        Game testGame2 = new Game(MatchLevel.LEVEL2);
+        //Game testGame = new Game(MatchLevel.TRIAL);
+        //Game testGame2 = new Game(MatchLevel.LEVEL2);
 
-        SpaceshipComponent[] tiless = ComponentLoader.loadComponents();
+        SpaceshipComponent[] tiless1 = ComponentLoader.loadComponents(false);
 
-        for (SpaceshipComponent tile : tiless) {
-            tile.visualize();
+        //facciamo un po' di modifiche all'array e ai componenti per vedere se si riflettono in tiless2
+        tiless1[0] = null;
+        tiless1[1] = new Cannon(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, true);
+        Cabin cabinatest=(Cabin) tiless1[2];
+        cabinatest.setVisible();
+
+
+
+        SpaceshipComponent[] tiless2 = ComponentLoader.loadComponents(false);
+
+        //facciamo display delle cose che abbiamo modificato
+
+        for(int i=0; i<3; i++){
+            System.out.printf("\n\n\n");
+            System.out.println("==========================");
+            System.out.println("Tile " + i + ": ");
+            if(tiless1[i]!=null){tiless1[i].visualize();}else{
+                System.out.println("null");
+            }
+            if(tiless2[i]!=null){tiless2[i].visualize();}else{
+                System.out.println("null");
+            }
+            System.out.println("==========================");
         }
+
+
 
     }
 
@@ -54,9 +79,9 @@ public class Game {
 
         this.players = new ArrayList<>();
         this.level = level;
-        this.tiles = ComponentLoader.loadComponents();
+        this.tiles = ComponentLoader.loadComponents(true);
 
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level);
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level, true); //TODO: rimettere a true in game
         if (cards == null || cards.isEmpty()) {
             throw new IllegalStateException("Failed to load adventure cards");
         }
