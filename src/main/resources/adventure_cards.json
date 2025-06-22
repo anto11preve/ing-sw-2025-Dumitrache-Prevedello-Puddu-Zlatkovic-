@@ -61,7 +61,7 @@
     "level":    "LEARNER",
     "lines": [
       {
-        "criteria": "CREW_ON_BOARD",
+        "criteria": "MAN_POWER",
         "penalty":  { "type": "DaysPenalty", "value": 3 }
       },
       {
@@ -485,7 +485,7 @@
         "penalty":  {"type":  "GoodsPenalty", "value": 3}
       },
       {
-        "criteria": "CREW_ON_BOARD",
+        "criteria": "MAN_POWER",
         "penalty": {
           "shots": [
             {
@@ -623,7 +623,7 @@
     "level":    "LEVEL_ONE",
     "lines": [
       {
-        "criteria": "CREW_ON_BOARD",
+        "criteria": "MAN_POWER",
         "penalty":  { "type": "DaysPenalty", "value": 3 }
       },
       {
