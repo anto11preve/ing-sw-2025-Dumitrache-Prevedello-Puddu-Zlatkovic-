@@ -32,6 +32,8 @@ public class Game {
     private boolean error = false;
 
 
+
+
     public static void main(String[] args) {
 
         //Game testGame = new Game(MatchLevel.TRIAL);
@@ -62,6 +64,14 @@ public class Game {
                 System.out.println("null");
             }
             System.out.println("==========================");
+        }
+
+        for(SpaceshipComponent s: tiless2){
+            if(s!=null){
+                s.visualize();
+            }else{
+                System.out.println("null");
+            }
         }
 
 
