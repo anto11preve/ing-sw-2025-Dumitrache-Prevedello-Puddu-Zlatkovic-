@@ -49,7 +49,7 @@
     "id":               "5",
     "type":             "Smugglers",
     "level":            "LEARNER",
-    "enemyStrength":    4,
+    "power":    4,
     "stealGoodsOnLoss": 2,
     "rewardGoods":    ["YELLOW","GREEN","BLUE"],
     "dayCost":          1,
@@ -69,7 +69,7 @@
         "penalty":  { "type": "CrewPenalty", "value": 2 }
       },
       {
-        "criteria": "CANNON_POWER",
+        "criteria": "FIRE_POWER",
         "penalty": {
           "shots": [
             {
@@ -477,7 +477,7 @@
     "level":    "LEVEL_TWO",
     "lines": [
       {
-        "criteria": "CANNON_POWER",
+        "criteria": "FIRE_POWER",
         "penalty":  { "type": "DaysPenalty", "value": 4 }
       },
       {
@@ -512,11 +512,8 @@
   },
   {
     "id":       "37",
-    "type":     "EPIDEMIC",
+    "type":     "Epidemic",
     "level":    "LEVEL_TWO",
-    "penalty": {
-      "crewLoss": 2
-    },
     "imagePath":"src/main/resources/pics/cards/37.jpg"
   },
   {
@@ -555,7 +552,7 @@
     "id":               "40",
     "type":             "Smugglers",
     "level":            "LEVEL_TWO",
-    "enemyStrength":    8,
+    "power":    8,
     "stealGoodsOnLoss": 3,
     "rewardGoods":    ["RED","YELLOW","YELLOW"],
     "dayCost":          1,
@@ -611,7 +608,7 @@
     "id":               "45",
     "type":             "Smugglers",
     "level":            "LEVEL_ONE",
-    "enemyStrength":    4,
+    "power":    4,
     "stealGoodsOnLoss": 2,
     "rewardGoods":    ["YELLOW","GREEN","BLUE"],
     "dayCost":          1,
@@ -631,7 +628,7 @@
         "penalty":  { "type": "CrewPenalty", "value": 2 }
       },
       {
-        "criteria": "CANNON_POWER",
+        "criteria": "FIRE_POWER",
         "penalty": {
           "shots": [
             {

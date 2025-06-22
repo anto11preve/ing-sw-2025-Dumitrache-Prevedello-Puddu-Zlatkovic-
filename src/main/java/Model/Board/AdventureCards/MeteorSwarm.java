@@ -42,9 +42,22 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
     public MeteorSwarm(JsonObject json) {
         super(json);
         this.meteors = new ArrayList<>();
+
+        if(!json.has("meteors")) {
+            throw new IllegalArgumentException("JSON does not contain 'meteors' array at id " + getId());
+        }
+
         for (JsonElement e : json.getAsJsonArray("meteors")) {
             JsonObject m = e.getAsJsonObject();
+
+            if(!m.has("large")){
+                throw new IllegalArgumentException("Meteor JSON object does not contain 'large' field at id " + getId());
+            }
             boolean large = m.get("large").getAsBoolean();
+
+            if(!m.has("direction")){
+                throw new IllegalArgumentException("Meteor JSON object does not contain 'direction' field at id " + getId());
+            }
             Side dir     = Side.valueOf(m.get("direction").getAsString().toUpperCase());
             this.meteors.add(new Meteor(large, dir));
         }

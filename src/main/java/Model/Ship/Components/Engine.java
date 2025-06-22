@@ -16,27 +16,29 @@ import java.util.List;
 public class Engine extends SpaceshipComponent {
 
     private final boolean isDouble;
-    private final int baseEnginePower;
     //private boolean hasAlien;
 
     public Engine(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
         this.isDouble = isDouble;
-        this.baseEnginePower = isDouble ? 2 : 1; //TODO: serve?
-        //this.hasAlien = false;
     }
 
     public Engine(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.isDouble = json.has("isDoubleEngine") && json.get("isDoubleEngine").getAsBoolean();
-        this.baseEnginePower = isDouble ? 2 : 1;
+        if (json.has("isDoubleEngine")) {
+            this.isDouble = json.has("isDoubleEngine") && json.get("isDoubleEngine").getAsBoolean();
+        }else {
+            throw new RuntimeException("Missing isDoubleEngine in Engine JSON configuration at " +
+                    json.get("imagePath").getAsString());
+        }
     }
 
     @Override
@@ -51,12 +53,7 @@ public class Engine extends SpaceshipComponent {
         return isDouble;
     }
 
-    /**
-     * Returns the base engine power (without alien bonus).
-     */
-    public int getEnginePower() {
-        return baseEnginePower;
-    }
+
 
 
 

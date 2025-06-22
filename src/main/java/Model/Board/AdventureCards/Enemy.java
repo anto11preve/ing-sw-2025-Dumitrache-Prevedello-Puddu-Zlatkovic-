@@ -36,6 +36,11 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
      */
     protected Enemy(JsonObject json, P lossPenalty, int days, R winReward) {
         super(json);
+
+        if(!json.has("power")) {
+            throw new IllegalArgumentException("JSON must contain 'power' field for ID: " + getId());
+        }
+
         this.power = json.get("power").getAsInt();
         this.lossPenalty = lossPenalty;
         this.winPenalty = new DaysPenalty(days);

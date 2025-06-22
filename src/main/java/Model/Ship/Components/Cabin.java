@@ -17,8 +17,6 @@ public class Cabin extends SpaceshipComponent {
     private int canContainPurple;  // True if the cabin can host purple aliens
 
     // New fields to support aliens actually present in the cabin
-    private boolean hasAlien = false; //TODO: serve?
-    private String alienType = null; // "brown" or "purple" TODO: serve?
 
     /**
      * Standard constructor for Cabin with explicit parameters.
@@ -34,11 +32,12 @@ public class Cabin extends SpaceshipComponent {
      */
     public Cabin(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
         this.occupants = Crewmates.EMPTY; // No crew by default when loading from JSON
@@ -86,8 +85,6 @@ public class Cabin extends SpaceshipComponent {
             if(this.occupants==Crewmates.BROWN_ALIEN) {
 
                 if (this.canContainBrown == 0) {
-                    this.hasAlien = false; // Reset alien presence if no brown support left
-                    this.alienType = null; // Reset alien type
                     this.occupants = Crewmates.EMPTY;
                     this.getShipBoard().getCondensedShip().getAliens().setBrownAlien(false);
                 }
@@ -104,8 +101,6 @@ public class Cabin extends SpaceshipComponent {
             if(this.occupants==Crewmates.PURPLE_ALIEN) {
 
                 if (this.canContainPurple == 0) {
-                    this.hasAlien = false; // Reset alien presence if no purple support left
-                    this.alienType = null; // Reset alien type
                     this.occupants = Crewmates.EMPTY;
                     this.getShipBoard().getCondensedShip().getAliens().setPurpleAlien(false);
                 }
@@ -124,22 +119,6 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
-    // Added support for alien tracking
-    public boolean hasAlien() {
-        return hasAlien;
-    }
-
-    public String getAlienType() {
-        return alienType;
-    }
-
-    public void setHasAlien(boolean hasAlien) {
-        this.hasAlien = hasAlien;
-    }
-
-    public void setAlienType(String alienType) {
-        this.alienType = alienType;
-    }
 
 
 

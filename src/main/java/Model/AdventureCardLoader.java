@@ -3,12 +3,14 @@ package Model;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Factories.AdventureCardFactory;
 import Model.Enums.CardLevel;
+import Model.Ship.Components.SpaceshipComponent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import Controller.Enums.MatchLevel;
 
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class AdventureCardLoader {
 
     private static List<AdventureCardFilip> testCards = null;
+    private static final String ADVENTURE_CARD_PATH = "src/main/resources/adventure_cards.json";
 
     /**
      * Injects test cards for testing purposes.
@@ -39,21 +42,26 @@ public class AdventureCardLoader {
         testCards = null;
     }
 
+
+
     /**
      * Loads all adventure cards from a JSON file using the specified resource path.
      * Cards are built dynamically using AdventureCardFactory.
      *
-     * @param resourcePath path to the JSON file (must be in resources folder)
      * @return list of parsed AdventureCardFilip objects
      */
-    public static List<AdventureCardFilip> loadCards(String resourcePath) {
-        try {
-            InputStream inputStream = AdventureCardLoader.class.getClassLoader().getResourceAsStream(resourcePath);
-            if (inputStream == null) {
-                throw new IllegalArgumentException("File not found: " + resourcePath);
-            }
+    public static List<AdventureCardFilip> loadCards() {
+//        try {
+//            InputStream inputStream = AdventureCardLoader.class.getClassLoader().getResourceAsStream(resourcePath);
+//            if (inputStream == null) {
+//                throw new IllegalArgumentException("File not found: " + resourcePath);
+//            }
+//
+//            InputStreamReader reader = new InputStreamReader(inputStream);
+//            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+//            List<AdventureCardFilip> cards = new ArrayList<>();
 
-            InputStreamReader reader = new InputStreamReader(inputStream);
+        try (FileReader reader = new FileReader(ADVENTURE_CARD_PATH)) {
             JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
             List<AdventureCardFilip> cards = new ArrayList<>();
 
@@ -77,13 +85,13 @@ public class AdventureCardLoader {
      * @param level the difficulty level of the match
      * @return list of cards for the selected level
      */
-    public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level) {
-        if (testCards != null) return testCards;
+    public static List<AdventureCardFilip> loadAdventureCards(MatchLevel level, boolean shuffle) {
+        //if (testCards != null) return testCards;
         
-        List<AdventureCardFilip> allCards = loadCards("adventure_cards.json");
+        List<AdventureCardFilip> allCards = loadCards();
         
         if (allCards == null) {
-            return new ArrayList<>();
+            throw new RuntimeException("Failed to load adventure cards from JSON");
         }
 
         return switch (level) {
@@ -103,7 +111,10 @@ public class AdventureCardLoader {
                 List<AdventureCardFilip> combined = new ArrayList<>();
                 combined.addAll(level1Cards);
                 combined.addAll(level2Cards);
-                //Collections.shuffle(combined); //TODO: riaggiungere lo shuffle
+
+                if (shuffle) {
+                    Collections.shuffle(combined);
+                }
                 yield combined;
             }
         };

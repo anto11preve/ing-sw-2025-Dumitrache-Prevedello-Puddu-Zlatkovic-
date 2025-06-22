@@ -31,16 +31,16 @@ public class SmugglersTest {
         json.addProperty("level", "LEARNER");
         json.addProperty("enemyStrength", 4);
         json.addProperty("stealGoodsOnLoss", 2);
-        
+
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("GREEN"));
         rewardGoods.add(new JsonPrimitive("BLUE"));
         json.add("rewardGoods", rewardGoods);
-        
+
         json.addProperty("dayCost", 1);
         json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
-        
+
         Smugglers card = new Smugglers(json);
         assertEquals(5, card.getId());
         assertEquals(CardLevel.LEARNER, card.getLevel());
@@ -57,16 +57,16 @@ public class SmugglersTest {
         json.addProperty("level", "LEVEL_TWO");
         json.addProperty("enemyStrength", 8);
         json.addProperty("stealGoodsOnLoss", 3);
-        
+
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("RED"));
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         json.add("rewardGoods", rewardGoods);
-        
+
         json.addProperty("dayCost", 1);
         json.addProperty("imagePath", "src/main/resources/pics/cards/40.jpg");
-        
+
         Smugglers card = new Smugglers(json);
         assertEquals(40, card.getId());
         assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
@@ -83,16 +83,16 @@ public class SmugglersTest {
         json.addProperty("level", "LEVEL_ONE");
         json.addProperty("enemyStrength", 4);
         json.addProperty("stealGoodsOnLoss", 2);
-        
+
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("GREEN"));
         rewardGoods.add(new JsonPrimitive("BLUE"));
         json.add("rewardGoods", rewardGoods);
-        
+
         json.addProperty("dayCost", 1);
         json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
-        
+
         Smugglers card = new Smugglers(json);
         assertEquals(45, card.getId());
         assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
@@ -127,7 +127,7 @@ public class SmugglersTest {
 
         System.setOut(originalOut);
         String output = outputStream.toString();
-        
+
         assertTrue(output.length() > 0);
     }
 }

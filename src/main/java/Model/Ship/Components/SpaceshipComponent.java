@@ -20,9 +20,28 @@ public abstract class SpaceshipComponent {
     private ShipBoard shipBoard;
     private boolean isVisible;
     private String imagePath;
-    private final String backCardImagePath = "src/main/resources/images/Components/";
+    private final String backCardImagePath = "src/main/resources/pics/tiles/0.png";
 
+    /**
+     * Constructor, that does not set the image path!
+     */
     public SpaceshipComponent(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right) {
+        this.type = type;
+        this.frontConnector = front;
+        this.rearConnector = rear;
+        this.leftConnector = left;
+        this.rightConnector = right;
+        this.orientation = Direction.UP; // Default orientation
+        this.isVisible = false;
+        this.shipBoard = null;
+        this.imagePath=null;
+    }
+
+    /**
+     * Constructor with image path.
+     * This is used by the ComponentFactory to load spaceship components from JSON configuration.
+     */
+    public SpaceshipComponent(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, String imagePath) {
         this.type = type;
         this.frontConnector = front;
         this.rearConnector = rear;
@@ -47,6 +66,10 @@ public abstract class SpaceshipComponent {
         System.out.println("Ship Board: " + shipBoard);
 
 
+    }
+
+    public String getBackCardImagePath() {
+        return backCardImagePath;
     }
 
     public void setVisible() {

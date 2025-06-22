@@ -32,7 +32,7 @@ public class FlightBoardBuilder {
         }
 
         // Load and shuffle the adventure deck from JSON based on level
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level);
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level, true);
         CardDeck deck = new CardDeck(cards);
 
         return new FlightBoard(players, deck, level);

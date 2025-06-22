@@ -16,14 +16,40 @@ public abstract class AdventureCardFilip {
     public AdventureCardFilip(int id, CardLevel level) {
         this.id = id;
         this.level = level;
+        this.imagePath="";
+        this.backCardImagePath="";
     }
 
     public AdventureCardFilip(JsonObject json) {
-        this.id         = json.get("id").getAsInt();
-        this.level      = CardLevelMapper.mapJsonLevelToCardLevel(json.get("level").getAsString());
-        this.imagePath  = json.has("imagePath")
-                ? json.get("imagePath").getAsString()
-                : "";               // or null
+        if(json.has("id")){
+            this.id= json.get("id").getAsInt();
+        }else{
+            throw new RuntimeException("No ID provided");
+        }
+        if(!json.has("level")){
+            throw new RuntimeException("No level provided for card with ID: " + id);
+        }
+
+
+        this.level = CardLevel.valueOf(json.get("level").getAsString().toUpperCase());
+        //this.level      = CardLevelMapper.mapJsonLevelToCardLevel(json.get("level").getAsString());
+
+
+        if (json.has("imagePath")){
+            this.imagePath  = json.get("imagePath").getAsString();
+        }else{
+            throw new RuntimeException("No image path provided");
+        }
+        if(level==CardLevel.LEVEL_THREE){
+            throw new RuntimeException("AdventureCardFilip level three is not supported");
+        }
+        if(level==CardLevel.LEVEL_TWO){
+            backCardImagePath= "src/main/resources/pics/cards/GT-cards_II_IT_0121.jpg";
+        }else{
+            backCardImagePath= "src/main/resources/pics/cards/GT-cards_I_IT_0121.jpg";
+        }
+
+
     }
 
     public void visualize(){
@@ -36,6 +62,10 @@ public abstract class AdventureCardFilip {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public String getBackCardImagePath() {
+        return backCardImagePath;
     }
 
     public final int getId() {

@@ -56,17 +56,26 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                     for (JsonElement g : obj.getAsJsonArray("goods")) {
                         goods.add(Good.valueOf(g.getAsString()));
                     }
+                }else{
+                    throw new IllegalArgumentException("Planet JSON object does not contain 'goods' array at id " + getId());
                 }
 
+                if(!obj.has("name")) {
+                    throw new IllegalArgumentException("Planet JSON object does not contain 'name' field at id " + getId());
+                }
                 String name = obj.has("name") ? obj.get("name").getAsString() : "Unknown Planet";
                 this.planetList.add(new Planet(name, goods));
             }
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'planets' array at id " + getId());
         }
 
         // Default landing penalty
         int days = 0;
         if (json.has("landingPenalty") && json.getAsJsonObject("landingPenalty").has("value")) {
             days = json.getAsJsonObject("landingPenalty").get("value").getAsInt();
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'landingPenalty' object with 'value' field at id " + getId());
         }
         this.landingPenalty = new DaysPenalty(days);
 
