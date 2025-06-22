@@ -1,5 +1,6 @@
 package Model.Board;
 
+import Model.AdventureCardLoader;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Enums.CardLevel;
 import Model.Exceptions.InvalidMethodParameters;
@@ -53,6 +54,15 @@ public class FlightBoard {
      *
      * @throws UnsupportedOperationException always
      */
+
+    public static void main(String[] args) {
+
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.LEVEL2, false);
+
+        for (AdventureCardFilip card : cards) {
+            card.visualize();
+        }
+    }
 
     public FlightBoard() {
         throw new UnsupportedOperationException("This FlightBoard constructor is no longer accepted");
