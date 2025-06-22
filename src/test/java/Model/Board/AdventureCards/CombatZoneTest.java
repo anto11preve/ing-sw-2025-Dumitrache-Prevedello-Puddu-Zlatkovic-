@@ -48,13 +48,77 @@ public class CombatZoneTest {
     }
 
     /**
-     * Tests JSON constructor with lines array containing DaysPenalty.
+     * Tests JSON constructor matching actual JSON structure from adventure_cards.json.
+     */
+    @Test
+    public void testJsonConstructorMatchingActualJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", 6);
+        json.addProperty("type", "CombatZone");
+        json.addProperty("level", "LEARNER");
+        
+        JsonArray lines = new JsonArray();
+        
+        // First line - MAN_POWER with DaysPenalty
+        JsonObject line1 = new JsonObject();
+        line1.addProperty("criteria", "MAN_POWER");
+        JsonObject penalty1 = new JsonObject();
+        penalty1.addProperty("type", "DaysPenalty");
+        penalty1.addProperty("value", 3);
+        line1.add("penalty", penalty1);
+        lines.add(line1);
+        
+        // Second line - ENGINE_POWER with CrewPenalty
+        JsonObject line2 = new JsonObject();
+        line2.addProperty("criteria", "ENGINE_POWER");
+        JsonObject penalty2 = new JsonObject();
+        penalty2.addProperty("type", "CrewPenalty");
+        penalty2.addProperty("value", 2);
+        line2.add("penalty", penalty2);
+        lines.add(line2);
+        
+        // Third line - FIRE_POWER with CannonShotPenalty
+        JsonObject line3 = new JsonObject();
+        line3.addProperty("criteria", "FIRE_POWER");
+        JsonObject penalty3 = new JsonObject();
+        JsonArray shots = new JsonArray();
+        
+        JsonObject shot1 = new JsonObject();
+        shot1.addProperty("isLarge", false);
+        shot1.addProperty("direction", "front");
+        shots.add(shot1);
+        
+        JsonObject shot2 = new JsonObject();
+        shot2.addProperty("isLarge", true);
+        shot2.addProperty("direction", "front");
+        shots.add(shot2);
+        
+        penalty3.add("shots", shots);
+        line3.add("penalty", penalty3);
+        lines.add(line3);
+        
+        json.add("lines", lines);
+        json.addProperty("imagePath", "src/main/resources/pics/cards/6.jpg");
+
+        CombatZone card = new CombatZone(json);
+        assertEquals(6, card.getId());
+        assertEquals(CardLevel.LEARNER, card.getLevel());
+
+        int count = 0;
+        for (CombatZoneLine line : card) {
+            count++;
+        }
+        assertEquals(3, count);
+    }
+
+    /**
+     * Tests JSON constructor with DaysPenalty.
      */
     @Test
     public void testJsonConstructorWithDaysPenalty() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 3);
-        json.addProperty("level", "LEVEL2");
+        json.addProperty("level", "LEVEL_TWO");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -88,7 +152,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithCrewPenalty() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 4);
-        json.addProperty("level", "LEVEL1");
+        json.addProperty("level", "LEVEL_ONE");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -121,7 +185,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithGoodsPenalty() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 5);
-        json.addProperty("level", "LEVEL1");
+        json.addProperty("level", "LEVEL_ONE");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -149,7 +213,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithCannonShotPenalty() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 6);
-        json.addProperty("level", "LEVEL2");
+        json.addProperty("level", "LEVEL_TWO");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -194,7 +258,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithUnsupportedPenaltyType() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 7);
-        json.addProperty("level", "LEVEL1");
+        json.addProperty("level", "LEVEL_ONE");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -218,7 +282,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithFallbackPenalty() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 8);
-        json.addProperty("level", "LEVEL1");
+        json.addProperty("level", "LEVEL_ONE");
 
         JsonArray lines = new JsonArray();
         JsonObject line = new JsonObject();
@@ -245,7 +309,7 @@ public class CombatZoneTest {
     public void testJsonConstructorWithoutLines() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 9);
-        json.addProperty("level", "LEVEL1");
+        json.addProperty("level", "LEVEL_ONE");
         // No lines array
 
         CombatZone card = new CombatZone(json);

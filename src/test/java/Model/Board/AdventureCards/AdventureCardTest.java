@@ -1,5 +1,6 @@
 package Model.Board.AdventureCards;
 
+import Model.AdventureCardOption;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.CrewPenalty;
@@ -19,7 +20,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -309,7 +312,8 @@ public class AdventureCardTest {
     @Test
     public void testSmugglers() {
         // Test constructor
-        Smugglers card = new Smugglers(1, CardLevel.LEVEL_ONE, 3, 1, 2, 3);
+        List<Good> goods = Arrays.asList(Good.RED, Good.BLUE, Good.GREEN);
+        Smugglers card = new Smugglers(1, CardLevel.LEVEL_ONE, 3, 1, 2, goods);
         assertEquals(1, card.getId());
         assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
         assertEquals("Contrabbandieri", card.getName());
@@ -317,7 +321,11 @@ public class AdventureCardTest {
         assertEquals(3, card.getPower());
         assertEquals(1, card.getLossPenalty().getAmount());
         assertEquals(2, card.getWinPenalty().getAmount());
-        assertEquals(3, card.getWinReward().getAmount());
+        int count = 0;
+        for (Good g : card.getWinReward()) {
+            count++;
+        }
+        assertEquals(3, count);
 
         // Test JSON constructor
         JsonObject json = new JsonObject();
@@ -335,6 +343,88 @@ public class AdventureCardTest {
         assertEquals(CardLevel.LEVEL_ONE, jsonCard.getLevel());
         assertEquals(4, jsonCard.getPower());
         assertEquals(2, jsonCard.getLossPenalty().getAmount());
-        assertEquals(3, jsonCard.getWinReward().getAmount());
+        int jsonCount = 0;
+        for (Good g : jsonCard.getWinReward()) {
+            jsonCount++;
+        }
+        assertEquals(3, jsonCount);
+    }
+
+    @Test
+    public void testBaseAdventureCard() throws Exception {
+        AdventureCard card = new AdventureCard();
+        
+        // Test with null values
+        assertNull(card.getId());
+        assertNull(card.getName());
+        assertNull(card.getType());
+        assertNull(card.getLevel());
+        assertNull(card.getDescription());
+        assertNull(card.getEffect());
+        assertNull(card.getConditions());
+        assertNull(card.getRewards());
+        assertNull(card.getPenalties());
+        assertNull(card.getImagePath());
+        assertNull(card.getAnimationPath());
+        assertNull(card.getSoundEffect());
+        assertFalse(card.isRequiresPlayerChoice());
+        assertNull(card.getOptions());
+        
+        // Test with populated values using reflection
+        setField(card, "id", "test-123");
+        setField(card, "name", "Test Card");
+        setField(card, "type", "TEST");
+        setField(card, "level", "LEVEL1");
+        setField(card, "description", "Test description");
+        setField(card, "effect", "Test effect");
+        setField(card, "conditions", Arrays.asList("cond1", "cond2"));
+        setField(card, "rewards", Arrays.asList("reward1"));
+        setField(card, "penalties", Arrays.asList("penalty1", "penalty2"));
+        setField(card, "imagePath", "/test.png");
+        setField(card, "animationPath", "/test.gif");
+        setField(card, "soundEffect", "/test.wav");
+        setField(card, "requiresPlayerChoice", true);
+        
+        AdventureCardOption option = new AdventureCardOption();
+        setOptionField(option, "label", "Test Option");
+        setOptionField(option, "conditions", Arrays.asList("opt_cond"));
+        setOptionField(option, "rewards", Arrays.asList("opt_reward"));
+        setOptionField(option, "penalties", Arrays.asList("opt_penalty"));
+        setField(card, "options", Arrays.asList(option));
+        
+        // Test all getters
+        assertEquals("test-123", card.getId());
+        assertEquals("Test Card", card.getName());
+        assertEquals("TEST", card.getType());
+        assertEquals("LEVEL1", card.getLevel());
+        assertEquals("Test description", card.getDescription());
+        assertEquals("Test effect", card.getEffect());
+        assertEquals(2, card.getConditions().size());
+        assertEquals("cond1", card.getConditions().get(0));
+        assertEquals(1, card.getRewards().size());
+        assertEquals("reward1", card.getRewards().get(0));
+        assertEquals(2, card.getPenalties().size());
+        assertEquals("penalty1", card.getPenalties().get(0));
+        assertEquals("/test.png", card.getImagePath());
+        assertEquals("/test.gif", card.getAnimationPath());
+        assertEquals("/test.wav", card.getSoundEffect());
+        assertTrue(card.isRequiresPlayerChoice());
+        assertEquals(1, card.getOptions().size());
+        assertEquals("Test Option", card.getOptions().get(0).getLabel());
+        assertEquals("opt_cond", card.getOptions().get(0).getConditions().get(0));
+        assertEquals("opt_reward", card.getOptions().get(0).getRewards().get(0));
+        assertEquals("opt_penalty", card.getOptions().get(0).getPenalties().get(0));
+    }
+    
+    private void setField(Object obj, String fieldName, Object value) throws Exception {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
+    
+    private void setOptionField(AdventureCardOption option, String fieldName, Object value) throws Exception {
+        Field field = AdventureCardOption.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(option, value);
     }
 }
