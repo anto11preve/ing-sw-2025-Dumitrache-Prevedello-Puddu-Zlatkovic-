@@ -102,7 +102,7 @@ public class Engine extends SpaceshipComponent {
 
     public void renderBig() {
         // Riga superiore
-        System.out.printf("╔══  %d  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero());
+        System.out.printf("╔══  %s  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
         System.out.print("║  ENGIN  ║\n");
 
@@ -121,6 +121,6 @@ public class Engine extends SpaceshipComponent {
         }
 
         // Riga inferiore
-        System.out.printf("╚══  %d  ══╝\n", this.getConnectorAt(Side.REAR).getNumero());
+        System.out.printf("╚══  %s  ══╝\n", this.getConnectorAt(Side.REAR).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
     }
 }

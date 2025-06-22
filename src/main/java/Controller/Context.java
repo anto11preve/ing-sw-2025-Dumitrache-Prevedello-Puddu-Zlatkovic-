@@ -26,6 +26,7 @@ public class Context {
     private List<Planet> planets;
     private int credits;
     private int daysLost;
+    private Runnable visual;
 
 
     public Context(Controller controller) {
@@ -39,6 +40,14 @@ public class Context {
         this.crewmates = card.getWinPenalty().getAmount();
         this.credits = card.getLandingReward().getAmount();
         this.daysLost = card.getLandingPenalty().getAmount();
+        this.visual = () -> {
+            System.out.println("Nave Abbandonata");
+            System.out.println("Crew: " + this.crewmates);
+            //winpenalty generica serve dire che e in giorni etc...
+            System.out.println("Credits: " + this.credits);
+            System.out.println("Days: " + this.daysLost);
+            System.out.println("---------------------------------------");
+        };
 
     }
 
@@ -127,6 +136,10 @@ public class Context {
             throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
         }
 
+    }
+
+    public void render(){
+        visual.run();
     }
 
     public Controller getController() {
