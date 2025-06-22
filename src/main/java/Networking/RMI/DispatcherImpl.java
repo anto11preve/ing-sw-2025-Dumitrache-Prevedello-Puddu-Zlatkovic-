@@ -2,6 +2,7 @@ package Networking.RMI;
 
 import Controller.Server.Server;
 import Networking.Messages.Handler;
+import Networking.Messages.MessageQueue;
 import Networking.TimeoutThread;
 
 import java.rmi.RemoteException;
@@ -16,10 +17,12 @@ public class DispatcherImpl extends UnicastRemoteObject implements Dispatcher {
     }
 
     @Override
-    public RMIMessageQueue dispatch(RMIMessageQueue clientQueue) throws RemoteException {
+    public MessageQueue dispatch(MessageQueue clientQueue) throws RemoteException {
         System.out.println("Got new client request");
 
-        RMINetwork network = new RMINetwork(clientQueue);
+        RMIMessageQueue inQueue = new RMIMessageQueue();
+
+        RMINetwork network = new RMINetwork(inQueue, clientQueue);
 
         new TimeoutThread(network).start();
         new Handler<Server>(this.server, network).start();
@@ -27,6 +30,6 @@ public class DispatcherImpl extends UnicastRemoteObject implements Dispatcher {
         this.server.connect(network);
 
         // Return server's inQueue to client (which will use it as outQueue)
-        return network.getInQueue();
+        return inQueue;
     }
 }
