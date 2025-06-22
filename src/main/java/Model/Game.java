@@ -13,9 +13,11 @@ import Model.Enums.Side;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.ShipBoard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,52 +32,94 @@ public class Game {
     private final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
+    private List<ShipBoard> preBuiltShips;
+    private List<SpaceshipComponent> centralCabins= new ArrayList<>();
 
 
 
 
     public static void main(String[] args) {
 
-        //Game testGame = new Game(MatchLevel.TRIAL);
-        //Game testGame2 = new Game(MatchLevel.LEVEL2);
+        int var=0;
 
-        SpaceshipComponent[] tiless1 = ComponentLoader.loadComponents(false);
+        switch (var) {
 
-        //facciamo un po' di modifiche all'array e ai componenti per vedere se si riflettono in tiless2
-        tiless1[0] = null;
-        tiless1[1] = new Cannon(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, true);
-        Cabin cabinatest=(Cabin) tiless1[2];
-        cabinatest.setVisible();
+            case 0:
+                Game testGame = new Game(MatchLevel.TRIAL);
+                Game testGame2 = new Game(MatchLevel.LEVEL2);
+
+                List<ShipBoard> shipsL1=testGame.getPreBuiltShips();
+                List<ShipBoard> shipsL2=testGame2.getPreBuiltShips();
+
+                for (ShipBoard ship : shipsL1) {
+
+                    System.out.println("Ship is valid:" + ship.validateShip());
+                    ship.render();
+
+                }
+
+                System.out.println("\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("Level 2 Ships:");
+
+                System.out.println(shipsL2.isEmpty());
+
+                for (ShipBoard ship : shipsL2) {
+
+                    System.out.println("Ship is valid:" + ship.validateShip());
+                    ship.render();
+
+                }
 
 
 
-        SpaceshipComponent[] tiless2 = ComponentLoader.loadComponents(false);
+                break;
 
-        //facciamo display delle cose che abbiamo modificato
+            case 1:
+                SpaceshipComponent[] tiless1 = ComponentLoader.loadComponents(false).toArray(new SpaceshipComponent[0]);
 
-        for(int i=0; i<3; i++){
-            System.out.printf("\n\n\n");
-            System.out.println("==========================");
-            System.out.println("Tile " + i + ": ");
-            if(tiless1[i]!=null){tiless1[i].visualize();}else{
-                System.out.println("null");
-            }
-            if(tiless2[i]!=null){tiless2[i].visualize();}else{
-                System.out.println("null");
-            }
-            System.out.println("==========================");
+                //facciamo un po' di modifiche all'array e ai componenti per vedere se si riflettono in tiless2
+                tiless1[0] = null;
+                tiless1[1] = new Cannon(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, true);
+                Cabin cabinatest = (Cabin) tiless1[2];
+                cabinatest.setVisible();
+
+
+                SpaceshipComponent[] tiless2 = ComponentLoader.loadComponents(false).toArray(new SpaceshipComponent[0]);
+
+                //facciamo display delle cose che abbiamo modificato
+
+                for (int i = 0; i < 3; i++) {
+                    System.out.printf("\n\n\n");
+                    System.out.println("==========================");
+                    System.out.println("Tile " + i + ": ");
+                    if (tiless1[i] != null) {
+                        tiless1[i].visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                    if (tiless2[i] != null) {
+                        tiless2[i].visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                    System.out.println("==========================");
+                }
+
+                for (SpaceshipComponent s : tiless2) {
+                    if (s != null) {
+                        s.visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                }
+
+                break;
+
+            default:
+                System.out.println("Invalid case");
+
+                break;
         }
-
-        for(SpaceshipComponent s: tiless2){
-            if(s!=null){
-                s.visualize();
-            }else{
-                System.out.println("null");
-            }
-        }
-
-
-
     }
 
     /**
@@ -90,12 +134,20 @@ public class Game {
 
         this.players = new ArrayList<>();
         this.level = level;
-        this.tiles = ComponentLoader.loadComponents(true);
+        List<SpaceshipComponent> allTiles= ComponentLoader.loadComponents(false);
 
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level, true); //TODO: rimettere a true in game
+        this.centralCabins.addAll(allTiles.subList(0,4));
+        allTiles.removeAll(centralCabins);
+
+        Collections.shuffle(allTiles);
+        this.tiles = allTiles.toArray(new SpaceshipComponent[0]);
+
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level, true);
         if (cards == null || cards.isEmpty()) {
             throw new IllegalStateException("Failed to load adventure cards");
         }
+
+        preBuiltShips = PreBuildShipsLoader.loadPreBuiltShips(level);
 
         if (level == MatchLevel.TRIAL) {
             List<AdventureCardFilip> learnerCards = cards.stream()
@@ -151,6 +203,10 @@ public class Game {
 
             this.flightBoard = new FlightBoard(hiddenDeck, pickableDecks);
         }
+    }
+
+    public List<ShipBoard> getPreBuiltShips() {
+        return preBuiltShips;
     }
 
     public SpaceshipComponent[] getTiles() {

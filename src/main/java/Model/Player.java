@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Ship.Components.Cabin;
 import Model.Ship.ShipBoard;
 
 // Classe principale del giocatore
@@ -12,6 +13,8 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.shipBoard = new ShipBoard();
+        //set central cabin on the Ship
+
         this.credits = 0;
         this.junk = 0;
     }

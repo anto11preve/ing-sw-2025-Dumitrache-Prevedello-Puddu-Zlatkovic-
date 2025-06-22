@@ -1,6 +1,6 @@
 [
   {
-    "shipType": "1",
+    "ID": "1",
     "level": "TRIAL",
     "components": [
       { "componentId": 64, "row": 5, "col": 7, "direction": "UP" },
@@ -21,7 +21,7 @@
     ]
   },
   {
-    "shipType": "2",
+    "ID": "2",
     "level": "TRIAL",
     "components": [
       { "componentId": 64, "row": 6, "col": 6, "direction": "UP" },
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "shipType": "3",
+    "ID": "3",
     "level": "TRIAL",
     "components": [
       { "componentId": 119, "row": 6, "col": 6, "direction": "UP" },
@@ -67,8 +67,8 @@
     ]
   },
   {
-    "shipType": "4",
-    "level": "LEVEL_TWO",
+    "ID": "4",
+    "level": "LEVEL2",
     "components": [
       { "componentId": 64, "row": 5, "col": 6, "direction": "UP" },
       { "componentId": 151, "row": 5, "col": 8, "direction": "DOWN" },
@@ -85,7 +85,7 @@
       { "componentId": 120, "row": 7, "col": 9, "direction": "RIGHT" },
       { "componentId": 27, "row": 7, "col": 10, "direction": "LEFT" },
       { "componentId": 80, "row": 8, "col": 4, "direction": "LEFT" },
-      { "componentId": 122, "row": 8, "col": 5, "direction": "RIGHT" },
+      { "componentId": 121, "row": 8, "col": 5, "direction": "RIGHT" },
       { "componentId": 28, "row": 8, "col": 6, "direction": "UP" },
       { "componentId": 138, "row": 8, "col": 7, "direction": "RIGHT" },
       { "componentId": 102, "row": 8, "col": 8, "direction": "LEFT" },
@@ -93,15 +93,15 @@
       { "componentId": 21, "row": 8, "col": 10, "direction": "LEFT" },
       { "componentId": 42, "row": 9, "col": 4, "direction": "UP" },
       { "componentId": 48, "row": 9, "col": 5, "direction": "UP" },
-      { "componentId": 145, "row": 9, "col": 6, "direction": "DOWN" },
+      { "componentId": 145, "row": 9, "col": 6, "direction": "LEFT" },
       { "componentId": 146, "row": 9, "col": 8, "direction": "DOWN" },
       { "componentId": 62, "row": 9, "col": 9, "direction": "UP" },
       { "componentId": 133, "row": 9, "col": 10, "direction": "UP" }
     ]
   },
   {
-    "shipType": "5",
-    "level": "LEVEL_TWO",
+    "ID": "5",
+    "level": "LEVEL2",
     "components": [
       { "componentId": 64, "row": 5, "col": 6, "direction": "UP" },
       { "componentId": 72, "row": 6, "col": 5, "direction": "UP" },
@@ -127,17 +127,17 @@
       { "componentId": 46, "row": 9, "col": 5, "direction": "UP" },
       { "componentId": 48, "row": 9, "col": 6, "direction": "UP" },
       { "componentId": 140, "row": 9, "col": 8, "direction": "LEFT" },
-      { "componentId": 82, "row": 9, "col": 10, "direction": "LEFT" }
+      { "componentId": 82, "row": 9, "col": 10, "direction": "DOWN" }
     ]
   },
   {
-    "shipType": "5",
-    "level": "LEVEL_TWO",
+    "ID": "6",
+    "level": "LEVEL2",
     "components": [
       { "componentId": 64, "row": 5, "col": 6, "direction": "UP" },
       { "componentId": 72, "row": 6, "col": 5, "direction": "UP" },
       { "componentId": 106, "row": 6, "col": 6, "direction": "UP" },
-      { "componentId": 85, "row": 6, "col": 7, "direction": "LEFT" },
+      { "componentId": 85, "row": 6, "col": 7, "direction": "UP" },
       { "componentId": 133, "row": 6, "col": 8, "direction": "LEFT" },
       { "componentId": 111, "row": 6, "col": 9, "direction": "UP" },
       { "componentId": 92, "row": 7, "col": 4, "direction": "UP" },
@@ -149,8 +149,8 @@
       { "componentId": 83, "row": 7, "col": 10, "direction": "RIGHT" },
       { "componentId": 145, "row": 8, "col": 4, "direction": "DOWN" },
       { "componentId": 119, "row": 8, "col": 5, "direction": "RIGHT" },
-      { "componentId": 5, "row": 8, "col": 6, "direction": "RIGHT" },
-      { "componentId": 26, "row": 8, "col": 7, "direction": "DOWN" },
+      { "componentId": 5, "row": 8, "col": 6, "direction": "UP" },
+      { "componentId": 26, "row": 8, "col": 7, "direction": "LEFT" },
       { "componentId": 33, "row": 8, "col": 8, "direction": "DOWN" },
       { "componentId": 7, "row": 8, "col": 9, "direction": "UP" },
       { "componentId": 152, "row": 8, "col": 10, "direction": "UP" },
@@ -158,7 +158,6 @@
       { "componentId": 46, "row": 9, "col": 5, "direction": "UP" },
       { "componentId": 48, "row": 9, "col": 6, "direction": "UP" },
       { "componentId": 140, "row": 9, "col": 8, "direction": "LEFT" },
-      { "componentId": 156, "row": 9, "col": 9, "direction": "DOWN" },
       { "componentId": 82, "row": 9, "col": 10, "direction": "LEFT" }
     ]
   }

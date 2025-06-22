@@ -68,13 +68,9 @@ public class Controller implements Agent {
 
 
     public void login(String name) throws InvalidCommand, InvalidParameters {
-        try {
-            model.getState().login(name);
-            model.setError(false);
-        } catch (InvalidCommand | InvalidParameters e) {
-            model.setError(true);
-        }
-        //TODO: vedere se mettere gestione exception più a monte, nello specifico nel thread che mangia i comandi
+
+        model.getState().login(name);
+
     }
     public void logout(String name) throws InvalidCommand, InvalidParameters {
         model.getState().logout(name);

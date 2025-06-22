@@ -109,10 +109,9 @@ public class Context {
     public Context(Controller controller, Smugglers card) {
         this(controller);
         this.goods = new ArrayList<>();
-//        for (Good good : card.getWinReward()) {
-//            this.goods.add(good);
-//        }
-        //TODO: rimuovere commento
+        for (Good good : card.getWinReward()) {
+            this.goods.add(good);
+        }
         this.daysLost = card.getWinPenalty().getAmount();
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();

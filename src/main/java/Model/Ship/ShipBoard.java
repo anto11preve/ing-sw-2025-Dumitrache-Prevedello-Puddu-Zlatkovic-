@@ -30,14 +30,16 @@ public class ShipBoard {
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
-        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-        centralCabin.setShipBoard(this);
-        components[2][3] = centralCabin;
-        centralCabin.added();
+        this.condensedShip = new CondensedShip();
+//TODO: gestire la cabina centrale
+//
+//        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+//        centralCabin.setShipBoard(this);
+//        components[2][3] = centralCabin;
+//        centralCabin.added();
 
         this.activeComponent = null;
         this.reservedComponents = new ArrayList<>();
-        this.condensedShip = new CondensedShip();
     }
 
     public CondensedShip getCondensedShip() {
@@ -340,72 +342,90 @@ public class ShipBoard {
      */
     private int dfs(int row, int col, boolean[][] visited) {
         //if (!isValidPosition(row, col)) return 0;
-        if (visited[row][col] || components[row][col] == null) return 0;
+        if (visited[row][col] || components[row][col] == null) {return 0;}
 
         visited[row][col] = true;
         int count = 1;
         SpaceshipComponent currentComponent = components[row][col];
         // Explore each of the four directions, only if the tile in that direction is not null and it's connected with the current component
 
-        SpaceshipComponent nextComponent= components[row+1][col];
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
 
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
+        SpaceshipComponent nextComponent = null;
+        if (isValidPosition(row+1, col)) {
+            nextComponent = components[row+1][col];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
 
-            if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
-                count += dfs(row + 1, col, visited);
-            }
-        }
-        nextComponent = components[row-1][col];
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+6) + ", " + (col+4));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
 
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-            if (connectorsAreConnected(currentComponent.getConnectorAt(Side.FRONT), nextComponent.getConnectorAt(Side.REAR))) {
-                count += dfs(row - 1, col, visited);
+                if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row + 1, col, visited);
+                }
             }
         }
 
-        nextComponent = components[row][col + 1];
-        if(nextComponent!=null) {
-
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.RIGHT);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.LEFT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-
-            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.RIGHT), nextComponent.getConnectorAt(Side.LEFT))) {
-                count += dfs(row, col + 1, visited);
-            }
-        }
-        nextComponent = components[row][col - 1];
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.LEFT);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.RIGHT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-
-            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.LEFT), nextComponent.getConnectorAt(Side.RIGHT))) {
-                count += dfs(row, col - 1, visited);
+        if (isValidPosition(row-1, col)) {
+            nextComponent = components[row-1][col];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.FRONT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.REAR);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+4) + ", " + (col+4));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+                if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row - 1, col, visited);
+                }
             }
         }
+
+        if (isValidPosition(row, col+1)) {
+            nextComponent = components[row][col + 1];
+            if(nextComponent!=null) {
+
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.RIGHT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.LEFT);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+5) + ", " + (col+5));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+
+                if(connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row, col + 1, visited);
+                }
+            }
+        }
+
+
+        if (isValidPosition(row, col-1)) {
+            nextComponent = components[row][col - 1];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.LEFT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.RIGHT);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+5) + ", " + (col+3));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+
+                if(connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row, col - 1, visited);
+                }
+            }
+        }
+
+
         return count;
     }
 
@@ -682,7 +702,7 @@ public class ShipBoard {
      */
     public boolean validateShip() {
 
-        if(!checkIntegrity()) {
+        if(!this.checkIntegrity()) {
             System.out.println("La nave non è strutturalmente integra.");
             return false;
         }
@@ -909,8 +929,12 @@ public class ShipBoard {
                 casellaA = renderEmpty();
             }
             if (i == 1) { // seconda riga - caselle B e C
-                casellaB = reservedComponents.get(0).renderSmall();
-                casellaC = reservedComponents.get(1).renderSmall();
+                if(!reservedComponents.isEmpty()) {
+                    casellaB = reservedComponents.get(0).renderSmall();
+                    if (reservedComponents.size() > 1) {
+                        casellaC = reservedComponents.get(1).renderSmall();
+                    }
+                }
             }
 
             // Poi stampiamo riga per riga il disegno

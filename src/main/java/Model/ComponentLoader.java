@@ -19,7 +19,7 @@ public class ComponentLoader {
 
     private static final String COMPONENTS_PATH = "src/main/resources/spaceship_components.json";
 
-    public static SpaceshipComponent[] loadComponents(boolean shuffle) {
+    public static List<SpaceshipComponent> loadComponents(boolean shuffle) {
         try (FileReader reader = new FileReader(COMPONENTS_PATH)) {
             JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
             List<SpaceshipComponent> components = new ArrayList<>();
@@ -31,7 +31,7 @@ public class ComponentLoader {
             if (shuffle) {
                 Collections.shuffle(components);
             }
-            return components.toArray(new SpaceshipComponent[0]);
+            return components;
         } catch (FileNotFoundException e){
             throw new RuntimeException("Spaceship components JSON file not found at: " + COMPONENTS_PATH, e);
         }
