@@ -56,19 +56,80 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                     for (JsonElement g : obj.getAsJsonArray("goods")) {
                         goods.add(Good.valueOf(g.getAsString()));
                     }
+                }else{
+                    throw new IllegalArgumentException("Planet JSON object does not contain 'goods' array at id " + getId());
                 }
 
+                if(!obj.has("name")) {
+                    throw new IllegalArgumentException("Planet JSON object does not contain 'name' field at id " + getId());
+                }
                 String name = obj.has("name") ? obj.get("name").getAsString() : "Unknown Planet";
                 this.planetList.add(new Planet(name, goods));
             }
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'planets' array at id " + getId());
         }
 
         // Default landing penalty
         int days = 0;
         if (json.has("landingPenalty") && json.getAsJsonObject("landingPenalty").has("value")) {
             days = json.getAsJsonObject("landingPenalty").get("value").getAsInt();
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'landingPenalty' object with 'value' field at id " + getId());
         }
         this.landingPenalty = new DaysPenalty(days);
+
+    }
+
+    @Override
+    public void visualize() {
+        // 1) print the shared header
+        super.visualize();
+
+        // 2) print each planet from your in-memory list
+        System.out.println("Planets:");
+        if (planetList.isEmpty()) {
+            System.out.println("  (no planets)");
+        } else {
+            int idx = 0;
+            for (Planet p : planetList) {
+                idx++;
+                System.out.printf("  #%d → %s%n", idx, p.getName());
+
+                // reflection to read the private `goods` field
+                List<Good> goods;
+                try {
+                    java.lang.reflect.Field f =
+                            Planet.class.getDeclaredField("goods");
+                    f.setAccessible(true);
+                    //noinspection unchecked
+                    goods = (List<Good>) f.get(p);
+                } catch (Exception e) {
+                    goods = List.of();  // fallback if something goes wrong
+                }
+
+                // build a space-separated string of goods
+                String goodsLine = "";
+                for (Good g : goods) {
+                    goodsLine += g + " ";
+                }
+                goodsLine = goodsLine.trim();  // remove trailing space
+
+                if (goods.isEmpty()) {
+                    System.out.println("      Goods: (no goods)");
+                } else {
+                    System.out.println("      Goods: " + goodsLine +
+                            " (" + goods.size() + " total)");
+                }
+            }
+        }
+
+        // 3) landing penalty and its type
+        System.out.printf(
+                "Landing Penalty:     %s (type: %s)%n",
+                landingPenalty,
+                landingPenalty.getClass().getSimpleName()
+        );
     }
 
 

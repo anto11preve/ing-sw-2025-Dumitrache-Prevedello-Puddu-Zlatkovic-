@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import Model.Enums.Side;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> {
@@ -40,18 +41,42 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
      */
     public MeteorSwarm(JsonObject json) {
         super(json);
-
-        Side incomingDirection = Side.valueOf(json.get("incomingDirection").getAsString());
-        int large = json.get("largeMeteors").getAsInt();
-        int small = json.get("smallMeteors").getAsInt();
-
-        // Construct meteor list from parsed data
         this.meteors = new ArrayList<>();
-        for (int i = 0; i < large; i++) {
-            meteors.add(new Meteor(true, incomingDirection)); // true = large meteor
+
+        if(!json.has("meteors")) {
+            throw new IllegalArgumentException("JSON does not contain 'meteors' array at id " + getId());
         }
-        for (int i = 0; i < small; i++) {
-            meteors.add(new Meteor(false, incomingDirection)); // false = small meteor
+
+        for (JsonElement e : json.getAsJsonArray("meteors")) {
+            JsonObject m = e.getAsJsonObject();
+
+            if(!m.has("large")){
+                throw new IllegalArgumentException("Meteor JSON object does not contain 'large' field at id " + getId());
+            }
+            boolean large = m.get("large").getAsBoolean();
+
+            if(!m.has("direction")){
+                throw new IllegalArgumentException("Meteor JSON object does not contain 'direction' field at id " + getId());
+            }
+            Side dir     = Side.valueOf(m.get("direction").getAsString().toUpperCase());
+            this.meteors.add(new Meteor(large, dir));
         }
     }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Total Meteors:  " + meteors.size());
+        System.out.println("Details:");
+        for (int i = 0; i < meteors.size(); i++) {
+            Meteor m = meteors.get(i);
+            System.out.printf(
+                    "  #%d → large=%s, dir=%s%n",
+                    i + 1,
+                    m.isBig(),
+                    m.getSide()
+            );
+        }
+    }
+
 }

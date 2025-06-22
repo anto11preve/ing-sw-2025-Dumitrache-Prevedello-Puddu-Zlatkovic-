@@ -16,27 +16,37 @@ import java.util.Set;
 public class Cannon extends SpaceshipComponent {
 
     private final boolean isDouble;
-    private Direction orientation;
-    private boolean hasAlien;
 
     public Cannon(Card type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, boolean isDouble) {
         super(type, front, rear, left, right);
         this.isDouble = isDouble;
-        this.orientation = Direction.UP;
-        this.hasAlien = false;
     }
 
     public Cannon(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
-        this.isDouble = json.get("isDoubleCannon").getAsBoolean();
-        this.orientation = Direction.UP;
-        this.hasAlien = false;
+
+
+        if (json.has("isDoubleCannon")) {
+            this.isDouble = json.get("isDoubleCannon").getAsBoolean();
+        }else{
+            throw new RuntimeException("Missing isDoubleCannon in Engine JSON configuration"+
+                    " at " + json.get("imagePath").getAsString());
+        }
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Cannon is Double: " + isDouble);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
 //    public void setOrientation(Direction dir) {
@@ -66,20 +76,6 @@ public class Cannon extends SpaceshipComponent {
 //        }
 //        return 0;
 //    }
-
-    /**
-     * Returns whether this cannon has an alien onboard.
-     */
-    public boolean hasAlien() {
-        return hasAlien;
-    }
-
-    /**
-     * Sets whether this cannon has an alien onboard.
-     */
-    public void setAlien(boolean hasAlien) {
-        this.hasAlien = hasAlien;
-    }
 
 
     @Override

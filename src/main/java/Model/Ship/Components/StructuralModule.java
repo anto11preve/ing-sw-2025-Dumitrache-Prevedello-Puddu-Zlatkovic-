@@ -24,12 +24,20 @@ public class StructuralModule extends SpaceshipComponent {
      */
     public StructuralModule(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
     public void added(){

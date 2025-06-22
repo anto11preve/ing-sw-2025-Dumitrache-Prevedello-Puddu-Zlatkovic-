@@ -7,6 +7,8 @@ import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
+import java.io.PrintStream;
+
 /**
  * Represents an Alien Life Support component.
  * Supports specific alien crew members (brown or purple), enhancing nearby cabins.
@@ -28,14 +30,29 @@ public class AlienLifeSupport extends SpaceshipComponent {
      */
     public AlienLifeSupport(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
+        if (json.has("alienColor")) {
+            this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
+        }else{
+            throw new RuntimeException("Missing alienColor in AlienLifeSupport JSON configuration at"+
+                    " " + json.get("imagePath").getAsString());
+        }
+
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Alien Supports Color: " + color);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
     /**
