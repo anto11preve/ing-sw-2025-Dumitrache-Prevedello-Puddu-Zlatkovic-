@@ -6,7 +6,6 @@
       { "componentId": 64, "row": 5, "col": 7, "direction": "UP" },
       { "componentId": 71, "row": 6, "col": 6, "direction": "UP" },
       { "componentId": 102, "row": 6, "col": 7, "direction": "DOWN" },
-      { "componentId": 0, "row": 6, "col": 8, "direction": "UP" },
       { "componentId": 92, "row": 7, "col": 5, "direction": "UP" },
       { "componentId": 18, "row": 7, "col": 6, "direction": "LEFT" },
       { "componentId": 1, "row": 7, "col": 7, "direction": "UP" },
@@ -18,8 +17,6 @@
       { "componentId": 17, "row": 8, "col": 8, "direction": "DOWN" },
       { "componentId": 112, "row": 8, "col": 9, "direction": "DOWN" },
       { "componentId": 40, "row": 9, "col": 5, "direction": "UP" },
-      { "componentId": 0, "row": 9, "col": 6, "direction": "UP" },
-      { "componentId": 0, "row": 9, "col": 8, "direction": "UP" },
       { "componentId": 61, "row": 9, "col": 9, "direction": "UP" }
     ]
   },
@@ -27,7 +24,6 @@
     "shipType": "2",
     "level": "TRIAL",
     "components": [
-      { "componentId": 0, "row": 5, "col": 7, "direction": "UP" },
       { "componentId": 64, "row": 6, "col": 6, "direction": "UP" },
       { "componentId": 107, "row": 6, "col": 7, "direction": "LEFT" },
       { "componentId": 90, "row": 6, "col": 8, "direction": "UP" },
@@ -51,7 +47,6 @@
     "shipType": "3",
     "level": "TRIAL",
     "components": [
-      { "componentId": 0, "row": 5, "col": 7, "direction": "UP" },
       { "componentId": 119, "row": 6, "col": 6, "direction": "UP" },
       { "componentId": 50, "row": 6, "col": 7, "direction": "DOWN" },
       { "componentId": 76, "row": 6, "col": 8, "direction": "UP" },
@@ -109,7 +104,6 @@
     "level": "LEVEL_TWO",
     "components": [
       { "componentId": 64, "row": 5, "col": 6, "direction": "UP" },
-      { "componentId": 0, "row": 5, "col": 8, "direction": "DOWN" },
       { "componentId": 72, "row": 6, "col": 5, "direction": "UP" },
       { "componentId": 106, "row": 6, "col": 6, "direction": "UP" },
       { "componentId": 85, "row": 6, "col": 7, "direction": "UP" },
@@ -133,7 +127,6 @@
       { "componentId": 46, "row": 9, "col": 5, "direction": "UP" },
       { "componentId": 48, "row": 9, "col": 6, "direction": "UP" },
       { "componentId": 140, "row": 9, "col": 8, "direction": "LEFT" },
-      { "componentId": 0, "row": 9, "col": 9, "direction": "UP" },
       { "componentId": 82, "row": 9, "col": 10, "direction": "LEFT" }
     ]
   },
@@ -142,7 +135,6 @@
     "level": "LEVEL_TWO",
     "components": [
       { "componentId": 64, "row": 5, "col": 6, "direction": "UP" },
-      { "componentId": 0, "row": 5, "col": 8, "direction": "DOWN" },
       { "componentId": 72, "row": 6, "col": 5, "direction": "UP" },
       { "componentId": 106, "row": 6, "col": 6, "direction": "UP" },
       { "componentId": 85, "row": 6, "col": 7, "direction": "LEFT" },
