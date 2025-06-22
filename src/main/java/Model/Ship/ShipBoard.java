@@ -891,7 +891,114 @@ public class ShipBoard {
         }
     }
 
+    public void render(){
+        // Ora stampiamo riga per riga componendo i pezzi
+        for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
+            // Prima otteniamo i disegni di tutti i componenti della riga i
+            String[][] disegni = new String[7][]; // 7 colonne (4-10)
+            for (int j = 0; j < COLS; j++) {
+                if (components[i][j] != null)
+                    disegni[j] = components[i][j].renderSmall();
+                else
+                    disegni[j] = renderEmpty();
+            }
 
+            // Caselle extra (sempre vuote per ora)
+            String[] casellaA = null, casellaB = null, casellaC = null;
+            if (i == 0) { // prima riga - casella A
+                casellaA = renderEmpty();
+            }
+            if (i == 1) { // seconda riga - caselle B e C
+                casellaB = reservedComponents.get(0).renderSmall();
+                casellaC = reservedComponents.get(1).renderSmall();
+            }
+
+            // Poi stampiamo riga per riga il disegno
+            for (int riga = 0; riga < disegni[0].length; riga++) {
+                // Stampiamo il numero di riga solo sulla riga centrale del componente
+                if (riga == disegni[0].length / 2) {
+                    System.out.printf("%2d ", i + 5);
+                } else {
+                    System.out.print("   ");
+                }
+
+                // Stampiamo la griglia principale
+                for (int j = 0; j < 7; j++) {
+                    System.out.print(disegni[j][riga]);
+                }
+
+                System.out.print("     "); // spazio separatore
+
+                // Stampiamo le caselle extra con etichette accanto
+                if (i == 0 && casellaA != null) {
+                    System.out.print(casellaA[riga]);
+                    // Stampiamo l'etichetta A solo sulla riga centrale
+                    if (riga == disegni[0].length / 2) {
+                        System.out.print(" HAND");
+                    }
+                } else if (i == 1) {
+                    if (casellaB != null) System.out.print(casellaB[riga]);
+                    if (casellaC != null) System.out.print(casellaC[riga]);
+                    // Stampiamo le etichette B e C solo sulla riga centrale
+                    if (riga == disegni[0].length / 2) {
+                        System.out.print(" RESERVED");
+                    }
+                }
+
+                System.out.println();
+            }
+        }
+
+// Legenda su 3 colonne
+        System.out.println("\nLEGENDA:");
+
+// Array con i tuoi contenuti personalizzati
+        String[] legenda = {
+                "BAT - Battery compartment",
+                "CAR - Cargo hold",
+                "CAB - Cabin",
+                "STR - Structural Module",
+                "E1  - Single Engine",
+                "E2  - Double Engine",
+                "C1  - Single Cannon",
+                "C2  - Double Cannon",
+                "PAL - Purple Alien",
+                "BAL - Brown Alien",
+                "SH  - Shield",
+                "↑   - Orientation"
+
+                // Aggiungi altri elementi qui...
+        };
+
+// Stampa su 3 colonne
+        for (int i = 0; i < legenda.length; i += 3) {
+            // Prima colonna
+            System.out.printf("%-30s", legenda[i]);
+
+            // Seconda colonna (se esiste)
+            if (i + 1 < legenda.length) {
+                System.out.printf("%-30s", legenda[i + 1]);
+            } else {
+                System.out.printf("%-30s", "");
+            }
+
+            // Terza colonna (se esiste)
+            if (i + 2 < legenda.length) {
+                System.out.printf("%-25s", legenda[i + 2]);
+            }
+
+            System.out.println();
+        }
+    }
+
+    public String[] renderEmpty() {
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│     │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
 
 }
 

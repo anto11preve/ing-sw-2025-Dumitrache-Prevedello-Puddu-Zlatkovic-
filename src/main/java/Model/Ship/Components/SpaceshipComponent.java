@@ -138,7 +138,13 @@ public abstract class SpaceshipComponent {
     public abstract void removed();
 
 
+    public String[] renderSmall(){
+        return null;
+    }
 
+    public void renderBig(){
+
+    }
 
 
 

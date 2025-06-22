@@ -1,5 +1,6 @@
 package Model.Ship.Components;
 
+import Model.Enums.Side;
 import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
@@ -82,5 +83,43 @@ public class Engine extends SpaceshipComponent {
             }
         }
 
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        if (!this.isDouble) {
+            righe[1] = String.format("%s E1%s %s", sx, this.getOrientation().getFreccia(), dx);
+        } else {
+            righe[1] = String.format("%s E2%s %s", sx, this.getOrientation().getFreccia(), dx);
+        }
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
+    }
+
+    public void renderBig() {
+        // Riga superiore
+        System.out.printf("╔══  %d  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero());
+
+        System.out.print("║  ENGIN  ║\n");
+
+        System.out.printf("%s%s%s\n",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    "+
+                        (this.getOrientation().getFreccia()),
+                "    "+
+                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+        if (!this.isDouble) {
+            System.out.print("║  SINGL  ║\n");
+        } else {
+            System.out.print("║  DOUBL  ║\n");
+        }
+
+        // Riga inferiore
+        System.out.printf("╚══  %d  ══╝\n", this.getConnectorAt(Side.REAR).getNumero());
     }
 }

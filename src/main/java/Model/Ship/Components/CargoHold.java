@@ -3,6 +3,7 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Good;
+import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
@@ -113,5 +114,75 @@ public class CargoHold extends SpaceshipComponent {
             getShipBoard().getCondensedShip().removeCargoHold(this);
         }
 
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        righe[1] = String.format("%s CAR %s", sx, dx);
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
+    }
+
+    public void renderBig() {
+        // Riga superiore
+        System.out.printf("╔══  %d  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero());
+
+        System.out.print("║  BATRY  ║\n");
+
+        System.out.printf("%s%s%s\n",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    "+
+                        (this.getOrientation().getFreccia()),
+                "    "+
+                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+        System.out.print("║  ");
+        switch(this.getCapacity()){
+            case 1:
+                System.out.print("  ");
+                for (Good good : this.getGoods()) {
+                    if (good == null) {
+                        System.out.print("☐ ");
+                    } else {
+                        // Prendo la prima lettera del nome dell'enum
+                        System.out.print(good.name().charAt(0) + " ");
+                    }
+                };
+                System.out.print("  ");
+                break;
+            case 2:
+                System.out.print(" ");
+                for (Good good : this.getGoods()) {
+                    if (good == null) {
+                        System.out.print("☐ ");
+                    } else {
+                        // Prendo la prima lettera del nome dell'enum
+                        System.out.print(good.name().charAt(0) + " ");
+                    }
+                }
+                System.out.print(" ");
+                break;
+            case 3:
+                System.out.print(" ");
+                for (Good good : this.getGoods()) {
+                    if (good == null) {
+                        System.out.print("☐ ");
+                    } else {
+                        // Prendo la prima lettera del nome dell'enum
+                        System.out.print(good.name().charAt(0) + " ");
+                    }
+                }
+                break;
+            default:
+                System.out.printf("║ %d slots ║\n", this.getCapacity());
+        }
+        System.out.print(" ║\n");
+
+        // Riga inferiore
+        System.out.printf("╚══  %d  ══╝\n", this.getConnectorAt(Side.REAR).getNumero());
     }
 }

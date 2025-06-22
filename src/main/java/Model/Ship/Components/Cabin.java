@@ -1,9 +1,6 @@
 package Model.Ship.Components;
 
-import Model.Enums.AlienColor;
-import Model.Enums.Card;
-import Model.Enums.ConnectorType;
-import Model.Enums.Crewmates;
+import Model.Enums.*;
 import com.google.gson.JsonObject;
 
 /**
@@ -159,5 +156,54 @@ public class Cabin extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().removeCabin(this);
         }
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        righe[1] = String.format("%s CAB %s", sx, dx);
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
+    }
+
+    public void renderBig() {
+        // Riga superiore
+        System.out.printf("╔══  %d  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero());
+
+        System.out.print("║  CABIN  ║\n");
+
+        System.out.printf("%s%s%s\n",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    "+
+                        (this.getOrientation().getFreccia()),
+                        "    "+
+                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+
+        switch (this.getOccupants()){
+            case EMPTY:
+                System.out.println("║         ║\n");
+                break;
+            case BROWN_ALIEN:
+                System.out.println("║  BROWN  ║\n");
+                break;
+            case PURPLE_ALIEN:
+                System.out.println("║ PURPLE  ║\n");
+                break;
+            case SINGLE_HUMAN:
+                System.out.println("║  1 HUM  ║\n");
+                break;
+            case DOUBLE_HUMAN:
+                System.out.println("║  2 HUM  ║\n");
+                break;
+            default:
+                System.out.println("║   ?    ║\n"); // Fallback case, should not happen
+        }
+
+        // Riga inferiore
+        System.out.printf("╚══  %d  ══╝\n", this.getConnectorAt(Side.REAR).getNumero());
     }
 }

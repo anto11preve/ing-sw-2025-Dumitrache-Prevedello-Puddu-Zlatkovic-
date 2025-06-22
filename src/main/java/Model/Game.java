@@ -11,6 +11,7 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Utils.ComponentLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -179,4 +180,92 @@ public class Game {
     public void setError(boolean error) {
         this.error = error;
     }
+
+    public void render(){
+        // Visualizzazione matrice 7x20 da array unidimensionale
+        for (int i = 0; i < 7; i++) {
+            // Prima otteniamo i disegni di tutti i componenti della riga i
+            String[][] disegni = new String[20][];
+            for (int j = 0; j < 20; j++) {
+                // Conversione da coordinate 2D a indice 1D
+                int indice = i * 20 + j;
+
+                if (tiles[indice] != null)
+                    if (tiles[indice].isVisible()) {
+                        disegni[j] = tiles[indice].renderSmall();
+                    } else {
+                        System.out.print(Arrays.toString(renderHidden())); // Renderizza anche i componenti non visibili
+                    }
+                else
+                    System.out.print(Arrays.toString(renderEmpty()));
+            }
+
+            // Stampiamo riga per riga il disegno
+            for (int riga = 0; riga < disegni[0].length; riga++) {
+                // Stampiamo la griglia
+                for (int j = 0; j < 20; j++) {
+                    System.out.print(disegni[j][riga]);
+                }
+                System.out.println();
+            }
+        }
+
+        String[] legenda = {
+                "BAT - Battery compartment",
+                "CAR - Cargo hold",
+                "CAB - Cabin",
+                "STR - Structural Module",
+                "E1  - Single Engine",
+                "E2  - Double Engine",
+                "C1  - Single Cannon",
+                "C2  - Double Cannon",
+                "PAL - Purple Alien",
+                "BAL - Brown Alien",
+                "SH  - Shield",
+                "↑   - Orientation"
+
+                // Aggiungi altri elementi qui...
+        };
+
+// Stampa su 3 colonne
+        for (int i = 0; i < legenda.length; i += 3) {
+            // Prima colonna
+            System.out.printf("%-30s", legenda[i]);
+
+            // Seconda colonna (se esiste)
+            if (i + 1 < legenda.length) {
+                System.out.printf("%-30s", legenda[i + 1]);
+            } else {
+                System.out.printf("%-30s", "");
+            }
+
+            // Terza colonna (se esiste)
+            if (i + 2 < legenda.length) {
+                System.out.printf("%-25s", legenda[i + 2]);
+            }
+
+            System.out.println();
+        }
+    }
+
+    public String[] renderHidden(){
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│  ?  │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
+
+    public String[] renderEmpty() {
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│     │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
+
 }
+
+
