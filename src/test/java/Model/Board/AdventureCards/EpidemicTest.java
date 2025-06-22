@@ -36,7 +36,7 @@ public class EpidemicTest {
         assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
         assertEquals("Epidemia", card.getName());
         assertEquals("", card.getDescription());
-        assertEquals(2, card.getCrewLost());    //TODO: check perchè non da problemi ma l'attributo è stato eliminato
+        //assertEquals(2, card.getCrewLost());
     }
 
     /**
@@ -49,7 +49,7 @@ public class EpidemicTest {
         assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
         assertEquals("Epidemia", card.getName());
         assertEquals("", card.getDescription());
-        assertEquals(0, card.getCrewLost()); //TODO: check perchè non da problemi ma l'attributo è stato eliminato
+        //assertEquals(0, card.getCrewLost());
     }
 
     /**
@@ -64,7 +64,7 @@ public class EpidemicTest {
         Epidemic card = new Epidemic(json);
         assertEquals(50, card.getId());
         assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
-        assertEquals(0, card.getCrewLost()); // Default value //TODO: check perchè non da problemi ma l'attributo è stato eliminato
+        //assertEquals(0, card.getCrewLost()); // Default value
     }
 
     /**
