@@ -1,10 +1,15 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.CrewPenalty;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Slavers extends Enemy<CrewPenalty, Credits> {
     public Slavers(int id, CardLevel level, int power, int crew, int days, int credits) {
@@ -40,7 +45,7 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
         CrewPenalty cp = getLossPenalty();
         System.out.printf(
                 "Loss Penalty:         %s (type: %s)%n",
-                cp,
+                cp.getAmount(),
                 cp.getClass().getSimpleName()
         );
 
@@ -48,7 +53,7 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
         DaysPenalty dp = getWinPenalty();
         System.out.printf(
                 "Win Penalty:          %s (type: %s)%n",
-                dp,
+                dp.getAmount(),
                 dp.getClass().getSimpleName()
         );
 
@@ -61,4 +66,47 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
         );
     }
 
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) encounter power
+        lines.add("Power:                " + getPower());
+
+        // 3) loss penalty (CrewPenalty)
+        CrewPenalty cp = getLossPenalty();
+        lines.add(String.format(
+                "Loss Penalty:         %s (type: %s)",
+                cp.getAmount(),
+                cp.getClass().getSimpleName()
+        ));
+
+        // 4) win penalty (DaysPenalty)
+        DaysPenalty dp = getWinPenalty();
+        lines.add(String.format(
+                "Win Penalty:          %s (type: %s)",
+                dp.getAmount(),
+                dp.getClass().getSimpleName()
+        ));
+
+        // 5) win reward (Credits)
+        Credits cr = getWinReward();
+        lines.add(String.format(
+                "Win Reward:           %d credits (type: %s)",
+                cr.getAmount(),
+                cr.getClass().getSimpleName()
+        ));
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
+    }
 }

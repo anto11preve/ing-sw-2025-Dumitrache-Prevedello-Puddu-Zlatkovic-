@@ -29,6 +29,7 @@ public class SlaversCrewRemovalState extends State {
      */
     public SlaversCrewRemovalState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     /**

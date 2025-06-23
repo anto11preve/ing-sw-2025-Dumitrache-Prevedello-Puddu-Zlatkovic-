@@ -27,6 +27,7 @@ public class SmugglersPowerDeclarationState extends State {
      */
     public SmugglersPowerDeclarationState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

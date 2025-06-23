@@ -1,5 +1,8 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
+import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Penalties.*;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
@@ -12,6 +15,7 @@ import java.util.List;
 
 import Model.Enums.Criteria;
 import Model.Enums.Side;
+import Model.Exceptions.InvalidMethodParameters;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -123,47 +127,87 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
 
         // 2) Print each combat line
         System.out.println("Combat Lines:");
-        for (int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < 2; i++) {
             CombatZoneLine line = lines.get(i);
-            Penalty         pen  = line.getPenalty();
+            RegularPenalty         pen  = (RegularPenalty) line.getPenalty();
             Criteria        crit = line.getOrderingCriteria();
 
             System.out.printf(" [%d] Criteria: %s%n", i + 1, crit);
 
-            // Simple penalties: rely on toString() //
-            if (pen instanceof DaysPenalty ||
-                    pen instanceof CrewPenalty ||
-                    pen instanceof GoodsPenalty) {
+            System.out.printf(
+                    "      Penalty: %s (type: %s)%n",
+                    pen.getAmount(),
+                    pen.getClass().getSimpleName()
+            );
 
-                System.out.printf(
-                        "      Penalty: %s (type: %s)%n",
-                        pen,
-                        pen.getClass().getSimpleName()
-                );
-
-            }
-            // CannonShotPenalty: iterable of CannonShot
-            else if (pen instanceof CannonShotPenalty) {
-                CannonShotPenalty csp = (CannonShotPenalty) pen;
-                int count = 0;
-                System.out.printf("      Shots:%n");
-                for (CannonShot shot : csp) {
-                    count++;
-                    System.out.printf(
-                            "        #%d → large=%s, dir=%s%n",
-                            count,
-                            shot.isBig(),
-                            shot.getSide()
-                    );
-                }
-                if (count == 0) {
-                    System.out.println("        (no shots)");
-                }
-            }
-            // Fallback
-            else {
-                System.out.printf("      Unknown penalty type: %s%n", pen);
-            }
         }
+        CombatZoneLine line = lines.get(2);
+        Penalty pen2  = line.getPenalty();
+        Criteria crit = line.getOrderingCriteria();
+        System.out.printf(" [%d] Criteria: %s%n", 3, crit);
+        // CannonShotPenalty: iterable of CannonShot
+        CannonShotPenalty csp = (CannonShotPenalty) pen2;
+        int count = 0;
+        System.out.printf("      Shots:%n");
+        for (CannonShot shot : csp) {
+            count++;
+            System.out.printf(
+                    "        #%d → large=%s, dir=%s%n",
+                    count,
+                    shot.isBig(),
+                    shot.getSide()
+            );
+        }
+    }
+
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) Print each combat line
+        lines.add("Combat Lines:");
+        for (int i = 0; i < 2; i++) {
+            CombatZoneLine line = this.lines.get(i);
+            RegularPenalty pen  = (RegularPenalty) line.getPenalty();
+            Criteria       crit = line.getOrderingCriteria();
+
+            lines.add(String.format(" [%d] Criteria: %s", i + 1, crit));
+            lines.add(String.format(
+                    "      Penalty: %s (type: %s)",
+                    pen.getAmount(),
+                    pen.getClass().getSimpleName()
+            ));
+        }
+
+        CombatZoneLine line = this.lines.get(2);
+        Penalty pen2  = line.getPenalty();
+        Criteria crit = line.getOrderingCriteria();
+        lines.add(String.format(" [%d] Criteria: %s", 3, crit));
+
+        // CannonShotPenalty: iterable of CannonShot
+        CannonShotPenalty csp = (CannonShotPenalty) pen2;
+        int count = 0;
+        lines.add("      Shots:");
+        for (CannonShot shot : csp) {
+            count++;
+            lines.add(String.format(
+                    "        #%d → large=%s, dir=%s",
+                    count,
+                    shot.isBig(),
+                    shot.getSide()
+            ));
+        }
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) throws InvalidMethodParameters, InvalidParameters {
+        cardResolverVisitor.visit(this, controller);
     }
 }

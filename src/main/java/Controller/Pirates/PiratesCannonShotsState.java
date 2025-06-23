@@ -3,7 +3,12 @@ package Controller.Pirates;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
+import Controller.MeteorsSwarm.ManageMeteorState;
+import Controller.MeteorsSwarm.MeteorsState;
 import Controller.State;
+import Model.Board.AdventureCards.Projectiles.Projectile;
+import Model.Enums.Side;
 import Model.Player;
 import Controller.Context;
 
@@ -31,6 +36,7 @@ public class PiratesCannonShotsState extends State{
      */
     public PiratesCannonShotsState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     /**
@@ -51,7 +57,7 @@ public class PiratesCannonShotsState extends State{
             throw new InvalidContextualAction("No projectiles available for cannon shots.");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (!player.equals(context.getPlayers().getFirst())) {
+        if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
@@ -60,8 +66,31 @@ public class PiratesCannonShotsState extends State{
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
-        controller.getModel().setState(new PiratesManageShotState(context, number, 0));
-        controller.getModel().setError(false);
+
+        Projectile shot = context.getProjectiles().getFirst();
+        boolean out = false;
+        if(shot.getSide() == Side.LEFT || shot.getSide() == Side.RIGHT) {
+            if(number > 9 || number < 5){      //fuori dalla griglia
+                out = true;
+            }
+        } else {
+            if(number > 10 || number < 4){     //fuori dalla griglia
+                out = true;
+            }
+        }
+        if(out) {
+            context.removeProjectile(shot);
+            if(context.getProjectiles().isEmpty()) {
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new PiratesCannonShotsState(context));
+                controller.getModel().setError(false);
+            }
+        } else {
+            controller.getModel().setState(new PiratesManageShotState(context, number, 0));
+            controller.getModel().setError(false);
+        }
 
     }
 }

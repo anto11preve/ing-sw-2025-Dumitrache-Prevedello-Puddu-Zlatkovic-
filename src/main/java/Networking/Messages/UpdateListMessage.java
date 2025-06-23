@@ -11,7 +11,7 @@ public class UpdateListMessage implements Message {
         final Server server;
 
         try{
-            server = (Server) network;
+            server = (Server) agent;
         } catch (ClassCastException e){
             System.err.println("Server object is not a Server");
             return;

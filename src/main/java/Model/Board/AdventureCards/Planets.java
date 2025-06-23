@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Enums.CardLevel;
@@ -97,41 +99,61 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                 idx++;
                 System.out.printf("  #%d → %s%n", idx, p.getName());
 
-                // reflection to read the private `goods` field
-                List<Good> goods;
-                try {
-                    java.lang.reflect.Field f =
-                            Planet.class.getDeclaredField("goods");
-                    f.setAccessible(true);
-                    //noinspection unchecked
-                    goods = (List<Good>) f.get(p);
-                } catch (Exception e) {
-                    goods = List.of();  // fallback if something goes wrong
+                for(Good good : p.getLandingReward()) {
+                    System.out.print(good + " ");
                 }
-
-                // build a space-separated string of goods
-                String goodsLine = "";
-                for (Good g : goods) {
-                    goodsLine += g + " ";
-                }
-                goodsLine = goodsLine.trim();  // remove trailing space
-
-                if (goods.isEmpty()) {
-                    System.out.println("      Goods: (no goods)");
-                } else {
-                    System.out.println("      Goods: " + goodsLine +
-                            " (" + goods.size() + " total)");
-                }
+                System.out.println();
             }
         }
 
         // 3) landing penalty and its type
         System.out.printf(
                 "Landing Penalty:     %s (type: %s)%n",
-                landingPenalty,
+                landingPenalty.getAmount(),
                 landingPenalty.getClass().getSimpleName()
         );
     }
 
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) print each planet from your in-memory list
+        lines.add("Planets:");
+        if (planetList.isEmpty()) {
+            lines.add("  (no planets)");
+        } else {
+            int idx = 0;
+            for (Planet p : planetList) {
+                idx++;
+                lines.add(String.format("  #%d → %s", idx, p.getName()));
+
+                StringBuilder rewardLine = new StringBuilder();
+                for(Good good : p.getLandingReward()) {
+                    rewardLine.append(good).append(" ");
+                }
+                lines.add(rewardLine.toString());
+            }
+        }
+
+        // 3) landing penalty and its type
+        lines.add(String.format(
+                "Landing Penalty:     %s (type: %s)",
+                landingPenalty.getAmount(),
+                landingPenalty.getClass().getSimpleName()
+        ));
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
+    }
 
 }

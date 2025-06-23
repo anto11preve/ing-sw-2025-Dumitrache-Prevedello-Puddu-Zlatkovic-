@@ -4,6 +4,7 @@ import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Player;
 import Model.Ship.Coordinates;
 
 //import java.util.Map;
@@ -12,17 +13,27 @@ public abstract class State {
 
     private Controller controller;
 
+    private Player playerInTurn;
+
     public Controller getController() {
         return controller;
     }
 
     public State(Controller controller) {
         this.controller = controller;
+        this.playerInTurn = controller.getModel().getFlightBoard().getTurnOrder()[0];
     }
 
     public State(){};
 
     public void onEnter() {}
+
+    public Player getPlayerInTurn() {
+        return playerInTurn;
+    }
+    public void setPlayerInTurn(Player playerInTurn) {
+        this.playerInTurn = playerInTurn;
+    }
 
     public void login(String name) throws InvalidCommand, InvalidParameters{
         throw new InvalidCommand("Invalid command: login");
@@ -59,7 +70,7 @@ public abstract class State {
 
 
     // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
+    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: pickNextCard");
     }
 

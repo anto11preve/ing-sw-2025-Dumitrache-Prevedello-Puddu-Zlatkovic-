@@ -30,6 +30,7 @@ public class PiratesRewardState extends State {
      */
     public PiratesRewardState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

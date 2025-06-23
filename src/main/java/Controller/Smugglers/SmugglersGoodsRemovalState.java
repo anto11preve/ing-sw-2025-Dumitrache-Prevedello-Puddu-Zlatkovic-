@@ -43,6 +43,7 @@ public class SmugglersGoodsRemovalState extends State{
     public SmugglersGoodsRemovalState(Context context) {
         this.context = context;
         this.amount = context.getRequiredGoods();
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     /**
@@ -54,6 +55,7 @@ public class SmugglersGoodsRemovalState extends State{
     public SmugglersGoodsRemovalState(Context context, int amount) {
         this.context = context;
         this.amount = amount;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
 
@@ -76,7 +78,7 @@ public class SmugglersGoodsRemovalState extends State{
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn");
         }

@@ -27,6 +27,7 @@ public class SlaversPowerDeclarationState extends State {
      */
     public SlaversPowerDeclarationState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

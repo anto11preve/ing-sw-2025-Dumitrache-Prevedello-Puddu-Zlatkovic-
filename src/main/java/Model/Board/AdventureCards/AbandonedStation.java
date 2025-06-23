@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.CardLevel;
@@ -91,27 +93,51 @@ public class AbandonedStation extends AdventureCardFilip {
         // 3) landing delay penalty and its type
         System.out.printf(
                 "Landing Delay:       %s (type: %s)%n",
-                landingPenalty,
+                landingPenalty.getAmount(),
                 landingPenalty.getClass().getSimpleName()
         );
-
-        // 4) reward goods count & list
-        int goodsCount = 0;
-        String goodsList = "";
-        for (Good g : landingReward) {
-            goodsCount++;
-            goodsList += g + " ";
+        System.out.println();
+        // 4) landing reward
+        System.out.print("Landing Reward: ");
+        for(Good good : landingReward) {
+            System.out.print(good + " ");
         }
-        if (!goodsList.isEmpty()) {
-            goodsList = goodsList.trim();
-        }
-        System.out.println("Reward Goods:        " + goodsCount);
-        System.out.println("  Goods List:        " + (goodsList.isEmpty() ? "(none)" : goodsList));
 
-        // 5) reward type
-        System.out.println(
-                "Reward Type:         " + landingReward.getClass().getSimpleName()
-        );
+    }
+
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) crew required
+        lines.add("Crew Required:       " + crew);
+
+        // 3) landing delay penalty and its type
+        lines.add(String.format(
+                "Landing Delay:       %s (type: %s)",
+                landingPenalty.getAmount(),
+                landingPenalty.getClass().getSimpleName()
+        ));
+        lines.add(""); // riga vuota
+
+        // 4) landing reward
+        StringBuilder rewardLine = new StringBuilder("Landing Reward: ");
+        for(Good good : landingReward) {
+            rewardLine.append(good).append(" ");
+        }
+        lines.add(rewardLine.toString());
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
     }
 
 

@@ -48,6 +48,7 @@ public class PiratesBatteryRemovalState extends State{
         this.context = context;
         this.declaredPower = declaredPower;
         this.batteries = batteries;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

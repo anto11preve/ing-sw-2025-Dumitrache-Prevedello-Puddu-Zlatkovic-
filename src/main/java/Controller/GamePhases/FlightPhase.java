@@ -4,13 +4,11 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Controller.State;
-import Model.Board.AdventureCards.AdventureCard;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.CardDeck;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.CardResolverVisitor;
-
-import java.util.Map;
 
 public class FlightPhase extends State {
 
@@ -35,7 +33,7 @@ public class FlightPhase extends State {
     }
 
     @Override
-    public void pickNextCard(String playerName) throws InvalidContextualAction, InvalidParameters {
+    public void pickNextCard(String playerName) throws InvalidContextualAction, InvalidParameters, InvalidMethodParameters {
         Controller controller = this.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(!currentPlayer.equals(controller.getModel().getFlightBoard().getTurnOrder()[0])){
