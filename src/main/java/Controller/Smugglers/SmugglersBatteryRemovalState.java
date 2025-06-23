@@ -13,6 +13,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.State;
 
+import java.util.List;
+
 /**
  * This state handles the removal of batteries from a player's ship during the
  * "Smugglers" event. After declaring a cannon power, players must now use a corresponding
@@ -155,5 +157,12 @@ public class SmugglersBatteryRemovalState extends State{
             controller.getModel().setError(false);
         }
 
+    }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "UseItem",
+            "GetReward"
+        );
     }
 }

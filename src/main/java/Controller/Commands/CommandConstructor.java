@@ -42,7 +42,7 @@ public interface CommandConstructor {
             ));
 
             commandConstructors.putAll(Map.of(
-                    "GetCreditsReward", GetRewardCommand.getCreditsConstructor()
+                    "GetCreditsReward", GetRewardCommand.getCreditsConstructor(),
                     "LeaveRace", LeaveRaceCommand.getConstructor(),
                     "Login", LoginCommand.getConstructor(),
                     "Logout", LogoutCommand.getConstructor(),

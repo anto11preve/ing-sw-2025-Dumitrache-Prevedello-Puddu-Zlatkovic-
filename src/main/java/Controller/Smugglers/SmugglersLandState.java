@@ -12,6 +12,8 @@ import Model.Ship.Coordinates;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * This state handles the phase where a player who successfully surpassed the smugglers' power
  * gets to collect rewards in the form of goods. The player can place goods in their cargo holds
@@ -149,5 +151,13 @@ public class SmugglersLandState extends State{
             controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //manca qualcuno da gestire
             controller.getModel().setError(false);
         }
+    }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+                "GetGood",
+                "MoveGood",
+                "End"
+        );
     }
 }

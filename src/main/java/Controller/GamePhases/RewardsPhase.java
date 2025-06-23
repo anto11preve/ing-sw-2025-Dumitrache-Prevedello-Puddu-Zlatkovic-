@@ -71,4 +71,8 @@ public class RewardsPhase extends State {
         }
 
     }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of();
+    }
 }

@@ -11,6 +11,9 @@ public class OffState extends State {
         super(controller);
     }
 
-
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of();
+    }
 
 }

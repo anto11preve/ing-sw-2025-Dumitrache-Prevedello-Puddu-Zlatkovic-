@@ -9,6 +9,8 @@ import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
 
+import java.util.List;
+
 /**
  * This state handles the declaration of cannon power by players during the
  * "Smugglers" event. Players must declare how many cannons (and corresponding batteries)
@@ -128,5 +130,11 @@ public class SmugglersPowerDeclarationState extends State {
             controller.getModel().setState(new SmugglersBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
             controller.getModel().setError(false);
         }
+    }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "DeclaresDouble"
+        );
     }
 }

@@ -102,5 +102,7 @@ public abstract class State {
     }
 
     /*TODO: implement this for all states*/
-    public abstract List<String> getAvailableCommands();
+    public abstract List<String> getAvailableCommands(
+
+    );
 }
