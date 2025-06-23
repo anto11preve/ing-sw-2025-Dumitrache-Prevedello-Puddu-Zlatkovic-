@@ -8,27 +8,18 @@ import java.util.*;
 
 public class ActionCreationState implements ViewState {
     private final ActionConstructor actionConstructor;
-    private final Set<String> requiredArguments;
     private final Map<String, String> providedArguments;
 
-    public ActionCreationState(ActionConstructor actionConstructor) {
+    public ActionCreationState(ActionConstructor actionConstructor, Map<String, String> providedArguments) {
         this.actionConstructor = actionConstructor;
 
-        this.requiredArguments = new HashSet<>(actionConstructor.getArguments());
-
-        this.providedArguments = new HashMap<>();
+        this.providedArguments = providedArguments;
 
         this.listArguments();
     }
 
     public void listArguments(){
-        final List<String> list = new ArrayList<>();
-        for(String argName : this.actionConstructor.getArguments()){
-            final String argValue = this.providedArguments.get(argName);
-            list.add(argName + ": " + (argValue == null ? "_empty_": argValue));
-        }
-
-        Client.client.showOptions("arguments", list);
+        Client.client.showArguments(this.actionConstructor.getArguments(), this.providedArguments);
     }
 
     public void addArgument(String argName, String argValue){
@@ -38,14 +29,13 @@ public class ActionCreationState implements ViewState {
     @Override
     public void callback(String line) {
         final String argName = line.split(" ")[0];
-        System.out.println("callback of CommandCreationState");
 
         if(argName.equalsIgnoreCase("send")){
             this.send();
             return;
         }
 
-        for(String arg : this.requiredArguments){
+        for(String arg : this.actionConstructor.getArguments()){
             if(argName.equalsIgnoreCase(arg)){
                 try {
                     final String argValue = line.split(" ")[1];

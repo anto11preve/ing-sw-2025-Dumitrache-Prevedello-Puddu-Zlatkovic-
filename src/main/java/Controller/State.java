@@ -6,13 +6,14 @@ import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Coordinates;
 
+import java.io.Serializable;
 import java.util.List;
 
 //import java.util.Map;
 
-public abstract class State {
+public abstract class State implements Serializable {
 
-    private Controller controller;
+    private transient Controller controller;
 
     public Controller getController() {
         return controller;
@@ -99,6 +100,10 @@ public abstract class State {
     }
     public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: throwDices");
+    }
+
+    public boolean isDone() {
+        return false;
     }
 
     /*TODO: implement this for all states*/

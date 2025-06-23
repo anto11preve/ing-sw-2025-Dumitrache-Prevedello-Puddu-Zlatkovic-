@@ -43,9 +43,10 @@ public final class TCPNetwork implements Networking.Network {
             this.out.flush();;
         } catch (IOException e) {
             if(!this.isDone()){
-                System.err.println("TCPOutQueue: Could not enqueue " +
+                System.err.println("TCPNetwork.send(): Could not enqueue " +
                         message.getClass().getSimpleName() +
                         ". Are you sure it's serializable?");
+                e.printStackTrace(System.err);
             }
             return false;
         }

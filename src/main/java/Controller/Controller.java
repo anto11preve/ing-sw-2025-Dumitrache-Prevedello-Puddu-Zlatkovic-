@@ -142,9 +142,7 @@ public class Controller implements Agent {
     }
 
     public void run(){
-        System.err.println("Thread started yay");
-        /*TODO: capire come segnalare al thread che deve morire*/
-        while(true){
+        while(!this.model.getState().isDone()){
             final Command command = this.dequeueCommand();
 
             if(command != null){
@@ -160,12 +158,14 @@ public class Controller implements Agent {
                     if(network != null && !network.isDone()) {
                         network.send(
                                 new ClientMessage(
-                                        new UpdateGameAction(this.model)
+                                        new UpdateGameAction(this.model.clone())
                                 )
                         );
                     }
                 }
             }
         }
+
+        Server.server.destroyGame(this.gameID);
     }
 }

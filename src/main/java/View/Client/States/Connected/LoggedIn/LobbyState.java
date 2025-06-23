@@ -29,7 +29,7 @@ public class LobbyState extends LoggedInState {
 
     @Override
     public List<String> getAvailableCommands() {
-        final List<String> commands = new ArrayList<>(/*TODO: add this after merge: game.getState().getAvailableCommands()*/);
+        final List<String> commands = new ArrayList<>(game.getState().getAvailableCommands());
 
         commands.addAll(super.getAvailableCommands());
 
