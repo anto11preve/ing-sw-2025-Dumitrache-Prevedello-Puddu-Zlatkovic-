@@ -89,6 +89,11 @@ public class AbandonedShipDecidingState extends State {
             throw new InvalidParameters("It's not your turn to take the reward.");
         }
 
+        if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
+            controller.getModel().setError(true);
+            throw new InvalidMethodParameters("The player doesn't have enough crew members to take the reward.");
+        }
+
         player.deltaCredits(context.getCredits());
 
         controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());

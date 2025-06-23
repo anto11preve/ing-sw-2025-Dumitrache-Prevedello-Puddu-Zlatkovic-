@@ -30,7 +30,17 @@ public class RewardsPhase extends State {
             }
         }
 
-        //TODO: ricompensa nave più bella, cioè il giocatore con meno connettori esposti prende 2 crediti (a parimerito prendono entrambi)
+        // Ricompensa per il giocatore con meno connettori esposti (nave più bella)
+        int numConnExp = -1;
+        Player cleanestPlayer = null;
+        for(Player p : this.getController().getModel().getFlightBoard().getTurnOrder()){
+            int connExp = p.getShipBoard().getExposedConnectors().size();
+            if(numConnExp == -1 || connExp < numConnExp){
+                numConnExp = connExp;
+                cleanestPlayer = p;
+            }
+        }
+        //TODO: controllare se si usa così getExposedConnectors
 
         for(Player p : this.getController().getModel().getFlightBoard().getTurnOrder()){
             List<Good> allGoods = p.getShipBoard().getCondensedShip().getCargoHolds().stream()
