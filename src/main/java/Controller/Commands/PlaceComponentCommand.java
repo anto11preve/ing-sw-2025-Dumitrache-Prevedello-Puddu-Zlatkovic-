@@ -78,31 +78,35 @@ public class PlaceComponentCommand extends Command {
     public static CommandConstructor getConstructor() {
         return new CommandConstructor() {
             @Override
-            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+            public PlaceComponentCommand create(String username, Map<String, String> args) throws IllegalArgumentException {
                 //TODO: ComponentOrigin origin
-                final int row;
+                final int row, column;
+                final ComponentOrigin origin;
+                final Direction orientation;
+
+                origin = ComponentOrigin.valueOf(args.get("origin").toUpperCase());
+
                 try{
                     row = Integer.parseInt(args.get("row"));
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
                 }
 
-                final int column;
                 try{
                     column = Integer.parseInt(args.get("column"));
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
                 }
 
-                //TODO: Direction orientation
+                orientation = Direction.valueOf(args.get("orientation").toUpperCase());
 
-                return new FinishBuildingCommand(username, ,
-                        new Coordinates(row, column));
+                return new PlaceComponentCommand(username, origin,
+                        new Coordinates(row, column), orientation);
             }
 
             @Override
             public List<String> getArguments() {
-                return List.of("");
+                return List.of("origin", "row", "column", "orientation");
             }
         };
     }

@@ -1,5 +1,6 @@
 package Controller.Commands;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,36 +24,49 @@ public interface CommandConstructor {
     /**
      * Map that holds all commands that exist
      */
-    Map<String, CommandConstructor> commandConstructors = Map.ofEntries(
-            "ChoosePlanet", ChoosePlanetCommand.getConstructor(),
-            "DeclaresDoubleCannon", DeclaresDoubleCommand.getCannonConstructor(),
-            "DeclaresDoubleEngine", DeclaresDoubleCommand.getEngineConstructor(),
-            "DeleteComponent", DeleteComponentCommand.getConstructor(),
-            "End", EndCommand.getConstructor(),
-            "FinishBuilding", FinishBuildingCommand.getConstructor(),
-            "FlipHourGlass", FlipHourGlassCommand.getConstructor(),
-            "GetComponent", GetComponentCommand.getConstructor(),
-            "GetGood", GetGoodCommand.getConstructor(),
-            "GetGoodReward", GetRewardCommand.getGoodsConstructor(),
-            "GetCreditsReward", GetRewardCommand.getCreditsConstructor(),
-            "LeaveRace", LeaveRaceCommand.getConstructor(),
-            "Login", LoginCommand.getConstructor(),
-            "Logout", LogoutCommand.getConstructor(),
-            "LookDeck", LookDeckCommand.getConstructor(),
-            "MoveGood", MoveGoodCommand.getConstructor(),
-            "PickNextCard", PickNextCardCommand.getConstructor(),
-            //TODO: "PlaceComponent" command is not implemented yet
-            "PlaceBrownAlien", PlaceCrewCommand.getBrownConstructor(),
-            "PlacePurpleAlien", PlaceCrewCommand.getPurpleConstructor(),
-            "PlaceHuman", PlaceCrewCommand.getHumanConstructor(),
-            "ReserveComponent", ReserveComponentCommand.getConstructor(),
-            "SkipReward", SkipRewardCommand.getConstructor(),
-            "StartTrialGame", StartGameCommand.getTrialConstructor(),
-            "StartLvL2Game", StartGameCommand.getLevel2Constructor(),
-            "ThrowDices", ThrowDicesCommand.getConstructor(),
-            "UseBatterie", UseItemCommand.getBatteriesConstructor(),
-            "UseCrew", UseItemCommand.getCrewConstructor()
+    Map<String, CommandConstructor> commandConstructors = new HashMap<>();
+
+    static Map<String, CommandConstructor> getCommandConstructor(){
+        if(commandConstructors.isEmpty()) {
+            commandConstructors.putAll(Map.of(
+                    "ChoosePlanet", ChoosePlanetCommand.getConstructor(),
+                    "DeclaresDoubleCannon", DeclaresDoubleCommand.getCannonConstructor(),
+                    "DeclaresDoubleEngine", DeclaresDoubleCommand.getEngineConstructor(),
+                    "DeleteComponent", DeleteComponentCommand.getConstructor(),
+                    "End", EndCommand.getConstructor(),
+                    "FinishBuilding", FinishBuildingCommand.getConstructor(),
+                    "FlipHourGlass", FlipHourGlassCommand.getConstructor(),
+                    "GetComponent", GetComponentCommand.getConstructor(),
+                    "GetGood", GetGoodCommand.getConstructor(),
+                    "GetGoodReward", GetRewardCommand.getGoodsConstructor()
+            ));
+
+            commandConstructors.putAll(Map.of(
+                    "GetCreditsReward", GetRewardCommand.getCreditsConstructor()
+                    "LeaveRace", LeaveRaceCommand.getConstructor(),
+                    "Login", LoginCommand.getConstructor(),
+                    "Logout", LogoutCommand.getConstructor(),
+                    "LookDeck", LookDeckCommand.getConstructor(),
+                    "MoveGood", MoveGoodCommand.getConstructor(),
+                    "PickNextCard", PickNextCardCommand.getConstructor(),
+                    //TODO: "PlaceComponent" command is not implemented yet
+                    "PlaceBrownAlien", PlaceCrewCommand.getBrownConstructor(),
+                    "PlacePurpleAlien", PlaceCrewCommand.getPurpleConstructor(),
+                    "PlaceHuman", PlaceCrewCommand.getHumanConstructor()
+            ));
+
+            commandConstructors.putAll(Map.of(
+                    "ReserveComponent", ReserveComponentCommand.getConstructor(),
+                    "SkipReward", SkipRewardCommand.getConstructor(),
+                    "StartTrialGame", StartGameCommand.getTrialConstructor(),
+                    "StartLvL2Game", StartGameCommand.getLevel2Constructor(),
+                    "ThrowDices", ThrowDicesCommand.getConstructor(),
+                    "UseBatterie", UseItemCommand.getBatteriesConstructor(),
+                    "UseCrew", UseItemCommand.getCrewConstructor()
+            ));
+        }
 
 
-    );
+        return commandConstructors;
+    }
 }
