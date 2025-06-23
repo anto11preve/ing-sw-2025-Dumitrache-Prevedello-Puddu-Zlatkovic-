@@ -45,7 +45,7 @@ public class AbandonedStationDecidingState extends State {
     public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
+        if(!currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn to skip the reward.");
         }

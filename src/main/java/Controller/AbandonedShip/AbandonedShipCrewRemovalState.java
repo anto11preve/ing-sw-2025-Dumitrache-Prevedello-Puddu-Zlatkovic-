@@ -9,6 +9,7 @@ import Controller.State;
 import Model.Enums.Crewmates;
 import Model.Player;
 import Model.Ship.Components.Cabin;
+import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.GamePhases.FlightPhase;
 
@@ -68,12 +69,14 @@ public class AbandonedShipCrewRemovalState extends State {
             throw new InvalidParameters("It's not your turn to remove crew members.");
         }
 
-        if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
-            controller.getModel().setError(true);
-            throw new InvalidContextualAction("The player doesn't have enough crew");
-        }
+
         if(context.getCrewmates() > 0){
-            Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
+            SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
+            if(component == null || !player.getShipBoard().getCondensedShip().getCabins().contains(component)) {   //non è un Battery
+                controller.getModel().setError(true);
+                throw new InvalidContextualAction("Invalid component type, expected Cabin");
+            }
+            Cabin cabin = (Cabin) component;
             switch (cabin.getOccupants()){
                 case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
                     cabin.setOccupants(Crewmates.EMPTY);

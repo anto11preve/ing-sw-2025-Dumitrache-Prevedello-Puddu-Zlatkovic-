@@ -141,4 +141,32 @@ public class CardDeck implements Iterable<AdventureCardFilip> {
         Collections.shuffle(cards);
     }
 
+    public void render(List<AdventureCardFilip> mazzo) {
+        if (mazzo == null || mazzo.isEmpty()) {
+            System.out.println("Empty Deck");
+            return;
+        }
+
+        // Otteniamo tutte le visualizzazioni delle carte
+        String[][] visualizzazioni = new String[mazzo.size()][];
+        int maxAltezza = 0;
+
+        for (int i = 0; i < mazzo.size(); i++) {
+            visualizzazioni[i] = mazzo.get(i).visualizeString();
+            maxAltezza = Math.max(maxAltezza, visualizzazioni[i].length);
+        }
+
+        // Stampiamo riga per riga
+        for (int riga = 0; riga < maxAltezza; riga++) {
+            for (int carta = 0; carta < mazzo.size(); carta++) {
+                if (riga < visualizzazioni[carta].length) {
+                    System.out.printf("%-45s", visualizzazioni[carta][riga]); // 45 caratteri per carta
+                } else {
+                    System.out.printf("%-45s", ""); // Spazio vuoto se la carta è più corta
+                }
+            }
+            System.out.println();
+        }
+    }
+
 }

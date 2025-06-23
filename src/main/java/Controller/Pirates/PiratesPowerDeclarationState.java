@@ -114,7 +114,7 @@ public class PiratesPowerDeclarationState extends State {
         }
 
 
-        if (context.getPower() > (amount)) {
+        if (context.getPower() > (amount)) {    //se perdi
             if (context.getSpecialPlayers().contains(player)) {
                 controller.getModel().setError(true);
                 throw new InvalidContextualAction("Player is already marked");
@@ -128,7 +128,7 @@ public class PiratesPowerDeclarationState extends State {
                 controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
                 controller.getModel().setError(false);
             }
-        } else {
+        } else {    //se non perdi
             controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
             controller.getModel().setError(false);
         }

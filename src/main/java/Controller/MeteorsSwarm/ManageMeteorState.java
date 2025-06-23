@@ -54,7 +54,7 @@ public class ManageMeteorState extends State {
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidMethodParameters("Player " + playerName + " is not in turn.");
         }
@@ -212,10 +212,10 @@ public class ManageMeteorState extends State {
                     if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                         controller.getModel().setState(new FlightPhase(controller));
                         controller.getModel().setError(false);
-                        return;
+                    } else {
+                        controller.getModel().setState(new MeteorsState(context));
+                        controller.getModel().setError(false);
                     }
-                    controller.getModel().setState(new MeteorsState(context));
-                    controller.getModel().setError(false);
                 } else {
                     controller.getModel().setState(new ManageMeteorState(context,number));
                     controller.getModel().setError(false);

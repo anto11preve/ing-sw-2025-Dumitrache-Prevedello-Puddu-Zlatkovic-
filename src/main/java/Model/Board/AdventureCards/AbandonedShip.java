@@ -1,9 +1,12 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.CrewPenalty;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Enums.CardLevel;
+import java.util.*;
 import com.google.gson.JsonObject;
 
 public class AbandonedShip extends AdventureCardFilip {
@@ -83,6 +86,26 @@ public class AbandonedShip extends AdventureCardFilip {
         System.out.println("Credits: " + this.landingReward.getAmount());
         System.out.println("Days: " + this.landingPenalty.getAmount());
         System.out.println("---------------------------------------");
+    }
+
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // Aggiungi le linee di super.visualize() se necessario
+        // lines.addAll(Arrays.asList(super.getVisualization()));
+
+        lines.add("Nave Abbandonata");
+        lines.add("Crew: " + this.winPenalty.getAmount());
+        lines.add("Credits: " + this.landingReward.getAmount());
+        lines.add("Days: " + this.landingPenalty.getAmount());
+        lines.add("---------------------------------------");
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
     }
 
 }

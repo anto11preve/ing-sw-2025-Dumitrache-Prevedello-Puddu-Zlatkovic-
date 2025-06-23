@@ -5,6 +5,7 @@ module org.example.ing_sw_project {
     requires com.google.gson;
     requires java.rmi;
     requires java.desktop;
+    requires jdk.jdi;
     //requires jdk.jdi;
 
     opens org.example.ing_sw_project to javafx.fxml;

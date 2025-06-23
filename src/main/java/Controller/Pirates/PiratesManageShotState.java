@@ -56,7 +56,7 @@ public class PiratesManageShotState extends State{
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (turn != context.getSpecialPlayers().indexOf(player)) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
@@ -153,7 +153,7 @@ public class PiratesManageShotState extends State{
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (turn != context.getSpecialPlayers().indexOf(player)) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }

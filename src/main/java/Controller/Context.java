@@ -41,8 +41,8 @@ public class Context {
         this.credits = card.getLandingReward().getAmount();
         this.daysLost = card.getLandingPenalty().getAmount();
         this.visual = () -> {
-            System.out.println("Nave Abbandonata");
-            System.out.println("Crew: " + this.crewmates);
+            System.out.println("Abandoned Ship");
+            System.out.println("Crew to lose: " + this.crewmates);
             //winpenalty generica serve dire che e in giorni etc...
             System.out.println("Credits: " + this.credits);
             System.out.println("Days: " + this.daysLost);
@@ -59,6 +59,18 @@ public class Context {
             this.goods.add(good);
         }
         this.daysLost = card.getLandingPenalty().getAmount();
+        this.visual = () -> {
+            System.out.println("Abandoned Station");
+            System.out.println("Crew required: " + this.crewmates);
+            //winpenalty generica serve dire che e in giorni etc...
+            System.out.print("Goods: ");
+            for(Good good : this.goods) {
+                System.out.print(good + " ");
+            }
+            System.out.println();
+            System.out.println("Days: " + this.daysLost);
+            System.out.println("---------------------------------------");
+        };
 
     }
 
@@ -68,11 +80,31 @@ public class Context {
         for(Meteor meteor : card) {
             this.projectiles.add(meteor);
         }
+        this.visual = () -> {
+            System.out.println("Meteor Swarm");
+            System.out.println("Total Meteors:  " + projectiles.size());
+            System.out.println("Details:");
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile m = projectiles.get(i);
+                System.out.printf(
+                        "  #%d → large=%s, dir=%s%n",
+                        i + 1,
+                        m.isBig(),
+                        m.getSide()
+                );
+            }
+            System.out.println();
+            System.out.println("---------------------------------------");
+        };
 
     }
 
     public Context(Controller controller, OpenSpace card) {
         this(controller);
+        this.visual = () -> {
+            System.out.println("Open Space");
+        };
+        System.out.println("---------------------------------------");
 
     }
 
@@ -85,6 +117,25 @@ public class Context {
             this.projectiles.add(projectile);
         }
         this.power = card.getPower();
+        this.visual = () -> {
+            System.out.println("Pirates");
+            System.out.println("Power required: " + this.power);
+            System.out.println("Total Shots:  " + projectiles.size());
+            System.out.println("Details:");
+            for (int i = 0; i < projectiles.size(); i++) {
+                Projectile m = projectiles.get(i);
+                System.out.printf(
+                        "  #%d → large=%s, dir=%s%n",
+                        i + 1,
+                        m.isBig(),
+                        m.getSide()
+                );
+            }
+            System.out.println();
+            System.out.println("Credits: " + this.credits);
+            System.out.println("Days: " + this.daysLost);
+            System.out.println("---------------------------------------");
+        };
 
     }
 
@@ -95,6 +146,18 @@ public class Context {
         for (Planet planet : card) {
             this.planets.add(planet);
         }
+        this.visual = () -> {
+            for(Planet planet : planets) {
+                System.out.print("Planet: " + planet.getName() + " ");
+                for(Good good : planet.getLandingReward()) {
+                    System.out.print(good + " ");
+                }
+                System.out.println();
+                System.out.println("Days Lost: " + this.daysLost);
+                System.out.println("---------------------------------------");
+            }
+        };
+
     }
 
     public Context(Controller controller, Slavers card) {
@@ -103,6 +166,14 @@ public class Context {
         this.daysLost = card.getWinPenalty().getAmount();
         this.crewmates = card.getLossPenalty().getAmount();
         this.power = card.getPower();
+        this.visual = () -> {
+            System.out.println("Slavers");
+            System.out.println("Power required: " + this.power);
+            System.out.println("Crewmates to lose: " + this.crewmates);
+            System.out.println("Credits: " + this.credits);
+            System.out.println("Days: " + this.daysLost);
+            System.out.println("---------------------------------------");
+        };
 
     }
 
@@ -115,6 +186,19 @@ public class Context {
         this.daysLost = card.getWinPenalty().getAmount();
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();
+        this.visual = () -> {
+            System.out.println("Smugglers");
+            System.out.println("Power required: " + this.power);
+            System.out.println("Goods to lose: " + this.requiredGoods);
+            System.out.print("Available goods: ");
+            for(Good good : this.goods) {
+                System.out.print(good + " ");
+            }
+            System.out.println();
+            System.out.println("Days: " + this.daysLost);
+            System.out.println("---------------------------------------");
+        };
+
     }
 
     public Context(Controller controller, CombatZone card) throws InvalidParameters {
@@ -127,13 +211,48 @@ public class Context {
             }
         } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
             this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
-            this.crewmates = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
+            this.requiredGoods = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
             for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
                 this.projectiles.add(projectile);
             }
         } else {
             throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
         }
+        this.visual = () -> {
+            if( card.getLevel() == CardLevel.LEVEL_ONE){
+                System.out.println("Combat Zone Level One");
+                System.out.println("Lowest Crew loses: " + this.daysLost + " days");
+                System.out.println("Lowest Engine Power loses: " + this.crewmates + " crewmates");
+                System.out.print("Lowest Fire Power gets hit by: ");
+                for (int i = 0; i < projectiles.size(); i++) {
+                    Projectile m = projectiles.get(i);
+                    System.out.printf(
+                            "  #%d → large=%s, dir=%s%n",
+                            i + 1,
+                            m.isBig(),
+                            m.getSide()
+                    );
+                }
+                System.out.println();
+                System.out.println("---------------------------------------");
+            } else {
+                System.out.println("Combat Zone Level Two");
+                System.out.println("Lowest Fire Power loses: " + this.daysLost + " days");
+                System.out.println("Lowest Engine Power loses: " + this.requiredGoods+ " goods");
+                System.out.print("Lowest Crew gets hit by: ");
+                for (int i = 0; i < projectiles.size(); i++) {
+                    Projectile m = projectiles.get(i);
+                    System.out.printf(
+                            "  #%d → large=%s, dir=%s%n",
+                            i + 1,
+                            m.isBig(),
+                            m.getSide()
+                    );
+                }
+                System.out.println();
+                System.out.println("---------------------------------------");
+            }
+        };
 
     }
 

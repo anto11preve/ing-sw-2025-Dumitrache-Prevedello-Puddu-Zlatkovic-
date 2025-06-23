@@ -59,7 +59,7 @@ public abstract class State {
 
 
     // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
+    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction, InvalidMethodParameters {
         throw new InvalidCommand("Invalid command: pickNextCard");
     }
 

@@ -3,6 +3,7 @@ package Controller.AbandonedShip;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Exceptions.InvalidMethodParameters;
@@ -49,7 +50,7 @@ public class AbandonedShipDecidingState extends State {
     public void skipReward(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
-        if(currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
+        if(!currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn to skip the reward.");
         }
@@ -88,7 +89,10 @@ public class AbandonedShipDecidingState extends State {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn to take the reward.");
         }
-
+        if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
+            controller.getModel().setError(true);
+            throw new InvalidParameters("The player doesn't have enough crew");
+        }
         player.deltaCredits(context.getCredits());
 
         controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());

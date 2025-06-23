@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Projectiles.Meteor;
 import Model.Enums.CardLevel;
 
@@ -77,6 +79,36 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
                     m.getSide()
             );
         }
+    }
+
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) Total meteors and details
+        lines.add("Total Meteors:  " + meteors.size());
+        lines.add("Details:");
+        for (int i = 0; i < meteors.size(); i++) {
+            Meteor m = meteors.get(i);
+            lines.add(String.format(
+                    "  #%d → large=%s, dir=%s",
+                    i + 1,
+                    m.isBig(),
+                    m.getSide()
+            ));
+        }
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
     }
 
 }

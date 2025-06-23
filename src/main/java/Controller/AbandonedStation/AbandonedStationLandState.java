@@ -59,7 +59,18 @@ public class AbandonedStationLandState extends State {
             throw new InvalidContextualAction("Not a valid cargo hold coordinates.");
         }
 
+        if(goodIndex<0 || goodIndex >= context.getGoods().size()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Good index is out of bounds.");
+        }
+
         CargoHold cargoHold = (CargoHold) component;
+
+        if(CargoHoldIndex < 0 || CargoHoldIndex >= cargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Cargo hold index is out of bounds.");
+        }
+
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
             controller.getModel().setError(true);
@@ -109,6 +120,11 @@ public class AbandonedStationLandState extends State {
 
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
+        if(oldIndex < 0 || oldIndex >= oldCargoHold.getCapacity() || newIndex < 0 || newIndex >= newCargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Cargo hold index is out of bounds.");
+        }
+
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);

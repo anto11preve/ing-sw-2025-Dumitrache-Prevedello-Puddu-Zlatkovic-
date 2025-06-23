@@ -6,7 +6,6 @@ import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.Engine;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.Utils.Position;
 import Model.Utils.DirectionSideUtils;
 import javafx.geometry.Orientation;
 
@@ -436,47 +435,47 @@ public class ShipBoard {
      *
      * @param origin the starting position of the ship part to preserve
      */
-    public void keepOnlyConnectedFrom(Position origin) {
-        Set<Position> connected = new HashSet<>();
-        Queue<Position> toVisit = new LinkedList<>();
-        toVisit.add(origin);
-
-        while (!toVisit.isEmpty()) {
-            Position current = toVisit.poll();
-            if (connected.contains(current)) continue;
-            connected.add(current);
-
-            SpaceshipComponent currentComp = components[current.getX()][current.getY()];
-            if (currentComp == null) continue;
-
-            for (Side side : Side.values()) {
-                int[] offset = getOffset(side);
-                int adjRow = current.getX() + offset[0];
-                int adjCol = current.getY() + offset[1];
-
-                if (!isValidPosition(adjRow, adjCol)) continue;
-
-                SpaceshipComponent neighborComp = components[adjRow][adjCol];
-                if (neighborComp == null) continue;
-
-                ConnectorType thisConnector = currentComp.getConnectorAt(side);
-                ConnectorType neighborConnector = neighborComp.getConnectorAt(getOppositeSide(side));
-
-                if (connectorsAreConnected(thisConnector, neighborConnector)) {
-                    toVisit.add(new Position(adjRow, adjCol));
-                }
-            }
-        }
-
-        for (int row = 0; row < components.length; row++) {
-            for (int col = 0; col < components[0].length; col++) {
-                Position pos = new Position(row, col);
-                if (!connected.contains(pos)) {
-                    components[row][col] = null;
-                }
-            }
-        }
-    }
+//    public void keepOnlyConnectedFrom(Position origin) {
+//        Set<Position> connected = new HashSet<>();
+//        Queue<Position> toVisit = new LinkedList<>();
+//        toVisit.add(origin);
+//
+//        while (!toVisit.isEmpty()) {
+//            Position current = toVisit.poll();
+//            if (connected.contains(current)) continue;
+//            connected.add(current);
+//
+//            SpaceshipComponent currentComp = components[current.getX()][current.getY()];
+//            if (currentComp == null) continue;
+//
+//            for (Side side : Side.values()) {
+//                int[] offset = getOffset(side);
+//                int adjRow = current.getX() + offset[0];
+//                int adjCol = current.getY() + offset[1];
+//
+//                if (!isValidPosition(adjRow, adjCol)) continue;
+//
+//                SpaceshipComponent neighborComp = components[adjRow][adjCol];
+//                if (neighborComp == null) continue;
+//
+//                ConnectorType thisConnector = currentComp.getConnectorAt(side);
+//                ConnectorType neighborConnector = neighborComp.getConnectorAt(getOppositeSide(side));
+//
+//                if (connectorsAreConnected(thisConnector, neighborConnector)) {
+//                    toVisit.add(new Position(adjRow, adjCol));
+//                }
+//            }
+//        }
+//
+//        for (int row = 0; row < components.length; row++) {
+//            for (int col = 0; col < components[0].length; col++) {
+//                Position pos = new Position(row, col);
+//                if (!connected.contains(pos)) {
+//                    components[row][col] = null;
+//                }
+//            }
+//        }
+//    }
 
 
 
@@ -632,33 +631,33 @@ public class ShipBoard {
      * @param incomingSide the side from which the attack is coming
      * @return true if the component is protected by a shield, false otherwise
      */
-    public boolean isProtectedByShield(Position pos, Side incomingSide) {
-        int row = pos.getX();
-        int col = pos.getY();
-        if (!isValidPosition(row, col)) return false;
-
-        Direction incomingDirection = DirectionSideUtils.convertSideToDirection(incomingSide);
-
-        switch (incomingDirection){
-            case UP:
-                if(condensedShip.getShields().getNorthShields() > 0)
-                    return true;
-                break;
-            case RIGHT:
-                if(condensedShip.getShields().getEastShields() > 0)
-                    return true;
-                break;
-            case DOWN:
-                if(condensedShip.getShields().getSouthShields() > 0)
-                    return true;
-                break;
-            case LEFT:
-                if(condensedShip.getShields().getWestShields() > 0)
-                    return true;
-                break;
-        }
-        return false;
-    }
+//    public boolean isProtectedByShield(Position pos, Side incomingSide) {
+//        int row = pos.getX();
+//        int col = pos.getY();
+//        if (!isValidPosition(row, col)) return false;
+//
+//        Direction incomingDirection = DirectionSideUtils.convertSideToDirection(incomingSide);
+//
+//        switch (incomingDirection){
+//            case UP:
+//                if(condensedShip.getShields().getNorthShields() > 0)
+//                    return true;
+//                break;
+//            case RIGHT:
+//                if(condensedShip.getShields().getEastShields() > 0)
+//                    return true;
+//                break;
+//            case DOWN:
+//                if(condensedShip.getShields().getSouthShields() > 0)
+//                    return true;
+//                break;
+//            case LEFT:
+//                if(condensedShip.getShields().getWestShields() > 0)
+//                    return true;
+//                break;
+//        }
+//        return false;
+//    }
 
     /**
      * Applies damage to a given position if it is not protected by a shield.
@@ -670,17 +669,17 @@ public class ShipBoard {
      * @param pos the position to apply damage to
      * @param incomingSide the side from which the damage is incoming
      */
-    public void applyDamage(Position pos, Side incomingSide) {
-        int row = pos.getX();
-        int col = pos.getY();
-        if (!isValidPosition(row, col)) return;
-
-        if (components[row][col] != null) {
-            if (!isProtectedByShield(pos, incomingSide)) {
-                components[row][col] = null;
-            }
-        }
-    }
+//    public void applyDamage(Position pos, Side incomingSide) {
+//        int row = pos.getX();
+//        int col = pos.getY();
+//        if (!isValidPosition(row, col)) return;
+//
+//        if (components[row][col] != null) {
+//            if (!isProtectedByShield(pos, incomingSide)) {
+//                components[row][col] = null;
+//            }
+//        }
+//    }
 
 
 
@@ -788,25 +787,25 @@ public class ShipBoard {
      *
      * @return a map linking each exposed component position to a list of its exposed sides
      */
-    public Map<Position, List<Side>> getExposedConnectors() {
-        Map<Position, List<Side>> exposedConnectors = new HashMap<>();
+    public Map<Coordinates, List<Side>> getExposedConnectors() {
+        Map<Coordinates, List<Side>> exposedConnectors = new HashMap<>();
         boolean[][] externalReachable = new boolean[ROWS][COLS];
 
         // Step 1: flood fill from borders to mark reachable empty spaces
-        Queue<Position> queue = new LinkedList<>();
+        Queue<Coordinates> queue = new LinkedList<>();
         for (int i = 0; i < ROWS; i++) {
-            if (components[i][0] == null) queue.add(new Position(i, 0));
-            if (components[i][COLS - 1] == null) queue.add(new Position(i, COLS - 1));
+            if (components[i][0] == null) queue.add(new Coordinates(i, 0));
+            if (components[i][COLS - 1] == null) queue.add(new Coordinates(i, COLS - 1));
         }
         for (int j = 0; j < COLS; j++) {
-            if (components[0][j] == null) queue.add(new Position(0, j));
-            if (components[ROWS - 1][j] == null) queue.add(new Position(ROWS - 1, j));
+            if (components[0][j] == null) queue.add(new Coordinates(0, j));
+            if (components[ROWS - 1][j] == null) queue.add(new Coordinates(ROWS - 1, j));
         }
 
         while (!queue.isEmpty()) {
-            Position pos = queue.poll();
-            int row = pos.getX();
-            int col = pos.getY();
+            Coordinates pos = queue.poll();
+            int row = pos.getI();
+            int col = pos.getJ();
             if (!isValidPosition(row, col)) continue;
             if (externalReachable[row][col]) continue;
             externalReachable[row][col] = true;
@@ -816,7 +815,7 @@ public class ShipBoard {
                 int newRow = row + d[0];
                 int newCol = col + d[1];
                 if (isValidPosition(newRow, newCol) && components[newRow][newCol] == null) {
-                    queue.add(new Position(newRow, newCol));
+                    queue.add(new Coordinates(newRow, newCol));
                 }
             }
         }
@@ -852,7 +851,7 @@ public class ShipBoard {
                 }
 
                 if (!exposed.isEmpty()) {
-                    exposedConnectors.put(new Position(row, col), exposed);
+                    exposedConnectors.put(new Coordinates(row, col), exposed);
                 }
             }
         }
@@ -915,12 +914,36 @@ public class ShipBoard {
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
-            String[][] disegni = new String[7][]; // 7 colonne (4-10)
+            String[][] draw = new String[7][]; // 7 colonne (4-10)
             for (int j = 0; j < COLS; j++) {
-                if (components[i][j] != null)
-                    disegni[j] = components[i][j].renderSmall();
-                else
-                    disegni[j] = renderEmpty();
+                // Controlla se questa casella deve essere vuota secondo le tue regole
+                boolean needsToBeEmpty = false;
+
+                // Prima e ultima colonna (j=0 e j=6)
+                if (j == 0 || j == 6) {
+                    needsToBeEmpty = true;
+                }
+                // Prime due dall'alto della seconda e penultima colonna (j=1 e j=5, i=0 e i=1)
+                else if ((j == 1 || j == 5) && (i == 0 || i == 1)) {
+                    needsToBeEmpty = true;
+                }
+                // Prima della terza e quinta colonna (j=2 e j=4, i=0)
+                else if ((j == 2 || j == 4) && i == 0) {
+                    needsToBeEmpty = true;
+                }
+                // Ultima della quarta colonna (j=3, i=ROWS-1)
+                else if (j == 3 && i == ROWS - 1) {
+                    needsToBeEmpty = true;
+                }
+
+                // Scegli il rendering appropriato
+                if (needsToBeEmpty) {
+                    draw[j] = renderNull(); // Usa il tuo metodo empty()
+                } else if (components[i][j] != null) {
+                    draw[j] = components[i][j].renderSmall();
+                } else {
+                    draw[j] = renderEmpty();
+                }
             }
 
             // Caselle extra (sempre vuote per ora)
@@ -938,9 +961,9 @@ public class ShipBoard {
             }
 
             // Poi stampiamo riga per riga il disegno
-            for (int riga = 0; riga < disegni[0].length; riga++) {
+            for (int riga = 0; riga < draw[0].length; riga++) {
                 // Stampiamo il numero di riga solo sulla riga centrale del componente
-                if (riga == disegni[0].length / 2) {
+                if (riga == draw[0].length / 2) {
                     System.out.printf("%2d ", i + 5);
                 } else {
                     System.out.print("   ");
@@ -948,7 +971,7 @@ public class ShipBoard {
 
                 // Stampiamo la griglia principale
                 for (int j = 0; j < 7; j++) {
-                    System.out.print(disegni[j][riga]);
+                    System.out.print(draw[j][riga]);
                 }
 
                 System.out.print("     "); // spazio separatore
@@ -957,14 +980,14 @@ public class ShipBoard {
                 if (i == 0 && casellaA != null) {
                     System.out.print(casellaA[riga]);
                     // Stampiamo l'etichetta A solo sulla riga centrale
-                    if (riga == disegni[0].length / 2) {
+                    if (riga == draw[0].length / 2) {
                         System.out.print(" HAND");
                     }
                 } else if (i == 1) {
                     if (casellaB != null) System.out.print(casellaB[riga]);
                     if (casellaC != null) System.out.print(casellaC[riga]);
                     // Stampiamo le etichette B e C solo sulla riga centrale
-                    if (riga == disegni[0].length / 2) {
+                    if (riga == draw[0].length / 2) {
                         System.out.print(" RESERVED");
                     }
                 }
@@ -1024,6 +1047,14 @@ public class ShipBoard {
         return righe;
     }
 
+    public String[] renderNull() {
+        // Disegno vuoto con linee doppie
+        String[] righe = new String[3];
+        righe[0] = "       ";
+        righe[1] = "       ";
+        righe[2] = "       ";
+        return righe;
+    }
 }
 
 

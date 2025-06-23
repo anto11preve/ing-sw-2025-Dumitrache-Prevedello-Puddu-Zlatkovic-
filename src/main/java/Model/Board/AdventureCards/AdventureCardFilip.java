@@ -2,8 +2,11 @@ package Model.Board.AdventureCards;
 
 import Controller.CardResolverVisitor;
 import Controller.Controller;
+import Controller.Exceptions.InvalidParameters;
 import Model.Enums.CardLevel;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Utils.CardLevelMapper;
+import java.util.*;
 import com.google.gson.JsonObject;
 
 // Classe per la gestione delle carte avventura
@@ -60,6 +63,11 @@ public abstract class AdventureCardFilip {
         System.out.println("Immagine: " + this.imagePath);
     }
 
+    public String[] visualizeString() {
+        return null;
+    }
+
+
     public String getImagePath() {
         return imagePath;
     }
@@ -80,6 +88,7 @@ public abstract class AdventureCardFilip {
 
     public abstract String getDescription();
 
-    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) throws InvalidMethodParameters, InvalidParameters {
+
     }
 }

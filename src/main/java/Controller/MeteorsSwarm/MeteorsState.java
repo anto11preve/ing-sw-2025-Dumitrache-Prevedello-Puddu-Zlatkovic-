@@ -40,7 +40,7 @@ public class MeteorsState extends State {
         int dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
         int number = dado1 + dado2;
 
-        for(Player p : controller.getModel().getPlayers()){
+        for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             context.addSpecialPlayer(p);
         }
         controller.getModel().setState(new ManageMeteorState(context, number));

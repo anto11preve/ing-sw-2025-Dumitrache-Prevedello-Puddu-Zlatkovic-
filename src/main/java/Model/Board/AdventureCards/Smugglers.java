@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.GoodsPenalty;
 import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Board.AdventureCards.Rewards.Goods;
@@ -67,7 +69,7 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         GoodsPenalty gp = getLossPenalty();
         System.out.printf(
                 "Loss Penalty:          %s (type: %s)%n",
-                gp,                    // toString shows how many goods
+                gp.getAmount(),                    // toString shows how many goods
                 gp.getClass().getSimpleName()
         );
 
@@ -75,7 +77,7 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         //    getWinPenalty() returns a DaysPenalty instance
         System.out.printf(
                 "Win Penalty:           %s (type: %s)%n",
-                getWinPenalty(),       // toString prints “N days”
+                getWinPenalty().getAmount(),       // toString prints “N days”
                 getWinPenalty().getClass().getSimpleName()
         );
 
@@ -95,4 +97,54 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         );
     }
 
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) show the encounter power
+        lines.add("Power:                 " + getPower());
+
+        // 3) loss penalty: number of goods and its class
+        GoodsPenalty gp = getLossPenalty();
+        lines.add(String.format(
+                "Loss Penalty:          %s (type: %s)",
+                gp.getAmount(),                    // toString shows how many goods
+                gp.getClass().getSimpleName()
+        ));
+
+        // 4) win‐penalty in days (wrapped by DaysPenalty)
+        lines.add(String.format(
+                "Win Penalty:           %s (type: %s)",
+                getWinPenalty().getAmount(),       // toString prints "N days"
+                getWinPenalty().getClass().getSimpleName()
+        ));
+
+        // 5) win‐reward list and its type
+        StringBuilder rewardLine = new StringBuilder("Reward Goods:          ");
+        if (rewardGoods.isEmpty()) {
+            rewardLine.append("(none)");
+        } else {
+            for (Good g : rewardGoods) {
+                rewardLine.append(g).append(" ");
+            }
+        }
+        lines.add(rewardLine.toString());
+
+        lines.add(String.format(
+                "Reward Type:           %s",
+                getWinReward().getClass().getSimpleName()
+        ));
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
+    }
 }

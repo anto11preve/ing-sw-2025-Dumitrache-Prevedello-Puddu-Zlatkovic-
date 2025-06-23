@@ -52,10 +52,10 @@ public class MeteorsCheckShipState extends State {
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                     controller.getModel().setState(new FlightPhase(controller));
                     controller.getModel().setError(false);
-                    return;
+                } else {
+                    controller.getModel().setState(new MeteorsState(context));
+                    controller.getModel().setError(false);
                 }
-                controller.getModel().setState(new MeteorsState(context));
-                controller.getModel().setError(false);
             } else {
                 controller.getModel().setState(new ManageMeteorState(context,number));
                 controller.getModel().setError(false);
