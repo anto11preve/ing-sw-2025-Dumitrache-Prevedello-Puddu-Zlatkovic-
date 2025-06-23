@@ -1,27 +1,35 @@
 package View.Client.Actions;
 
+import Controller.Enums.MatchLevel;
 import View.Client.ClientState;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class EmptyAction implements Action {
+public class CreateGameAction implements Action {
+    private final MatchLevel matchLevel;
+
+    public CreateGameAction(MatchLevel matchLevel) {
+        this.matchLevel = matchLevel;
+    }
+
     @Override
     public ClientState execute(ClientState state) {
-        return state;
+        return state.create(matchLevel);
     }
 
     static public ActionConstructor getConstructor() {
         return new ActionConstructor() {
             @Override
             public Action create(Map<String, String> args) throws IllegalArgumentException {
-                return new EmptyAction();
+                final MatchLevel matchLevel = MatchLevel.valueOf(args.get("matchLevel").toUpperCase());
+
+                return new CreateGameAction(matchLevel);
             }
 
             @Override
             public List<String> getArguments() {
-                return List.of();
+                return List.of("matchLevel");
             }
         };
     }

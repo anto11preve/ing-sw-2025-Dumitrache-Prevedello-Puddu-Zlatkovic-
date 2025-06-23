@@ -12,8 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectingState implements ClientState {
+    private final boolean useRMI;
+
+    public ConnectingState(boolean useRMI) {
+        this.useRMI = useRMI;
+    }
+
     @Override
-    public ClientState connect(String hostname, Integer port, boolean useRMI) {
+    public ClientState connect(String hostname, Integer port) {
         final Network network;
         try {
             network = useRMI ? new RMINetwork(hostname, port) : new TCPNetwork(hostname, port);

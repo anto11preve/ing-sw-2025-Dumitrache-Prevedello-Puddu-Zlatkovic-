@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server @ localhost" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="Controller.Server.Server" />
+    <module name="GC06" />
+    <option name="PROGRAM_PARAMETERS" value="--hostname localhost" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="Controller.Server.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

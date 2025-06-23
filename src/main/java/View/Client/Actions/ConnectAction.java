@@ -8,18 +8,15 @@ import java.util.Map;
 public class ConnectAction implements Action {
     private final String hostname;
     private final Integer port;
-    private final boolean useRMI;
 
-    public ConnectAction(String hostname, Integer port, boolean useRMI) {
+    public ConnectAction(String hostname, Integer port) {
         this.hostname = hostname;
         this.port = port;
-
-        this.useRMI = useRMI;
     }
 
     @Override
     public ClientState execute(ClientState state) {
-        return state.connect(hostname, port, useRMI);
+        return state.connect(hostname, port);
     }
 
     static public ActionConstructor getConstructor() {
@@ -30,9 +27,8 @@ public class ConnectAction implements Action {
                 try {
                     final String hostname = arguments.get("hostname");
                     final int port = Integer.parseInt(arguments.get("port"));
-                    final boolean useRMI = Boolean.parseBoolean(arguments.get("use-RMI"));
 
-                    return new ConnectAction(hostname, port, useRMI);
+                    return new ConnectAction(hostname, port);
                 } catch (Exception e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -40,7 +36,7 @@ public class ConnectAction implements Action {
 
             @Override
             public List<String> getArguments() {
-                return List.of("hostname", "port", "use-RMI");
+                return List.of("hostname", "port");
             }
         };
     }

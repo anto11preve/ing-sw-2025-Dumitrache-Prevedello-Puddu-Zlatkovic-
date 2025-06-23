@@ -1,5 +1,9 @@
 package View.Client.States.Connected.LoggedIn;
 
+import Controller.Enums.MatchLevel;
+import Networking.Messages.CreateGameMessage;
+import Networking.Messages.JoinGameMessage;
+import Networking.Messages.UpdateListMessage;
 import Networking.Network;
 import View.Client.Client;
 import View.Client.ClientState;
@@ -9,10 +13,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameSelectionState extends LoggedInState {
-    private int[] gamesList = new int[0];
+    private Integer[] gamesList = new Integer[0];
+    private boolean transitioned = false;
 
     public GameSelectionState(Network network, String username){
         super(network, username);
+
+        //Thread that requests updates of the games list
+        new Thread(() -> {
+            while(!transitioned) {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException _) {}
+
+                GameSelectionState.this.send(new UpdateListMessage());
+            }
+        }, "UpdateRequester").start();
+    }
+
+    @Override
+    public ClientState create(MatchLevel matchLevel){
+        this.transitioned = true;
+
+        final ClientState sendResult = this.send(new CreateGameMessage(matchLevel));
+
+        if(sendResult.isDone()){
+            return sendResult;
+        }
+
+        return new UnconfirmedSelectionState(this.getNetwork(), this.getUsername());
+    }
+
+    @Override
+    public ClientState join(int gameId){
+        transitioned = true;
+
+        final ClientState sendResult = this.send(new JoinGameMessage(gameId));
+
+        if(sendResult.isDone()){
+            return sendResult;
+        }
+
+        return new UnconfirmedSelectionState(this.getNetwork(), this.getUsername());
+    }
+
+    @Override
+    public ClientState list(){
+        final List<String> games = new ArrayList<>();
+
+        for(Integer game : this.gamesList){
+            games.add(game.toString());
+        }
+
+        /*TODO: make this work well...*/
+        Client.client.showOptions("Games are ", games);
+
+        return this;
+    }
+
+    @Override
+    public ClientState updateList(Integer[] newGamesList){
+        this.gamesList = newGamesList;
+
+        return this.list();
     }
 
     @Override
@@ -27,25 +90,4 @@ public class GameSelectionState extends LoggedInState {
         return list;
     }
 
-    public ClientState list(){
-        final List<String> games = new ArrayList<>();
-
-        for(Integer game : this.gamesList){
-            games.add(game.toString());
-        }
-
-        /*TODO: make this work well...*/
-        Client.client.showOptions("Games are ", games);
-
-        return this;
-    }
-
-    /*TODO: implement this*/
-    public ClientState updateList(){
-        return this;
-    }
-
-    public ClientState join(int gameId){
-        return new LobbyState(this.getNetwork(), this.getUsername(), gameId);
-    }
 }

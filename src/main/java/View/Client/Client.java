@@ -4,16 +4,15 @@ import Networking.Agent;
 import Networking.Utils;
 import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
-import View.Client.States.ConnectingState;
+import View.Client.States.ProtocolChoiceState;
 import View.GUI;
 import View.States.ChooseState;
-import View.States.CommandCreationState;
+import View.States.ActionCreationState;
 import View.States.StopState;
 import View.TUI;
 import View.View;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class Client implements Agent {
     public static Client client;
@@ -35,7 +34,7 @@ public class Client implements Agent {
     private Client(final View view, final String hostname, final String port) {
         /*TODO: make the arguments not be ignored*/
         this.view = view;
-        this.state = new ConnectingState();
+        this.state = new ProtocolChoiceState();
     }
 
     @Override
@@ -56,9 +55,6 @@ public class Client implements Agent {
         }else {
             this.view.setState(new ChooseState());
         }
-        final Function<Integer, String> function = Object::toString;
-
-        final String applied = function.apply(10);
     }
 
     public void showOptions(String prompt, List<String> options){
@@ -69,6 +65,7 @@ public class Client implements Agent {
         final ActionConstructor actionConstructor = ActionConstructor.actionConstructors.get(command[0]);
 
         //the command is not part of the available commands
+        /*TODO: add commandConstructors after merge*/
         if(actionConstructor == null) {
             return;
         }
@@ -80,6 +77,6 @@ public class Client implements Agent {
         }
 
         //the command needs to be created with arguments
-        this.view.setState(new CommandCreationState(actionConstructor));
+        this.view.setState(new ActionCreationState(actionConstructor));
     }
 }

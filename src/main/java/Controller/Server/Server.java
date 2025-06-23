@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server implements Agent {
+    public static Server server;
     private static final Map<String, Pair<String, Runnable>> availableActions = new HashMap<>();
     private final Set<Network> uninitialized = new HashSet<>();
     private final Map<Network, String> players = new ConcurrentHashMap<>();
@@ -33,7 +34,6 @@ public class Server implements Agent {
 
         System.out.println("Starting server @" + hostname);
 
-        final Server server;
         try {
             server = new Server(hostname, TCPPort, RMIPort);
         } catch (IOException e) {
@@ -65,6 +65,7 @@ public class Server implements Agent {
 
         availableActions.put("help", new Pair<>("prints this message", this::help));
         availableActions.put("list", new Pair<>("prints all players", this::list));
+        availableActions.put("games", new Pair<>("prints all games", this::games));
         availableActions.put("send", new Pair<>("sends a message to all networks", this::send));
         availableActions.put("stop", new Pair<>("stops all network connections", ()->{}));
 
@@ -72,8 +73,6 @@ public class Server implements Agent {
             System.out.print("> ");
             String line = scanner.nextLine();
             command = line.split(" ", 2);
-
-            final Set<Network> networks = players.keySet();
 
             try{
                 availableActions.get(command[0]).getValue().run();
@@ -83,7 +82,11 @@ public class Server implements Agent {
         } while (!command[0].equalsIgnoreCase("stop"));
     }
 
-    public void help(){
+    private void games() {
+        Arrays.asList(this.getGameIds()).forEach(System.out::println);;
+    }
+
+    public void help (){
         for (String command : availableActions.keySet()) {
             System.out.println(command + ": " + availableActions.get(command).getKey());
         }
@@ -93,7 +96,7 @@ public class Server implements Agent {
         names().forEach(System.out::println);
     }
 
-    public void send(){
+    public void send (){
         final Set<Network> networks = players.keySet();
         for (Network network : networks) {
             if(!network.send(new PrintMessage(command[1]))){
@@ -102,7 +105,7 @@ public class Server implements Agent {
         }
     }
 
-    public synchronized void stop() {
+    public synchronized void stop () {
         this.RMIConnectionHandler.setDone();
         this.TCPconnectionHandler.setDone();
 
@@ -119,7 +122,7 @@ public class Server implements Agent {
         }
     }
 
-    public synchronized void disconnect(Network network) {
+    public synchronized void disconnect (Network network) {
         network.setDone();
 
         synchronized(this.players) {
@@ -139,7 +142,7 @@ public class Server implements Agent {
         }
     }
 
-    public synchronized boolean login(Network network, String username) {
+    public synchronized boolean login (Network network, String username) {
         //network was already logged in somehow
         if(!this.uninitialized.contains(network) || this.players.containsKey(network)) {
             return false;
@@ -155,7 +158,7 @@ public class Server implements Agent {
         return true;
     }
 
-    public Set<String> names(){
+    public Set<String> names (){
         Set<String> names = new HashSet<>();
 
         final Set<Network> networks = players.keySet();
@@ -170,9 +173,9 @@ public class Server implements Agent {
         return names;
     }
 
-    public int[] getGameIds(){
+    public Integer[] getGameIds(){
         synchronized(games) {
-            final int[] gameIds = new int[this.games.size()];
+            final Integer[] gameIds = new Integer[this.games.size()];
 
             int i = 0;
             for (int gameId : this.games.keySet()) gameIds[i++] = gameId;
@@ -181,13 +184,16 @@ public class Server implements Agent {
         }
     }
 
-    public int createGame(MatchLevel matchLevel){
+    public Controller createGame(MatchLevel matchLevel){
         synchronized(this.games){
             final int gameId = this.nextGameId++;
+            System.err.println("Creating new controller");
 
-            this.games.put(gameId, new Controller(matchLevel, gameId));
+            final Controller game = new Controller(matchLevel, gameId);
 
-            return gameId;
+            this.games.put(gameId, game);
+
+            return game;
         }
     }
 
@@ -197,7 +203,20 @@ public class Server implements Agent {
         }
     }
 
-    public void put(int gameId, Controller game) {
-        games.put(gameId, game);
+    public String getUsername(Network network) {
+        synchronized(this.players) {
+            return players.get(network);
+        }
+    }
+
+    public Network getNetwork(String username) {
+        synchronized(this.players) {
+            for(Network network : this.players.keySet()) {
+                if(this.players.get(network).equals(username))
+                    return network;
+            }
+
+            return null;
+        }
     }
 }

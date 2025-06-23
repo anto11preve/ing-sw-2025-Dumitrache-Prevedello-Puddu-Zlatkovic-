@@ -20,7 +20,12 @@ public class Handler<T extends Agent> extends Thread {
 
             if (message != null) {
                 this.network.setTimeout(System.currentTimeMillis() + Network.TIMEOUT);
-                message.handle(this.reference, this.network);;
+                try {
+                    message.handle(this.reference, this.network);
+                } catch (RuntimeException e) {
+                    e.printStackTrace(System.err);
+                    return;
+                }
             }
         }
     }
