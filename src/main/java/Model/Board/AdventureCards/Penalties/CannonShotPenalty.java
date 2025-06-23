@@ -32,7 +32,7 @@ public class CannonShotPenalty extends Penalty implements Iterable<CannonShot> {
             }
             this.CannonShots = shots;
         }else{
-            throw new IllegalArgumentException("Missing penalty.shots in JSON at id: " + json.get("id").getAsInt());
+            throw new IllegalArgumentException("Missing penalty.shots in JSON at id: " + json.get("id").getAsString());
         }
     }
 

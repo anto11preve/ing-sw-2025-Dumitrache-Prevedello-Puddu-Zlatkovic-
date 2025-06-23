@@ -69,7 +69,7 @@ public class AdventureCardLoader {
                 JsonObject obj = element.getAsJsonObject();
                 cards.add(AdventureCardFactory.fromJson(obj));
             }
-
+            System.out.println(cards.size());
             return cards;
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,10 +103,14 @@ public class AdventureCardLoader {
                 List<AdventureCardFilip> level1Cards = allCards.stream()
                         .filter(card -> card.getLevel() == CardLevel.LEVEL_ONE)
                         .collect(Collectors.toList());
+
+                System.out.println(level1Cards.size());
                         
                 List<AdventureCardFilip> level2Cards = allCards.stream()
                         .filter(card -> card.getLevel() == CardLevel.LEVEL_TWO)
                         .collect(Collectors.toList());
+
+                System.out.println(level2Cards.size());
 
                 List<AdventureCardFilip> combined = new ArrayList<>();
                 combined.addAll(level1Cards);

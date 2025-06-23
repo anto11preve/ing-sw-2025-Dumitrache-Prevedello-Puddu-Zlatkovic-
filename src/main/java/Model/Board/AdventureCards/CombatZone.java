@@ -58,49 +58,61 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
                 Criteria criteria     = Criteria.valueOf(
                         entry.get("criteria").getAsString().toUpperCase()
                 );
+
                 // 2) Read the penalty object
-                JsonObject penObj     = entry.getAsJsonObject("penalty");
-                Penalty   penalty;
 
-                // 3A) If they gave a "shots" array → ProjectilePenalty
-                if (penObj.has("shots")) {
-                    List<CannonShot> shots = new ArrayList<>();
-                    for (JsonElement shotElem : penObj.getAsJsonArray("shots")) {
-                        JsonObject s    = shotElem.getAsJsonObject();
-                        boolean   large = s.get("isLarge").getAsBoolean();
-                        Side dir   = Side.valueOf(
-                                s.get("direction").getAsString().toUpperCase()
-                        );
-                        shots.add(new CannonShot(large, dir));
+                if (entry.has("penalty")) {
+                    JsonObject penObj     = entry.getAsJsonObject("penalty");
+                    Penalty   penalty;
+
+                    // 3A) If they gave a "shots" array → ProjectilePenalty
+                    if (penObj.has("shots")) {
+//                        List<CannonShot> shots = new ArrayList<>();
+//                        for (JsonElement shotElem : penObj.getAsJsonArray("shots")) {
+//                            JsonObject s    = shotElem.getAsJsonObject();
+//                            boolean   large = s.get("isLarge").getAsBoolean();
+//                            Side dir   = Side.valueOf(
+//                                    s.get("direction").getAsString().toUpperCase()
+//                            );
+//                            shots.add(new CannonShot(large, dir));
+//                        }
+//                        penalty = new CannonShotPenalty(shots);
+                        penalty= new CannonShotPenalty(entry);
+
+                        // 3B) Otherwise, look for a "type" field and switch on it
+                    } else if (penObj.has("type")) {
+                        String type = penObj.get("type").getAsString();
+                        switch (type) {
+                            case "DaysPenalty"   -> penalty = new DaysPenalty(
+                                    penObj.get("value").getAsInt()
+                            );
+                            case "CrewPenalty"   -> penalty = new CrewPenalty(
+                                    penObj.get("value").getAsInt()
+                            );
+                            case "GoodsPenalty"  -> penalty = new GoodsPenalty(
+                                    penObj.get("value").getAsInt()
+                            );
+                            default -> throw new IllegalArgumentException(
+                                    "Unsupported penalty type: " + type+ " for CombatZone with ID: " + getId()
+                            );
+                        }
+
+                        // 3C) Fallback if no "shots" or "type" (shouldn’t happen if your JSON is correct)
+                    } else {
+                        throw new IllegalArgumentException("JSON must contain 'shots' or 'type' field for CombatZone with ID: " + getId());
                     }
-                    penalty = new CannonShotPenalty(shots);
 
-                    // 3B) Otherwise, look for a "type" field and switch on it
-                } else if (penObj.has("type")) {
-                    String type = penObj.get("type").getAsString();
-                    switch (type) {
-                        case "DaysPenalty"   -> penalty = new DaysPenalty(
-                                penObj.get("value").getAsInt()
-                        );
-                        case "CrewPenalty"   -> penalty = new CrewPenalty(
-                                penObj.get("value").getAsInt()
-                        );
-                        case "GoodsPenalty"  -> penalty = new GoodsPenalty(
-                                penObj.get("value").getAsInt()
-                        );
-                        default -> throw new IllegalArgumentException(
-                                "Unsupported penalty type: " + type
-                        );
-                    }
+                    // 4) Add the line
+                    this.lines.add(new CombatZoneLine(criteria, penalty));
 
-                    // 3C) Fallback if no "shots" or "type" (shouldn’t happen if your JSON is correct)
-                } else {
-                    penalty = new DaysPenalty(1);
+                }else{
+                    throw new IllegalArgumentException(
+                            "JSON must contain 'penalty' object for CombatZone with ID: " + getId()
+                    );
                 }
-
-                // 4) Add the line
-                this.lines.add(new CombatZoneLine(criteria, penalty));
             }
+        }else{
+            throw new IllegalArgumentException("JSON must contain 'lines' array for CombatZone with ID: " + getId());
         }
     }
 

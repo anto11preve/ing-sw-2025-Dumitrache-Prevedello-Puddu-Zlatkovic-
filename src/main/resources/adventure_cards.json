@@ -884,7 +884,7 @@
       {
         "criteria": "FIRE_POWER",
         "penalty": {
-          "shots": [
+        "shots": [
             {
               "isLarge": false,
               "direction": "front"
