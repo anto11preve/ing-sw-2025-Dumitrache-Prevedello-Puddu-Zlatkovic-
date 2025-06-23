@@ -63,7 +63,7 @@ public class ChoosePlanetState extends State {
      * @param name       the name of the chosen planet
      */
     @Override
-    public void choosePlanet(String playerName, String name) throws InvalidContextualAction, InvalidParameters {
+    public void choosePlanet(String playerName, String planetName) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
@@ -71,7 +71,7 @@ public class ChoosePlanetState extends State {
             throw new InvalidParameters("It's not your turn to choose a planet");
         }
 
-        Planet chosenPlanet = context.getPlanet(name);
+        Planet chosenPlanet = context.getPlanet(planetName);
         if(chosenPlanet == null) {
             controller.getModel().setError(true);
             throw new InvalidParameters("Planet not found");

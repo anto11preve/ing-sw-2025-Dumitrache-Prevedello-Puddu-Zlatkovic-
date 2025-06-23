@@ -10,15 +10,13 @@ import Model.ComponentLoader;
 import Controller.State;
 import Model.Enums.ConnectorType;
 import Model.Enums.Side;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.ShipBoard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,14 +31,14 @@ public class Game {
     private State state;
     private boolean error = false;
     private List<ShipBoard> preBuiltShips;
-    private List<SpaceshipComponent> centralCabins= new ArrayList<>();
+    private Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
 
 
 
 
     public static void main(String[] args) {
 
-        int var=0;
+        int var=2;
 
         switch (var) {
 
@@ -112,6 +110,85 @@ public class Game {
                         System.out.println("null");
                     }
                 }
+
+                break;
+
+            case 2:
+
+                Game myGame = new Game(MatchLevel.TRIAL);
+                myGame.addPlayer("Alice");
+                Player alice = myGame.getPlayer("Alice");
+                myGame.addPlayer("Bob");
+                Player bob = myGame.getPlayer("Bob");
+                myGame.addPlayer("Charlie");
+                Player charlie = myGame.getPlayer("Charlie");
+                myGame.addPlayer("Diana");
+                Player diana = myGame.getPlayer("Diana");
+
+                FlightBoard flightBoard = myGame.getFlightBoard();
+                try {
+                    flightBoard.setStartingPositions(alice, 1);
+                    flightBoard.setStartingPositions(bob, 2);
+                    flightBoard.setStartingPositions(charlie, 3);
+                    flightBoard.setStartingPositions(diana, 4);
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Flight board after setting starting positions:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, 12);
+                    flightBoard.deltaFlightDays(bob, 12);
+                    flightBoard.deltaFlightDays(charlie, 1);
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Flight board after delta flight days:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, 2);
+                    flightBoard.deltaFlightDays(alice, 1);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days forward for Alice:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, -1);
+                    flightBoard.deltaFlightDays(alice, -4);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days backward for Alice:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(diana, -1);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days backward for Diana:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+
+
+
+
+
+
 
                 break;
 
@@ -214,7 +291,12 @@ public class Game {
     }
 
     public void addPlayer(String name) {
-        this.players.add(new Player(name));
+        Cabin centralCabin= (Cabin) centralCabins.poll();
+        if (centralCabin == null) {
+            throw new IllegalStateException("No more central cabins available");
+        }
+        this.players.add(new Player(name,centralCabin));
+
     }
 
     public void removePlayer(String name) {

@@ -42,6 +42,8 @@ public class FlightBoard {
 
     private final Map<Player, Integer> playerPositions;
 
+    private final Map<Player, Integer> playerTotalDistance;
+
     private List<Player> ffPlayers;
 
     /**
@@ -98,6 +100,7 @@ public class FlightBoard {
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
+        this.playerTotalDistance = new HashMap<>();
         this.ffPlayers = new ArrayList<>();
     }
 
@@ -131,7 +134,54 @@ public class FlightBoard {
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
+        this.playerTotalDistance = new HashMap<>();
         this.ffPlayers = new ArrayList<>();
+    }
+
+    public void render(){
+        System.out.println("FlightBoard: " + cellNumber + " cells");
+        Player[]turnOrder=getTurnOrder();
+
+        for (Player player : turnOrder) {
+            int position = getPosition(player);
+            int totalDistance = getTotalDistance(player);
+            int credit = player.getCredits();
+            System.out.println("Player: " + player.getName() + ", Position: " + position + ", Total Distance: " + totalDistance+
+                    ", Credit: " + credit);
+
+        }
+
+
+        List<Player> dubbedPlayers = getDubbedPlayers();
+        if (!dubbedPlayers.isEmpty()) {
+            System.out.println("Dubbed Players: ");
+            for (Player dubbedPlayer : dubbedPlayers) {
+                System.out.println(" - " + dubbedPlayer.getName());
+            }
+        }
+    }
+
+    public List<Player> getDubbedPlayers() {
+        Player[] players = this.getTurnOrder();
+        List<Player> dubbedPlayers = new ArrayList<>();
+        int length = players.length;
+
+        int firstPlayerDistance = playerTotalDistance.get(players[length-1]);
+
+        if(playerTotalDistance.get(players[0])>firstPlayerDistance) {
+            firstPlayerDistance = playerTotalDistance.get(players[0]);
+        }
+
+        for(int i=0;i<length;i++){
+
+            int otherPlayerDistance = playerTotalDistance.get(players[i]);
+            if((firstPlayerDistance-otherPlayerDistance)>cellNumber){
+                dubbedPlayers.add(players[i]);
+            }
+        }
+
+
+        return dubbedPlayers;
     }
 
     public final int getCellNumber() {
@@ -206,6 +256,13 @@ public class FlightBoard {
         return playerPositions.get(player);
     }
 
+    public int getTotalDistance(Player player) throws NullPointerException {
+        if (player == null) {
+            throw new NullPointerException("player is null");
+        }
+        return playerTotalDistance.get(player);
+    }
+
     public FlightBoard(List<Player> players, CardDeck deck, MatchLevel level) {
         this.cellNumber = (level == MatchLevel.TRIAL) ? 18 : 24;
         this.timer = (level == MatchLevel.LEVEL2) ? new Timer() : null;
@@ -213,8 +270,10 @@ public class FlightBoard {
         this.peekableCardDecks = (level == MatchLevel.LEVEL2) ? new ArrayList<>() : null;
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
+        this.playerTotalDistance = new HashMap<>();
         for (Player p : players) {
             playerPositions.put(p, 0);
+            playerTotalDistance.put(p, 0);
         }
         this.ffPlayers = new ArrayList<>();
     }
@@ -233,19 +292,19 @@ public class FlightBoard {
      */
     public void setStartingPositions(Player player, int position) throws InvalidMethodParameters {
         if(this.getCellNumber()==18){
-            if(position==4){playerPositions.put(player, 0);}
-            else if (position==3) {playerPositions.put(player, 1);}
-            else if (position==2) {playerPositions.put(player, 2);}
-            else if (position==1) {playerPositions.put(player, 4);}
+            if(position==4){playerPositions.put(player, 0); playerTotalDistance.put(player, 0);}
+            else if (position==3) {playerPositions.put(player, 1); playerTotalDistance.put(player, 1);}
+            else if (position==2) {playerPositions.put(player, 2); playerTotalDistance.put(player, 2);}
+            else if (position==1) {playerPositions.put(player, 4); playerTotalDistance.put(player, 4);}
             else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and 4");}
 
 
         } else if (this.getCellNumber() == 24) {
 
-            if(position==4){playerPositions.put(player, 0);}
-            else if (position==3) {playerPositions.put(player, 1);}
-            else if (position==2) {playerPositions.put(player, 3);}
-            else if (position==1) {playerPositions.put(player, 5);}
+            if(position==4){playerPositions.put(player, 0); playerTotalDistance.put(player, 0);}
+            else if (position==3) {playerPositions.put(player, 1); playerTotalDistance.put(player, 1);}
+            else if (position==2) {playerPositions.put(player, 3); playerTotalDistance.put(player, 3);}
+            else if (position==1) {playerPositions.put(player, 5); playerTotalDistance.put(player, 5);}
             else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and 4");}
 
 
@@ -279,6 +338,11 @@ public class FlightBoard {
 
         int currentPosition = playerPositions.get(player);
         int newPosition = (currentPosition + deltaDays) % cellNumber;
+        if (newPosition < 0) {
+            newPosition += cellNumber; // Ensure newPosition is non-negative
+        }
+        int currentTotalDistance = playerTotalDistance.get(player);
+        playerTotalDistance.put(player, currentTotalDistance + deltaDays);
         int new_delta=0;
 
 
@@ -310,26 +374,26 @@ public class FlightBoard {
             if(newPosition>currentPosition){
                 for (Integer position : allPositions) {
                     if (position >= newPosition || position < currentPosition) {
-                        new_delta++;
+                        new_delta--;
                     }
                 }
             }else{
                 for (Integer position : allPositions) {
                     if (position >= newPosition && position < currentPosition) {
-                        new_delta++;
+                        new_delta--;
                     }
                 }
             }
             playerPositions.put(player, newPosition);
-            deltaFlightDays(player, -new_delta);
+            deltaFlightDays(player, new_delta);
         }
 
     }
 
 
-
+    //TODO: invertire ordine 
     public Player[] getTurnOrder() {
-        return playerPositions.entrySet().stream()
+        return playerTotalDistance.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .toArray(Player[]::new);
@@ -338,6 +402,7 @@ public class FlightBoard {
     public void removePlayingPlayer(Player player) {
         if (playerPositions.containsKey(player)) {
             playerPositions.remove(player);
+            playerTotalDistance.remove(player);
             ffPlayers.add(player);
         } else {
             throw new IllegalArgumentException("Player not found in flight board");

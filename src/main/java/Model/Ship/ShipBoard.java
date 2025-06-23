@@ -30,12 +30,8 @@ public class ShipBoard {
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
         this.condensedShip = new CondensedShip();
-//TODO: gestire la cabina centrale
-//
-//        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-//        centralCabin.setShipBoard(this);
-//        components[2][3] = centralCabin;
-//        centralCabin.added();
+
+
 
         this.activeComponent = null;
         this.reservedComponents = new ArrayList<>();

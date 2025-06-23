@@ -54,7 +54,7 @@ public class AbandonedStationLandState extends State {
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
+        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
             controller.getModel().setError(true);//non è un CargoHold
             throw new InvalidContextualAction("Not a valid cargo hold coordinates.");
         }
@@ -112,7 +112,8 @@ public class AbandonedStationLandState extends State {
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
+        if(oldComponent == null || newComponent == null ||
+                !player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
             controller.getModel().setError(true);
             throw new InvalidParameters("Invalid cargo hold coordinates.");

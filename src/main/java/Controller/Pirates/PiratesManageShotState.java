@@ -69,7 +69,7 @@ public class PiratesManageShotState extends State{
 
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
-                for (int i = 5; i <= 9; i++) {
+                for (int i = 5; (i <= 9)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -79,7 +79,7 @@ public class PiratesManageShotState extends State{
                     }
                 }
             case Side.RIGHT:
-                for (int i = 10; i >= 4; i--) {
+                for (int i = 10; (i >= 4)&&(!hit); i--) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -89,7 +89,7 @@ public class PiratesManageShotState extends State{
                     }
                 }
             case Side.LEFT:
-                for (int i = 4; i <= 10; i++) {
+                for (int i = 4; (i <= 10)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -99,7 +99,7 @@ public class PiratesManageShotState extends State{
                     }
                 }
             case Side.REAR:
-                for (int i = 0; i <= 4; i++) {
+                for (int i = 0; (i <= 4)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -215,7 +215,8 @@ public class PiratesManageShotState extends State{
                 controller.getModel().setError(false);
             }
         } else {
-            ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("No shield found to use");
         }
 
     }
