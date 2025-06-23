@@ -23,7 +23,7 @@ import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
-import com.sun.jdi.connect.Connector;
+//import com.sun.jdi.connect.Connector;
 
 import java.util.*;
 

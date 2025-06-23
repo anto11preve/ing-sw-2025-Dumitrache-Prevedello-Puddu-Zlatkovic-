@@ -104,11 +104,11 @@
           "shots": [
             {
               "isLarge": false,
-              "direction": "front"
+              "direction": "rear"
             },
             {
               "isLarge": true,
-              "direction": "front"
+              "direction": "rear"
             }
           ]
         }
@@ -887,11 +887,11 @@
         "shots": [
             {
               "isLarge": false,
-              "direction": "front"
+              "direction": "rear"
             },
             {
               "isLarge": true,
-              "direction": "front"
+              "direction": "rear"
             }
           ]
         }

@@ -62,11 +62,9 @@ public class FlightBoard {
         List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(MatchLevel.LEVEL2, false);
 
         System.out.println(cards.size());
-        int i=1;
         for (AdventureCardFilip card : cards) {
             card.visualize();
-            System.out.println(i);
-            i++;
+            System.out.println("\n\n\n\n\n\n");
         }
 
     }
