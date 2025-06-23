@@ -13,6 +13,7 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Board.Timer;
 import Controller.GamePhases.FlightPhase;
+import Model.Ship.ShipBoard;
 
 import java.util.HashMap;
 import java.util.List;
@@ -466,8 +467,63 @@ public class BuildingState extends State {
     }
 
     @Override
+    public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
+
+        if(!(this.getController().getMatchLevel()==MatchLevel.TRIAL)){
+            throw new InvalidCommand("Delete component command is available only in Trial Games");
+        }
+
+        Game model=this.getController().getModel();
+        Player currrentPlayer = model.getPlayer(name);
+        if (currrentPlayer == null) {
+            throw new InvalidParameters("Player not found");
+        }
+        ShipBoard shipBoard = currrentPlayer.getShipBoard();
+
+        // Check if the coordinates are valid
+        if (!validCoordinates.containsKey(coordinates.getI()) || !validCoordinates.get(coordinates.getI()).contains(coordinates.getJ())) {
+            throw new InvalidParameters("Invalid coordinates");
+        }
+        // Check if the coordinates correspond to a valid component
+        SpaceshipComponent component = shipBoard.getComponent(coordinates);
+        if (component == null) {
+            throw new InvalidParameters("No component found at the given coordinates");
+        }
+
+        // apply removed on the tile
+        component.removed();
+        // remove the tile from the ship matrix
+        component.setShipBoard(null);
+
+        try {
+            shipBoard.removeComponent(coordinates);
+        } catch (InvalidMethodParameters e) {
+            throw new RuntimeException("Either the map of ship valid position or the convertion between board and matrix coordinates failed, Strange bug!!!");
+        }
+
+        //Put the component back into the tiles in the table;
+        SpaceshipComponent[] allTiles = model.getTiles();
+        boolean put=false;
+        int length=allTiles.length;
+        for(int i=0; (i<length)&&!put; i++){
+            if(allTiles[i]==null){
+                put=true;
+                allTiles[i]=component;
+            }
+        }
+
+
+
+
+
+
+
+
+    }
+
+    @Override
     public List<String> getAvailableCommands(){
         /*TODO: add all other commands*/
-        return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass");
+        return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass", "DeleteComponent");
     }
 }
