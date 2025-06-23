@@ -16,12 +16,22 @@ public class Cabin extends SpaceshipComponent {
     // New fields to support aliens actually present in the cabin
 
     /**
-     * Standard constructor for Cabin with explicit parameters.
+     * Standard constructor for Cabin with explicit parameters, with no match with image path.
      */
     public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants) {
         super(Type, front, rear, left, right);
         this.occupants = Crewmates.EMPTY; // Default to empty even if parameter is passed
     }
+
+    /**
+     * Constructor for Cabin with image path.
+     */
+    public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants, String imagePath) {
+        super(Type, front, rear, left, right, imagePath);
+        this.occupants = Crewmates.EMPTY; // Default to empty even if parameter is passed
+    }
+
+
 
     /**
      * Constructor to initialize a Cabin from a JSON object.
