@@ -23,6 +23,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
         this.context = context;
         this.declaredPower = declaredPower;
         this.batteries = batteries;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone1_E_BatteryRemovalState(Context context, double declaredPower, int batteries, double worst) {
@@ -30,6 +31,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.worst = worst;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     @Override

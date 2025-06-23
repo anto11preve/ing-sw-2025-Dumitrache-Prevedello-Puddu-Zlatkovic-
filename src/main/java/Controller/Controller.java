@@ -104,7 +104,7 @@ public class Controller implements Agent {
     }
 
     // Adventure Card resolution
-    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction {
+    public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction, InvalidMethodParameters {
         model.getState().pickNextCard(name);
     }
     public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {

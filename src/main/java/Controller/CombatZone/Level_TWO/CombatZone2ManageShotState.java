@@ -1,5 +1,7 @@
 package Controller.CombatZone.Level_TWO;
 
+import Controller.CombatZone.Level_ONE.CombatZone1CannonShotsState;
+import Controller.CombatZone.Level_ONE.CombatZone1ManageShotState;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
@@ -93,14 +95,20 @@ public class CombatZone2ManageShotState extends State {
             }
         }
 
-        context.removeProjectile(shot);
-        if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-            controller.getModel().setState(new FlightPhase(controller));
+        context.removeSpecialPlayer(player);
+        if (context.getSpecialPlayers().isEmpty()) {
+            context.removeProjectile(shot);
+            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new CombatZone2CannonShotsState(context));
+                controller.getModel().setError(false);
+            }
+        } else {
+            controller.getModel().setState(new CombatZone2ManageShotState(context, number));
             controller.getModel().setError(false);
-            return;
         }
-        controller.getModel().setState(new CombatZone2CannonShotsState(context));
-        controller.getModel().setError(false);
 
     }
 
@@ -160,16 +168,23 @@ public class CombatZone2ManageShotState extends State {
             BatteryCompartment compartment = (BatteryCompartment) component2;
             compartment.removeBattery();
 
-            context.removeProjectile(shot);
-            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                controller.getModel().setState(new FlightPhase(controller));
+            context.removeSpecialPlayer(player);
+            if (context.getSpecialPlayers().isEmpty()) {
+                context.removeProjectile(shot);
+                if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+                    controller.getModel().setState(new FlightPhase(controller));
+                    controller.getModel().setError(false);
+                    return;
+                }
+                controller.getModel().setState(new CombatZone2CannonShotsState(context));
                 controller.getModel().setError(false);
-                return;
+            } else{
+                controller.getModel().setState(new CombatZone2ManageShotState(context, number));
+                controller.getModel().setError(false);
             }
-            controller.getModel().setState(new CombatZone2CannonShotsState(context));
-            controller.getModel().setError(false);
         } else {
-            ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("No shield or cannon found to use");
         }
 
     }

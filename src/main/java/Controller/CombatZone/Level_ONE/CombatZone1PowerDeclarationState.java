@@ -16,6 +16,7 @@ public class CombatZone1PowerDeclarationState extends State {
 
     public CombatZone1PowerDeclarationState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone1PowerDeclarationState(Context context, double worst) {

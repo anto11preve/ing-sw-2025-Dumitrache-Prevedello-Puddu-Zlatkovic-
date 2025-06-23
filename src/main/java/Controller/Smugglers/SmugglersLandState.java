@@ -30,6 +30,7 @@ public class SmugglersLandState extends State{
      */
     public SmugglersLandState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

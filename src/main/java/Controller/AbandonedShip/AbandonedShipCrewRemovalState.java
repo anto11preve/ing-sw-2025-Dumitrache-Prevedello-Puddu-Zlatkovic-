@@ -36,6 +36,7 @@ public class AbandonedShipCrewRemovalState extends State {
      */
     public AbandonedShipCrewRemovalState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**
@@ -72,12 +73,11 @@ public class AbandonedShipCrewRemovalState extends State {
 
         if(context.getCrewmates() > 0){
             SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-            if(component == null || !player.getShipBoard().getCondensedShip().getCabins().contains(component)){
+            if(component == null || !player.getShipBoard().getCondensedShip().getCabins().contains(component)) {   //non è un Battery
                 controller.getModel().setError(true);
-                throw new InvalidParameters("Invalid coordinates, not a cabin.");
+                throw new InvalidContextualAction("Invalid component type, expected Cabin");
             }
             Cabin cabin = (Cabin) component;
-
             switch (cabin.getOccupants()){
                 case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
                     cabin.setOccupants(Crewmates.EMPTY);

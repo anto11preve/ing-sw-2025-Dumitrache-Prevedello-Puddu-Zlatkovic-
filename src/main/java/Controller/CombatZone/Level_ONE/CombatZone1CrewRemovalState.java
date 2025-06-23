@@ -16,6 +16,7 @@ public class CombatZone1CrewRemovalState extends State {
 
     public CombatZone1CrewRemovalState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     @Override

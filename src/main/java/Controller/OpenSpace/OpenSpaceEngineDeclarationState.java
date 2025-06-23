@@ -29,6 +29,7 @@ public class OpenSpaceEngineDeclarationState extends State {
      */
     public OpenSpaceEngineDeclarationState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     @Override

@@ -15,15 +15,17 @@ import Controller.Smugglers.SmugglersPowerDeclarationState;
 import Model.Board.AdventureCards.*;
 import Model.Board.AdventureCards.Penalties.RegularPenalty;
 import Model.Enums.CardLevel;
+import Model.Enums.ConnectorType;
 import Model.Enums.Crewmates;
+import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
+import com.sun.jdi.connect.Connector;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class CardResolverVisitor {
 
@@ -214,11 +216,32 @@ public class CardResolverVisitor {
         controller.getModel().setState(new SmugglersPowerDeclarationState(context));
     }
 
-    public void visit( Stardust card, Controller controller) {
+    public void visit( Stardust card, Controller controller) throws InvalidMethodParameters {
         /*
         in ordine inverso di rotta si scorre per vedere se un giocatore ha connettori esposti, e
         in base al loro tipo si perdono giorni di rotta
          */
+        List<Player> playersReversed = new ArrayList<>(List.of(controller.getModel().getFlightBoard().getTurnOrder()));
+        Collections.reverse(playersReversed);
+        for(Player p : playersReversed){
+            int counter = 0;
+
+            for (Map.Entry<Coordinates, List<Side>> entry : p.getShipBoard().getExposedConnectors().entrySet()) {
+                Coordinates position = entry.getKey();
+                List<Side> sides = entry.getValue();
+
+                for (Side side : sides) {
+                    ConnectorType connector = p.getShipBoard().getComponent(position).getConnectorAt(side); // supponendo che Position abbia questo metodo
+
+                    if ((connector == ConnectorType.UNIVERSAL || connector == ConnectorType.DOUBLE)) {
+                        counter++;
+                    }
+                }
+            }
+            controller.getModel().getFlightBoard().deltaFlightDays(p, -counter);
+        }
+
+
     }
 
     public interface SpaceshipComponentVisitor {

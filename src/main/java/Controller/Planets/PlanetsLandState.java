@@ -38,6 +38,7 @@ public class PlanetsLandState extends State {
     public PlanetsLandState(Context context, List<Planet> chosenPlanets) {
         this.context = context;
         this.chosenPlanets = chosenPlanets;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     /**
@@ -57,10 +58,6 @@ public class PlanetsLandState extends State {
     public void getGood(String playerName, int goodIndex, Coordinates coordinates, int CargoHoldIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
-            throw new InvalidParameters("It's not your turn");
-        }
 
         if(context.getSpecialPlayers().getFirst() != player) {
             controller.getModel().setError(true);
@@ -88,8 +85,8 @@ public class PlanetsLandState extends State {
             throw new InvalidParameters("Invalid cargo hold index");
         }
 
-
-        if(goodIndex < 0) {
+        //TODO: sarebbe da controllare che non metti un index maggiore dei goods in un pianeta
+        if(goodIndex < 0 ) {
             controller.getModel().setError(true);
             throw new InvalidParameters("Invalid good index");
         }
@@ -156,7 +153,7 @@ public class PlanetsLandState extends State {
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn");
         }
@@ -203,11 +200,18 @@ public class PlanetsLandState extends State {
     public void end(String playerName){
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn");
         }
-        controller.getModel().setState(new FlightPhase(controller));
-        controller.getModel().setError(false);
+        context.removeSpecialPlayer(player);
+        chosenPlanets.removeFirst();
+        if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {      //dovrei controllare anche le non conformità delle due liste
+            controller.getModel().setState(new FlightPhase(controller));     //finiti pianeti occupati
+            controller.getModel().setError(false);
+        } else {
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+        }
     }
 }

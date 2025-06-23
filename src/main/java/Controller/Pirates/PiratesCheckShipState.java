@@ -24,13 +24,14 @@ public class PiratesCheckShipState extends State {
         this.context = context;
         this.number = number;
         this.turn = turn;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     @Override
     public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (!player.equals(context.getPlayers().getFirst())) {
+        if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }

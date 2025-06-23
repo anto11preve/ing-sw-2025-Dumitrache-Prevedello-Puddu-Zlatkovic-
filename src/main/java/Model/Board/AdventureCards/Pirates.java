@@ -1,5 +1,7 @@
 package Model.Board.AdventureCards;
 
+import Controller.CardResolverVisitor;
+import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.CannonShotPenalty;
 import Model.Board.AdventureCards.Penalties.DaysPenalty;
 import Model.Board.AdventureCards.Penalties.GoodsPenalty;
@@ -99,7 +101,7 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         DaysPenalty dp = getWinPenalty();
         System.out.printf(
                 "Win Penalty:          %s (type: %s)%n",
-                dp,
+                dp.getAmount(),
                 dp.getClass().getSimpleName()
         );
 
@@ -112,5 +114,57 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         );
     }
 
+    public String[] visualizeString() {
+        List<String> lines = new ArrayList<>();
+
+        // 1) common header da super.visualize()
+        lines.add("==========================");
+        lines.add("ID: " + this.getId());
+        lines.add("Nome: " + this.getName());
+        lines.add("Livello: " + this.getLevel());
+
+        // 2) Show the encounter power
+        lines.add("Power:                " + getPower());
+
+        // 3) List each pirate shot from the loss penalty
+        CannonShotPenalty shots = getLossPenalty();
+        lines.add("Pirate Shots:         " + shots.getClass().getSimpleName());
+        int idx = 0;
+        for (CannonShot shot : shots) {
+            idx++;
+            lines.add(String.format(
+                    "  #%d → large=%s, dir=%s",
+                    idx,
+                    shot.isBig(),
+                    shot.getSide()
+            ));
+        }
+        if (idx == 0) {
+            lines.add("  (no shots)");
+        }
+
+        // 4) Days penalty when you win
+        DaysPenalty dp = getWinPenalty();
+        lines.add(String.format(
+                "Win Penalty:          %s (type: %s)",
+                dp.getAmount(),
+                dp.getClass().getSimpleName()
+        ));
+
+        // 5) Credits reward when you win
+        Credits cr = getWinReward();
+        lines.add(String.format(
+                "Win Reward:           %d credits (type: %s)",
+                cr.getAmount(),
+                cr.getClass().getSimpleName()
+        ));
+
+        return lines.toArray(new String[0]);
+    }
+
+    @Override
+    public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) {
+        cardResolverVisitor.visit(this, controller);
+    }
 
 }

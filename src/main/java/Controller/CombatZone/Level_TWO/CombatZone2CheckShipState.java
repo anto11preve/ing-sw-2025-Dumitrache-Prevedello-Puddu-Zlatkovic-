@@ -18,6 +18,7 @@ public class CombatZone2CheckShipState extends State {
 
     public CombatZone2CheckShipState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     @Override

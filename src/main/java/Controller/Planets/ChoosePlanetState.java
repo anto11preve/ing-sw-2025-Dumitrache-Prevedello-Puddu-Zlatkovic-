@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Player;
@@ -36,6 +37,7 @@ public class ChoosePlanetState extends State {
      */
     public ChoosePlanetState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**
@@ -47,6 +49,7 @@ public class ChoosePlanetState extends State {
     public ChoosePlanetState(Context context, List<Planet> choosenPlanets) {
         this.context = context;
         this.chosenPlanets = choosenPlanets;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**
@@ -60,7 +63,7 @@ public class ChoosePlanetState extends State {
      * the state changes to {@link PlanetsLandState}.
      *
      * @param playerName the name of the player making the choice
-     * @param name       the name of the chosen planet
+     * @param planetName       the name of the chosen planet
      */
     @Override
     public void choosePlanet(String playerName, String planetName) throws InvalidContextualAction, InvalidParameters {
@@ -124,7 +127,12 @@ public class ChoosePlanetState extends State {
         }
 
         context.removePlayer(player);
-        controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
-        controller.getModel().setError(false);
+        if (!context.getPlayers().isEmpty()) {
+            controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
+            controller.getModel().setError(false);
+        } else {
+            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setError(false);
+        }
     }
 }

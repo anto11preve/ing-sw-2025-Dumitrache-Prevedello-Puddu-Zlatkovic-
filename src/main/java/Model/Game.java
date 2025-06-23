@@ -371,7 +371,14 @@ public class Game {
     }
 
     public void render(){
-        // Visualizzazione matrice 7x20 da array unidimensionale
+        // Prima stampiamo l'intestazione con i numeri delle colonne
+        System.out.print("   "); // spazio per i numeri di riga
+        for (int j = 0; j < 20; j++) {
+            System.out.printf("   %2d  ", j); // numeri colonna centrati
+        }
+        System.out.println();
+
+// Visualizzazione matrice 7x20 da array unidimensionale
         for (int i = 0; i < 7; i++) {
             // Prima otteniamo i disegni di tutti i componenti della riga i
             String[][] disegni = new String[20][];
@@ -379,18 +386,26 @@ public class Game {
                 // Conversione da coordinate 2D a indice 1D
                 int indice = i * 20 + j;
 
-                if (tiles[indice] != null)
+                if (tiles[indice] != null) {
                     if (tiles[indice].isVisible()) {
                         disegni[j] = tiles[indice].renderSmall();
                     } else {
-                        System.out.print(Arrays.toString(renderHidden())); // Renderizza anche i componenti non visibili
+                        disegni[j] = renderHidden(); // Rimuovi Arrays.toString()
                     }
-                else
-                    System.out.print(Arrays.toString(renderEmpty()));
+                } else {
+                    disegni[j] = renderEmpty(); // Rimuovi Arrays.toString()
+                }
             }
 
             // Stampiamo riga per riga il disegno
             for (int riga = 0; riga < disegni[0].length; riga++) {
+                // Stampiamo il numero di riga solo sulla riga centrale del componente
+                if (riga == disegni[0].length / 2) {
+                    System.out.printf("%2d ", i);
+                } else {
+                    System.out.print("   ");
+                }
+
                 // Stampiamo la griglia
                 for (int j = 0; j < 20; j++) {
                     System.out.print(disegni[j][riga]);

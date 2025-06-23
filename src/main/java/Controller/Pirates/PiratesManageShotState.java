@@ -40,6 +40,7 @@ public class PiratesManageShotState extends State{
         this.context = context;
         this.number = number;
         this.turn = turn;
+        this.setPlayerInTurn(context.getSpecialPlayers().get(turn));
     }
 
     /**
@@ -56,7 +57,7 @@ public class PiratesManageShotState extends State{
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (turn != context.getSpecialPlayers().indexOf(player)) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
@@ -153,7 +154,7 @@ public class PiratesManageShotState extends State{
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (turn != context.getSpecialPlayers().indexOf(player)) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
@@ -201,15 +202,15 @@ public class PiratesManageShotState extends State{
             compartment.removeBattery();
 
             turn++;
-            if (turn > context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
+            if (turn >= context.getSpecialPlayers().size()) {  //tutti i giocatori sono stati colpiti da questo shot
                 context.removeProjectile(shot);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                     controller.getModel().setState(new FlightPhase(controller));
                     controller.getModel().setError(false);
-                    return;
+                } else {
+                    controller.getModel().setState(new PiratesCannonShotsState(context));
+                    controller.getModel().setError(false);
                 }
-                controller.getModel().setState(new PiratesCannonShotsState(context));
-                controller.getModel().setError(false);
             } else {
                 controller.getModel().setState(new PiratesManageShotState(context, number, turn));
                 controller.getModel().setError(false);

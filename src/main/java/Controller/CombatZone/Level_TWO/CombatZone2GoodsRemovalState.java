@@ -26,11 +26,13 @@ public class CombatZone2GoodsRemovalState extends State {
     public CombatZone2GoodsRemovalState(Context context) {
         this.context = context;
         this.amount = context.getRequiredGoods();
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone2GoodsRemovalState(Context context, int amount) {
         this.context = context;
         this.amount = amount;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
 

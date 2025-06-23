@@ -27,6 +27,7 @@ public class SlaversRewardsState extends State{
      */
     public SlaversRewardsState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**
