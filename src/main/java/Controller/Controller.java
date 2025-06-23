@@ -4,48 +4,35 @@ import Controller.Commands.Command;
 import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
-// Import del modello e delle librerie per RMI
+// Import del modello
+import Controller.Server.Server;
 import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
 
+import Model.Player;
 import Model.Ship.Coordinates;
+import Networking.Agent;
+import Networking.Messages.ClientMessage;
+import Networking.Network;
+import View.Client.Actions.UpdateGameAction;
 
-import java.rmi.*;
-//import java.rmi.registry.*;
-//import java.rmi.server.*;
 import java.util.*;
 
-public class Controller /*extends UnicastRemoteObject implements ControllerInterface*/ {
+public class Controller implements Agent {
     private final Game model;
     private final Queue<Command> commandQueue= new LinkedList<>();
     private final MatchLevel matchLevel;
     private final int gameID;
-    //placeholder per lo smistatore di comandi per eliminarsi da lista game attivi quando la partita finisce
 
-
-    /*
-    public static void main(String[] args)
-            throws RemoteException, AlreadyBoundException {
-        System.out.println("Constructing server implementation...");
-        Controller controller = new Controller();
-
-        System.out.println("Binding server implementation to registry...");
-        Registry registry = LocateRegistry.getRegistry();
-        registry.bind("Game_Controller", controller);
-        System.out.println("Waiting for invocations from clients...");
-
-   }
-   */
-
-
-    public Controller(MatchLevel matchLevel, int GameID/*, Smistatore smistatore*/) throws RemoteException {
+    public Controller(MatchLevel matchLevel, int GameID) {
         this.model = new Game(matchLevel);
-        model.setState(new LogInState(this));
+        this.model.setState(new LogInState(this));
         this.matchLevel = matchLevel;
         this.gameID = GameID;
-        //this.smistatatore=smistatatore;
 
+        //create the thread that reads and executes commands
+        new Thread(this, "Controller#" + this.gameID).start();
     }
 
     // Getter for game model
@@ -58,11 +45,23 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
     }
 
     public void enqueueCommand(Command command) {
-        commandQueue.add(command);
+        synchronized (this.commandQueue) {
+            this.commandQueue.add(command);
+            this.commandQueue.notifyAll();
+        }
     }
 
     public Command dequeueCommand() {
-        return commandQueue.poll();
+        synchronized (this.commandQueue) {
+            if(this.commandQueue.isEmpty()){
+                try{
+                    this.commandQueue.wait();
+                } catch (InterruptedException e){
+                    /*TODO: decidere se si vuole gestire o ignorare*/
+                }
+            }
+            return this.commandQueue.poll();
+        }
     }
 
     public MatchLevel getMatchLevel() {return matchLevel;}
@@ -74,13 +73,7 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
 
 
     public void login(String name) throws InvalidCommand, InvalidParameters {
-        try {
-            model.getState().login(name);
-            model.setError(false);
-        } catch (InvalidCommand | InvalidParameters e) {
-            model.setError(true);
-        }
-        //TODO: vedere se mettere gestione exception più a monte, nello specifico nel thread che mangia i comandi
+        model.getState().login(name);
     }
     public void logout(String name) throws InvalidCommand, InvalidParameters {
         model.getState().logout(name);
@@ -148,6 +141,31 @@ public class Controller /*extends UnicastRemoteObject implements ControllerInter
         model.getState().throwDices(playerName);
     }
 
+    public void run(){
+        System.err.println("Thread started yay");
+        /*TODO: capire come segnalare al thread che deve morire*/
+        while(true){
+            final Command command = this.dequeueCommand();
 
+            if(command != null){
+                try {
+                    command.execute(this);
+                    this.model.setError(false);
+                } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters | InvalidContextualAction e) {
+                    this.model.setError(true);
+                }
 
+                for(Player player : this.getModel().getPlayers()){
+                    Network network = Server.server.getNetwork(player.getName());
+                    if(network != null && !network.isDone()) {
+                        network.send(
+                                new ClientMessage(
+                                        new UpdateGameAction(this.model)
+                                )
+                        );
+                    }
+                }
+            }
+        }
+    }
 }

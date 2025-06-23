@@ -59,6 +59,21 @@ public class CondensedShip {
         return totalCrew;
     }
 
+    public int getTotalHumans() {
+        int totalHumans = 0;
+
+        for (Cabin cabin : cabins) {
+            Crewmates crewmates = cabin.getOccupants();
+            if(crewmates == Crewmates.SINGLE_HUMAN) {
+                totalHumans += 1;
+            } else if (crewmates == Crewmates.DOUBLE_HUMAN) {
+                totalHumans += 2;
+            }
+        }
+
+        return totalHumans;
+    }
+
     public DoubleCannonsCounter getTotalDoubleCannons() {
         int frontCannons = 0;
         int otherCannons = 0;

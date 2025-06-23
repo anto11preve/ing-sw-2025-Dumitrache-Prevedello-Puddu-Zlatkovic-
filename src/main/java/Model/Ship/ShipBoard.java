@@ -30,14 +30,12 @@ public class ShipBoard {
 
     public ShipBoard() {
         this.components = new SpaceshipComponent[ROWS][COLS];
-        Cabin centralCabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-        centralCabin.setShipBoard(this);
-        components[2][3] = centralCabin;
-        centralCabin.added();
+        this.condensedShip = new CondensedShip();
+
+
 
         this.activeComponent = null;
         this.reservedComponents = new ArrayList<>();
-        this.condensedShip = new CondensedShip();
     }
 
     public CondensedShip getCondensedShip() {
@@ -340,72 +338,90 @@ public class ShipBoard {
      */
     private int dfs(int row, int col, boolean[][] visited) {
         //if (!isValidPosition(row, col)) return 0;
-        if (visited[row][col] || components[row][col] == null) return 0;
+        if (visited[row][col] || components[row][col] == null) {return 0;}
 
         visited[row][col] = true;
         int count = 1;
         SpaceshipComponent currentComponent = components[row][col];
         // Explore each of the four directions, only if the tile in that direction is not null and it's connected with the current component
 
-        SpaceshipComponent nextComponent= components[row+1][col];
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
 
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
+        SpaceshipComponent nextComponent = null;
+        if (isValidPosition(row+1, col)) {
+            nextComponent = components[row+1][col];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
 
-            if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
-                count += dfs(row + 1, col, visited);
-            }
-        }
-        nextComponent = components[row-1][col];
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+6) + ", " + (col+4));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
 
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.REAR);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.FRONT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-            if (connectorsAreConnected(currentComponent.getConnectorAt(Side.FRONT), nextComponent.getConnectorAt(Side.REAR))) {
-                count += dfs(row - 1, col, visited);
+                if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row + 1, col, visited);
+                }
             }
         }
 
-        nextComponent = components[row][col + 1];
-        if(nextComponent!=null) {
-
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.RIGHT);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.LEFT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-
-            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.RIGHT), nextComponent.getConnectorAt(Side.LEFT))) {
-                count += dfs(row, col + 1, visited);
-            }
-        }
-        nextComponent = components[row][col - 1];
-        if(nextComponent!=null) {
-            ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.LEFT);
-            ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.RIGHT);
-            if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
-                return -1;
-                //-1 makes checkIntegrity return false,
-                // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
-            }
-
-            if(connectorsAreConnected(currentComponent.getConnectorAt(Side.LEFT), nextComponent.getConnectorAt(Side.RIGHT))) {
-                count += dfs(row, col - 1, visited);
+        if (isValidPosition(row-1, col)) {
+            nextComponent = components[row-1][col];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.FRONT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.REAR);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+4) + ", " + (col+4));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+                if (connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row - 1, col, visited);
+                }
             }
         }
+
+        if (isValidPosition(row, col+1)) {
+            nextComponent = components[row][col + 1];
+            if(nextComponent!=null) {
+
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.RIGHT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.LEFT);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+5) + ", " + (col+5));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+
+                if(connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row, col + 1, visited);
+                }
+            }
+        }
+
+
+        if (isValidPosition(row, col-1)) {
+            nextComponent = components[row][col - 1];
+            if(nextComponent!=null) {
+                ConnectorType currentComponentConnector = currentComponent.getConnectorAt(Side.LEFT);
+                ConnectorType nextComponentConnector = nextComponent.getConnectorAt(Side.RIGHT);
+                if(!connectosAreCompatible(currentComponentConnector, nextComponentConnector)) {
+                    System.out.println("Uncompatible connectors between element at " + (row+5) + ", " + (col+4)+"and element at " + (row+5) + ", " + (col+3));
+                    return -1;
+                    //-1 makes checkIntegrity return false,
+                    // this is not mandatory for ship integrity, but it's a simple check that is useful for validation
+                }
+
+                if(connectorsAreConnected(currentComponentConnector, nextComponentConnector)) {
+                    count += dfs(row, col - 1, visited);
+                }
+            }
+        }
+
+
         return count;
     }
 
@@ -682,7 +698,7 @@ public class ShipBoard {
      */
     public boolean validateShip() {
 
-        if(!checkIntegrity()) {
+        if(!this.checkIntegrity()) {
             System.out.println("La nave non è strutturalmente integra.");
             return false;
         }
@@ -891,7 +907,118 @@ public class ShipBoard {
         }
     }
 
+    public void render(){
+        // Ora stampiamo riga per riga componendo i pezzi
+        for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
+            // Prima otteniamo i disegni di tutti i componenti della riga i
+            String[][] disegni = new String[7][]; // 7 colonne (4-10)
+            for (int j = 0; j < COLS; j++) {
+                if (components[i][j] != null)
+                    disegni[j] = components[i][j].renderSmall();
+                else
+                    disegni[j] = renderEmpty();
+            }
 
+            // Caselle extra (sempre vuote per ora)
+            String[] casellaA = null, casellaB = null, casellaC = null;
+            if (i == 0) { // prima riga - casella A
+                casellaA = renderEmpty();
+            }
+            if (i == 1) { // seconda riga - caselle B e C
+                if(!reservedComponents.isEmpty()) {
+                    casellaB = reservedComponents.get(0).renderSmall();
+                    if (reservedComponents.size() > 1) {
+                        casellaC = reservedComponents.get(1).renderSmall();
+                    }
+                }
+            }
+
+            // Poi stampiamo riga per riga il disegno
+            for (int riga = 0; riga < disegni[0].length; riga++) {
+                // Stampiamo il numero di riga solo sulla riga centrale del componente
+                if (riga == disegni[0].length / 2) {
+                    System.out.printf("%2d ", i + 5);
+                } else {
+                    System.out.print("   ");
+                }
+
+                // Stampiamo la griglia principale
+                for (int j = 0; j < 7; j++) {
+                    System.out.print(disegni[j][riga]);
+                }
+
+                System.out.print("     "); // spazio separatore
+
+                // Stampiamo le caselle extra con etichette accanto
+                if (i == 0 && casellaA != null) {
+                    System.out.print(casellaA[riga]);
+                    // Stampiamo l'etichetta A solo sulla riga centrale
+                    if (riga == disegni[0].length / 2) {
+                        System.out.print(" HAND");
+                    }
+                } else if (i == 1) {
+                    if (casellaB != null) System.out.print(casellaB[riga]);
+                    if (casellaC != null) System.out.print(casellaC[riga]);
+                    // Stampiamo le etichette B e C solo sulla riga centrale
+                    if (riga == disegni[0].length / 2) {
+                        System.out.print(" RESERVED");
+                    }
+                }
+
+                System.out.println();
+            }
+        }
+
+// Legenda su 3 colonne
+        System.out.println("\nLEGENDA:");
+
+// Array con i tuoi contenuti personalizzati
+        String[] legenda = {
+                "BAT - Battery compartment",
+                "CAR - Cargo hold",
+                "CAB - Cabin",
+                "STR - Structural Module",
+                "E1  - Single Engine",
+                "E2  - Double Engine",
+                "C1  - Single Cannon",
+                "C2  - Double Cannon",
+                "PAL - Purple Alien",
+                "BAL - Brown Alien",
+                "SH  - Shield",
+                "↑   - Orientation"
+
+                // Aggiungi altri elementi qui...
+        };
+
+// Stampa su 3 colonne
+        for (int i = 0; i < legenda.length; i += 3) {
+            // Prima colonna
+            System.out.printf("%-30s", legenda[i]);
+
+            // Seconda colonna (se esiste)
+            if (i + 1 < legenda.length) {
+                System.out.printf("%-30s", legenda[i + 1]);
+            } else {
+                System.out.printf("%-30s", "");
+            }
+
+            // Terza colonna (se esiste)
+            if (i + 2 < legenda.length) {
+                System.out.printf("%-25s", legenda[i + 2]);
+            }
+
+            System.out.println();
+        }
+    }
+
+    public String[] renderEmpty() {
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│     │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
 
 }
 

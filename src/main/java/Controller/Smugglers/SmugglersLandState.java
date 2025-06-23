@@ -49,36 +49,37 @@ public class SmugglersLandState extends State{
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new InvalidParameters("It's not your turn");
-        }
-
-        if(coordinates == null){
-            controller.getModel().setError(true);
-            throw new InvalidParameters("Invalid coordinates");
-        }
-
-        if(goodIndex < 0 || goodIndex >= context.getGoods().size()){
-            controller.getModel().setError(true);
-            throw new IndexOutOfBoundsException("Invalid goodIndex");
+            throw new InvalidParameters("It's not your turn to remove crew members.");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {  //non è un CargoHold
+        if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
+            controller.getModel().setError(true);//non è un CargoHold
+            throw new InvalidContextualAction("Not a valid cargo hold coordinates.");
+        }
+
+        if(goodIndex < 0 || goodIndex >= context.getGoods().size()) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Invalid component type, expected CargoHold");
+            throw new InvalidParameters("Invalid good index.");
         }
 
         CargoHold cargoHold = (CargoHold) component;
+        if(CargoHoldIndex < 0 || CargoHoldIndex >= cargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid cargo hold index.");
+        }
+
+
         Good selectedGood = context.getGoods().get(goodIndex);
         if(selectedGood == null) {
             controller.getModel().setError(true);
-           throw new InvalidParameters("Good not found");
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Cannot add good to the cargo hold");
+            throw new InvalidContextualAction("Failed to place good in cargo hold at specified index.");
         }
 
         context.removeGood(selectedGood);
@@ -101,29 +102,37 @@ public class SmugglersLandState extends State{
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new InvalidParameters("It's not your turn");
+            throw new InvalidParameters("It's not your turn to move the good.");
         }
 
         SpaceshipComponent oldComponent = player.getShipBoard().getComponent(oldCoordinates);
         SpaceshipComponent newComponent = player.getShipBoard().getComponent(newCoordinates);
 
-        if(!player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
+        if(oldComponent == null || newComponent == null ||
+                !player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
             controller.getModel().setError(true);
-           throw new InvalidContextualAction("Invalid components, expected CargoHolds");
+            throw new InvalidParameters("Invalid cargo hold coordinates.");
         }
+
+
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
+        if(oldIndex < 0 || oldIndex >= oldCargoHold.getCapacity() || newIndex < 0 || newIndex >= newCargoHold.getCapacity()) {
+            controller.getModel().setError(true);
+            throw new InvalidParameters("Invalid cargo hold index.");
+        }
+
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
             controller.getModel().setError(true);
-            throw new InvalidParameters("Good not found");
+            throw new InvalidParameters("Selected good is null.");
         }
 
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
             controller.getModel().setError(true);
-            throw new InvalidContextualAction("Cannot add good to the cargo hold");
+            throw new InvalidContextualAction("Invalid cargo hold coordinates.");
         }
         oldCargoHold.removeGood(oldIndex);
         controller.getModel().setState(new SmugglersLandState(context));

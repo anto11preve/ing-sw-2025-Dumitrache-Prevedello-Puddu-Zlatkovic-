@@ -2,746 +2,669 @@
   {
     "id": 1,
     "type": "OpenSpace",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Nothing happens.",
-    "imagePath": "assets/cards/trial/card_1.png"
+    "level": "LEARNER",
+    "imagePath": "src/main/resources/pics/cards/1.png"
   },
   {
     "id": 2,
     "type": "MeteorSwarm",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Small meteors from the front.",
-    "incomingDirection": "FRONT",
-    "smallMeteors": 2,
-    "largeMeteors": 0,
-    "imagePath": "assets/cards/trial/card_2.png"
+    "level": "LEARNER",
+    "meteors": [
+      { "large": true, "direction": "front" },
+      { "large": false, "direction": "left" },
+      { "large": false, "direction": "right" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/2.png"
   },
   {
     "id": 3,
     "type": "Planets",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Trade at nearby planets.",
+    "level": "LEARNER",
     "planets": [
       {
-        "name": "Trialon",
-        "goods": [
-          "RED",
-          "BLUE"
-        ]
+        "name": "Planet 1",
+        "goods": ["RED", "RED"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["RED", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["YELLOW"]
       }
     ],
-    "imagePath": "assets/cards/trial/card_3.png"
+    "landingPenalty": {
+      "value": 2
+    },
+    "imagePath": "src/main/resources/pics/cards/3.png"
   },
   {
     "id": 4,
-    "type": "OpenSpace",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Peaceful region of space.",
-    "imagePath": "assets/cards/trial/card_4.png"
-  },
-  {
-    "id": 5,
-    "type": "MeteorSwarm",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Meteors from the right.",
-    "incomingDirection": "RIGHT",
-    "smallMeteors": 3,
-    "largeMeteors": 1,
-    "imagePath": "assets/cards/trial/card_5.png"
-  },
-  {
-    "id": 6,
-    "type": "Pirates",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Pirates attack.",
-    "power": 3,
-    "reward": {
-      "credits": 2
-    },
-    "penalty": {
-      "days": 1
-    },
-    "imagePath": "assets/cards/trial/card_6.png"
-  },
-  {
-    "id": 7,
     "type": "Stardust",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "Stardust damages exposed components.",
-    "imagePath": "assets/cards/trial/card_7.png"
+    "level": "LEARNER",
+    "imagePath": "src/main/resources/pics/cards/4.png"
   },
   {
-    "id": 8,
-    "type": "AbandonedShip",
-    "level": "TRIAL",
-    "originalLevel": "LEVEL1",
-    "description": "You find an abandoned ship.",
+    "id":               "5",
+    "type":             "Smugglers",
+    "level":            "LEARNER",
+    "power":    4,
+    "stealGoodsOnLoss": 2,
+    "rewardGoods":    ["YELLOW","GREEN","BLUE"],
+    "dayCost":          1,
+    "imagePath":       "src/main/resources/pics/cards/5.jpg"
+  },
+  {
+    "id":       "6",
+    "type":     "CombatZone",
+    "level":    "LEARNER",
+    "lines": [
+      {
+        "criteria": "MAN_POWER",
+        "penalty":  { "type": "DaysPenalty", "value": 3 }
+      },
+      {
+        "criteria": "ENGINE_POWER",
+        "penalty":  { "type": "CrewPenalty", "value": 2 }
+      },
+      {
+        "criteria": "FIRE_POWER",
+        "penalty": {
+          "shots": [
+            {
+              "isLarge": false,
+              "direction": "front"
+            },
+            {
+              "isLarge": true,
+              "direction": "front"
+            }
+          ]
+        }
+      }
+    ],
+    "imagePath":"src/main/resources/pics/cards/6.jpg"
+  },
+  {
+    "id":            "7",
+    "type":          "AbandonedShip",
+    "level":         "LEARNER",
+    "crewRequired":   3,
     "reward": {
-      "crew": 1
+      "credits":     4
     },
-    "imagePath": "assets/cards/trial/card_8.png"
+    "days":          1,
+    "imagePath":   "src/main/resources/pics/cards/7.jpg"
+  },
+  {
+    "id":            "8",
+    "type":          "AbandonedStation",
+    "level":         "LEARNER",
+    "crewRequired":   5,
+    "days":           1,
+    "reward": {
+      "goods":      ["YELLOW","GREEN"]
+    },
+    "imagePath":    "src/main/resources/pics/cards/8.jpg"
   },
   {
     "id": 9,
     "type": "OpenSpace",
-    "level": "LEVEL1",
-    "description": "Nothing happens.",
-    "imagePath": "assets/cards/i/card_1.png"
+    "level": "LEVEL_ONE",
+    "imagePath": "src/main/resources/pics/cards/9.png"
   },
   {
     "id": 10,
-    "type": "MeteorSwarm",
-    "level": "LEVEL1",
-    "description": "Small meteors from the front.",
-    "incomingDirection": "FRONT",
-    "smallMeteors": 2,
-    "largeMeteors": 0,
-    "imagePath": "assets/cards/i/card_2.png"
+    "type": "OpenSpace",
+    "level": "LEVEL_ONE",
+    "imagePath": "src/main/resources/pics/cards/10.png"
   },
   {
     "id": 11,
-    "type": "Planets",
-    "level": "LEVEL1",
-    "description": "Trade at nearby planets.",
-    "planets": [
-      {
-        "name": "Trialon",
-        "goods": [
-          "RED",
-          "BLUE"
-        ]
-      }
-    ],
-    "imagePath": "assets/cards/i/card_3.png"
+    "type": "OpenSpace",
+    "level": "LEVEL_ONE",
+    "imagePath": "src/main/resources/pics/cards/11.png"
   },
   {
     "id": 12,
-    "type": "OpenSpace",
-    "level": "LEVEL1",
-    "description": "Peaceful region of space.",
-    "imagePath": "assets/cards/i/card_4.png"
+    "type": "Planets",
+    "level": "LEVEL_ONE",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["RED", "GREEN", "BLUE", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["RED", "YELLOW", "BLUE"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["RED",  "BLUE", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 4",
+        "goods": ["RED",  "GREEN"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 3
+    },
+    "imagePath": "src/main/resources/pics/cards/12.png"
   },
   {
     "id": 13,
-    "type": "MeteorSwarm",
-    "level": "LEVEL1",
-    "description": "Meteors from the right.",
-    "incomingDirection": "RIGHT",
-    "smallMeteors": 3,
-    "largeMeteors": 1,
-    "imagePath": "assets/cards/i/card_5.png"
+    "type": "Planets",
+    "level": "LEVEL_ONE",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["YELLOW", "GREEN", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["YELLOW", "YELLOW"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 3
+    },
+    "imagePath": "src/main/resources/pics/cards/13.png"
   },
   {
     "id": 14,
-    "type": "Pirates",
-    "level": "LEVEL1",
-    "description": "Pirates attack.",
-    "power": 3,
-    "reward": {
-      "credits": 2
+    "type": "Planets",
+    "level": "LEVEL_ONE",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["GREEN", "GREEN"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["YELLOW"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["BLUE", "BLUE", "BLUE"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 1
     },
-    "penalty": {
-      "days": 1
-    },
-    "imagePath": "assets/cards/i/card_6.png"
+    "imagePath": "src/main/resources/pics/cards/14.png"
   },
   {
     "id": 15,
-    "type": "Stardust",
-    "level": "LEVEL1",
-    "description": "Stardust damages exposed components.",
-    "imagePath": "assets/cards/i/card_7.png"
+    "type": "MeteorSwarm",
+    "level": "LEVEL_ONE",
+    "meteors": [
+      { "large": false, "direction": "front" },
+      { "large": false, "direction": "front" },
+      { "large": false, "direction": "left" },
+      { "large": false, "direction": "right" },
+      { "large": false, "direction": "rear" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/15.png"
   },
   {
     "id": 16,
-    "type": "AbandonedShip",
-    "level": "LEVEL1",
-    "description": "You find an abandoned ship.",
-    "reward": {
-      "crew": 1
-    },
-    "imagePath": "assets/cards/i/card_8.png"
-  },
-  {
-    "id": 17,
-    "type": "Smugglers",
-    "level": "LEVEL1",
-    "description": "Smugglers spotted!",
-    "imagePath": "assets/cards/i/card_9.png",
-    "power": 3
-  },
-  {
-    "id": 18,
-    "type": "AbandonedStation",
-    "level": "LEVEL1",
-    "description": "You find a derelict station.",
-    "imagePath": "assets/cards/i/card_10.png",
-    "reward": {
-      "cargo": 2
-    }
-  },
-  {
-    "id": 19,
-    "type": "CombatZone",
-    "level": "LEVEL1",
-    "description": "You enter a combat zone.",
-    "imagePath": "assets/cards/i/card_11.png",
-    "reward": {
-      "credits": 3
-    },
-    "penalty": {
-      "days": 2
-    },
-    "power": 4
-  },
-  {
-    "id": 20,
     "type": "MeteorSwarm",
-    "level": "LEVEL1",
-    "description": "Meteors from the rear.",
-    "imagePath": "assets/cards/i/card_12.png",
-    "incomingDirection": "REAR",
-    "smallMeteors": 2,
-    "largeMeteors": 1
+    "level": "LEVEL_ONE",
+    "meteors": [
+      { "large": true, "direction": "front" },
+      { "large": false, "direction": "front" },
+      { "large": true, "direction": "front" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/16.png"
+  },
+  {
+    "id":            "17",
+    "type":          "AbandonedShip",
+    "level":         "LEVEL_ONE",
+    "crewRequired":   2,
+    "reward": {
+      "credits":     3
+    },
+    "days":          1,
+    "imagePath":   "src/main/resources/pics/cards/17.jpg"
+  },
+  {
+    "id":            "18",
+    "type":          "AbandonedStation",
+    "level":         "LEVEL_ONE",
+    "crewRequired":   6,
+    "days":           1,
+    "reward": {
+      "goods":      ["RED","RED"]
+    },
+    "imagePath":    "src/main/resources/pics/cards/18.jpg"
+  },
+  {
+    "id":       "19",
+    "type":     "Slavers",
+    "level":    "LEVEL_ONE",
+    "power":    6,
+    "penalty": {
+      "crewLoss": 3,
+      "days":     1
+    },
+    "reward": {
+      "credits": 5
+    },
+    "imagePath":"src/main/resources/pics/cards/19.jpg"
+  },
+  {
+    "id":       "20",
+    "type":     "Pirates",
+    "level":    "LEVEL_ONE",
+    "power":    5,
+    "penalty": {
+      "shots": [
+        { "isLarge": false, "direction": "FRONT" },
+        { "isLarge": true,  "direction": "FRONT" },
+        { "isLarge": false, "direction": "FRONT" }
+      ],
+      "days": 1
+    },
+    "reward": {
+      "credits": 4
+    },
+    "imagePath":"src/main/resources/pics/cards/20.jpg"
   },
   {
     "id": 21,
-    "type": "Slavers",
-    "level": "LEVEL1",
-    "description": "Slavers demand crew.",
-    "imagePath": "assets/cards/i/card_13.png",
-    "reward": {
-      "credits": 2
-    },
-    "penalty": {
-      "crewLoss": 1
-    },
-    "power": 4
+    "type": "OpenSpace",
+    "level": "LEVEL_TWO",
+    "imagePath": "src/main/resources/pics/cards/21.png"
   },
   {
     "id": 22,
     "type": "OpenSpace",
-    "level": "LEVEL1",
-    "description": "Space is calm.",
-    "imagePath": "assets/cards/i/card_14.png"
+    "level": "LEVEL_TWO",
+    "imagePath": "src/main/resources/pics/cards/22.png"
   },
   {
     "id": 23,
-    "type": "Stardust",
-    "level": "LEVEL1",
-    "description": "Thick stardust field.",
-    "imagePath": "assets/cards/i/card_15.png"
+    "type": "OpenSpace",
+    "level": "LEVEL_TWO",
+    "imagePath": "src/main/resources/pics/cards/23.png"
   },
   {
     "id": 24,
     "type": "MeteorSwarm",
-    "level": "LEVEL1",
-    "description": "Meteors from the left.",
-    "imagePath": "assets/cards/i/card_16.png",
-    "incomingDirection": "LEFT",
-    "smallMeteors": 1,
-    "largeMeteors": 2
+    "level": "LEVEL_TWO",
+    "meteors": [
+      { "large": false, "direction": "front" },
+      { "large": false, "direction": "front" },
+      { "large": true, "direction": "left" },
+      { "large": false, "direction": "left" },
+      { "large": false, "direction": "left" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/24.png"
   },
   {
     "id": 25,
-    "type": "CombatZone",
-    "level": "LEVEL1",
-    "description": "Fight or flee.",
-    "imagePath": "assets/cards/i/card_17.png",
-    "reward": {
-      "credits": 4
-    },
-    "penalty": {
-      "days": 1
-    },
-    "power": 5
+    "type": "MeteorSwarm",
+    "level": "LEVEL_TWO",
+    "meteors": [
+      { "large": true, "direction": "front" },
+      { "large": true, "direction": "front" },
+      { "large": false, "direction": "rear" },
+      { "large": false, "direction": "rear" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/25.png"
   },
   {
     "id": 26,
-    "type": "Planets",
-    "level": "LEVEL1",
-    "description": "More planets!",
-    "imagePath": "assets/cards/i/card_18.png",
-    "planets": [
-      {
-        "name": "X-7",
-        "goods": [
-          "GREEN",
-          "YELLOW"
-        ]
-      }
-    ]
+    "type": "MeteorSwarm",
+    "level": "LEVEL_TWO",
+    "meteors": [
+      { "large": false, "direction": "front" },
+      { "large": false, "direction": "front" },
+      { "large": true, "direction": "right" },
+      { "large": false, "direction": "right" },
+      { "large": false, "direction": "right" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/26.png"
   },
   {
     "id": 27,
-    "type": "AbandonedShip",
-    "level": "LEVEL1",
-    "description": "Abandoned ship spotted.",
-    "imagePath": "assets/cards/i/card_19.png",
-    "reward": {
-      "crew": 2
-    }
+    "type": "Planets",
+    "level": "LEVEL_TWO",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["RED", "RED", "RED", "YELLOW"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["RED", "RED", "GREEN", "GREEN"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["RED", "BLUE", "BLUE", "BLUE", "BLUE"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 4
+    },
+    "imagePath": "src/main/resources/pics/cards/27.png"
   },
   {
     "id": 28,
-    "type": "OpenSpace",
-    "level": "LEVEL1",
-    "description": "Nothing to report.",
-    "imagePath": "assets/cards/i/card_20.png"
+    "type": "Planets",
+    "level": "LEVEL_TWO",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["RED", "RED"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["GREEN", "GREEN", "GREEN", "GREEN"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 3
+    },
+    "imagePath": "src/main/resources/pics/cards/28.png"
   },
   {
     "id": 29,
-    "type": "OpenSpace",
-    "level": "LEVEL2",
-    "description": "Nothing happens in deep space.",
-    "imagePath": "assets/cards/ii/card_1.png"
+    "type": "Planets",
+    "level": "LEVEL_TWO",
+    "planets": [
+      {
+        "name": "Planet 1",
+        "goods": ["RED", "YELLOW"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["YELLOW", "GREEN", "BLUE"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["GREEN", "GREEN"]
+      },
+      {
+        "name": "Planet 4",
+        "goods": ["YELLOW"]
+      }
+    ],
+    "landingPenalty": {
+      "value": 2
+    },
+    "imagePath": "src/main/resources/pics/cards/29.png"
   },
   {
     "id": 30,
-    "type": "MeteorSwarm",
-    "level": "LEVEL2",
-    "description": "Large meteors from the front.",
-    "imagePath": "assets/cards/ii/card_2.png",
-    "incomingDirection": "FRONT",
-    "smallMeteors": 2,
-    "largeMeteors": 2
-  },
-  {
-    "id": 31,
     "type": "Planets",
-    "level": "LEVEL2",
-    "description": "You find new planets.",
-    "imagePath": "assets/cards/ii/card_3.png",
+    "level": "LEVEL_TWO",
     "planets": [
       {
-        "name": "Zeta",
-        "goods": [
-          "RED",
-          "GREEN"
-        ]
+        "name": "Planet 1",
+        "goods": ["GREEN", "GREEN", "GREEN", "GREEN"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["YELLOW", "YELLOW"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["BLUE", "BLUE", "BLUE", "BLUE"]
       }
-    ]
-  },
-  {
-    "id": 32,
-    "type": "Pirates",
-    "level": "LEVEL2",
-    "description": "Stronger pirates are approaching.",
-    "imagePath": "assets/cards/ii/card_4.png",
-    "reward": {
-      "credits": 3
+    ],
+    "landingPenalty": {
+      "value": 3
     },
-    "penalty": {
-      "days": 2
-    },
-    "power": 5
+    "imagePath": "src/main/resources/pics/cards/30.png"
   },
   {
-    "id": 33,
-    "type": "AbandonedShip",
-    "level": "LEVEL2",
-    "description": "You board a damaged ship.",
-    "imagePath": "assets/cards/ii/card_5.png",
+    "id":            "31",
+    "type":          "AbandonedShip",
+    "level":         "LEVEL_TWO",
+    "crewRequired":   4,
     "reward": {
-      "crew": 2
-    }
+      "credits":     6
+    },
+    "days":          1,
+    "imagePath":   "src/main/resources/pics/cards/31.jpg"
   },
   {
-    "id": 34,
-    "type": "Stardust",
-    "level": "LEVEL2",
-    "description": "Radiation storms and stardust.",
-    "imagePath": "assets/cards/ii/card_6.png"
+    "id":            "32",
+    "type":          "AbandonedShip",
+    "level":         "LEVEL_TWO",
+    "crewRequired":   5,
+    "reward": {
+      "credits":     8
+    },
+    "days":          2,
+    "imagePath":   "src/main/resources/pics/cards/32.jpg"
+  },
+  {
+    "id":            "33",
+    "type":          "AbandonedStation",
+    "level":         "LEVEL_TWO",
+    "crewRequired":   7,
+    "days":           1,
+    "reward": {
+      "goods":      ["RED","YELLOW"]
+    },
+    "imagePath":    "src/main/resources/pics/cards/33.jpg"
+  },
+  {
+    "id":            "34",
+    "type":          "AbandonedStation",
+    "level":         "LEVEL_TWO",
+    "crewRequired":   8,
+    "days":           2,
+    "reward": {
+      "goods":      ["YELLOW","YELLOW", "GREEN"]
+    },
+    "imagePath":    "src/main/resources/pics/cards/34.jpg"
   },
   {
     "id": 35,
-    "type": "Smugglers",
-    "level": "LEVEL2",
-    "description": "Cunning smugglers spotted.",
-    "imagePath": "assets/cards/ii/card_7.png",
-    "reward": {
-      "credits": 3
-    },
-    "penalty": {
-      "cargoLoss": 1
-    },
-    "power": 4
+    "type": "Stardust",
+    "level": "LEVEL_TWO",
+    "imagePath": "src/main/resources/pics/cards/35.png"
   },
   {
-    "id": 36,
-    "type": "Slavers",
-    "level": "LEVEL2",
-    "description": "Slavers try to abduct your crew.",
-    "imagePath": "assets/cards/ii/card_8.png",
-    "reward": {
-      "credits": 2
-    },
-    "penalty": {
-      "crewLoss": 2
-    },
-    "power": 5
+    "id":       "36",
+    "type":     "CombatZone",
+    "level":    "LEVEL_TWO",
+    "lines": [
+      {
+        "criteria": "FIRE_POWER",
+        "penalty":  { "type": "DaysPenalty", "value": 4 }
+      },
+      {
+        "criteria": "ENGINE_POWER",
+        "penalty":  {"type":  "GoodsPenalty", "value": 3}
+      },
+      {
+        "criteria": "MAN_POWER",
+        "penalty": {
+          "shots": [
+            {
+              "isLarge": false,
+              "direction": "front"
+            },
+            {
+              "isLarge": false,
+              "direction": "left"
+            },
+            {
+              "isLarge": false,
+              "direction": "right"
+            },
+            {
+              "isLarge": true,
+              "direction": "rear"
+            }
+          ]
+        }
+      }
+    ],
+    "imagePath":"src/main/resources/pics/cards/36.jpg"
   },
   {
-    "id": 37,
-    "type": "CombatZone",
-    "level": "LEVEL2",
-    "description": "Heavy combat zone.",
-    "imagePath": "assets/cards/ii/card_9.png",
-    "reward": {
-      "credits": 5
-    },
+    "id":       "37",
+    "type":     "Epidemic",
+    "level":    "LEVEL_TWO",
+    "imagePath":"src/main/resources/pics/cards/37.jpg"
+  },
+  {
+    "id":       "38",
+    "type":     "Slavers",
+    "level":    "LEVEL_TWO",
+    "power":    7,
     "penalty": {
+      "crewLoss": 4,
+      "days":     2
+    },
+    "reward": {
+      "credits": 8
+    },
+    "imagePath":"src/main/resources/pics/cards/38.jpg"
+  },
+  {
+    "id":       "39",
+    "type":     "Pirates",
+    "level":    "LEVEL_TWO",
+    "power":    6,
+    "penalty": {
+      "shots": [
+        { "isLarge": true, "direction": "front" },
+        { "isLarge": false,  "direction": "front" },
+        { "isLarge": true, "direction": "front" }
+      ],
       "days": 2
     },
-    "power": 6
-  },
-  {
-    "id": 38,
-    "type": "Epidemic",
-    "level": "LEVEL2",
-    "description": "Contagion spreads onboard.",
-    "imagePath": "assets/cards/ii/card_10.png",
-    "penalty": {
-      "crewLoss": 1
-    }
-  },
-  {
-    "id": 39,
-    "type": "MeteorSwarm",
-    "level": "LEVEL2",
-    "description": "Meteor barrage from left.",
-    "imagePath": "assets/cards/ii/card_11.png",
-    "incomingDirection": "LEFT",
-    "smallMeteors": 3,
-    "largeMeteors": 2
-  },
-  {
-    "id": 40,
-    "type": "AbandonedStation",
-    "level": "LEVEL2",
-    "description": "Exploration opportunity.",
-    "imagePath": "assets/cards/ii/card_12.png",
     "reward": {
-      "cargo": 3
-    }
+      "credits": 7
+    },
+    "imagePath":"src/main/resources/pics/cards/39.jpg"
+  },
+  {
+    "id":               "40",
+    "type":             "Smugglers",
+    "level":            "LEVEL_TWO",
+    "power":    8,
+    "stealGoodsOnLoss": 3,
+    "rewardGoods":    ["RED","YELLOW","YELLOW"],
+    "dayCost":          1,
+    "imagePath":       "src/main/resources/pics/cards/40.jpg"
   },
   {
     "id": 41,
-    "type": "Pirates",
-    "level": "LEVEL2",
-    "description": "Well-armed pirates block your path.",
-    "imagePath": "assets/cards/ii/card_13.png",
-    "reward": {
-      "credits": 4
-    },
-    "penalty": {
-      "days": 2
-    },
-    "power": 6
+    "type": "OpenSpace",
+    "level": "LEVEL_ONE",
+    "imagePath": "src/main/resources/pics/cards/1.png"
   },
   {
     "id": 42,
-    "type": "OpenSpace",
-    "level": "LEVEL2",
-    "description": "Calm sector with nothing happening.",
-    "imagePath": "assets/cards/ii/card_14.png"
+    "type": "MeteorSwarm",
+    "level": "LEVEL_ONE",
+    "meteors": [
+      { "large": true, "direction": "front" },
+      { "large": false, "direction": "left" },
+      { "large": false, "direction": "right" }
+    ],
+    "imagePath": "src/main/resources/pics/cards/2.png"
   },
   {
     "id": 43,
     "type": "Planets",
-    "level": "LEVEL2",
-    "description": "Friendly planet for trading.",
-    "imagePath": "assets/cards/ii/card_15.png",
+    "level": "LEVEL_ONE",
     "planets": [
       {
-        "name": "Velox",
-        "goods": [
-          "YELLOW",
-          "BLUE"
-        ]
+        "name": "Planet 1",
+        "goods": ["RED", "RED"]
+      },
+      {
+        "name": "Planet 2",
+        "goods": ["RED", "BLUE", "BLUE"]
+      },
+      {
+        "name": "Planet 3",
+        "goods": ["YELLOW"]
       }
-    ]
+    ],
+    "landingPenalty": {
+      "value": 2
+    },
+    "imagePath": "src/main/resources/pics/cards/3.png"
   },
   {
     "id": 44,
     "type": "Stardust",
-    "level": "LEVEL2",
-    "description": "Star debris covers your hull.",
-    "imagePath": "assets/cards/ii/card_16.png"
+    "level": "LEVEL_ONE",
+    "imagePath": "src/main/resources/pics/cards/4.png"
   },
   {
-    "id": 45,
-    "type": "CombatZone",
-    "level": "LEVEL2",
-    "description": "Another violent skirmish zone.",
-    "imagePath": "assets/cards/ii/card_17.png",
-    "reward": {
-      "credits": 4
-    },
-    "penalty": {
-      "days": 3
-    },
-    "power": 5
+    "id":               "45",
+    "type":             "Smugglers",
+    "level":            "LEVEL_ONE",
+    "power":    4,
+    "stealGoodsOnLoss": 2,
+    "rewardGoods":    ["YELLOW","GREEN","BLUE"],
+    "dayCost":          1,
+    "imagePath":       "src/main/resources/pics/cards/5.jpg"
   },
   {
-    "id": 46,
-    "type": "MeteorSwarm",
-    "level": "LEVEL2",
-    "description": "Meteor strike from rear.",
-    "imagePath": "assets/cards/ii/card_18.png",
-    "incomingDirection": "REAR",
-    "smallMeteors": 2,
-    "largeMeteors": 1
-  },
-  {
-    "id": 47,
-    "type": "AbandonedShip",
-    "level": "LEVEL2",
-    "description": "Unmanned ship drifting nearby.",
-    "imagePath": "assets/cards/ii/card_19.png",
-    "reward": {
-      "crew": 1
-    }
-  },
-  {
-    "id": 48,
-    "type": "Epidemic",
-    "level": "LEVEL2",
-    "description": "Illness weakens your crew.",
-    "imagePath": "assets/cards/ii/card_20.png",
-    "penalty": {
-      "crewLoss": 2
-    }
-  },
-  {
-    "id": 49,
-    "type": "OpenSpace",
-    "level": "LEVEL3",
-    "description": "No activity in this quadrant.",
-    "imagePath": "assets/cards/iii/card_1.png"
-  },
-  {
-    "id": 50,
-    "type": "MeteorSwarm",
-    "level": "LEVEL3",
-    "description": "Massive meteor storm from front.",
-    "imagePath": "assets/cards/iii/card_2.png",
-    "incomingDirection": "FRONT",
-    "smallMeteors": 3,
-    "largeMeteors": 2
-  },
-  {
-    "id": 51,
-    "type": "Planets",
-    "level": "LEVEL3",
-    "description": "Exotic planets to trade with.",
-    "imagePath": "assets/cards/iii/card_3.png",
-    "planets": [
+    "id":       "46",
+    "type":     "CombatZone",
+    "level":    "LEVEL_ONE",
+    "lines": [
       {
-        "name": "Orion-3",
-        "goods": [
-          "RED",
-          "YELLOW"
-        ]
-      }
-    ]
-  },
-  {
-    "id": 52,
-    "type": "Pirates",
-    "level": "LEVEL3",
-    "description": "Elite pirate squad attacks.",
-    "imagePath": "assets/cards/iii/card_4.png",
-    "reward": {
-      "credits": 5
-    },
-    "penalty": {
-      "days": 3
-    },
-    "power": 7
-  },
-  {
-    "id": 53,
-    "type": "AbandonedShip",
-    "level": "LEVEL3",
-    "description": "High-tech abandoned ship found.",
-    "imagePath": "assets/cards/iii/card_5.png",
-    "reward": {
-      "crew": 2
-    }
-  },
-  {
-    "id": 54,
-    "type": "Stardust",
-    "level": "LEVEL3",
-    "description": "Thick stardust reduces ship integrity.",
-    "imagePath": "assets/cards/iii/card_6.png"
-  },
-  {
-    "id": 55,
-    "type": "Smugglers",
-    "level": "LEVEL3",
-    "description": "Advanced smugglers detected.",
-    "imagePath": "assets/cards/iii/card_7.png",
-    "reward": {
-      "credits": 4
-    },
-    "penalty": {
-      "cargoLoss": 2
-    },
-    "power": 5
-  },
-  {
-    "id": 56,
-    "type": "Slavers",
-    "level": "LEVEL3",
-    "description": "Heavily armed slaver craft.",
-    "imagePath": "assets/cards/iii/card_8.png",
-    "reward": {
-      "credits": 3
-    },
-    "penalty": {
-      "crewLoss": 2
-    },
-    "power": 6
-  },
-  {
-    "id": 57,
-    "type": "CombatZone",
-    "level": "LEVEL3",
-    "description": "High-risk combat engagement.",
-    "imagePath": "assets/cards/iii/card_9.png",
-    "reward": {
-      "credits": 6
-    },
-    "penalty": {
-      "days": 3
-    },
-    "power": 7
-  },
-  {
-    "id": 58,
-    "type": "Epidemic",
-    "level": "LEVEL3",
-    "description": "Crew health crisis!",
-    "imagePath": "assets/cards/iii/card_10.png",
-    "penalty": {
-      "crewLoss": 3
-    }
-  },
-  {
-    "id": 59,
-    "type": "MeteorSwarm",
-    "level": "LEVEL3",
-    "description": "Meteor storm from left.",
-    "imagePath": "assets/cards/iii/card_11.png",
-    "incomingDirection": "LEFT",
-    "smallMeteors": 2,
-    "largeMeteors": 2
-  },
-  {
-    "id": 60,
-    "type": "AbandonedStation",
-    "level": "LEVEL3",
-    "description": "Valuable tech in an abandoned station.",
-    "imagePath": "assets/cards/iii/card_12.png",
-    "reward": {
-      "cargo": 4
-    }
-  },
-  {
-    "id": 61,
-    "type": "Pirates",
-    "level": "LEVEL3",
-    "description": "Coordinated pirate assault.",
-    "imagePath": "assets/cards/iii/card_13.png",
-    "reward": {
-      "credits": 6
-    },
-    "penalty": {
-      "days": 2
-    },
-    "power": 8
-  },
-  {
-    "id": 62,
-    "type": "OpenSpace",
-    "level": "LEVEL3",
-    "description": "Drifting in silence.",
-    "imagePath": "assets/cards/iii/card_14.png"
-  },
-  {
-    "id": 63,
-    "type": "Planets",
-    "level": "LEVEL3",
-    "description": "Wealthy planets welcome you.",
-    "imagePath": "assets/cards/iii/card_15.png",
-    "planets": [
+        "criteria": "MAN_POWER",
+        "penalty":  { "type": "DaysPenalty", "value": 3 }
+      },
       {
-        "name": "Aurora",
-        "goods": [
-          "BLUE",
-          "GREEN"
-        ]
+        "criteria": "ENGINE_POWER",
+        "penalty":  { "type": "CrewPenalty", "value": 2 }
+      },
+      {
+        "criteria": "FIRE_POWER",
+        "penalty": {
+          "shots": [
+            {
+              "isLarge": false,
+              "direction": "front"
+            },
+            {
+              "isLarge": true,
+              "direction": "front"
+            }
+          ]
+        }
       }
-    ]
+    ],
+    "imagePath":"src/main/resources/pics/cards/6.jpg"
   },
   {
-    "id": 64,
-    "type": "Stardust",
-    "level": "LEVEL3",
-    "description": "Ship hull scraped by stellar debris.",
-    "imagePath": "assets/cards/iii/card_16.png"
-  },
-  {
-    "id": 65,
-    "type": "CombatZone",
-    "level": "LEVEL3",
-    "description": "Deadly battleground ahead.",
-    "imagePath": "assets/cards/iii/card_17.png",
+    "id":            "47",
+    "type":          "AbandonedShip",
+    "level":         "LEVEL_ONE",
+    "crewRequired":   3,
     "reward": {
-      "credits": 5
+      "credits":     4
     },
-    "penalty": {
-      "days": 3
-    },
-    "power": 6
+    "days":          1,
+    "imagePath":   "src/main/resources/pics/cards/7.jpg"
   },
   {
-    "id": 66,
-    "type": "MeteorSwarm",
-    "level": "LEVEL3",
-    "description": "Meteor strike from rear.",
-    "imagePath": "assets/cards/iii/card_18.png",
-    "incomingDirection": "REAR",
-    "smallMeteors": 2,
-    "largeMeteors": 2
-  },
-  {
-    "id": 67,
-    "type": "AbandonedShip",
-    "level": "LEVEL3",
-    "description": "Find survivors in damaged ship.",
-    "imagePath": "assets/cards/iii/card_19.png",
+    "id":            "48",
+    "type":          "AbandonedStation",
+    "level":         "LEVEL_ONE",
+    "crewRequired":   5,
+    "days":           1,
     "reward": {
-      "crew": 1
-    }
-  },
-  {
-    "id": 68,
-    "type": "Epidemic",
-    "level": "LEVEL3",
-    "description": "Infection spreads rapidly.",
-    "imagePath": "assets/cards/iii/card_20.png",
-    "penalty": {
-      "crewLoss": 2
-    }
+      "goods":      ["YELLOW","GREEN"]
+    },
+    "imagePath":    "src/main/resources/pics/cards/8.jpg"
   }
 ]

@@ -1,9 +1,6 @@
 package Model.Ship.Components;
 
-import Model.Enums.AlienColor;
-import Model.Enums.Card;
-import Model.Enums.ConnectorType;
-import Model.Enums.Crewmates;
+import Model.Enums.*;
 import com.google.gson.JsonObject;
 
 /**
@@ -17,11 +14,9 @@ public class Cabin extends SpaceshipComponent {
     private int canContainPurple;  // True if the cabin can host purple aliens
 
     // New fields to support aliens actually present in the cabin
-    private boolean hasAlien = false; //TODO: serve?
-    private String alienType = null; // "brown" or "purple" TODO: serve?
 
     /**
-     * Standard constructor for Cabin with explicit parameters.
+     * Standard constructor for Cabin with explicit parameters, with no match with image path.
      */
     public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants) {
         super(Type, front, rear, left, right);
@@ -29,16 +24,27 @@ public class Cabin extends SpaceshipComponent {
     }
 
     /**
+     * Constructor for Cabin with image path.
+     */
+    public Cabin(Card Type, ConnectorType front, ConnectorType rear, ConnectorType left, ConnectorType right, Crewmates occupants, String imagePath) {
+        super(Type, front, rear, left, right, imagePath);
+        this.occupants = Crewmates.EMPTY; // Default to empty even if parameter is passed
+    }
+
+
+
+    /**
      * Constructor to initialize a Cabin from a JSON object.
      * This is used by the ComponentFactory to load spaceship components from JSON configuration.
      */
     public Cabin(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
         this.occupants = Crewmates.EMPTY; // No crew by default when loading from JSON
@@ -48,6 +54,15 @@ public class Cabin extends SpaceshipComponent {
         this.canContainPurple = 0;
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Occupants: " + occupants);
+        System.out.println("Can Contain Brown: " + canContainBrown);
+        System.out.println("Can Contain Purple: " + canContainPurple);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
+    }
     public boolean getCanContainBrown() {
         return canContainBrown>0;
     }
@@ -77,8 +92,6 @@ public class Cabin extends SpaceshipComponent {
             if(this.occupants==Crewmates.BROWN_ALIEN) {
 
                 if (this.canContainBrown == 0) {
-                    this.hasAlien = false; // Reset alien presence if no brown support left
-                    this.alienType = null; // Reset alien type
                     this.occupants = Crewmates.EMPTY;
                     this.getShipBoard().getCondensedShip().getAliens().setBrownAlien(false);
                 }
@@ -95,8 +108,6 @@ public class Cabin extends SpaceshipComponent {
             if(this.occupants==Crewmates.PURPLE_ALIEN) {
 
                 if (this.canContainPurple == 0) {
-                    this.hasAlien = false; // Reset alien presence if no purple support left
-                    this.alienType = null; // Reset alien type
                     this.occupants = Crewmates.EMPTY;
                     this.getShipBoard().getCondensedShip().getAliens().setPurpleAlien(false);
                 }
@@ -115,22 +126,6 @@ public class Cabin extends SpaceshipComponent {
         return occupants;
     }
 
-    // Added support for alien tracking
-    public boolean hasAlien() {
-        return hasAlien;
-    }
-
-    public String getAlienType() {
-        return alienType;
-    }
-
-    public void setHasAlien(boolean hasAlien) {
-        this.hasAlien = hasAlien;
-    }
-
-    public void setAlienType(String alienType) {
-        this.alienType = alienType;
-    }
 
 
 
@@ -159,5 +154,54 @@ public class Cabin extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().removeCabin(this);
         }
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        righe[1] = String.format("%s CAB %s", sx, dx);
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
+    }
+
+    public void renderBig() {
+        // Riga superiore
+        System.out.printf("╔══  %s  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
+
+        System.out.print("║  CABIN  ║\n");
+
+        System.out.printf("%s%s%s\n",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    "+
+                        (this.getOrientation().getFreccia()),
+                        "    "+
+                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+
+        switch (this.getOccupants()){
+            case EMPTY:
+                System.out.println("║         ║\n");
+                break;
+            case BROWN_ALIEN:
+                System.out.println("║  BROWN  ║\n");
+                break;
+            case PURPLE_ALIEN:
+                System.out.println("║ PURPLE  ║\n");
+                break;
+            case SINGLE_HUMAN:
+                System.out.println("║  1 HUM  ║\n");
+                break;
+            case DOUBLE_HUMAN:
+                System.out.println("║  2 HUM  ║\n");
+                break;
+            default:
+                System.out.println("║   ?    ║\n"); // Fallback case, should not happen
+        }
+
+        // Riga inferiore
+        System.out.printf("╚══  %s  ══╝\n", this.getConnectorAt(Side.REAR).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
     }
 }

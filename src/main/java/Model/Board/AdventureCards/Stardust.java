@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 public class Stardust extends AdventureCardFilip {
 
+
     public Stardust(int id, CardLevel level) {
         super(id, level);
     }
@@ -23,4 +24,8 @@ public class Stardust extends AdventureCardFilip {
         super(json);
     }
 
+    @Override
+    public void visualize() {
+        super.visualize();
+    }
 }

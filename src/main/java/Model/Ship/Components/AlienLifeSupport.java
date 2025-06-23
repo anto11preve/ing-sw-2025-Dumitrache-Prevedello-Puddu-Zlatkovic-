@@ -3,8 +3,11 @@ package Model.Ship.Components;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.AlienColor;
+import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
+
+import java.io.PrintStream;
 
 /**
  * Represents an Alien Life Support component.
@@ -27,14 +30,29 @@ public class AlienLifeSupport extends SpaceshipComponent {
      */
     public AlienLifeSupport(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
+        if (json.has("alienColor")) {
+            this.color = AlienColor.valueOf(json.get("alienColor").getAsString().toUpperCase());
+        }else{
+            throw new RuntimeException("Missing alienColor in AlienLifeSupport JSON configuration at"+
+                    " " + json.get("imagePath").getAsString());
+        }
+
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Alien Supports Color: " + color);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
     /**
@@ -79,5 +97,21 @@ public class AlienLifeSupport extends SpaceshipComponent {
             }
         }
 
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        if (this.getColor() == AlienColor.BROWN) {
+            righe[1] = String.format("%s BAL %s", sx, dx);
+        } else if (this.getColor() == AlienColor.PURPLE) {
+            righe[1] = String.format("%s PAL %s", sx, dx);
+        } else {
+            righe[1] = String.format("%s ?AL %s", sx, dx); // Fallback case, should not happen
+        }
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
     }
 }

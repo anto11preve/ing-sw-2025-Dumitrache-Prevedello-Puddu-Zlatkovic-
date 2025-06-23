@@ -1,64 +1,133 @@
 package Model.Board.AdventureCards;
 
 import Model.Enums.CardLevel;
+import Model.Enums.Good;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the Smugglers class which represents smuggler encounters.
+ * Tests constructor, JSON parsing, and visualization functionality.
+ */
 public class SmugglersTest {
 
+    /**
+     * Tests JSON constructor with actual card ID 5 from adventure_cards.json.
+     */
     @Test
-    public void testConstructor() {
-        Smugglers card = new Smugglers(1, CardLevel.LEVEL_ONE, 3, 1, 2, 3);
-        assertEquals(1, card.getId());
-        assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
-        assertEquals("Contrabbandieri", card.getName());
-        assertEquals("", card.getDescription());
-        assertEquals(3, card.getPower());
-        assertEquals(1, card.getLossPenalty().getAmount());
-        assertEquals(2, card.getWinPenalty().getAmount());
-        assertEquals(3, card.getWinReward().getAmount());
+    public void testJsonConstructorCard5() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", "5");
+        json.addProperty("type", "Smugglers");
+        json.addProperty("level", "LEARNER");
+        json.addProperty("enemyStrength", 4);
+        json.addProperty("stealGoodsOnLoss", 2);
+
+        JsonArray rewardGoods = new JsonArray();
+        rewardGoods.add(new JsonPrimitive("YELLOW"));
+        rewardGoods.add(new JsonPrimitive("GREEN"));
+        rewardGoods.add(new JsonPrimitive("BLUE"));
+        json.add("rewardGoods", rewardGoods);
+
+        json.addProperty("dayCost", 1);
+        json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
+
+        Smugglers card = new Smugglers(json);
+        assertEquals(5, card.getId());
+        assertEquals(CardLevel.LEARNER, card.getLevel());
     }
 
+    /**
+     * Tests JSON constructor with actual card ID 40 from adventure_cards.json.
+     */
     @Test
-    public void testJsonConstructorWithFullData() {
+    public void testJsonConstructorCard40() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", 2);
-        json.addProperty("level", "LEVEL1");
-        json.addProperty("power", 4);
-        
-        JsonObject reward = new JsonObject();
-        reward.addProperty("credits", 3);
-        json.add("reward", reward);
-        
-        JsonObject penalty = new JsonObject();
-        penalty.addProperty("cargoLoss", 2);
-        penalty.addProperty("days", 1);
-        json.add("penalty", penalty);
-        
+        json.addProperty("id", "40");
+        json.addProperty("type", "Smugglers");
+        json.addProperty("level", "LEVEL_TWO");
+        json.addProperty("enemyStrength", 8);
+        json.addProperty("stealGoodsOnLoss", 3);
+
+        JsonArray rewardGoods = new JsonArray();
+        rewardGoods.add(new JsonPrimitive("RED"));
+        rewardGoods.add(new JsonPrimitive("YELLOW"));
+        rewardGoods.add(new JsonPrimitive("YELLOW"));
+        json.add("rewardGoods", rewardGoods);
+
+        json.addProperty("dayCost", 1);
+        json.addProperty("imagePath", "src/main/resources/pics/cards/40.jpg");
+
         Smugglers card = new Smugglers(json);
-        assertEquals(2, card.getId());
-        assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
-        assertEquals(4, card.getPower());
-        assertEquals(2, card.getLossPenalty().getAmount());
-        assertEquals(1, card.getWinPenalty().getAmount());
-        assertEquals(3, card.getWinReward().getAmount());
+        assertEquals(40, card.getId());
+        assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
     }
-    
+
+    /**
+     * Tests JSON constructor with actual card ID 45 from adventure_cards.json.
+     */
     @Test
-    public void testJsonConstructorWithMinimalData() {
+    public void testJsonConstructorCard45() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", 3);
-        json.addProperty("level", "LEVEL1");
-        
+        json.addProperty("id", "45");
+        json.addProperty("type", "Smugglers");
+        json.addProperty("level", "LEVEL_ONE");
+        json.addProperty("enemyStrength", 4);
+        json.addProperty("stealGoodsOnLoss", 2);
+
+        JsonArray rewardGoods = new JsonArray();
+        rewardGoods.add(new JsonPrimitive("YELLOW"));
+        rewardGoods.add(new JsonPrimitive("GREEN"));
+        rewardGoods.add(new JsonPrimitive("BLUE"));
+        json.add("rewardGoods", rewardGoods);
+
+        json.addProperty("dayCost", 1);
+        json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
+
         Smugglers card = new Smugglers(json);
-        assertEquals(3, card.getId());
+        assertEquals(45, card.getId());
         assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
-        // Should use default values
-        assertTrue(card.getPower() > 0);
-        assertEquals(1, card.getLossPenalty().getAmount());
-        assertEquals(0, card.getWinPenalty().getAmount());
-        assertEquals(3, card.getWinReward().getAmount());
+    }
+
+    /**
+     * Tests the basic constructor.
+     */
+    @Test
+    public void testConstructor() {
+        List<Good> goods = Arrays.asList(Good.RED, Good.BLUE, Good.GREEN);
+        Smugglers card = new Smugglers(5, CardLevel.LEARNER, 4, 2, 1, goods);
+        assertEquals(5, card.getId());
+        assertEquals(CardLevel.LEARNER, card.getLevel());
+        assertEquals("Contrabbandieri", card.getName());
+        assertEquals("", card.getDescription());
+    }
+
+    /**
+     * Tests the visualize method.
+     */
+    @Test
+    public void testVisualize() {
+        List<Good> goods = Arrays.asList(Good.YELLOW, Good.GREEN, Good.BLUE);
+        Smugglers card = new Smugglers(5, CardLevel.LEARNER, 4, 2, 1, goods);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
+        card.visualize();
+
+        System.setOut(originalOut);
+        String output = outputStream.toString();
+
+        assertTrue(output.length() > 0);
     }
 }

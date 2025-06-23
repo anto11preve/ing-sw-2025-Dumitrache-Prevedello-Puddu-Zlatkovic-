@@ -75,8 +75,7 @@ public class ManageMeteorState extends State {
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        player.getShipBoard().removeComponent(coordinates);
-                        player.addJunk();
+                        break;
                     }
                 }
                 break;
@@ -87,8 +86,7 @@ public class ManageMeteorState extends State {
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        player.getShipBoard().removeComponent(coordinates);
-                        player.addJunk();
+                        break;
                     }
                 }
                 break;
@@ -99,8 +97,7 @@ public class ManageMeteorState extends State {
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        player.getShipBoard().removeComponent(coordinates);
-                        player.addJunk();
+                        break;
                     }
                 }
                 break;
@@ -111,8 +108,7 @@ public class ManageMeteorState extends State {
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
-                        player.getShipBoard().removeComponent(coordinates);
-                        player.addJunk();
+                        break;
                     }
                 }
                 break;
@@ -132,7 +128,10 @@ public class ManageMeteorState extends State {
                             component = player.getShipBoard().getComponent(new Coordinates(i, number));
                             if(component != null || player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                cannonFound = !cannon.isDouble();//... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -142,16 +141,25 @@ public class ManageMeteorState extends State {
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -161,16 +169,25 @@ public class ManageMeteorState extends State {
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -180,16 +197,25 @@ public class ManageMeteorState extends State {
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(number +1, i));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                             component = player.getShipBoard().getComponent(new Coordinates(number - 1, i));
                             if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                                 Cannon cannon = (Cannon) component;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
+                                if(!cannon.isDouble()){
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -201,6 +227,8 @@ public class ManageMeteorState extends State {
 
                 /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio
                 if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component == null || component.getConnectorAt(meteor.getSide()) ==null)))){
+                    player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
+                    player.addJunk();
                     boolean brokenShip = player.getShipBoard().checkIntegrity();
                     if (brokenShip) {
                         controller.getModel().setState(new MeteorsCheckShipState(context, number));
@@ -262,6 +290,9 @@ public class ManageMeteorState extends State {
                         if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                             Cannon cannon = (Cannon) component;
                             cannonOrShieldFound = cannon.isDouble();   //... e se non è doppio
+                            if(!cannon.isDouble()){
+                                break;
+                            }
                         }
                     }
                 } else {
@@ -278,6 +309,9 @@ public class ManageMeteorState extends State {
                         if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                             Cannon cannon = (Cannon) component;
                             cannonOrShieldFound = cannon.isDouble();   //... e se non è doppio
+                            if(!cannon.isDouble()){
+                                break;
+                            }
                         }
                     }
                 } else {
@@ -293,6 +327,9 @@ public class ManageMeteorState extends State {
                         if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                             Cannon cannon = (Cannon) component;
                             cannonOrShieldFound = cannon.isDouble();   //... e se non è doppio
+                            if(!cannon.isDouble()){
+                                break;
+                            }
                         }
                     }
                 } else {
@@ -308,6 +345,9 @@ public class ManageMeteorState extends State {
                         if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                             Cannon cannon = (Cannon) component;
                             cannonOrShieldFound = cannon.isDouble();   //... e se non è doppio
+                            if(!cannon.isDouble()){
+                                break;
+                            }
                         }
                     }
                 } else {

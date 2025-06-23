@@ -45,7 +45,7 @@ public class CombatZone2ManageShotState extends State {
 
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
-                for (int i = 5; i <= 9; i++) {
+                for (int i = 5; (i <= 9)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -55,7 +55,7 @@ public class CombatZone2ManageShotState extends State {
                     }
                 }
             case Side.RIGHT:
-                for (int i = 10; i >= 4; i--) {
+                for (int i = 10; (i >= 4)&&(!hit); i--) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -65,7 +65,7 @@ public class CombatZone2ManageShotState extends State {
                     }
                 }
             case Side.LEFT:
-                for (int i = 4; i <= 10; i++) {
+                for (int i = 4; (i <= 10)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -75,7 +75,7 @@ public class CombatZone2ManageShotState extends State {
                     }
                 }
             case Side.REAR:
-                for (int i = 0; i <= 4; i++) {
+                for (int i = 0; (i <= 4)&&(!hit); i++) {
                     Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -115,7 +115,7 @@ public class CombatZone2ManageShotState extends State {
             throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().get(0)) {
+        if (player != context.getSpecialPlayers().getFirst()) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }

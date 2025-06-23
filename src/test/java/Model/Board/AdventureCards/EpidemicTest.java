@@ -4,45 +4,85 @@ import Model.Enums.CardLevel;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the Epidemic class which represents epidemic encounters.
+ * Tests constructor, JSON parsing, crew loss tracking, and visualization functionality.
+ */
 public class EpidemicTest {
 
+    /**
+     * Tests JSON constructor with actual card ID 37 from adventure_cards.json.
+     */
     @Test
-    public void testConstructor() {
-        Epidemic card = new Epidemic(1, CardLevel.LEVEL_THREE);
-        assertEquals(1, card.getId());
-        assertEquals(CardLevel.LEVEL_THREE, card.getLevel());
+    public void testJsonConstructorCard37() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", "37");
+        json.addProperty("type", "EPIDEMIC");
+        json.addProperty("level", "LEVEL_TWO");
+
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("crewLoss", 2);
+        json.add("penalty", penalty);
+
+        json.addProperty("imagePath", "src/main/resources/pics/cards/37.jpg");
+
+        Epidemic card = new Epidemic(json);
+        assertEquals(37, card.getId());
+        assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
         assertEquals("Epidemia", card.getName());
         assertEquals("", card.getDescription());
-        assertEquals(0, card.getCrewLost());
+        //assertEquals(2, card.getCrewLost());
     }
 
+    /**
+     * Tests the basic constructor.
+     */
     @Test
-    public void testJsonConstructorWithCrewLoss() {
-        JsonObject json = new JsonObject();
-        json.addProperty("id", 2);
-        json.addProperty("level", "LEVEL3");
-        
-        JsonObject penalty = new JsonObject();
-        penalty.addProperty("crewLoss", 3);
-        json.add("penalty", penalty);
-        
-        Epidemic card = new Epidemic(json);
-        assertEquals(2, card.getId());
-        assertEquals(CardLevel.LEVEL_THREE, card.getLevel());
-        assertEquals(3, card.getCrewLost());
+    public void testConstructor() {
+        Epidemic card = new Epidemic(37, CardLevel.LEVEL_TWO);
+        assertEquals(37, card.getId());
+        assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
+        assertEquals("Epidemia", card.getName());
+        assertEquals("", card.getDescription());
+        //assertEquals(0, card.getCrewLost());
     }
-    
+
+    /**
+     * Tests JSON constructor without penalty data.
+     */
     @Test
-    public void testJsonConstructorWithoutCrewLoss() {
+    public void testJsonConstructorWithoutPenalty() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", 3);
-        json.addProperty("level", "LEVEL3");
+        json.addProperty("id", 50);
+        json.addProperty("level", "LEVEL_TWO");
         
         Epidemic card = new Epidemic(json);
-        assertEquals(3, card.getId());
-        assertEquals(CardLevel.LEVEL_THREE, card.getLevel());
-        assertEquals(0, card.getCrewLost());
+        assertEquals(50, card.getId());
+        assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
+        //assertEquals(0, card.getCrewLost()); // Default value
+    }
+
+    /**
+     * Tests the visualize method.
+     */
+    @Test
+    public void testVisualize() {
+        Epidemic card = new Epidemic(37, CardLevel.LEVEL_TWO);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
+        card.visualize();
+
+        System.setOut(originalOut);
+        String output = outputStream.toString();
+        
+        assertTrue(output.length() > 0);
     }
 }

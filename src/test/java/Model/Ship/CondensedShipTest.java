@@ -12,8 +12,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the CondensedShip class which maintains a simplified representation of the ship's
+ * components and their properties for game mechanics like crew count, batteries, and alien support.
+ */
 public class CondensedShipTest {
 
+    /**
+     * Tests the constructor to ensure a new CondensedShip is properly initialized:
+     * - All component lists should be empty
+     * - All counters should be initialized to zero
+     * - No aliens should be present
+     */
     @Test
     public void testConstructor() {
         CondensedShip ship = new CondensedShip();
@@ -33,6 +43,14 @@ public class CondensedShipTest {
         assertFalse(ship.getAliens().hasBrownAlien());
     }
     
+    /**
+     * Tests adding different types of components to the CondensedShip:
+     * - Adding a cabin should update the cabins list
+     * - Adding a battery compartment should update the battery compartments list
+     * - Adding a cannon should update the cannons list
+     * - Adding alien life support should update the alien supports list
+     * - Each list should correctly track the number of components added
+     */
     @Test
     public void testAddComponents() {
         CondensedShip ship = new CondensedShip();
@@ -80,6 +98,13 @@ public class CondensedShipTest {
         assertEquals(1, ship.getAlienSupports().size());
     }
     
+    /**
+     * Tests calculating the total crew count from all cabins:
+     * - Double human cabins should count as 2 crew
+     * - Single human cabins should count as 1 crew
+     * - Empty cabins should count as 0 crew
+     * - The total should be the sum of all cabin occupants
+     */
     @Test
     public void testGetTotalCrew() {
         CondensedShip ship = new CondensedShip();
@@ -118,6 +143,11 @@ public class CondensedShipTest {
         assertEquals(3, ship.getTotalCrew());
     }
     
+    /**
+     * Tests calculating the total batteries from all battery compartments:
+     * - Each battery compartment can hold a specific number of batteries
+     * - The total should be the sum of all batteries across all compartments
+     */
     @Test
     public void testGetTotalBatteries() {
         CondensedShip ship = new CondensedShip();
@@ -146,6 +176,12 @@ public class CondensedShipTest {
         assertEquals(5, ship.getTotalBatteries());
     }
     
+    /**
+     * Tests alien support functionality:
+     * - Cabins can be configured to support different alien types
+     * - The ship should track which alien types can be supported
+     * - The ship should track which aliens are currently on board
+     */
     @Test
     public void testAlienSupport() {
         CondensedShip ship = new CondensedShip();
