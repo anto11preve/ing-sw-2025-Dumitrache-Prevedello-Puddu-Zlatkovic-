@@ -39,6 +39,10 @@ public class CombatZone2CannonShotsState extends State {
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
+        for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
+            context.addSpecialPlayer(p);
+        }
+
         Projectile shot = context.getProjectiles().getFirst();
         boolean out = false;
         if(shot.getSide() == Side.LEFT || shot.getSide() == Side.RIGHT) {

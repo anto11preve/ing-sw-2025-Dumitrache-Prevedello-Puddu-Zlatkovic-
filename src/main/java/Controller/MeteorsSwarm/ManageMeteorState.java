@@ -379,7 +379,8 @@ public class ManageMeteorState extends State {
                 controller.getModel().setState(new ManageMeteorState(context, number));
             }
         } else {
-            return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o scudi
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("No shield or cannon found to use");
         }
     }
 }
