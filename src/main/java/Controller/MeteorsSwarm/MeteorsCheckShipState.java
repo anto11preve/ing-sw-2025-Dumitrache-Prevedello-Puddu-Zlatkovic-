@@ -21,13 +21,14 @@ public class MeteorsCheckShipState extends State {
     public MeteorsCheckShipState(Context context, int number) {
         this.context = context;
         this.number = number;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     @Override
     public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }

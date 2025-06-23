@@ -33,6 +33,7 @@ public class PiratesPowerDeclarationState extends State {
      */
     public PiratesPowerDeclarationState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

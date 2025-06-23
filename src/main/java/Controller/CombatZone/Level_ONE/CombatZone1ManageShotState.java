@@ -30,7 +30,7 @@ public class CombatZone1ManageShotState extends State {
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
-        if (player != context.getSpecialPlayers().getFirst()) {
+        if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not the player's turn");
         }

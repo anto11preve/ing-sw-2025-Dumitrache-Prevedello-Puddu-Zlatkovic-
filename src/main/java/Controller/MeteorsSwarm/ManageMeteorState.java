@@ -41,6 +41,7 @@ public class ManageMeteorState extends State {
     public ManageMeteorState(Context context, int number) {
         this.context = context;
         this.number = number;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     /**

@@ -1,9 +1,13 @@
 package Controller.MeteorsSwarm;
 
+import Controller.CombatZone.Level_ONE.CombatZone1ManageShotState;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
+import Model.Board.AdventureCards.Projectiles.Projectile;
+import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 
@@ -21,6 +25,7 @@ public class MeteorsState extends State {
 
     public MeteorsState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     @Override
@@ -43,8 +48,31 @@ public class MeteorsState extends State {
         for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             context.addSpecialPlayer(p);
         }
-        controller.getModel().setState(new ManageMeteorState(context, number));
-        controller.getModel().setError(false);
+
+        Projectile meteor = context.getProjectiles().getFirst();
+        boolean out = false;
+        if(meteor.getSide() == Side.LEFT || meteor.getSide() == Side.RIGHT) {
+            if(number > 9 || number < 5){      //fuori dalla griglia
+                out = true;
+            }
+        } else {
+            if(number > 10 || number < 4){     //fuori dalla griglia
+                out = true;
+            }
+        }
+        if(out) {
+            context.removeProjectile(meteor);
+            if(context.getProjectiles().isEmpty()) {
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new MeteorsState(context));
+                controller.getModel().setError(false);
+            }
+        } else {
+            controller.getModel().setState(new ManageMeteorState(context, number));
+            controller.getModel().setError(false);
+        }
 
     }
 }

@@ -35,6 +35,7 @@ public class AbandonedShipDecidingState extends State {
      */
     public AbandonedShipDecidingState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

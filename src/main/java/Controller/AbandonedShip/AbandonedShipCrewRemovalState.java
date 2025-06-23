@@ -36,6 +36,7 @@ public class AbandonedShipCrewRemovalState extends State {
      */
     public AbandonedShipCrewRemovalState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

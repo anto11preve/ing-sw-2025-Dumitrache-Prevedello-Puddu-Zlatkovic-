@@ -30,6 +30,7 @@ public class AbandonedStationDecidingState extends State {
      */
     public AbandonedStationDecidingState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**

@@ -31,6 +31,7 @@ public class AbandonedStationLandState extends State {
      */
     public AbandonedStationLandState(Context context) {
         this.context = context;
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     /**
