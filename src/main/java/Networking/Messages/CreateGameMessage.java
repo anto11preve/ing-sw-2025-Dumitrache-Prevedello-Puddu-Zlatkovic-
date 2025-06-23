@@ -1,5 +1,6 @@
 package Networking.Messages;
 
+import Controller.Commands.LoginCommand;
 import Controller.Controller;
 import Controller.Enums.MatchLevel;
 import Controller.Exceptions.InvalidCommand;
@@ -44,7 +45,7 @@ public class CreateGameMessage implements Message {
 
             System.err.println("Game joined successfully. Killing ServerHandler and starting ControllerHandler");
 
-            new Handler<>(game, network);
+            new Handler<>(game, network).start();
 
             throw new RuntimeException();
         }catch (InvalidCommand | InvalidParameters _){

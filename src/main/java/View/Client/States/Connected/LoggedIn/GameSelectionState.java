@@ -23,7 +23,7 @@ public class GameSelectionState extends LoggedInState {
         new Thread(() -> {
             while(!transitioned) {
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(10000);
                 } catch (InterruptedException _) {}
 
                 GameSelectionState.this.send(new UpdateListMessage());
