@@ -53,7 +53,8 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
 
                 List<Good> goods = new ArrayList<>();
                 if (obj.has("goods")) {
-                    for (JsonElement g : obj.getAsJsonArray("goods")) {
+                    JsonArray goodsArray = obj.getAsJsonArray("goods");
+                    for (JsonElement g : goodsArray) {
                         goods.add(Good.valueOf(g.getAsString()));
                     }
                 }else{
@@ -63,7 +64,7 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
                 if(!obj.has("name")) {
                     throw new IllegalArgumentException("Planet JSON object does not contain 'name' field at id " + getId());
                 }
-                String name = obj.has("name") ? obj.get("name").getAsString() : "Unknown Planet";
+                String name = obj.get("name").getAsString();
                 this.planetList.add(new Planet(name, goods));
             }
         }else{

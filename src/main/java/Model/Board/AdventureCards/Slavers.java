@@ -23,12 +23,8 @@ public class Slavers extends Enemy<CrewPenalty, Credits> {
 
     public Slavers(JsonObject json) {
         super(json,
-              new CrewPenalty(json.has("penalty") && json.getAsJsonObject("penalty").has("crewLoss") ? 
-                  json.getAsJsonObject("penalty").get("crewLoss").getAsInt() : 1),
-              json.has("penalty") && json.getAsJsonObject("penalty").has("days") ? 
-                  json.getAsJsonObject("penalty").get("days").getAsInt() : 0,
-              new Credits(json.has("reward") && json.getAsJsonObject("reward").has("credits") ? 
-                  json.getAsJsonObject("reward").get("credits").getAsInt() : 2)
+              new CrewPenalty(json),
+              new Credits(json)
         );
     }
 

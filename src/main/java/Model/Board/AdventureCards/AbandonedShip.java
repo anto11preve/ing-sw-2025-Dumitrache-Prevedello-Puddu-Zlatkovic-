@@ -55,19 +55,23 @@ public class AbandonedShip extends AdventureCardFilip {
         // Parse from JSON if available
         if (json.has("crewRequired")) {
             crew = json.get("crewRequired").getAsInt();
-        }
-
-        if (json.has("reward") && json.getAsJsonObject("reward").has("crew")) {
-            crew = json.getAsJsonObject("reward").get("crew").getAsInt();
+        }else{
+            throw new RuntimeException("Missing field 'crewRequired' in AbandonedShip JSON at ID: " + json.get("id").getAsInt());
         }
 
         if (json.has("reward") && json.getAsJsonObject("reward").has("credits")) {
             credits = json.getAsJsonObject("reward").get("credits").getAsInt();
+        }else{
+            throw new RuntimeException("Missing field 'reward.credits' in AbandonedShip JSON at ID: " + json.get("id").getAsInt());
         }
 
         if (json.has("days")) {
             days = json.get("days").getAsInt();
+        }else{
+            throw new RuntimeException("Missing field 'days' in AbandonedShip JSON at ID: " + json.get("id").getAsInt());
         }
+
+
 
         this.winPenalty = new CrewPenalty(crew);
         this.landingReward = new Credits(credits);

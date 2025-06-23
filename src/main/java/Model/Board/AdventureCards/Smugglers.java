@@ -5,6 +5,7 @@ import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.CardLevel;
 import Model.Enums.Good;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -31,14 +32,7 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
     public Smugglers(JsonObject json) {
         super(
                 json,
-                new GoodsPenalty(json.has("penalty") &&
-                        json.getAsJsonObject("penalty").has("cargoLoss")
-                        ? json.getAsJsonObject("penalty").get("cargoLoss").getAsInt()
-                        : 1),
-                json.has("penalty") &&
-                        json.getAsJsonObject("penalty").has("days")
-                        ? json.getAsJsonObject("penalty").get("days").getAsInt()
-                        : 0,
+                new GoodsPenalty(json),
                 // we still need to pass a dummy Goods here
                 new Goods(new ArrayList<>())
         );
@@ -47,11 +41,20 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         //rewardGoods.clear();
         rewardGoods = new ArrayList<>();
         if (json.has("rewardGoods")) {
-            for (JsonElement e : json.getAsJsonArray("rewardGoods")) {
-                rewardGoods.add(
-                        Good.valueOf(e.getAsString().toUpperCase())
-                );
+
+            if (json.has("rewardGoods")) {
+                JsonArray goodsArray = json.getAsJsonArray("rewardGoods");
+
+                for (JsonElement e : goodsArray) {
+                    rewardGoods.add(
+                            Good.valueOf(e.getAsString().toUpperCase())
+                    );
+                }
+            }else{
+                throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + getId());
             }
+        }else{
+            throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + getId());
         }
     }
 

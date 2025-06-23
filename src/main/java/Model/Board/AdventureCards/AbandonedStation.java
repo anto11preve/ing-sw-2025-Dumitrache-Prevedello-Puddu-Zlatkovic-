@@ -49,20 +49,34 @@ public class AbandonedStation extends AdventureCardFilip {
     public AbandonedStation(JsonObject json) {
         super(json);
 
-        // Default values
-        this.crew = json.has("crewRequired") ? json.get("crewRequired").getAsInt() : 1;
-        int days = json.has("days") ? json.get("days").getAsInt() : 0;
-        this.landingPenalty = new DaysPenalty(days);
+        if (json.has("crewRequired")) {
+            // Default values
+            this.crew = json.get("crewRequired").getAsInt();
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'crewRequired' at id " + getId());
+        }
+
+        if (json.has("days")) {
+            int days = json.get("days").getAsInt();
+            this.landingPenalty = new DaysPenalty(days);
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'days' at id " + getId());
+        }
 
         // Parse cargo from reward
         List<Good> parsedGoods = new ArrayList<>();
-        if (json.has("reward") && json.getAsJsonObject("reward").has("cargo")) {
-            int cargoCount = json.getAsJsonObject("reward").get("cargo").getAsInt();
+
+        if (json.has("reward") && json.getAsJsonObject("reward").has("goods")) {
+            JsonArray goodsArr = json.getAsJsonObject("reward").getAsJsonArray("goods");
             // Add default goods based on cargo count
-            for (int i = 0; i < cargoCount; i++) {
-                parsedGoods.add(Good.RED); // Default good
+            for (JsonElement goodEl : goodsArr) {
+                parsedGoods.add(Good.valueOf(goodEl.getAsString().toUpperCase()));
             }
+        }else{
+            throw new IllegalArgumentException("JSON does not contain 'reward.goods' at id " + getId());
         }
+
+
         this.landingReward = new Goods(parsedGoods);
     }
 

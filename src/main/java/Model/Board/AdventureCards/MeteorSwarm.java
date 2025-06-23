@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import Model.Enums.Side;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -47,7 +48,9 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
             throw new IllegalArgumentException("JSON does not contain 'meteors' array at id " + getId());
         }
 
-        for (JsonElement e : json.getAsJsonArray("meteors")) {
+        JsonArray meteorsArray = json.getAsJsonArray("meteors");
+
+        for (JsonElement e : meteorsArray) {
             JsonObject m = e.getAsJsonObject();
 
             if(!m.has("large")){
@@ -58,6 +61,7 @@ public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> 
             if(!m.has("direction")){
                 throw new IllegalArgumentException("Meteor JSON object does not contain 'direction' field at id " + getId());
             }
+
             Side dir     = Side.valueOf(m.get("direction").getAsString().toUpperCase());
             this.meteors.add(new Meteor(large, dir));
         }

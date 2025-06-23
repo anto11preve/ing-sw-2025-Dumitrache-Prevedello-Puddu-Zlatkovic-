@@ -37,38 +37,14 @@ public class Pirates extends Enemy<CannonShotPenalty, Credits> {
         super(
                 json,
                 // build the cannon‐shot list from JSON
-                new CannonShotPenalty(
-                        parseShots(
-                                json.getAsJsonObject("penalty")
-                                        .getAsJsonArray("shots")
-                        )
-                ),
-                // day cost
-                json.getAsJsonObject("penalty").has("days")
-                        ? json.getAsJsonObject("penalty").get("days").getAsInt()
-                        : 1,
+                new CannonShotPenalty(json),
                 // credit reward
-                new Credits(
-                        json.getAsJsonObject("reward").has("credits")
-                                ? json.getAsJsonObject("reward").get("credits").getAsInt()
-                                : 2
-                )
+                new Credits(json)
         );
+
     }
 
-    private static List<CannonShot> parseShots(JsonArray arr) {
-        List<CannonShot> shots = new ArrayList<>();
-        for (JsonElement e : arr) {
-            JsonObject o    = e.getAsJsonObject();
-            if(!o.has("isLarge") || !o.has("direction")) {
-                throw new IllegalArgumentException("Invalid cannon shot data: at id ");
-            }
-            boolean   large = o.get("isLarge").getAsBoolean();
-            Side      dir   = Side.valueOf(o.get("direction").getAsString().toUpperCase());
-            shots.add(new CannonShot(large, dir));
-        }
-        return shots;
-    }
+
 
     @Override
     public void visualize() {

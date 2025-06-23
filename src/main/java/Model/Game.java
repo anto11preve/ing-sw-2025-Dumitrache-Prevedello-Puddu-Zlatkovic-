@@ -38,7 +38,11 @@ public class Game {
 
     public static void main(String[] args) {
 
-        int var=2;
+        int var=0;
+        // This variable can be set to 0, 1, or 2 to test different functionalities
+        // 0: Pre-built ships
+        // 1: Component loader and modification
+        // 2: Players change position
 
         switch (var) {
 

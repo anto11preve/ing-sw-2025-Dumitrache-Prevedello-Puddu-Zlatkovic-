@@ -34,7 +34,7 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
      * @param lossPenalty the penalty if the player loses
      * @param winReward the reward if the player wins
      */
-    protected Enemy(JsonObject json, P lossPenalty, int days, R winReward) {
+    protected Enemy(JsonObject json, P lossPenalty, R winReward) {
         super(json);
 
         if(!json.has("power")) {
@@ -42,8 +42,15 @@ public abstract class Enemy<P extends Penalty, R extends Reward> extends Adventu
         }
 
         this.power = json.get("power").getAsInt();
-        this.lossPenalty = lossPenalty;
+
+        if(!(json.has("penalty")&&json.getAsJsonObject("penalty").has("days"))) {
+            throw new IllegalArgumentException("Missing 'penalty.shots' in JSON at id: " + getId());
+        }
+        // day cost
+        int days=json.getAsJsonObject("penalty").get("days").getAsInt();
         this.winPenalty = new DaysPenalty(days);
+
+        this.lossPenalty = lossPenalty;
         this.winReward = winReward;
     }
 
