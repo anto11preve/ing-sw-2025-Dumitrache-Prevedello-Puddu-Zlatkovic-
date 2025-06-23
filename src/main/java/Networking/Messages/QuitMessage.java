@@ -2,8 +2,8 @@ package Networking.Messages;
 
 import Networking.Agent;
 import Networking.Network;
-import View.Client.Actions.StopAction;
 import View.Client.Client;
+import View.Client.ClientState;
 
 public class QuitMessage implements Message {
     @Override
@@ -23,6 +23,6 @@ public class QuitMessage implements Message {
             return;
         }
 
-        client.execute(new StopAction());
+        client.execute(ClientState::stop);
     }
 }

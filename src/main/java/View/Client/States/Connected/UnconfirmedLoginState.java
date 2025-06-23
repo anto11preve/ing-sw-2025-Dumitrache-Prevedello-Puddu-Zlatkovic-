@@ -5,10 +5,10 @@ import View.Client.ClientState;
 import View.Client.States.Connected.LoggedIn.GameSelectionState;
 import View.Client.States.ConnectedState;
 
-public class LoginUnsureState extends ConnectedState {
+public class UnconfirmedLoginState extends ConnectedState {
     private final String username;
 
-    public LoginUnsureState(Network network, String username) {
+    public UnconfirmedLoginState(Network network, String username) {
         super(network);
         this.username = username;
     }
@@ -23,7 +23,7 @@ public class LoginUnsureState extends ConnectedState {
     }
 
     @Override
-    public ClientState loginFailed(String username) {
+    public LoginState loginFailed(String username) {
         return new LoginState(this.getNetwork());
     }
 }

@@ -2,17 +2,16 @@ package View.States;
 
 import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
-import View.Client.Actions.EmptyAction;
 import View.Client.Client;
 
 import java.util.*;
 
-public class CommandCreationState implements ViewState {
+public class ActionCreationState implements ViewState {
     private final ActionConstructor actionConstructor;
     private final Set<String> requiredArguments;
     private final Map<String, String> providedArguments;
 
-    public CommandCreationState(ActionConstructor actionConstructor) {
+    public ActionCreationState(ActionConstructor actionConstructor) {
         this.actionConstructor = actionConstructor;
 
         this.requiredArguments = new HashSet<>(actionConstructor.getArguments());
@@ -54,9 +53,11 @@ public class CommandCreationState implements ViewState {
                 }catch (ArrayIndexOutOfBoundsException e){
                     System.err.println("Warning: No argument was provided");
                 }
-                return;
+                break;
             }
         }
+
+        this.listArguments();
     }
 
     public void send() {
@@ -65,7 +66,7 @@ public class CommandCreationState implements ViewState {
         try{
             action = this.actionConstructor.create(this.providedArguments);
         }catch (IllegalArgumentException e) {
-            action = new EmptyAction();
+            action = state -> state;
         }
 
         Client.client.execute(action);

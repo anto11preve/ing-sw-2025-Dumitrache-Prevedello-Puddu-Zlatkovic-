@@ -5,12 +5,17 @@ import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Controller.PreMatchLobby.LogInState;
 // Import del modello
+import Controller.Server.Server;
 import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
 
+import Model.Player;
 import Model.Ship.Coordinates;
 import Networking.Agent;
+import Networking.Messages.ClientMessage;
+import Networking.Network;
+import View.Client.Actions.UpdateGameAction;
 
 import java.util.*;
 
@@ -22,12 +27,12 @@ public class Controller implements Agent {
 
     public Controller(MatchLevel matchLevel, int GameID) {
         this.model = new Game(matchLevel);
-        model.setState(new LogInState(this));
+        this.model.setState(new LogInState(this));
         this.matchLevel = matchLevel;
         this.gameID = GameID;
 
         //create the thread that reads and executes commands
-        new Thread(this).start();
+        new Thread(this, "Controller#" + this.gameID).start();
     }
 
     // Getter for game model
@@ -68,9 +73,7 @@ public class Controller implements Agent {
 
 
     public void login(String name) throws InvalidCommand, InvalidParameters {
-
         model.getState().login(name);
-
     }
     public void logout(String name) throws InvalidCommand, InvalidParameters {
         model.getState().logout(name);
@@ -139,6 +142,7 @@ public class Controller implements Agent {
     }
 
     public void run(){
+        System.err.println("Thread started yay");
         /*TODO: capire come segnalare al thread che deve morire*/
         while(true){
             final Command command = this.dequeueCommand();
@@ -146,8 +150,20 @@ public class Controller implements Agent {
             if(command != null){
                 try {
                     command.execute(this);
+                    this.model.setError(false);
                 } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters | InvalidContextualAction e) {
-                    /*TODO: capire come gestire le exception*/
+                    this.model.setError(true);
+                }
+
+                for(Player player : this.getModel().getPlayers()){
+                    Network network = Server.server.getNetwork(player.getName());
+                    if(network != null && !network.isDone()) {
+                        network.send(
+                                new ClientMessage(
+                                        new UpdateGameAction(this.model)
+                                )
+                        );
+                    }
                 }
             }
         }

@@ -5,6 +5,10 @@ import View.Client.Client;
 public class ChooseState implements ViewState {
 
     public ChooseState() {
+        this.listArguments();
+    }
+
+    private void listArguments() {
         Client.client.showOptions("Choose command", Client.client.getState().getAvailableCommands());
     }
 
@@ -17,7 +21,10 @@ public class ChooseState implements ViewState {
         for(String option : Client.client.getState().getAvailableCommands()){
             if(action.equalsIgnoreCase(option)){
                 Client.client.createAction(line.split(" "));
+                return;
             }
         }
+
+        this.listArguments();
     }
 }

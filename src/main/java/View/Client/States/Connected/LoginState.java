@@ -3,7 +3,6 @@ package View.Client.States.Connected;
 import Networking.Messages.LoginMessage;
 import Networking.Network;
 import View.Client.ClientState;
-import View.Client.States.Connected.LoggedIn.GameSelectionState;
 import View.Client.States.ConnectedState;
 
 import java.util.ArrayList;
@@ -32,6 +31,6 @@ public class LoginState extends ConnectedState {
             return sendResult;
         }
 
-        return new LoginUnsureState(this.getNetwork(), username);
+        return new UnconfirmedLoginState(this.getNetwork(), username);
     }
 }

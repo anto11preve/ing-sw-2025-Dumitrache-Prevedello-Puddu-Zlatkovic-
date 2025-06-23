@@ -1,6 +1,7 @@
 package Networking.RMI;
 
 import Networking.Messages.Message;
+import Networking.Messages.MessageQueue;
 import Networking.Messages.QuitMessage;
 import Networking.Network;
 import Networking.TimeoutThread;
@@ -13,8 +14,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class RMINetwork implements Network {
-    private final RMIMessageQueue inQueue = new RMIMessageQueue();
-    private final RMIMessageQueue outQueue;
+    private final RMIMessageQueue inQueue;
+    private final MessageQueue outQueue;
     private boolean done = false;
 
     private long timeout = System.currentTimeMillis() + TIMEOUT;;
@@ -24,19 +25,18 @@ public class RMINetwork implements Network {
 
         final Dispatcher dispatcher = (Dispatcher) registry.lookup("Dispatcher");
 
+        this.inQueue = new RMIMessageQueue();
+
         this.outQueue = dispatcher.dispatch(this.inQueue);
 
         new TimeoutThread(this).start();
     }
 
-    public RMINetwork(RMIMessageQueue outQueue) throws RemoteException {
+    public RMINetwork(RMIMessageQueue inQueue, MessageQueue outQueue) throws RemoteException {
+        this.inQueue = inQueue;
         this.outQueue = outQueue;
 
         new TimeoutThread(this).start();
-    }
-
-    public RMIMessageQueue getInQueue() {
-        return inQueue;
     }
 
     @Override
