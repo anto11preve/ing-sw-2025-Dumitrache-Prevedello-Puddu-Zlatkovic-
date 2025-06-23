@@ -4,7 +4,6 @@
 package Controller.Commands;
 
 import Controller.Controller;
-import Controller.Enums.MatchLevel;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
@@ -16,18 +15,14 @@ import java.util.Map;
  * Only the first player can create a new game with specified difficulty level.
  */
 public class StartGameCommand extends Command {
-    /** The difficulty level for the new game */
-    private final MatchLevel level;
 
     /**
      * Constructs a new StartGameCommand.
      *
      * @param playerName the name of the player creating the game
-     * @param level the difficulty level of the game
      */
-    public StartGameCommand(String playerName, MatchLevel level) {
+    public StartGameCommand(String playerName) {
         super(playerName);
-        this.level = level;
     }
 
     /**
@@ -40,38 +35,11 @@ public class StartGameCommand extends Command {
         controller.startGame(getPlayerName());
     }
 
-    /**
-     * Gets the match level for this game.
-     *
-     * @return the match level
-     */
-    public MatchLevel getLevel() {
-        return level;
-    }
-
-    public static CommandConstructor getTrialConstructor() {
+    public static CommandConstructor getConstructor() {
         return new CommandConstructor() {
             @Override
-            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
-                //TODO: MatchLevel level
-
-                return new StartGameCommand(username, MatchLevel.TRIAL);
-            }
-
-            @Override
-            public List<String> getArguments() {
-                return List.of();
-            }
-        };
-    }
-
-    public static CommandConstructor getLevel2Constructor() {
-        return new CommandConstructor() {
-            @Override
-            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
-                //TODO: MatchLevel level
-
-                return new StartGameCommand(username, MatchLevel.LEVEL2);
+            public StartGameCommand create(String username, Map<String, String> args) throws IllegalArgumentException {
+                return new StartGameCommand(username);
             }
 
             @Override

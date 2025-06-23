@@ -62,7 +62,7 @@ public class SlaversCrewRemovalState extends State {
         }
 
         Player player = controller.getModel().getPlayer(playerName);
-        if(player == controller.getModel().getFlightBoard().getTurnOrder()[0]){
+        if(player == context.getSpecialPlayers().getFirst()){
             if(context.getCrewmates() > 0){
                 Cabin cabin = (Cabin) player.getShipBoard().getComponent(coordinates);
                 switch (cabin.getOccupants()){

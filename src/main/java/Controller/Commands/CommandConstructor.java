@@ -44,13 +44,12 @@ public interface CommandConstructor {
             commandConstructors.putAll(Map.of(
                     "GetCreditsReward", GetRewardCommand.getCreditsConstructor(),
                     "LeaveRace", LeaveRaceCommand.getConstructor(),
-                    "Login", LoginCommand.getConstructor(),
                     "Logout", LogoutCommand.getConstructor(),
                     "LookDeck", LookDeckCommand.getConstructor(),
                     "MoveGood", MoveGoodCommand.getConstructor(),
                     "PickNextCard", PickNextCardCommand.getConstructor(),
-                    //TODO: "PlaceComponent" command is not implemented yet
                     "PlaceBrownAlien", PlaceCrewCommand.getBrownConstructor(),
+                    "PlaceComponent", PlaceComponentCommand.getConstructor(),
                     "PlacePurpleAlien", PlaceCrewCommand.getPurpleConstructor(),
                     "PlaceHuman", PlaceCrewCommand.getHumanConstructor()
             ));
@@ -58,12 +57,10 @@ public interface CommandConstructor {
             commandConstructors.putAll(Map.of(
                     "ReserveComponent", ReserveComponentCommand.getConstructor(),
                     "SkipReward", SkipRewardCommand.getConstructor(),
-                    "StartTrialGame", StartGameCommand.getTrialConstructor(),
-                    "StartLvL2Game", StartGameCommand.getLevel2Constructor(),
+                    "StartGame", StartGameCommand.getConstructor(),
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
                     "UseBatterie", UseItemCommand.getBatteriesConstructor(),
-                    "UseCrew", UseItemCommand.getCrewConstructor(),
-                    "PlaceComponent", PlaceComponentCommand.getConstructor()
+                    "UseCrew", UseItemCommand.getCrewConstructor()
             ));
         }
 

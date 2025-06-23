@@ -12,6 +12,11 @@ public class OffState extends State {
     }
 
     @Override
+    public boolean isDone() {
+        return true;
+    }
+
+    @Override
     public List<String> getAvailableCommands(){
         return List.of();
     }

@@ -22,4 +22,10 @@ public class OpenSpace extends AdventureCardFilip {
     public OpenSpace(JsonObject json) {
         super(json);
     }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+    }
+
 }

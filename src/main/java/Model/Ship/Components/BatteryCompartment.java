@@ -3,6 +3,7 @@ package Model.Ship.Components;
 import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
+import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
@@ -13,7 +14,6 @@ import com.google.gson.JsonObject;
 public class BatteryCompartment extends SpaceshipComponent {
     private final int capacity;  // Maximum number of batteries the compartment can hold
     private int batteries;       // Current number of batteries available
-
     /**
      * Standard constructor for BatteryCompartment with explicit parameters.
      */
@@ -29,15 +29,31 @@ public class BatteryCompartment extends SpaceshipComponent {
      */
     public BatteryCompartment(JsonObject json) {
         super(
-                Card.valueOf(json.get("type").getAsString()),
+                Card.valueOf(json.get("type").getAsString().toUpperCase()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("front").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("rear").getAsString()),
                 ConnectorType.valueOf(json.getAsJsonObject("connectors").get("left").getAsString()),
-                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString())
+                ConnectorType.valueOf(json.getAsJsonObject("connectors").get("right").getAsString()),
+                json.get("imagePath").getAsString()
         );
 
-        this.capacity = json.has("capacity") ? json.get("capacity").getAsInt() : 2; // Default to 2 if unspecified
-        this.batteries = this.capacity;
+        if (json.has("capacity")) {
+            this.capacity  = json.get("capacity").getAsInt();
+            this.batteries = this.capacity;
+        }else{
+            throw new RuntimeException("Missing capacity in BatteryCompartment JSON configuration" +
+                    " at " + json.get("imagePath").getAsString());
+        }
+
+    }
+
+    @Override
+    public void visualize() {
+        super.visualize();
+        System.out.println("Battery Compartment Capacity: " + capacity);
+        System.out.println("Current Batteries: " + batteries);
+        System.out.println("==========================");
+        System.out.printf("\n\n\n\n");
     }
 
     public int getCapacity() {
@@ -80,5 +96,36 @@ public class BatteryCompartment extends SpaceshipComponent {
             getShipBoard().getCondensedShip().removeBatteryCompartment(this);
         }
 
+    }
+
+    public String[] renderSmall() {
+        String[] righe = new String[3];
+        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
+        String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
+        righe[1] = String.format("%s BAT %s", sx, dx);
+        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        return righe;
+    }
+
+    public void renderBig() {
+        // Riga superiore
+        System.out.printf("╔══  %s  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
+
+        System.out.print("║  BATRY  ║\n");
+
+        System.out.printf("%s%s%s\n",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    "+
+                        (this.getOrientation().getFreccia()),
+                "    "+
+                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+
+        System.out.printf("║    %d    ║\n", this.getBatteries());
+
+        // Riga inferiore
+        System.out.printf("╚══  %s  ══╝\n", this.getConnectorAt(Side.REAR).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
     }
 }

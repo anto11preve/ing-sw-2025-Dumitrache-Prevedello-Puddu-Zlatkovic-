@@ -46,7 +46,6 @@ public class CombatZone1ManageShotState extends State {
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; (i <= 9)&&(!hit); i++) {
-                    //TODO: conviene metttere il controllo sul ciclo for come ho fatto qui in tutti i cicli perchè senno il colo rimove un intera riga/colonna quando arriva
                     Coordinates coordinates = new Coordinates(number, i); //TODO: mi sa che da quando ho modificato le coordinate, non funziona più, basta invertire i e number ma il bug c'era in ogni caso perchè a volte era usata in un modo a volte in un altro
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -56,7 +55,7 @@ public class CombatZone1ManageShotState extends State {
                     }
                 }
             case Side.RIGHT:
-                for (int i = 10; i >= 4; i--) {
+                for (int i = 10; (i >= 4)&&(!hit); i--) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -66,7 +65,7 @@ public class CombatZone1ManageShotState extends State {
                     }
                 }
             case Side.LEFT:
-                for (int i = 4; i <= 10; i++) {
+                for (int i = 4; (i <= 10&&(!hit)); i++) {
                     Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -76,7 +75,7 @@ public class CombatZone1ManageShotState extends State {
                     }
                 }
             case Side.REAR:
-                for (int i = 0; i <= 4; i++) {
+                for (int i = 0; (i <= 4&&(!hit)); i++) {
                     Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
@@ -172,7 +171,8 @@ public class CombatZone1ManageShotState extends State {
             controller.getModel().setState(new CombatZone1CannonShotsState(context));
             controller.getModel().setError(false);
         } else {
-            ///TODO: return; //sta cercando di usare una batteria ma sarebbe sprecata non ha cannoni doppi o schudi
+            controller.getModel().setError(true);
+            throw new IllegalArgumentException("No shield found to use");
         }
 
     }

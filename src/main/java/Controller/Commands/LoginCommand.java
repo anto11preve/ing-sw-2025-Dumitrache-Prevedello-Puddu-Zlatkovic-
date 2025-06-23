@@ -4,6 +4,14 @@ package Controller.Commands;
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
+import Controller.Server.Server;
+import Networking.Agent;
+import Networking.Messages.ClientMessage;
+import Networking.Messages.Handler;
+import Networking.Network;
+import View.Client.Actions.Action;
+import View.Client.Actions.JoinFailedAction;
+import View.Client.Actions.JoinSuccessAction;
 
 import java.util.List;
 import java.util.Map;
@@ -30,8 +38,23 @@ public class LoginCommand extends Command {
      */
     @Override
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters {
-        //TODO: login attualmente è l'unica exception che viene gestita nel controller ma lo faremo gestire al thread che lo esegue
-        controller.login(getPlayerName());
+        final String username = this.getPlayerName();
+
+        Agent agent = controller;
+        Action action = new JoinSuccessAction(controller.getModel());
+
+        try{
+            controller.login(username);
+        } catch (InvalidParameters | InvalidCommand e){
+            agent = Server.server;
+            action = new JoinFailedAction();
+            throw e;
+        } finally {
+            final Network network = Server.server.getNetwork(username);
+            network.send(new ClientMessage(action));
+
+            new Handler<>(agent, network).start();
+        }
     }
 
     public static CommandConstructor getConstructor() {

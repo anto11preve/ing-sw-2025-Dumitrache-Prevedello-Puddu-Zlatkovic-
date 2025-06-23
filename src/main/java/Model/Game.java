@@ -7,24 +7,196 @@ import Model.Enums.Card;
 import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
 import Controller.State;
+import Model.Enums.ConnectorType;
+import Model.Exceptions.InvalidMethodParameters;
+import Model.Ship.Components.Cabin;
+import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.Utils.ComponentLoader;
+import Model.Ship.ShipBoard;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Represents a game session of Galaxy Trucker.
  * Manages players, the tile pool, the flight board, and overall game state.
  */
-public class Game {
-    private final List<Player> players;
-    private final MatchLevel level;
-    private final SpaceshipComponent[] tiles;
-    private final FlightBoard flightBoard;
+public class Game implements Serializable, Cloneable {
+    private transient final List<Player> players;
+    private transient final MatchLevel level;
+    private transient final SpaceshipComponent[] tiles;
+    private transient final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
+    private final transient List<ShipBoard> preBuiltShips;
+    private final transient Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
+
+
+
+
+    public static void main(String[] args) {
+
+        int var=2;
+
+        switch (var) {
+
+            case 0:
+                Game testGame = new Game(MatchLevel.TRIAL);
+                Game testGame2 = new Game(MatchLevel.LEVEL2);
+
+                List<ShipBoard> shipsL1=testGame.getPreBuiltShips();
+                List<ShipBoard> shipsL2=testGame2.getPreBuiltShips();
+
+                for (ShipBoard ship : shipsL1) {
+
+                    System.out.println("Ship is valid:" + ship.validateShip());
+                    ship.render();
+
+                }
+
+                System.out.println("\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("Level 2 Ships:");
+
+                System.out.println(shipsL2.isEmpty());
+
+                for (ShipBoard ship : shipsL2) {
+
+                    System.out.println("Ship is valid:" + ship.validateShip());
+                    ship.render();
+
+                }
+
+
+
+                break;
+
+            case 1:
+                SpaceshipComponent[] tiless1 = ComponentLoader.loadComponents(false).toArray(new SpaceshipComponent[0]);
+
+                //facciamo un po' di modifiche all'array e ai componenti per vedere se si riflettono in tiless2
+                tiless1[0] = null;
+                tiless1[1] = new Cannon(Card.CANNON, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, true);
+                Cabin cabinatest = (Cabin) tiless1[2];
+                cabinatest.setVisible();
+
+
+                SpaceshipComponent[] tiless2 = ComponentLoader.loadComponents(false).toArray(new SpaceshipComponent[0]);
+
+                //facciamo display delle cose che abbiamo modificato
+
+                for (int i = 0; i < 3; i++) {
+                    System.out.printf("\n\n\n");
+                    System.out.println("==========================");
+                    System.out.println("Tile " + i + ": ");
+                    if (tiless1[i] != null) {
+                        tiless1[i].visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                    if (tiless2[i] != null) {
+                        tiless2[i].visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                    System.out.println("==========================");
+                }
+
+                for (SpaceshipComponent s : tiless2) {
+                    if (s != null) {
+                        s.visualize();
+                    } else {
+                        System.out.println("null");
+                    }
+                }
+
+                break;
+
+            case 2:
+
+                Game myGame = new Game(MatchLevel.TRIAL);
+                myGame.addPlayer("Alice");
+                Player alice = myGame.getPlayer("Alice");
+                myGame.addPlayer("Bob");
+                Player bob = myGame.getPlayer("Bob");
+                myGame.addPlayer("Charlie");
+                Player charlie = myGame.getPlayer("Charlie");
+                myGame.addPlayer("Diana");
+                Player diana = myGame.getPlayer("Diana");
+
+                FlightBoard flightBoard = myGame.getFlightBoard();
+                try {
+                    flightBoard.setStartingPositions(alice, 1);
+                    flightBoard.setStartingPositions(bob, 2);
+                    flightBoard.setStartingPositions(charlie, 3);
+                    flightBoard.setStartingPositions(diana, 4);
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Flight board after setting starting positions:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, 12);
+                    flightBoard.deltaFlightDays(bob, 12);
+                    flightBoard.deltaFlightDays(charlie, 1);
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Flight board after delta flight days:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, 2);
+                    flightBoard.deltaFlightDays(alice, 1);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days forward for Alice:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(alice, -1);
+                    flightBoard.deltaFlightDays(alice, -4);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days backward for Alice:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+                try {
+                    flightBoard.deltaFlightDays(diana, -1);
+
+                } catch (InvalidMethodParameters e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Flight board after delta flight days backward for Diana:");
+                flightBoard.render();
+                System.out.println("\n\n\n\n\n\n");
+
+
+
+
+
+
+
+
+                break;
+
+            default:
+                System.out.println("Invalid case");
+
+                break;
+        }
+    }
 
     /**
      * Constructs a new Game instance based only on the match level.
@@ -38,12 +210,20 @@ public class Game {
 
         this.players = new ArrayList<>();
         this.level = level;
-        this.tiles = ComponentLoader.loadComponents();
+        List<SpaceshipComponent> allTiles= ComponentLoader.loadComponents(false);
 
-        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level);
+        this.centralCabins.addAll(allTiles.subList(0,4));
+        allTiles.removeAll(centralCabins);
+
+        Collections.shuffle(allTiles);
+        this.tiles = allTiles.toArray(new SpaceshipComponent[0]);
+
+        List<AdventureCardFilip> cards = AdventureCardLoader.loadAdventureCards(level, true);
         if (cards == null || cards.isEmpty()) {
             throw new IllegalStateException("Failed to load adventure cards");
         }
+
+        preBuiltShips = PreBuildShipsLoader.loadPreBuiltShips(level);
 
         if (level == MatchLevel.TRIAL) {
             List<AdventureCardFilip> learnerCards = cards.stream()
@@ -73,7 +253,7 @@ public class Game {
             }
 
             List<CardDeck> pickableDecks = new ArrayList<>();
-            
+
             // Creates 4 lists of AdventureCardFilip, each containg 1 card of level1 and 2 of level2
             List<AdventureCardFilip> peekable1 = level1Cards.subList(0, 1);
             peekable1.addAll(level2Cards.subList(0, 2));
@@ -96,9 +276,13 @@ public class Game {
             CardDeck hiddenDeck = new CardDeck(hidden);
 
 
-            
+
             this.flightBoard = new FlightBoard(hiddenDeck, pickableDecks);
         }
+    }
+
+    public List<ShipBoard> getPreBuiltShips() {
+        return preBuiltShips;
     }
 
     public SpaceshipComponent[] getTiles() {
@@ -106,7 +290,12 @@ public class Game {
     }
 
     public void addPlayer(String name) {
-        this.players.add(new Player(name));
+        Cabin centralCabin= (Cabin) centralCabins.poll();
+        if (centralCabin == null) {
+            throw new IllegalStateException("No more central cabins available");
+        }
+        this.players.add(new Player(name,centralCabin));
+
     }
 
     public void removePlayer(String name) {
@@ -179,4 +368,112 @@ public class Game {
     public void setError(boolean error) {
         this.error = error;
     }
+
+    public void render(){
+        // Visualizzazione matrice 7x20 da array unidimensionale
+        for (int i = 0; i < 7; i++) {
+            // Prima otteniamo i disegni di tutti i componenti della riga i
+            String[][] disegni = new String[20][];
+            for (int j = 0; j < 20; j++) {
+                // Conversione da coordinate 2D a indice 1D
+                int indice = i * 20 + j;
+
+                if (tiles[indice] != null)
+                    if (tiles[indice].isVisible()) {
+                        disegni[j] = tiles[indice].renderSmall();
+                    } else {
+                        System.out.print(Arrays.toString(renderHidden())); // Renderizza anche i componenti non visibili
+                    }
+                else
+                    System.out.print(Arrays.toString(renderEmpty()));
+            }
+
+            // Stampiamo riga per riga il disegno
+            for (int riga = 0; riga < disegni[0].length; riga++) {
+                // Stampiamo la griglia
+                for (int j = 0; j < 20; j++) {
+                    System.out.print(disegni[j][riga]);
+                }
+                System.out.println();
+            }
+        }
+
+        String[] legenda = {
+                "BAT - Battery compartment",
+                "CAR - Cargo hold",
+                "CAB - Cabin",
+                "STR - Structural Module",
+                "E1  - Single Engine",
+                "E2  - Double Engine",
+                "C1  - Single Cannon",
+                "C2  - Double Cannon",
+                "PAL - Purple Alien",
+                "BAL - Brown Alien",
+                "SH  - Shield",
+                "↑   - Orientation"
+
+                // Aggiungi altri elementi qui...
+        };
+
+// Stampa su 3 colonne
+        for (int i = 0; i < legenda.length; i += 3) {
+            // Prima colonna
+            System.out.printf("%-30s", legenda[i]);
+
+            // Seconda colonna (se esiste)
+            if (i + 1 < legenda.length) {
+                System.out.printf("%-30s", legenda[i + 1]);
+            } else {
+                System.out.printf("%-30s", "");
+            }
+
+            // Terza colonna (se esiste)
+            if (i + 2 < legenda.length) {
+                System.out.printf("%-25s", legenda[i + 2]);
+            }
+
+            System.out.println();
+        }
+    }
+
+    public String[] renderHidden(){
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│  ?  │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
+
+    public String[] renderEmpty() {
+        // Disegno vuoto con linee singole
+        String[] righe = new String[3];
+        righe[0] = "┌─────┐";
+        righe[1] = "│     │";
+        righe[2] = "└─────┘";
+        return righe;
+    }
+
+    @Override
+    public Game clone(){
+        try {
+            return (Game) super.clone();
+        } catch (CloneNotSupportedException e) {
+            System.err.println("Could not clone Game");
+            return new Game(this);
+        }
+    }
+
+    public Game(Game oldGame){
+        this.players = oldGame.players;
+        this.level = oldGame.level;
+        this.tiles = oldGame.tiles;
+        this.flightBoard = oldGame.flightBoard;
+        this.state = oldGame.state;
+        this.error = oldGame.error;
+        this.preBuiltShips = oldGame.preBuiltShips;
+
+    }
 }
+
+

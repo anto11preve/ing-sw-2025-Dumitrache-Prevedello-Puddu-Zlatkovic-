@@ -59,7 +59,7 @@ public class LogInState extends State {
     }
 
     @Override
-    public void logout(String name)throws InvalidParameters {
+    public void logout(String name) throws InvalidParameters {
 
         Player removed_player= this.getController().getModel().getPlayer(name);
         if(removed_player == null){
@@ -67,8 +67,6 @@ public class LogInState extends State {
         }
         this.getController().getModel().removePlayer(name);
         if(this.getController().getModel().getPlayers().isEmpty()){
-
-            //qui andrebbe eliminata dalla lista partite accedibili
             this.getController().getModel().setState(new OffState(this.getController()));
         }
         System.out.println("Player " + name + " logged out");
@@ -93,8 +91,6 @@ public class LogInState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "Login",
-                        "Logout",
-                        "StartGame");
+        return List.of("Logout", "StartGame");
     }
 }
