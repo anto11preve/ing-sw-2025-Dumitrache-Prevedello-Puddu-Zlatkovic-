@@ -62,7 +62,8 @@ public interface CommandConstructor {
                     "StartLvL2Game", StartGameCommand.getLevel2Constructor(),
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
                     "UseBatterie", UseItemCommand.getBatteriesConstructor(),
-                    "UseCrew", UseItemCommand.getCrewConstructor()
+                    "UseCrew", UseItemCommand.getCrewConstructor(),
+                    "PlaceComponent", PlaceComponentCommand.getConstructor()
             ));
         }
 
