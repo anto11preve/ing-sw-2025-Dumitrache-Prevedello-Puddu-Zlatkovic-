@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
  * Manages players, the tile pool, the flight board, and overall game state.
  */
 public class Game implements Serializable, Cloneable {
-    private transient final List<Player> players;
+    private final List<Player> players;
     private transient final MatchLevel level;
-    private transient final SpaceshipComponent[] tiles;
+    private final SpaceshipComponent[] tiles;
     private transient final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
@@ -343,7 +343,6 @@ public class Game implements Serializable, Cloneable {
     public void addComponent(SpaceshipComponent component) {
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null");
-
         for (int i = 0; i < tiles.length; i++) {
             if (tiles[i] == null) {
                 tiles[i] = component;
@@ -371,6 +370,7 @@ public class Game implements Serializable, Cloneable {
 
     public void setState(State phase) {
         this.state = phase;
+        phase.onEnter();
     }
 
     public State getState() {
@@ -385,6 +385,8 @@ public class Game implements Serializable, Cloneable {
         this.error = error;
     }
 
+    /**
+     * TUI Tiles visualization method*/
     public void render(){
         // Prima stampiamo l'intestazione con i numeri delle colonne
         System.out.print("   "); // spazio per i numeri di riga
@@ -393,15 +395,15 @@ public class Game implements Serializable, Cloneable {
         }
         System.out.println();
 
-// Visualizzazione matrice 7x20 da array unidimensionale
-        for (int i = 0; i < 7; i++) {
+// Visualizzazione matrice 8x20 da array unidimensionale
+        for (int i = 0; i < 8; i++) {
             // Prima otteniamo i disegni di tutti i componenti della riga i
             String[][] disegni = new String[20][];
             for (int j = 0; j < 20; j++) {
                 // Conversione da coordinate 2D a indice 1D
                 int indice = i * 20 + j;
 
-                if (tiles[indice] != null) {
+                if (indice < tiles.length && tiles[indice] != null) {
                     if (tiles[indice].isVisible()) {
                         disegni[j] = tiles[indice].renderSmall();
                     } else {

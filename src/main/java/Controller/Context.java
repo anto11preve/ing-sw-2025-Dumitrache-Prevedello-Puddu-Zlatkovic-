@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.*;
+import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.*;
 import Model.Board.AdventureCards.Projectiles.Meteor;
@@ -10,23 +11,24 @@ import Model.Enums.CardLevel;
 import Model.Enums.Good;
 import Model.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Context {
-    private Controller controller;
-    private List<Player> players;
-    private List<Player> specialPlayers;
+public class Context implements Serializable {
+    private transient Controller controller;
+    private transient List<Player> players;
+    private transient List<Player> specialPlayers;
     private int crewmates;
     private int power;
     private int requiredGoods;
-    private List<Good> goods;
-    private List<Projectile> projectiles;
-    private List<Planet> planets;
+    private transient List<Good> goods;
+    private transient List<Projectile> projectiles;
+    private transient List<Planet> planets;
     private int credits;
     private int daysLost;
-    private Runnable visual;
+    private transient Runnable visual;
 
 
     public Context(Controller controller) {
@@ -203,23 +205,16 @@ public class Context {
 
     public Context(Controller controller, CombatZone card) throws InvalidParameters {
         this(controller);
-        if( card.getLevel() == CardLevel.LEVEL_ONE){
+        if( card.getLevel() == CardLevel.LEARNER){
+            for(CombatZoneLine line : card) {
+
+            }
             this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
             this.crewmates = ((CrewPenalty) card.iterator().next().getPenalty()).getAmount();
             for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
                 this.projectiles.add(projectile);
             }
-        } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
-            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
-            this.requiredGoods = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
-            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
-                this.projectiles.add(projectile);
-            }
-        } else {
-            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
-        }
-        this.visual = () -> {
-            if( card.getLevel() == CardLevel.LEVEL_ONE){
+            this.visual = () -> {
                 System.out.println("Combat Zone Level One");
                 System.out.println("Lowest Crew loses: " + this.daysLost + " days");
                 System.out.println("Lowest Engine Power loses: " + this.crewmates + " crewmates");
@@ -235,7 +230,14 @@ public class Context {
                 }
                 System.out.println();
                 System.out.println("---------------------------------------");
-            } else {
+            };
+        } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
+            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
+            this.requiredGoods = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
+            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
+                this.projectiles.add(projectile);
+            }
+            this.visual = () -> {
                 System.out.println("Combat Zone Level Two");
                 System.out.println("Lowest Fire Power loses: " + this.daysLost + " days");
                 System.out.println("Lowest Engine Power loses: " + this.requiredGoods+ " goods");
@@ -251,8 +253,11 @@ public class Context {
                 }
                 System.out.println();
                 System.out.println("---------------------------------------");
-            }
-        };
+            };
+        } else {
+            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
+        }
+
 
     }
 

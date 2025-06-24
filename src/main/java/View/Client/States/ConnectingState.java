@@ -11,7 +11,7 @@ import View.Client.States.Connected.LoginState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectingState implements ClientState {
+public final class ConnectingState implements ClientState {
     private final boolean useRMI;
 
     public ConnectingState(boolean useRMI) {

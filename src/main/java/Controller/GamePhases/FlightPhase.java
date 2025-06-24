@@ -9,6 +9,7 @@ import Model.Board.CardDeck;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.CardResolverVisitor;
+import View.Client.ClientState;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class FlightPhase extends State {
 
     public FlightPhase(Controller controller) {
         super(controller);
+        controller.setQueuedAction(ClientState::net_Fly);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class FlightPhase extends State {
         CardDeck deck;
         deck = controller.getModel().getFlightBoard().getUpcomingCardDeck();
         AdventureCardFilip card = deck.popCard();
+        System.out.println(card.getName());
         card.accept(new CardResolverVisitor(), controller);
         controller.getModel().setError(false);
     }

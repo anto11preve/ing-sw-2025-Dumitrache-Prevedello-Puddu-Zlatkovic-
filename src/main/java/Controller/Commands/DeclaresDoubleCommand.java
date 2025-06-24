@@ -90,7 +90,7 @@ public class DeclaresDoubleCommand extends Command {
                 try{
                     amount = Double.parseDouble(args.get("amount"));
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Could not parse the amount. Did you provide an Integer?");
+                    throw new IllegalArgumentException("Could not parse the amount. Did you provide an Double?");
                 }
 
                 return new DeclaresDoubleCommand(username, DoubleType.ENGINES, amount);

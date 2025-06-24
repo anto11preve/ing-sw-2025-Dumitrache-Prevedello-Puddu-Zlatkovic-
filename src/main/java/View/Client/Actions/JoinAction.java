@@ -20,7 +20,7 @@ public class JoinAction implements Action {
     public static ActionConstructor getConstructor() {
         return new ActionConstructor() {
             @Override
-            public Action create(Map<String, String> args) throws IllegalArgumentException {
+            public JoinAction create(Map<String, String> args) throws IllegalArgumentException {
                 final int gameId;
 
                 try {

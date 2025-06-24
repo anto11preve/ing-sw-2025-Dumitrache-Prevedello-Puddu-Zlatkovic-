@@ -1,23 +1,40 @@
 package View.Client.States.Connected.LoggedIn;
 
 import Model.Game;
+import Networking.Messages.LeaveGameMessage;
 import Networking.Network;
 import View.Client.ClientState;
 import View.Client.States.Connected.LoggedInState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class LobbyState extends LoggedInState {
+public abstract class GameSelectedState extends LoggedInState {
     private Game game;
 
-    public LobbyState(Network network, String username, Game game) {
+    public GameSelectedState(Network network, String username, Game game) {
         super(network, username);
         this.game = game;
     }
 
     public final Game getGame() {
         return game;
+    }
+
+    @Override
+    public ClientState net_Leave(String username) {
+        if(!Objects.equals(username, this.getUsername())) {
+            return this;
+        }
+
+        final ClientState sendResult;
+
+        if((sendResult = this.send(new LeaveGameMessage())).isDone()){
+            return sendResult;
+        }
+
+        return new GameSelectionState(this.getNetwork(), this.getUsername());
     }
 
     @Override

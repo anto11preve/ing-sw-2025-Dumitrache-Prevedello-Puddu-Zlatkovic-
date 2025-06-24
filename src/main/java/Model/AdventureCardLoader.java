@@ -95,9 +95,15 @@ public class AdventureCardLoader {
         }
 
         return switch (level) {
-            case TRIAL -> allCards.stream()
-                    .filter(card -> card.getLevel() == CardLevel.LEARNER)
-                    .collect(Collectors.toList());
+            case TRIAL -> {
+                List<AdventureCardFilip>returnList= allCards.stream()
+                        .filter(card -> card.getLevel() == CardLevel.LEARNER)
+                        .collect(Collectors.toList());
+                if (shuffle) {
+                    Collections.shuffle(returnList);
+                }
+                yield returnList;
+            }
 
             case LEVEL2 -> {
                 List<AdventureCardFilip> level1Cards = allCards.stream()

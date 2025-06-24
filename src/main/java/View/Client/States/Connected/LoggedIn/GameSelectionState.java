@@ -8,11 +8,12 @@ import Networking.Network;
 import View.Client.Client;
 import View.Client.ClientState;
 import View.Client.States.Connected.LoggedInState;
+import View.States.ViewGamesState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameSelectionState extends LoggedInState {
+public final class GameSelectionState extends LoggedInState {
     private Integer[] gamesList = new Integer[0];
     private boolean transitioned = false;
 
@@ -29,6 +30,8 @@ public class GameSelectionState extends LoggedInState {
                 GameSelectionState.this.send(new UpdateListMessage());
             }
         }, "UpdateRequester").start();
+
+        Client.view.setState(new ViewGamesState());
     }
 
     @Override
@@ -58,24 +61,10 @@ public class GameSelectionState extends LoggedInState {
     }
 
     @Override
-    public ClientState list(){
-        final List<String> games = new ArrayList<>();
-
-        for(Integer game : this.gamesList){
-            games.add(game.toString());
-        }
-
-        /*TODO: make this work well...*/
-        Client.client.showOptions("Games are ", games);
-
-        return this;
-    }
-
-    @Override
     public ClientState updateList(Integer[] newGamesList){
         this.gamesList = newGamesList;
 
-        return this.list();
+        return this;
     }
 
     @Override
@@ -90,4 +79,16 @@ public class GameSelectionState extends LoggedInState {
         return list;
     }
 
+    /*Visualization*/
+    @Override
+    public void list(){
+        final List<String> games = new ArrayList<>();
+
+        for(Integer game : this.gamesList){
+            games.add(game.toString());
+        }
+
+        /*TODO: make this work well...*/
+        Client.view.showOptions("Games are ", games);
+    }
 }

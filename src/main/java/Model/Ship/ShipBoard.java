@@ -908,6 +908,12 @@ public class ShipBoard {
     }
 
     public void render(MatchLevel level){
+        // Prima stampiamo l'intestazione con i numeri delle colonne
+        System.out.print("   "); // spazio per i numeri di riga
+        for (int j = 0; j < COLS; j++) {
+            System.out.printf("   %d   ", j + 4); // o qualsiasi offset tu voglia
+        }
+        System.out.println();
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
@@ -957,9 +963,9 @@ public class ShipBoard {
             // Caselle extra (sempre vuote per ora)
             String[] casellaA = null, casellaB = null, casellaC = null;
             if (i == 0) { // prima riga - casella A
-                if (activeComponent!=null) {
+                if (activeComponent != null) {
                     casellaA = activeComponent.renderSmall();
-                }else{
+                } else {
                     renderEmpty();
                 }
             }
@@ -1048,7 +1054,7 @@ public class ShipBoard {
 
             System.out.println();
         }
-}
+    }
 
     public String[] renderEmpty() {
         // Disegno vuoto con linee singole

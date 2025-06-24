@@ -14,6 +14,7 @@ import Model.Ship.Coordinates;
 import Model.Board.Timer;
 import Controller.GamePhases.FlightPhase;
 import Model.Ship.ShipBoard;
+import View.Client.ClientState;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ public class BuildingState extends State {
             throw new IllegalArgumentException("Invalid match level");
         }
 
+        controller.setQueuedAction(ClientState::net_Start);
     }
 
     /**
@@ -107,12 +109,14 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Component not found");
             }
 
+            this.getController().getModel().getTiles()[index] = null;
+
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
             if (oldTile!=null) {
                 oldTile.setVisible();
                 model.addComponent(oldTile);
-                currentPlayer.getShipBoard().setActiveComponent(selectedTile);
             }
+            currentPlayer.getShipBoard().setActiveComponent(selectedTile);
         }
 
 
@@ -547,6 +551,6 @@ public class BuildingState extends State {
     @Override
     public List<String> getAvailableCommands(){
         /*TODO: add all other commands*/
-        return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass", "DeleteComponent");
+        return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass", "DeleteComponent", "PreBuiltShip");
     }
 }

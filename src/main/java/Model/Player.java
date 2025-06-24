@@ -8,10 +8,12 @@ import Model.Ship.Components.Cabin;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
+import java.io.Serializable;
+
 // Classe principale del giocatore
-public class Player {
+public final class Player implements Serializable {
     private final String name;
-    private ShipBoard shipBoard;
+    private transient ShipBoard shipBoard;
     private int credits;
     private int junk;
 

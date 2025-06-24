@@ -11,6 +11,6 @@ public class LoginFailedAction implements Action {
 
     @Override
     public ClientState execute(ClientState state) {
-        return state.loginFailed(username);
+        return state.net_LoginFailed(username);
     }
 }
