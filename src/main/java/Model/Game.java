@@ -289,6 +289,14 @@ public class Game implements Serializable, Cloneable {
         return preBuiltShips;
     }
 
+    public ShipBoard getPreBuiltShip(int index) {
+        List<ShipBoard> allPreBuildShips = PreBuildShipsLoader.loadPreBuiltShips(level);
+        if (index < 0 || index >= allPreBuildShips.size()) {
+            throw new IndexOutOfBoundsException("Invalid pre-built ship index: " + index);
+        }
+        return allPreBuildShips.get(index);
+    }
+
     public SpaceshipComponent[] getTiles() {
         return this.tiles;
     }

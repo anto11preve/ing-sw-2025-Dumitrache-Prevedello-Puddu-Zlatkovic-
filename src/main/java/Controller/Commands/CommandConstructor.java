@@ -60,7 +60,8 @@ public interface CommandConstructor {
                     "StartGame", StartGameCommand.getConstructor(),
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
                     "UseBatterie", UseItemCommand.getBatteriesConstructor(),
-                    "UseCrew", UseItemCommand.getCrewConstructor()
+                    "UseCrew", UseItemCommand.getCrewConstructor(),
+                    "PreBuiltShip", PreBuiltShipCommand.getConstructor()
             ));
         }
 
