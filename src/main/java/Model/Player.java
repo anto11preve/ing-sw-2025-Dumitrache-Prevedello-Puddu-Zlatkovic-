@@ -26,6 +26,7 @@ public class Player {
      *
      * @param name The name of the player.
      */
+    @Deprecated
     public Player(String name) {
         this.name = name;
         this.shipBoard = new ShipBoard();

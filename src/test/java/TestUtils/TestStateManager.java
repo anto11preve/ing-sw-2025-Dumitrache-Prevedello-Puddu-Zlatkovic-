@@ -1,10 +1,10 @@
-package Controller.TestUtils;
+package TestUtils;
 
 import Controller.Controller;
-import Controller.Enums.MatchLevel;
 import Model.Game;
 import Model.Ship.Coordinates;
 import Model.Enums.Direction;
+import Controller.Enums.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,25 +17,12 @@ public class TestStateManager {
 
     private static final Map<String, GameSnapshot> savedGameSnapshots = new HashMap<>();
 
-    /**
-     * Represents a saved game state
-     */
-    public static class GameSnapshot {
-        public final Controller controller;
-        public final Game model;
-        public final String description;
 
-        public GameSnapshot(Controller controller, String description) {
-            this.controller = controller;
-            this.model = controller.getModel();
-            this.description = description;
-        }
-    }
 
     /**
      * Creates and saves common test states
      */
-    public static void initializeCommonStates() {
+    public TestStateManager() {
         // Empty lobby
         saveGameSnapshot("empty_lobby_trial", createEmptyLobby());
 
@@ -46,15 +33,17 @@ public class TestStateManager {
         saveGameSnapshot("lobby_4_players_trial", createFullLobby());
 
         // Building phase just started
-        saveGameSnapshot("building_started", createBuildingPhaseStarted());
+        saveGameSnapshot("building_2_players_trial", createBuildingPhaseStarted());
 
         // Building phase with components placed
         saveGameSnapshot("building_in_progress", createBuildingInProgress());
     }
 
     /**
-     * Saves a game state with a key
+     * Saves a game state with a key, the saving is NOT permanent
+     * @deprecated
      */
+    @Deprecated
     public static void saveGameSnapshot(String key, GameSnapshot state) {
         savedGameSnapshots.put(key, state);
     }
@@ -67,7 +56,6 @@ public class TestStateManager {
     }
 
     // State creation methods
-
     private static GameSnapshot createEmptyLobby() {
         Controller controller = new Controller(MatchLevel.TRIAL, 1);
         return new GameSnapshot(controller, "Empty lobby - no players");
@@ -120,7 +108,7 @@ public class TestStateManager {
             // Simulate some building actions
             controller.getComponent("Player1", 0);
             controller.placeComponent("Player1",
-                    Controller.Enums.ComponentOrigin.HAND,
+                    ComponentOrigin.HAND,
                     new Coordinates(7, 5),
                     Direction.UP);
 
@@ -129,6 +117,9 @@ public class TestStateManager {
         }
         return new GameSnapshot(controller, "Building phase with components placed");
     }
+
+
+
 
     /**
      * Creates a custom game state based on specific requirements

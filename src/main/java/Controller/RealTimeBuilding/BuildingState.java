@@ -371,6 +371,25 @@ public class BuildingState extends State {
 
     }
 
+    @Override
+    public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
+
+        Game model = this.getController().getModel();
+        Player currentPlayer = model.getPlayer(name);
+
+        if(currentPlayer == null) {
+            throw new InvalidParameters("Player not found");
+        }
+
+        try {
+            ShipBoard shipBoard= model.getPreBuiltShip(index);
+            currentPlayer.setShipBoard(shipBoard);
+        } catch (Exception e) {
+            throw new InvalidParameters("Invalid ship index");
+        }
+
+    }
+
     /**
      * Finishes assembly for a player and places them on the starting grid.
      * If there are components reserved not placed,
