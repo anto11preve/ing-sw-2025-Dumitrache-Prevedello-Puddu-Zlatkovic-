@@ -10,23 +10,24 @@ import Model.Enums.CardLevel;
 import Model.Enums.Good;
 import Model.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Context {
-    private Controller controller;
-    private List<Player> players;
-    private List<Player> specialPlayers;
+public class Context implements Serializable {
+    private transient Controller controller;
+    private transient List<Player> players;
+    private transient List<Player> specialPlayers;
     private int crewmates;
     private int power;
     private int requiredGoods;
-    private List<Good> goods;
-    private List<Projectile> projectiles;
-    private List<Planet> planets;
+    private transient List<Good> goods;
+    private transient List<Projectile> projectiles;
+    private transient List<Planet> planets;
     private int credits;
     private int daysLost;
-    private Runnable visual;
+    private transient Runnable visual;
 
 
     public Context(Controller controller) {
