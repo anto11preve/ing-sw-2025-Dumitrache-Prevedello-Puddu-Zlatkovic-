@@ -399,7 +399,7 @@ public class FlightBoard {
     //TODO: invertire ordine 
     public Player[] getTurnOrder() {
         return playerTotalDistance.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
+                .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
                 .map(Map.Entry::getKey)
                 .toArray(Player[]::new);
     }
@@ -418,7 +418,7 @@ public class FlightBoard {
         return ffPlayers;
     }
 
-    public void visualize() {
+    public void visualize(Player playerInTurn) {
         Player[] turnOrder = getTurnOrder();
 
         // Print table header
@@ -434,12 +434,17 @@ public class FlightBoard {
             String playerName = player.getName();
             int credits = player.getCredits();
 
+            // Add current turn indicator for the first player (current turn)
+            String turnIndicator = (player.equals(playerInTurn)) ? "▶ " : "  ";
+
             // Truncate player name if it's too long to fit in the table
             if (playerName.length() > 25) {
                 playerName = playerName.substring(0, 22) + "...";
             }
 
-            System.out.printf("│ %-3d │ %-25s │ %-15d │%n", (i + 1), playerName, credits);
+            String displayName = turnIndicator + playerName;
+
+            System.out.printf("│ %-3d │ %-25s │ %-15d │%n", (i + 1), displayName, credits);
         }
 
         // Print table footer

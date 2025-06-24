@@ -2,6 +2,7 @@ package Controller;
 
 import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.*;
+import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Board.AdventureCards.Penalties.*;
 import Model.Board.AdventureCards.Projectiles.Meteor;
@@ -204,23 +205,16 @@ public class Context implements Serializable {
 
     public Context(Controller controller, CombatZone card) throws InvalidParameters {
         this(controller);
-        if( card.getLevel() == CardLevel.LEVEL_ONE){
+        if( card.getLevel() == CardLevel.LEARNER){
+            for(CombatZoneLine line : card) {
+
+            }
             this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
             this.crewmates = ((CrewPenalty) card.iterator().next().getPenalty()).getAmount();
             for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
                 this.projectiles.add(projectile);
             }
-        } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
-            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
-            this.requiredGoods = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
-            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
-                this.projectiles.add(projectile);
-            }
-        } else {
-            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
-        }
-        this.visual = () -> {
-            if( card.getLevel() == CardLevel.LEVEL_ONE){
+            this.visual = () -> {
                 System.out.println("Combat Zone Level One");
                 System.out.println("Lowest Crew loses: " + this.daysLost + " days");
                 System.out.println("Lowest Engine Power loses: " + this.crewmates + " crewmates");
@@ -236,7 +230,14 @@ public class Context implements Serializable {
                 }
                 System.out.println();
                 System.out.println("---------------------------------------");
-            } else {
+            };
+        } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
+            this.daysLost = ((DaysPenalty) card.iterator().next().getPenalty()).getAmount();
+            this.requiredGoods = ((GoodsPenalty) card.iterator().next().getPenalty()).getAmount();
+            for (Projectile projectile : ((CannonShotPenalty) card.iterator().next().getPenalty())) {
+                this.projectiles.add(projectile);
+            }
+            this.visual = () -> {
                 System.out.println("Combat Zone Level Two");
                 System.out.println("Lowest Fire Power loses: " + this.daysLost + " days");
                 System.out.println("Lowest Engine Power loses: " + this.requiredGoods+ " goods");
@@ -252,8 +253,11 @@ public class Context implements Serializable {
                 }
                 System.out.println();
                 System.out.println("---------------------------------------");
-            }
-        };
+            };
+        } else {
+            throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
+        }
+
 
     }
 

@@ -38,11 +38,13 @@ public class CombatZone extends AdventureCardFilip implements Iterable<CombatZon
         return "";
     }
 
+    public List<CombatZoneLine> getLines() {
+        return new ArrayList<>(this.lines);
+    }
+
     @Override
     public Iterator<CombatZoneLine> iterator() {
-        List<CombatZoneLine> lines = new ArrayList<>(this.lines);
-
-        return lines.iterator();
+        return this.getLines().iterator();
     }
 
     /**

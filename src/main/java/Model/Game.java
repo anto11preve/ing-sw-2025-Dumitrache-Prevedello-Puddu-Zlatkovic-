@@ -55,7 +55,7 @@ public class Game implements Serializable, Cloneable {
                 for (ShipBoard ship : shipsL1) {
 
                     System.out.println("Ship is valid:" + ship.validateShip());
-                    ship.render();
+
 
                 }
 
@@ -67,7 +67,7 @@ public class Game implements Serializable, Cloneable {
                 for (ShipBoard ship : shipsL2) {
 
                     System.out.println("Ship is valid:" + ship.validateShip());
-                    ship.render();
+
 
                 }
 
@@ -367,6 +367,7 @@ public class Game implements Serializable, Cloneable {
 
     public void setState(State phase) {
         this.state = phase;
+        phase.onEnter();
     }
 
     public State getState() {
