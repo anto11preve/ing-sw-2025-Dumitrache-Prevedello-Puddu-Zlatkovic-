@@ -5,7 +5,7 @@ import View.Client.ClientState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtocolChoiceState implements ClientState {
+public final class ProtocolChoiceState implements ClientState {
     @Override
     public ClientState chooseProtocol(String choice){
         if(choice.equalsIgnoreCase("RMI")){

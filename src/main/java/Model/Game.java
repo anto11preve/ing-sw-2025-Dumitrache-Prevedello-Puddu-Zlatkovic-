@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
  * Manages players, the tile pool, the flight board, and overall game state.
  */
 public class Game implements Serializable, Cloneable {
-    private transient final List<Player> players;
+    private final List<Player> players;
     private transient final MatchLevel level;
-    private transient final SpaceshipComponent[] tiles;
+    private final SpaceshipComponent[] tiles;
     private transient final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
@@ -373,6 +373,8 @@ public class Game implements Serializable, Cloneable {
         this.error = error;
     }
 
+    /**
+     * TUI Tiles visualization method*/
     public void render(){
         // Prima stampiamo l'intestazione con i numeri delle colonne
         System.out.print("   "); // spazio per i numeri di riga

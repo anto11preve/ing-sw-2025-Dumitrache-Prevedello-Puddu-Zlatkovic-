@@ -10,8 +10,8 @@ import Networking.Messages.ClientMessage;
 import Networking.Messages.Handler;
 import Networking.Network;
 import View.Client.Actions.Action;
-import View.Client.Actions.JoinFailedAction;
 import View.Client.Actions.JoinSuccessAction;
+import View.Client.ClientState;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class LoginCommand extends Command {
             controller.login(username);
         } catch (InvalidParameters | InvalidCommand e){
             agent = Server.server;
-            action = new JoinFailedAction();
+            action = ClientState::net_JoinFailed;
             throw e;
         } finally {
             final Network network = Server.server.getNetwork(username);

@@ -14,6 +14,7 @@ import Model.Ship.Coordinates;
 import Model.Board.Timer;
 import Controller.GamePhases.FlightPhase;
 import Model.Ship.ShipBoard;
+import View.Client.ClientState;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ public class BuildingState extends State {
             throw new IllegalArgumentException("Invalid match level");
         }
 
+        controller.setQueuedAction(ClientState::net_Start);
     }
 
     /**

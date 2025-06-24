@@ -15,7 +15,9 @@ import Model.Ship.Coordinates;
 import Networking.Agent;
 import Networking.Messages.ClientMessage;
 import Networking.Network;
+import View.Client.Actions.Action;
 import View.Client.Actions.UpdateGameAction;
+import View.Client.ClientState;
 
 import java.util.*;
 
@@ -24,6 +26,7 @@ public class Controller implements Agent {
     private final Queue<Command> commandQueue= new LinkedList<>();
     private final MatchLevel matchLevel;
     private final int gameID;
+    private Action queuedAction;
 
     public Controller(MatchLevel matchLevel, int GameID) {
         this.model = new Game(matchLevel);
@@ -141,6 +144,27 @@ public class Controller implements Agent {
         model.getState().throwDices(playerName);
     }
 
+    public synchronized void setQueuedAction(Action action){
+        this.queuedAction = action;
+    }
+
+    public synchronized void sendAll() {
+        for(Player player : this.getModel().getPlayers()){
+            Network network = Server.server.getNetwork(player.getName());
+            if(network != null && !network.isDone()) {
+
+                network.send(new ClientMessage(
+                        new UpdateGameAction(new Game(this.model)/*this.model.clone()*/)
+                ));
+                if(this.queuedAction != null) {
+                    network.send(new ClientMessage(this.queuedAction));
+                }
+            }
+        }
+
+        this.queuedAction = null;
+    }
+
     public void run(){
         while(!this.model.getState().isDone()){
             final Command command = this.dequeueCommand();
@@ -153,16 +177,7 @@ public class Controller implements Agent {
                     this.model.setError(true);
                 }
 
-                for(Player player : this.getModel().getPlayers()){
-                    Network network = Server.server.getNetwork(player.getName());
-                    if(network != null && !network.isDone()) {
-                        network.send(
-                                new ClientMessage(
-                                        new UpdateGameAction(this.model.clone())
-                                )
-                        );
-                    }
-                }
+                this.sendAll();
             }
         }
 

@@ -23,7 +23,7 @@ public class ConnectAction implements Action {
         return new ActionConstructor() {
 
             @Override
-            public Action create(Map<String, String> arguments) throws IllegalArgumentException {
+            public ConnectAction create(Map<String, String> arguments) throws IllegalArgumentException {
                 try {
                     final String hostname = arguments.get("hostname");
                     final int port = Integer.parseInt(arguments.get("port"));

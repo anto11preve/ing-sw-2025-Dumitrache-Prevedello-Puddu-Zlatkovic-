@@ -4,6 +4,8 @@ package Controller.Commands;
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
+import View.Client.Actions.Action;
+import View.Client.ClientState;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,12 @@ public class LogoutCommand extends Command {
      */
     @Override
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters {
-
+        controller.setQueuedAction(new Action() {
+            @Override
+            public ClientState execute(ClientState state) {
+                return state.net_Leave(LogoutCommand.this.getPlayerName());
+            }
+        });
         controller.logout(getPlayerName());
     }
 
