@@ -1,4 +1,4 @@
-package View.States;
+package View.States.MenuStates;
 
 import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
@@ -6,7 +6,7 @@ import View.Client.Client;
 
 import java.util.*;
 
-public class ActionCreationState implements ViewState {
+public class ActionCreationState implements MenuState {
     private final ActionConstructor actionConstructor;
     private final Map<String, String> providedArguments;
 
@@ -14,12 +14,11 @@ public class ActionCreationState implements ViewState {
         this.actionConstructor = actionConstructor;
 
         this.providedArguments = providedArguments;
-
-        this.listArguments();
     }
 
-    public void listArguments(){
-        Client.client.showArguments(this.actionConstructor.getArguments(), this.providedArguments);
+    @Override
+    public void paint(){
+        Client.view.showArguments(this.actionConstructor.getArguments(), this.providedArguments);
     }
 
     public void addArgument(String argName, String argValue){
@@ -41,13 +40,13 @@ public class ActionCreationState implements ViewState {
                     final String argValue = line.split(" ")[1];
                     this.addArgument(arg, argValue);
                 }catch (ArrayIndexOutOfBoundsException e){
-                    System.err.println("Warning: No argument was provided");
+                    Client.view.log("Warning: No argument was provided");
                 }
                 break;
             }
         }
 
-        this.listArguments();
+        Client.view.repaint();
     }
 
     public void send() {
@@ -55,7 +54,7 @@ public class ActionCreationState implements ViewState {
 
         try{
             action = this.actionConstructor.create(this.providedArguments);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             action = state -> state;
         }
 

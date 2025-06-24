@@ -11,6 +11,6 @@ public class LoginSuccessAction implements Action {
 
     @Override
     public ClientState execute(ClientState state) {
-        return state.loginSuccess(username);
+        return state.net_LoginSuccess(username);
     }
 }

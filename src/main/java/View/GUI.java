@@ -1,31 +1,21 @@
 package View;
-import View.States.ViewState;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.List;
 import java.util.Map;
 
-public class GUI extends Application implements View {
-    private ViewState state = null;
+public class GUI extends View {
+    private Application application = new Application() {
+        @Override
+        public void start(Stage stage) throws Exception {
+
+        }
+    };
+
     @Override
     public void run() {
-        launch();
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
-    }
-
-    @Override
-    public void setState(ViewState state) {
-        this.state = state;
-    }
-
-    @Override
-    public ViewState getState() {
-        return this.state;
+        application.launch();
     }
 
     @Override

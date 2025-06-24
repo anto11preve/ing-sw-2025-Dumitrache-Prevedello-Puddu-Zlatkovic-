@@ -8,7 +8,7 @@ import View.Client.States.ConnectedState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginState extends ConnectedState {
+public final class LoginState extends ConnectedState {
     public LoginState(Network network) {
         super(network);
     }

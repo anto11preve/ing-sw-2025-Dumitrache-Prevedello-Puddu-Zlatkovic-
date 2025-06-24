@@ -1,15 +1,11 @@
-package View.States;
+package View.States.MenuStates;
 
 import View.Client.Client;
 
-public class ChooseActionState implements ViewState {
-
-    public ChooseActionState() {
-        this.listActions();
-    }
-
-    private void listActions() {
-        Client.client.showOptions("Choose action", Client.client.getState().getAvailableCommands());
+public class ChooseActionState implements MenuState {
+    @Override
+    public void paint() {
+        Client.view.showOptions("Choose action", Client.client.getState().getAvailableCommands());
     }
 
     @Override
@@ -30,6 +26,6 @@ public class ChooseActionState implements ViewState {
             }
         }
 
-        this.listActions();
+        Client.view.repaint();
     }
 }
