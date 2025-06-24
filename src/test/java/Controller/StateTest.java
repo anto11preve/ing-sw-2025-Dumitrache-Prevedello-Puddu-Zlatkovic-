@@ -10,15 +10,18 @@ import TestUtils.GameSnapshot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StateTest {
+public class StateTest {
 
 
     protected Controller controller;
+    protected Game model;
+    protected State state;
     //protected Game model;
 
     public StateTest(MatchLevel matchLevel) {
         this.controller = createController(matchLevel);
-        //this.model = controller.getModel();
+        this.model= controller.getModel();
+        this.state=model.getState();
     }
 
     /**

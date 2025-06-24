@@ -98,18 +98,18 @@ public class BuildingState extends State {
                 throw new InvalidCommand("Player already finished");
             }
             if (index < 0 || index >= this.getController().getModel().getTiles().length) {
-                //TODO: getTiles() non funziona più......
                 throw new InvalidParameters("Invalid index");
             }
 
             SpaceshipComponent selectedTile = this.getController().getModel().getTiles()[index];
 
-            //TODO: getTiles() non funziona più......
             if(selectedTile == null) {
                 throw new InvalidParameters("Component not found");
             }
+
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
             if (oldTile!=null) {
+                oldTile.setVisible();
                 model.addComponent(oldTile);
                 currentPlayer.getShipBoard().setActiveComponent(selectedTile);
             }

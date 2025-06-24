@@ -1,5 +1,6 @@
 package Model.Ship;
 
+import Controller.Enums.MatchLevel;
 import Model.Enums.*;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Components.Cabin;
@@ -906,7 +907,7 @@ public class ShipBoard {
         }
     }
 
-    public void render(){
+    public void render(MatchLevel level){
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
@@ -915,21 +916,32 @@ public class ShipBoard {
                 // Controlla se questa casella deve essere vuota secondo le tue regole
                 boolean needsToBeEmpty = false;
 
-                // Prima e ultima colonna (j=0 e j=6)
-                if (j == 0 || j == 6) {
-                    needsToBeEmpty = true;
-                }
-                // Prime due dall'alto della seconda e penultima colonna (j=1 e j=5, i=0 e i=1)
-                else if ((j == 1 || j == 5) && (i == 0 || i == 1)) {
-                    needsToBeEmpty = true;
-                }
-                // Prima della terza e quinta colonna (j=2 e j=4, i=0)
-                else if ((j == 2 || j == 4) && i == 0) {
-                    needsToBeEmpty = true;
-                }
-                // Ultima della quarta colonna (j=3, i=ROWS-1)
-                else if (j == 3 && i == ROWS - 1) {
-                    needsToBeEmpty = true;
+                if (level == MatchLevel.TRIAL) {
+                    // Prima e ultima colonna (j=0 e j=6)
+                    if (j == 0 || j == 6) {
+                        needsToBeEmpty = true;
+                    }
+                    // Prime due dall'alto della seconda e penultima colonna (j=1 e j=5, i=0 e i=1)
+                    else if ((j == 1 || j == 5) && (i == 0 || i == 1)) {
+                        needsToBeEmpty = true;
+                    }
+                    // Prima della terza e quinta colonna (j=2 e j=4, i=0)
+                    else if ((j == 2 || j == 4) && i == 0) {
+                        needsToBeEmpty = true;
+                    }
+                    // Ultima della quarta colonna (j=3, i=ROWS-1)
+                    else if (j == 3 && i == ROWS - 1) {
+                        needsToBeEmpty = true;
+                    }
+                } else {
+
+                    if( (j == 0 || j == 1 || j == 3 || j == 5 || j == 6) && i == 0 ){
+                        needsToBeEmpty = true;
+                    } else if (i == 1 && (j == 0 || j == 6)){
+                        needsToBeEmpty = true;
+                    } else if (j == 3 && i == ROWS - 1) {
+                        needsToBeEmpty = true;
+                    }
                 }
 
                 // Scegli il rendering appropriato
@@ -945,7 +957,11 @@ public class ShipBoard {
             // Caselle extra (sempre vuote per ora)
             String[] casellaA = null, casellaB = null, casellaC = null;
             if (i == 0) { // prima riga - casella A
-                casellaA = activeComponent.renderSmall();
+                if (activeComponent!=null) {
+                    casellaA = activeComponent.renderSmall();
+                }else{
+                    renderEmpty();
+                }
             }
             if (i == 1) { // seconda riga - caselle B e C
                 if(!reservedComponents.isEmpty()) {
@@ -1032,7 +1048,7 @@ public class ShipBoard {
 
             System.out.println();
         }
-    }
+}
 
     public String[] renderEmpty() {
         // Disegno vuoto con linee singole
