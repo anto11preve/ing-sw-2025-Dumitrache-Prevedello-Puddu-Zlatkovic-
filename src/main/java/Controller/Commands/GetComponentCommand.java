@@ -4,6 +4,9 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for getting a component from the component pool during ship building phase.
  * Players can draw components from the shared pool to use in ship construction.
@@ -16,11 +19,10 @@ public class GetComponentCommand extends Command {
      * Constructs a new GetComponentCommand.
      *
      * @param playerName the name of the player getting the component
-     * @param gameID the ID of the game session
      * @param index the index of the component to retrieve
      */
-    public GetComponentCommand(String playerName, int gameID, int index) {
-        super(playerName, gameID);
+    public GetComponentCommand(String playerName, int index) {
+        super(playerName);
         this.index = index;
     }
     
@@ -41,5 +43,26 @@ public class GetComponentCommand extends Command {
      */
     public int getIndex() {
         return index;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final int index;
+                try{
+                    index = Integer.parseInt(args.get("index"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the index. Did you provide an Integer?");
+                }
+
+                return new FinishBuildingCommand(username, index);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("index");
+            }
+        };
     }
 }

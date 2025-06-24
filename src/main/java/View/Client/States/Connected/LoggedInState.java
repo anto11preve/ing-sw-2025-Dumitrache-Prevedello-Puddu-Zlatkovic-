@@ -13,6 +13,7 @@ public abstract class LoggedInState extends ConnectedState {
         this.username = username;
     }
 
+    @Override
     public final String getUsername() {
         return this.username;
     }

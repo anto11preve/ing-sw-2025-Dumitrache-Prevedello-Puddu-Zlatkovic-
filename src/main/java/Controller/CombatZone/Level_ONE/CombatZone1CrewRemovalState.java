@@ -11,6 +11,8 @@ import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone1CrewRemovalState extends State {
     private Context context;
 
@@ -57,6 +59,12 @@ public class CombatZone1CrewRemovalState extends State {
             controller.getModel().setError(true);
             throw new IllegalArgumentException("It's not your turn to remove crew members.");
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "UseItem"
+        );
     }
 
 }

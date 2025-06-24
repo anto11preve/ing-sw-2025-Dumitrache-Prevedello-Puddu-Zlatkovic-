@@ -17,7 +17,7 @@ public class EnemyTest {
         }
         
         public TestEnemy(JsonObject json, DaysPenalty lossPenalty, int days, Credits winReward) {
-            super(json, lossPenalty, days, winReward);
+            super(json, lossPenalty, winReward);
         }
 
         @Override

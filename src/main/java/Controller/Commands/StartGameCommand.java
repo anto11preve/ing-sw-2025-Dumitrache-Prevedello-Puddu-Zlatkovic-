@@ -4,28 +4,25 @@
 package Controller.Commands;
 
 import Controller.Controller;
-import Controller.Enums.MatchLevel;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Command for creating a new game session.
  * Only the first player can create a new game with specified difficulty level.
  */
 public class StartGameCommand extends Command {
-    /** The difficulty level for the new game */
-    private final MatchLevel level;
 
     /**
      * Constructs a new StartGameCommand.
      *
      * @param playerName the name of the player creating the game
-     * @param gameID the ID for the new game session
-     * @param level the difficulty level of the game
      */
-    public StartGameCommand(String playerName, int gameID, MatchLevel level) {
-        super(playerName, gameID);
-        this.level = level;
+    public StartGameCommand(String playerName) {
+        super(playerName);
     }
 
     /**
@@ -38,12 +35,17 @@ public class StartGameCommand extends Command {
         controller.startGame(getPlayerName());
     }
 
-    /**
-     * Gets the match level for this game.
-     *
-     * @return the match level
-     */
-    public MatchLevel getLevel() {
-        return level;
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public StartGameCommand create(String username, Map<String, String> args) throws IllegalArgumentException {
+                return new StartGameCommand(username);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
     }
 }

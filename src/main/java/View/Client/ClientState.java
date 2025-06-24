@@ -11,6 +11,10 @@ public interface ClientState {
         return List.of("stop");
     }
 
+    default String getUsername() {
+        throw new UnsupportedOperationException("Cannot invoke getUsername on " + this.getClass().getName());
+    }
+
     default ClientState chooseProtocol(String choice){
         throw new UnsupportedOperationException("Cannot invoke chooseProtocol on " + this.getClass().getName());
     }

@@ -6,6 +6,8 @@ import Controller.RealTimeBuilding.BuildingState;
 import Controller.State;
 import Model.Player;
 
+import java.util.List;
+
 public class LogInState extends State {
 
 //    @Override
@@ -57,7 +59,7 @@ public class LogInState extends State {
     }
 
     @Override
-    public void logout(String name)throws InvalidParameters {
+    public void logout(String name) throws InvalidParameters {
 
         Player removed_player= this.getController().getModel().getPlayer(name);
         if(removed_player == null){
@@ -65,8 +67,6 @@ public class LogInState extends State {
         }
         this.getController().getModel().removePlayer(name);
         if(this.getController().getModel().getPlayers().isEmpty()){
-
-            //qui andrebbe eliminata dalla lista partite accedibili
             this.getController().getModel().setState(new OffState(this.getController()));
         }
         System.out.println("Player " + name + " logged out");
@@ -88,5 +88,9 @@ public class LogInState extends State {
 
         System.out.println("Game started by admin " + name);
         // You can add more logic here if needed
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of("Logout", "StartGame");
     }
 }

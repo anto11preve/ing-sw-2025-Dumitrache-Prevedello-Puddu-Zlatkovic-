@@ -6,16 +6,15 @@ import Model.Board.FlightBoard;
 import Model.Enums.Card;
 import Model.Enums.CardLevel;
 import Controller.Enums.MatchLevel;
-import Model.ComponentLoader;
 import Controller.State;
 import Model.Enums.ConnectorType;
-import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.ShipBoard;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,15 +22,15 @@ import java.util.stream.Collectors;
  * Represents a game session of Galaxy Trucker.
  * Manages players, the tile pool, the flight board, and overall game state.
  */
-public class Game {
-    private final List<Player> players;
-    private final MatchLevel level;
-    private final SpaceshipComponent[] tiles;
-    private final FlightBoard flightBoard;
+public class Game implements Serializable, Cloneable {
+    private transient final List<Player> players;
+    private transient final MatchLevel level;
+    private transient final SpaceshipComponent[] tiles;
+    private transient final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
-    private List<ShipBoard> preBuiltShips;
-    private Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
+    private final transient List<ShipBoard> preBuiltShips;
+    private final transient Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
 
 
 
@@ -474,6 +473,26 @@ public class Game {
         return righe;
     }
 
+    @Override
+    public Game clone(){
+        try {
+            return (Game) super.clone();
+        } catch (CloneNotSupportedException e) {
+            System.err.println("Could not clone Game");
+            return new Game(this);
+        }
+    }
+
+    public Game(Game oldGame){
+        this.players = oldGame.players;
+        this.level = oldGame.level;
+        this.tiles = oldGame.tiles;
+        this.flightBoard = oldGame.flightBoard;
+        this.state = oldGame.state;
+        this.error = oldGame.error;
+        this.preBuiltShips = oldGame.preBuiltShips;
+
+    }
 }
 
 

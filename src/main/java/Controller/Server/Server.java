@@ -2,6 +2,7 @@ package Controller.Server;
 
 import Controller.Controller;
 import Controller.Enums.MatchLevel;
+import Controller.PreMatchLobby.OffState;
 import Networking.Agent;
 import Networking.Messages.PrintMessage;
 import Networking.Network;
@@ -117,6 +118,16 @@ public class Server implements Agent {
             networks.addAll(this.players.keySet());
         }
 
+        synchronized (this.games) {
+            final Set<Integer> gameIds =  this.games.keySet();
+
+            for (Integer gameId : gameIds){
+                Controller game = this.games.get(gameId);
+                game.getModel().setState(new OffState(game));
+                game.enqueueCommand(null);
+            }
+        }
+
         for(Network network : networks){
             disconnect(network);
         }
@@ -194,6 +205,14 @@ public class Server implements Agent {
             this.games.put(gameId, game);
 
             return game;
+        }
+    }
+
+    public void destroyGame(int gameId) {
+        synchronized(this.games) {
+            System.err.println("Destroying game " + gameId);
+
+            this.games.remove(gameId);
         }
     }
 

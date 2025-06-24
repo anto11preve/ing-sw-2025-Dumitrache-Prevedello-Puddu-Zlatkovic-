@@ -3,7 +3,9 @@ package View;
 import View.States.ViewState;
 
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class TUI implements View {
     private ViewState state;
@@ -33,9 +35,14 @@ public final class TUI implements View {
     }
 
     @Override
-    public void showArguments(List<String> arguments){
-        for(String argument : arguments){}
+    public void showArguments(List<String> arguments, Map<String, String> providedArguments){
+        final List<String> list = new ArrayList<>();
+        for(String argName : arguments){
+            final String argValue = providedArguments.get(argName);
+            list.add(argName + ": " + (argValue == null ? "_empty_": argValue));
+        }
 
+        this.showOptions("Fill arguments: argName argValue (type \"send\" to finish)", list);
     }
 
     @Override

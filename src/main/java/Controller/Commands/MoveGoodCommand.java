@@ -6,6 +6,9 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for moving goods between cargo holds.
  * Used during cargo management phases.
@@ -24,15 +27,14 @@ public class MoveGoodCommand extends Command {
      * Constructs a new MoveGoodsCommand.
      *
      * @param playerName the name of the player moving goods
-     * @param gameID the ID of the game session
      * @param oldCoordinates the source coordinates
      * @param newCoordinates the destination coordinates
      * @param oldIndex the source index
      * @param newIndex the destination index
      */
-    public MoveGoodCommand(String playerName, int gameID, Coordinates oldCoordinates,
+    public MoveGoodCommand(String playerName, Coordinates oldCoordinates,
                            Coordinates newCoordinates, int oldIndex, int newIndex) {
-        super(playerName, gameID);
+        super(playerName);
         this.oldCoordinates = oldCoordinates;
         this.newCoordinates = newCoordinates;
         this.oldIndex = oldIndex;
@@ -83,5 +85,64 @@ public class MoveGoodCommand extends Command {
      */
     public int getNewIndex() {
         return newIndex;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final int oldRow;
+                try{
+                    oldRow = Integer.parseInt(args.get("oldRow"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the oldRow. Did you provide an Integer?");
+                }
+
+                final int oldColumn;
+                try{
+                    oldColumn = Integer.parseInt(args.get("oldColumn"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the oldColumn. Did you provide an Integer?");
+                }
+
+                final int newRow;
+                try{
+                    newRow = Integer.parseInt(args.get("newRow"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the newRow. Did you provide an Integer?");
+                }
+
+                final int newColumn;
+                try{
+                    newColumn = Integer.parseInt(args.get("newColumn"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the newColumn. Did you provide an Integer?");
+                }
+
+                final int oldIndex;
+                try{
+                    oldIndex = Integer.parseInt(args.get("oldIndex"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the oldIndex. Did you provide an Integer?");
+                }
+
+                final int newIndex;
+                try{
+                    newIndex = Integer.parseInt(args.get("newIndex"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the newIndex. Did you provide an Integer?");
+                }
+
+                return new MoveGoodCommand(username,
+                        new Coordinates(oldRow, oldColumn),
+                        new Coordinates(newRow, newColumn),
+                        oldIndex, newIndex);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("position", "oldRow", "oldColumn", "newRow", "newColumn", "oldIndex", "newIndex");
+            }
+        };
     }
 }

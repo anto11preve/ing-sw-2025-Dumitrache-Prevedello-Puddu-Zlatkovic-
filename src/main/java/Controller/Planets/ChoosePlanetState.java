@@ -135,4 +135,8 @@ public class ChoosePlanetState extends State {
             controller.getModel().setError(false);
         }
     }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "ChoosePlanet", "End" );
+    }
 }

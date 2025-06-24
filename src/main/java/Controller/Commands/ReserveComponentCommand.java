@@ -4,6 +4,9 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for reserving a component during ship building phase.
  * Players can reserve up to 2 components for later use (Level 2 only).
@@ -14,10 +17,9 @@ public class ReserveComponentCommand extends Command {
      * Constructs a new ReserveComponentCommand.
      *
      * @param playerName the name of the player reserving the component
-     * @param gameID the ID of the game session
      */
-    public ReserveComponentCommand(String playerName, int gameID) {
-        super(playerName, gameID);
+    public ReserveComponentCommand(String playerName) {
+        super(playerName);
     }
     
     /**
@@ -28,5 +30,20 @@ public class ReserveComponentCommand extends Command {
     @Override
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters {
         controller.reserveComponent(getPlayerName());
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+
+                return new ReserveComponentCommand(username);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of();
+            }
+        };
     }
 }

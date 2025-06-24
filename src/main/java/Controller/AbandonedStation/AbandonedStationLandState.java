@@ -12,6 +12,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 
 /**
  * Represents the state in which a player manages the goods obtained from an abandoned station.
@@ -160,5 +162,14 @@ public class AbandonedStationLandState extends State {
 
         controller.getModel().setState(new FlightPhase(controller));
         controller.getModel().setError(false);
+    }
+
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "GetGood",
+            "MoveGood",
+            "End"
+        );
     }
 }

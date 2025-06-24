@@ -166,4 +166,8 @@ import java.util.Map;
 
     }
 
+    public List<String> getAvailableCommands(){
+        return List.of( "DeleteComponent");
+    }
+
 }
