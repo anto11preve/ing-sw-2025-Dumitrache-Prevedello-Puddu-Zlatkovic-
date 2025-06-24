@@ -7,6 +7,9 @@ import Controller.Exceptions.InvalidParameters;
 import Model.Enums.Direction;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for placing a component on the ship board during building phase.
  * Handles component placement with proper connection validation.
@@ -23,14 +26,13 @@ public class PlaceComponentCommand extends Command {
      * Constructs a new PlaceComponentCommand.
      *
      * @param playerName the name of the player placing the component
-     * @param gameID the ID of the game session
      * @param origin the origin of the component
      * @param coordinates the coordinates for placement
      * @param orientation the orientation of the component
      */
-    public PlaceComponentCommand(String playerName, int gameID, ComponentOrigin origin, 
-                               Coordinates coordinates, Direction orientation) {
-        super(playerName, gameID);
+    public PlaceComponentCommand(String playerName, ComponentOrigin origin,
+                                 Coordinates coordinates, Direction orientation) {
+        super(playerName);
         this.origin = origin;
         this.coordinates = coordinates;
         this.orientation = orientation;
@@ -71,5 +73,41 @@ public class PlaceComponentCommand extends Command {
      */
     public Direction getOrientation() {
         return orientation;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public PlaceComponentCommand create(String username, Map<String, String> args) throws IllegalArgumentException {
+                //TODO: ComponentOrigin origin
+                final int row, column;
+                final ComponentOrigin origin;
+                final Direction orientation;
+
+                origin = ComponentOrigin.valueOf(args.get("origin").toUpperCase());
+
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                try{
+                    column = Integer.parseInt(args.get("column"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                orientation = Direction.valueOf(args.get("orientation").toUpperCase());
+
+                return new PlaceComponentCommand(username, origin,
+                        new Coordinates(row, column), orientation);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("origin", "row", "column", "orientation");
+            }
+        };
     }
 }

@@ -3,8 +3,6 @@ package Networking.Messages;
 import Controller.Commands.LoginCommand;
 import Controller.Controller;
 import Controller.Enums.MatchLevel;
-import Controller.Exceptions.InvalidCommand;
-import Controller.Exceptions.InvalidParameters;
 import Controller.Server.Server;
 import Networking.Agent;
 import Networking.Network;
@@ -38,20 +36,8 @@ public class CreateGameMessage implements Message {
 
         final Controller game = server.createGame(this.matchLevel);
 
-        System.err.println("Enqueuing loginCommand");
+        game.enqueueCommand(new LoginCommand(username));
 
-        try{
-            game.login(username);
-
-            System.err.println("Game joined successfully. Killing ServerHandler and starting ControllerHandler");
-
-            new Handler<>(game, network).start();
-
-            throw new RuntimeException();
-        }catch (InvalidCommand | InvalidParameters _){
-        }
-
-
-
+        throw new RuntimeException("Killing ServerHandler. Hopefully controller will handle login soon...");
     }
 }

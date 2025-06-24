@@ -11,6 +11,8 @@ import Model.Ship.Coordinates;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * This state handles the forced removal of crewmates from players' ships during
  * the "Slavers" encounter, specifically for players who failed to surpass the slavers' power.
@@ -91,5 +93,9 @@ public class SlaversCrewRemovalState extends State {
                 }
             }
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem" );
     }
 }

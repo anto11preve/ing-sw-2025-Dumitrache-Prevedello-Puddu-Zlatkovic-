@@ -11,6 +11,8 @@ import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 /**
  * This state handles the battery removal process for a player attempting to boost their power
  * during the "Slavers" encounter. Players use batteries to reach or exceed the slavers' power level.
@@ -159,5 +161,9 @@ public class SlaversBatteryRemovalState extends State{
             controller.getModel().setError(false);
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem", "GetReward");
     }
 }

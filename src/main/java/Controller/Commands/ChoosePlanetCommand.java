@@ -5,6 +5,9 @@ import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Command for choosing a planet to land on during planet encounters.
  * Players select which planet they want to visit for goods.
@@ -17,11 +20,10 @@ public class ChoosePlanetCommand extends Command {
      * Constructs a new ChoosePlanetCommand.
      *
      * @param playerName the name of the player choosing the planet
-     * @param gameID the ID of the game session
      * @param planetName the name of the planet to choose
      */
-    public ChoosePlanetCommand(String playerName, int gameID, String planetName) {
-        super(playerName, gameID);
+    public ChoosePlanetCommand(String playerName, String planetName) {
+        super(playerName);
         this.planetName = planetName;
     }
     
@@ -42,5 +44,22 @@ public class ChoosePlanetCommand extends Command {
      */
     public String getPlanetName() {
         return planetName;
+    }
+
+    public static CommandConstructor getConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final String planetName;
+                planetName = args.get("planetName");
+
+                return new ChoosePlanetCommand(username, planetName);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("planetName");
+            }
+        };
     }
 }

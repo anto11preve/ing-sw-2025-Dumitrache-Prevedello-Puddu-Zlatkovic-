@@ -9,6 +9,8 @@ import Model.Player;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * Handles the reward phase after the pirate attack.
  *
@@ -96,5 +98,9 @@ public class PiratesRewardState extends State {
             controller.getModel().setState(new FlightPhase(controller));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "GetReward", "SkipReward" );
     }
 }

@@ -13,6 +13,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 
 /**
  * Represents the state where players can remove crew members from their ship
@@ -97,5 +99,10 @@ public class AbandonedShipCrewRemovalState extends State {
             controller.getModel().setState(new FlightPhase(controller));
             controller.getModel().setError(false);
         }
+    }
+
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of( "UseItem");
     }
 }

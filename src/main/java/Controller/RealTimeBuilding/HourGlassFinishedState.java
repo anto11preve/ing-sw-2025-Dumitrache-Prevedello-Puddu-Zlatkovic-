@@ -8,6 +8,7 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
 import Model.Player;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -99,5 +100,11 @@ public class HourGlassFinishedState extends State {
         }
 
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "FinishBuilding"
+        );
     }
 }

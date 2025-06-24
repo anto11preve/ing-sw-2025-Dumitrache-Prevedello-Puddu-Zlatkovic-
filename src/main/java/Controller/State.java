@@ -7,11 +7,15 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.Coordinates;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.List;
+
 //import java.util.Map;
 
-public abstract class State {
+public abstract class State implements Serializable {
 
-    private Controller controller;
+    private transient Controller controller;
 
     private Player playerInTurn;
 
@@ -21,7 +25,6 @@ public abstract class State {
 
     public State(Controller controller) {
         this.controller = controller;
-        this.playerInTurn = controller.getModel().getFlightBoard().getTurnOrder()[0];
     }
 
     public State(){};
@@ -109,8 +112,18 @@ public abstract class State {
     public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: throwDices");
     }
-
     public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
         throw new InvalidCommand("Invalid command: preBuiltShip");
     }
+
+    public boolean isDone() {
+        return false;
+    }
+
+
+    public abstract List<String> getAvailableCommands(
+
+    );
+
+
 }

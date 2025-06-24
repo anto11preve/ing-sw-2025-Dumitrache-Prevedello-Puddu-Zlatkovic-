@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Map;
 
 public class GUI extends Application implements View {
     private ViewState state = null;
@@ -39,7 +40,7 @@ public class GUI extends Application implements View {
     }
 
     @Override
-    public void showArguments(List<String> arguments){
+    public void showArguments(List<String> arguments, Map<String, String> providedArguments){
 
     }
 }

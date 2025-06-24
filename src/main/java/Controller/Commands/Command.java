@@ -6,26 +6,19 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Exceptions.InvalidMethodParameters;
 
-public abstract class Command {
-    private String PlayerName;
-    private int GameID;
+import java.io.Serializable;
 
-    public Command(String playerName, int gameID) {
+public abstract class Command implements Serializable {
+    private final String PlayerName;
+
+    public Command(String playerName) {
         PlayerName = playerName;
-        GameID = gameID;
     }
-    public String getPlayerName() {
+
+    public final String getPlayerName() {
         return PlayerName;
     }
-    public int getGameID() {
-        return GameID;
-    }
-    public void setPlayerName(String playerName) {
-        PlayerName = playerName;
-    }
-    public void setGameID(int gameID) {
-        GameID = gameID;
-    }
+
     public abstract void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction;
 
 }

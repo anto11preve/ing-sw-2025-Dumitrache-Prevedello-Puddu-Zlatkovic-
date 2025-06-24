@@ -9,6 +9,8 @@ import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Player;
 
+import java.util.List;
+
 public class CombatZone2EngineDeclarationState extends State {
     private Context context;
     private double worst;
@@ -83,5 +85,9 @@ public class CombatZone2EngineDeclarationState extends State {
             controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries, worst));
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "DeclaresDouble");
     }
 }

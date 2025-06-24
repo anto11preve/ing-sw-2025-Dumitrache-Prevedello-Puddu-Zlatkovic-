@@ -18,6 +18,8 @@ import Model.Ship.Components.BatteryCompartment;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone2ManageShotState extends State {
     private final Context context;
     private final int number;
@@ -187,5 +189,10 @@ public class CombatZone2ManageShotState extends State {
             throw new IllegalArgumentException("No shield or cannon found to use");
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "EndTurn",
+                        "UseItem");
     }
 }

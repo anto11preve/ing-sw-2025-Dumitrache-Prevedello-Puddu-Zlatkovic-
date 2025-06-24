@@ -11,6 +11,8 @@ import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 
+import java.util.List;
+
 public class CombatZone1CheckShipState extends State {
     private Context context;
 
@@ -101,4 +103,9 @@ public class CombatZone1CheckShipState extends State {
 //        }
 //
 //    }
+
+    public List<String> getAvailableCommands(){
+        return List.of( "DeleteComponent"
+        );
+    }
 }

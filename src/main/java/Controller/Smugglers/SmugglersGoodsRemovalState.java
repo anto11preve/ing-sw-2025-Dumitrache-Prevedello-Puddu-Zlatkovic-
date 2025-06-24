@@ -13,6 +13,8 @@ import Model.Ship.GoodCounter;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 
+import java.util.List;
+
 /**
  * This state manages the forced removal of goods from a player's ship during
  * the "Smugglers" event, if they failed to surpass the smugglers' power threshold.
@@ -143,5 +145,11 @@ public class SmugglersGoodsRemovalState extends State{
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context, amount));
             controller.getModel().setError(false);
         }
+    }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "MoveGood"
+        );
     }
 }

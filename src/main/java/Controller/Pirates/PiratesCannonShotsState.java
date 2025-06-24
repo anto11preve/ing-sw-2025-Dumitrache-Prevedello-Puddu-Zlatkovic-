@@ -12,6 +12,7 @@ import Model.Enums.Side;
 import Model.Player;
 import Controller.Context;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -92,5 +93,11 @@ public class PiratesCannonShotsState extends State{
             controller.getModel().setError(false);
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "ThrowDices"
+        );
     }
 }

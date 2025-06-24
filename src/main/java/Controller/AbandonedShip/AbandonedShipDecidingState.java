@@ -10,6 +10,8 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * Represents the state where players decide whether to accept or skip the reward
  * from encountering an abandoned ship during the flight phase.
@@ -100,5 +102,13 @@ public class AbandonedShipDecidingState extends State {
 
         controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
         controller.getModel().setError(false);
+    }
+
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "SkipReward",
+            "GetReward"
+        );
     }
 }

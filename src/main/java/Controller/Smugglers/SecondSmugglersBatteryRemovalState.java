@@ -12,6 +12,8 @@ import Model.Ship.Coordinates;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.List;
+
 /**
  * This state manages the penalty phase for players who failed to match the smugglers' power
  * and also lack sufficient goods to discard. These players must now discard a number of batteries instead.
@@ -88,5 +90,11 @@ public class SecondSmugglersBatteryRemovalState extends State{
             controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
             controller.getModel().setError(false);
         }
+    }
+    @Override
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "UseItem"
+        );
     }
 }

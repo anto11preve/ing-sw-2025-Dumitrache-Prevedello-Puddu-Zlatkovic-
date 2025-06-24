@@ -12,6 +12,8 @@ import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
 
+import java.util.List;
+
 /**
  * Represents the state where a player declares how much cannon power
  * (converted from batteries) they want to use to face the pirates.
@@ -133,5 +135,11 @@ public class PiratesPowerDeclarationState extends State {
             controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
             controller.getModel().setError(false);
         }
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "DeclaresDouble"
+        );
     }
 }

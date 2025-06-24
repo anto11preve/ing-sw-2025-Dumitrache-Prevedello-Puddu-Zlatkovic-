@@ -12,6 +12,7 @@ import Model.Board.AdventureCards.Projectiles.Projectile;
 import Model.Enums.Side;
 import Model.Player;
 
+import java.util.List;
 import java.util.Random;
 
 public class CombatZone1CannonShotsState extends State {
@@ -68,5 +69,11 @@ public class CombatZone1CannonShotsState extends State {
             controller.getModel().setError(false);
         }
 
+    }
+
+    public List<String> getAvailableCommands(){
+        return List.of(
+            "ThrowDices"
+        );
     }
 }
