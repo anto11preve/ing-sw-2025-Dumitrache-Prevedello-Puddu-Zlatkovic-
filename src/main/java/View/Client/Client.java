@@ -8,9 +8,10 @@ import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
 import View.Client.States.ProtocolChoiceState;
 import View.GUI;
-import View.States.ChooseActionState;
-import View.States.ActionCreationState;
-import View.States.StopState;
+import View.States.MenuStates.ChooseActionState;
+import View.States.MenuStates.ActionCreationState;
+import View.States.MenuStates.StopState;
+import View.States.ViewNothingState;
 import View.TUI;
 import View.View;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class Client implements Agent {
     public static Client client;
-    private final View view;
+    public static View view;
     private ClientState state;
 
     public static void main(String[] args) {
@@ -30,21 +31,23 @@ public class Client implements Agent {
 
         final String port = Utils.getOption("--port", args);
 
-        client = new Client((useGui) ? new GUI() : new TUI(), hostname, port);
+        view = (useGui) ? new GUI() : new TUI();
+        client = new Client(hostname, port);
 
         client.run();
     }
 
-    private Client(final View view, final String hostname, final String port) {
+    private Client(final String hostname, final String port) {
         /*TODO: make the arguments not be ignored*/
-        this.view = view;
         this.state = new ProtocolChoiceState();
     }
 
     @Override
     public void run() {
-        this.view.setState(new ChooseActionState());
+        view.setState(new ViewNothingState());
+        view.setMenuState(new ChooseActionState());
         view.run();
+        view.repaint();
     }
 
     public ClientState getState() {
@@ -55,22 +58,17 @@ public class Client implements Agent {
         this.state = action.execute(this.state);
 
         if(this.state.isDone()){
-            this.view.setState(new StopState());
-        }else {
-            this.view.setState(new ChooseActionState());
+            view.setMenuState(new StopState());
+        } else if (!action.isVisualize()) {
+            /*If the action is just a visualization action,
+             there is no need to change the menu*/
+            view.setMenuState(new ChooseActionState());
+            view.repaint();
         }
     }
 
-    public void showOptions(String prompt, List<String> options){
-        view.showOptions(prompt, options);
-    }
-
-    public void showArguments(List<String> arguments, Map<String, String> providedArguments){
-        view.showArguments(arguments, providedArguments);
-    }
-
     public void createAction(String action, String[] args){
-        ActionConstructor actionConstructor = ActionConstructor.actionConstructors.get(action);
+        ActionConstructor actionConstructor = ActionConstructor.getActionConstructors().get(action);
 
         //the command is not part of the available commands
         if(actionConstructor == null) {
@@ -111,11 +109,18 @@ public class Client implements Agent {
 
         //the arguments provided are enough
         if(args.length >= actionConstructor.getArguments().size()){
-            this.execute(actionConstructor.create(providedArguments));
+            Action _action;
+            try{
+                _action = actionConstructor.create(providedArguments);
+            } catch(IllegalArgumentException e){
+                _action = state -> state;
+            }
+
+            this.execute(_action);
             return;
         }
 
         //the command needs to be created with arguments
-        this.view.setState(new ActionCreationState(actionConstructor, providedArguments));
+        view.setMenuState(new ActionCreationState(actionConstructor, providedArguments));
     }
 }

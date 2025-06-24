@@ -21,15 +21,15 @@ public class CreateGameAction implements Action {
     static public ActionConstructor getConstructor() {
         return new ActionConstructor() {
             @Override
-            public Action create(Map<String, String> args) throws IllegalArgumentException {
-                final MatchLevel matchLevel = MatchLevel.valueOf(args.get("matchLevel").toUpperCase());
+            public CreateGameAction create(Map<String, String> args) throws IllegalArgumentException {
+                final MatchLevel matchLevel = MatchLevel.valueOf(args.get("MatchLevel").toUpperCase());
 
                 return new CreateGameAction(matchLevel);
             }
 
             @Override
             public List<String> getArguments() {
-                return List.of("matchLevel");
+                return List.of("MatchLevel");
             }
         };
     }

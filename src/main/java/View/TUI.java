@@ -1,25 +1,12 @@
 package View;
 
-import View.States.ViewState;
-
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class TUI implements View {
-    private ViewState state;
+public final class TUI extends View {
     private final Console console = System.console();
-
-    @Override
-    public synchronized void setState(ViewState state) {
-        this.state = state;
-    }
-
-    @Override
-    public synchronized ViewState getState() {
-        return this.state;
-    }
 
     @Override
     public void log(String message) {
@@ -49,9 +36,9 @@ public final class TUI implements View {
     public void run() {
         new Thread(() -> {
             String line;
-            while (!TUI.this.getState().isDone()){
+            while (!TUI.this.getMenuState().isDone()){
                 line = console.readLine();
-                TUI.this.getState().callback(line);
+                TUI.this.getMenuState().callback(line);
             }
         }).start();
 

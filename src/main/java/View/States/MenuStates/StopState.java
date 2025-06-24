@@ -1,9 +1,13 @@
-package View.States;
+package View.States.MenuStates;
 
-public class StopState implements ViewState {
+public class StopState implements MenuState {
     @Override
     public boolean isDone(){
         return true;
+    }
+
+    @Override
+    public void paint() {
     }
 
     @Override

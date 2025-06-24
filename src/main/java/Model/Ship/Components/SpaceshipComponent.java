@@ -6,18 +6,20 @@ import Model.Enums.Direction;
 import Model.Enums.Side;
 import Model.Ship.ShipBoard;
 
+import java.io.Serializable;
+
 /**
  * Abstract class representing a spaceship component.
  * Handles rotation, connectors, and association with the shipboard.
  */
-public abstract class SpaceshipComponent {
+public abstract class SpaceshipComponent implements Serializable {
     private final Card type;
     private ConnectorType frontConnector;
     private ConnectorType rearConnector;
     private ConnectorType leftConnector;
     private ConnectorType rightConnector;
     protected Direction orientation; // UP = standard, RIGHT = 90°, DOWN = 180°, LEFT = 270°
-    private ShipBoard shipBoard;
+    private transient ShipBoard shipBoard;
     private boolean isVisible;
     private String imagePath;
     private final String backCardImagePath = "src/main/resources/pics/tiles/0.png";

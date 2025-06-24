@@ -11,7 +11,7 @@ import Model.Ship.ShipBoard;
 import java.io.Serializable;
 
 // Classe principale del giocatore
-public class Player implements Serializable {
+public final class Player implements Serializable {
     private final String name;
     private transient ShipBoard shipBoard;
     private int credits;

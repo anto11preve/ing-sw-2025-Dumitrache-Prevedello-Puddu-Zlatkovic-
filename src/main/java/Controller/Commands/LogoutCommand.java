@@ -31,7 +31,7 @@ public class LogoutCommand extends Command {
      */
     @Override
     public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
-
+        controller.setQueuedAction(state -> state.net_Leave(LogoutCommand.this.getPlayerName()));
         controller.logout(getPlayerName());
     }
 

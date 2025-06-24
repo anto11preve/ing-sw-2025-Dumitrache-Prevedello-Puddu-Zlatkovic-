@@ -12,6 +12,6 @@ public class JoinSuccessAction implements Action {
 
     @Override
     public ClientState execute(ClientState state) {
-        return state.joinSuccess(game);
+        return state.net_JoinSuccess(game);
     }
 }
