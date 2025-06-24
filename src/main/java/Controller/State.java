@@ -112,13 +112,18 @@ public abstract class State implements Serializable {
     public void throwDices(String playerName) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
         throw new InvalidCommand("Invalid command: throwDices");
     }
+    public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
+        throw new InvalidCommand("Invalid command: preBuiltShip");
+    }
 
     public boolean isDone() {
         return false;
     }
 
-    /*TODO: implement this for all states*/
+
     public abstract List<String> getAvailableCommands(
 
     );
+
+
 }
