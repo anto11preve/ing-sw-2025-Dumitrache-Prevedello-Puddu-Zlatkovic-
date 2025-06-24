@@ -102,7 +102,9 @@ public class Controller implements Agent {
     public void placeCrew(String name, Coordinates coordinates, CrewType type) throws InvalidCommand, InvalidParameters {
         model.getState().placeCrew(name, coordinates, type);
     }
-
+    public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
+        model.getState().preBuiltShip(name, index);
+    }
     // Adventure Card resolution
     public void pickNextCard(String name) throws InvalidCommand, InvalidParameters, InvalidContextualAction, InvalidMethodParameters {
         model.getState().pickNextCard(name);

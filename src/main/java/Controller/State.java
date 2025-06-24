@@ -110,4 +110,7 @@ public abstract class State {
         throw new InvalidCommand("Invalid command: throwDices");
     }
 
+    public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
+        throw new InvalidCommand("Invalid command: preBuiltShip");
+    }
 }
