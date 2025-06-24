@@ -75,7 +75,7 @@ public class Controller implements Agent {
     public void login(String name) throws InvalidCommand, InvalidParameters {
         model.getState().login(name);
     }
-    public void logout(String name) throws InvalidCommand, InvalidParameters {
+    public void logout(String name) throws InvalidCommand, InvalidParameters, InvalidMethodParameters {
         model.getState().logout(name);
     }
     public void startGame(String name) throws InvalidCommand, InvalidParameters {

@@ -21,7 +21,7 @@ public class FlightPhase extends State {
     @Override
     public void onEnter() {
         for(Player p: this.getController().getModel().getFlightBoard().getTurnOrder()){
-            if(p.getShipBoard().getCondensedShip().getTotalCrew() == 0){
+            if(p.getShipBoard().getCondensedShip().getTotalHumans() == 0 || getController().getModel().getFlightBoard().getDubbedPlayers().contains(p)){
                 this.getController().getModel().getFlightBoard().removePlayingPlayer(p);
             }
 

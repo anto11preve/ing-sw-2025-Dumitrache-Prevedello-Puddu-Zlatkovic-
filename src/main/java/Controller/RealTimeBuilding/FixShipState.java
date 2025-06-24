@@ -69,7 +69,6 @@ import java.util.Map;
         Game model= this.getController().getModel();
         FlightBoard flightBoard= model.getFlightBoard();
 
-        flightBoard.setUpcomingCardDeck();
 
 
 

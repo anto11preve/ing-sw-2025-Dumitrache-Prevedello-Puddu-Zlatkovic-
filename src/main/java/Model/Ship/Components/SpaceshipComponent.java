@@ -192,8 +192,8 @@ public abstract class SpaceshipComponent {
         return null;
     }
 
-    public void renderBig(){
-
+    public String[] renderBig(){
+        return null;
     }
 
 

@@ -114,4 +114,36 @@ public class AlienLifeSupport extends SpaceshipComponent {
         righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
         return righe;
     }
+
+    public String[] renderBig() {
+        String[] righe = new String[5];
+
+        // Riga superiore
+        righe[0] = String.format("╔══  %s  ══╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
+
+        if (color == AlienColor.BROWN) {
+            righe[1] = "║  ALSBR  ║";
+        } else {
+            righe[1] = "║  ALSPU  ║";
+        }
+
+        righe[2] = String.format("%s%s%s",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    " + this.getOrientation().getFreccia(),
+                "    " + (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        );
+
+        righe[3] = "║         ║";
+
+        // Riga inferiore
+        righe[4] = String.format("╚══  %s  ══╝",
+                this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
+
+        return righe;
+    }
 }

@@ -109,8 +109,10 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Component not found");
             }
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
-            model.addComponent(oldTile);
-            currentPlayer.getShipBoard().setActiveComponent(selectedTile);
+            if (oldTile!=null) {
+                model.addComponent(oldTile);
+                currentPlayer.getShipBoard().setActiveComponent(selectedTile);
+            }
         }
 
 
@@ -307,9 +309,10 @@ public class BuildingState extends State {
             }
 
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
-            model.addComponent(oldTile);
-            currentPlayer.getShipBoard().setActiveComponent(null);
-
+            if (oldTile != null) {
+                model.addComponent(oldTile);
+                currentPlayer.getShipBoard().setActiveComponent(null);
+            }
 
 
             //manca l'implementazione
@@ -412,9 +415,10 @@ public class BuildingState extends State {
             }
 
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
-            model.addComponent(oldTile);
-            currentPlayer.getShipBoard().setActiveComponent(null);
-
+            if (oldTile != null) {
+                model.addComponent(oldTile);
+                currentPlayer.getShipBoard().setActiveComponent(null);
+            }
 
 
             int penalty=currentPlayer.getShipBoard().getReservedComponents().size();
@@ -430,7 +434,7 @@ public class BuildingState extends State {
                 if (matchLevel == MatchLevel.TRIAL) {
                     //if it's a trial game set at frist PlaceAlienState that will populate cabins autonomously
                     // then, skip FixShipState, since in Trial mode you cannot finish building unless your ship is valid.
-                    this.getController().getModel().setState(new PlaceAlienState(this.getController()));
+                    State state=new PlaceAlienState(this.getController());
                     this.getController().getModel().setState(new FlightPhase(this.getController()));
                 } else {
                     //if it's a level2 game, set FixShipState that will allow players to fix their ships

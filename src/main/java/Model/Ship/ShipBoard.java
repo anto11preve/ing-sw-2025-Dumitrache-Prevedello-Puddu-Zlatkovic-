@@ -945,7 +945,7 @@ public class ShipBoard {
             // Caselle extra (sempre vuote per ora)
             String[] casellaA = null, casellaB = null, casellaC = null;
             if (i == 0) { // prima riga - casella A
-                casellaA = renderEmpty();
+                casellaA = activeComponent.renderSmall();
             }
             if (i == 1) { // seconda riga - caselle B e C
                 if(!reservedComponents.isEmpty()) {

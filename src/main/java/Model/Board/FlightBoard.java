@@ -222,9 +222,11 @@ public class FlightBoard {
         List<AdventureCardFilip> cards = new ArrayList<>();
         upcomingCardDeck = new CardDeck();
         // Aggiungi le carte dei peekableCardDecks
-        for (CardDeck deck : peekableCardDecks) {
-            while (!deck.peekCards().isEmpty()) {
-                upcomingCardDeck.pushCard(deck.popCard());
+        if (cellNumber!=18) {
+            for (CardDeck deck : peekableCardDecks) {
+                while (!deck.peekCards().isEmpty()) {
+                    upcomingCardDeck.pushCard(deck.popCard());
+                }
             }
         }
 
@@ -414,6 +416,36 @@ public class FlightBoard {
 
     public List<Player> getFinishedFlightPlayers() {
         return ffPlayers;
+    }
+
+    public void visualize() {
+        Player[] turnOrder = getTurnOrder();
+
+        // Print table header
+        System.out.println("┌───────────────────────────────────────────────────┐");
+        System.out.println("│                 FLIGHT BOARD STATUS               │");
+        System.out.println("├───────────────────────────────────────────────────┤");
+        System.out.printf("│ %-3s │ %-25s │ %-15s │%n", "Pos", "Player Name", "Credits");
+        System.out.println("├─────┼───────────────────────────┼─────────────────┤");
+
+        // Print each player's information in turn order
+        for (int i = 0; i < turnOrder.length; i++) {
+            Player player = turnOrder[i];
+            String playerName = player.getName();
+            int credits = player.getCredits();
+
+            // Truncate player name if it's too long to fit in the table
+            if (playerName.length() > 25) {
+                playerName = playerName.substring(0, 22) + "...";
+            }
+
+            System.out.printf("│ %-3d │ %-25s │ %-15d │%n", (i + 1), playerName, credits);
+        }
+
+        // Print table footer
+        System.out.println("└─────┴───────────────────────────┴─────────────────┘");
+        System.out.println("Turn Order: 1st = " + turnOrder[0].getName() +
+                " | Last = " + turnOrder[turnOrder.length - 1].getName());
     }
 
 

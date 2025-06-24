@@ -111,27 +111,35 @@ public class Cannon extends SpaceshipComponent {
         return righe;
     }
 
-    public void renderBig() {
+    public String[] renderBig() {
+        String[] righe = new String[5];
+
         // Riga superiore
-        System.out.printf("╔══  %s  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
+        righe[0] = String.format("╔══  %s  ══╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        System.out.print("║  CANON  ║\n");
+        righe[1] = "║  CANON  ║";
 
-        System.out.printf("%s%s%s\n",
-                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
-                "    "+
-                        (this.getOrientation().getFreccia()),
-                "    "+
-                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        righe[2] = String.format("%s%s%s",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    " + this.getOrientation().getFreccia(),
+                "    " + (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
         if (!this.isDouble) {
-            System.out.print("║  SINGL  ║\n");
+            righe[3] = "║  SINGL  ║";
         } else {
-            System.out.print("║  DOUBL  ║\n");
+            righe[3] = "║  DOUBL  ║";
         }
 
         // Riga inferiore
-        System.out.printf("╚══  %s  ══╝\n", this.getConnectorAt(Side.REAR).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
+        righe[4] = String.format("╚══  %s  ══╝",
+                this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
+
+        return righe;
     }
 }

@@ -166,42 +166,49 @@ public class Cabin extends SpaceshipComponent {
         return righe;
     }
 
-    public void renderBig() {
+    public String[] renderBig() {
+        String[] righe = new String[5];
+
         // Riga superiore
-        System.out.printf("╔══  %s  ══╗\n", this.getConnectorAt(Side.FRONT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
+        righe[0] = String.format("╔══  %s  ══╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        System.out.print("║  CABIN  ║\n");
+        righe[1] = "║  CABIN  ║";
 
-        System.out.printf("%s%s%s\n",
-                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
-                "    "+
-                        (this.getOrientation().getFreccia()),
-                        "    "+
-                        (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
+        righe[2] = String.format("%s%s%s",
+                (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
+                "    " + this.getOrientation().getFreccia(),
+                "    " + (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-
-        switch (this.getOccupants()){
+        switch (this.getOccupants()) {
             case EMPTY:
-                System.out.println("║         ║\n");
+                righe[3] = "║         ║";
                 break;
             case BROWN_ALIEN:
-                System.out.println("║  BROWN  ║\n");
+                righe[3] = "║  BROWN  ║";
                 break;
             case PURPLE_ALIEN:
-                System.out.println("║ PURPLE  ║\n");
+                righe[3] = "║ PURPLE  ║";
                 break;
             case SINGLE_HUMAN:
-                System.out.println("║  1 HUM  ║\n");
+                righe[3] = "║  1 HUM  ║";
                 break;
             case DOUBLE_HUMAN:
-                System.out.println("║  2 HUM  ║\n");
+                righe[3] = "║  2 HUM  ║";
                 break;
             default:
-                System.out.println("║   ?    ║\n"); // Fallback case, should not happen
+                righe[3] = "║   ?     ║"; // Fallback case, should not happen
         }
 
         // Riga inferiore
-        System.out.printf("╚══  %s  ══╝\n", this.getConnectorAt(Side.REAR).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
+        righe[4] = String.format("╚══  %s  ══╝",
+                this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
+
+        return righe;
     }
 }

@@ -6,7 +6,9 @@ import Controller.Enums.MatchLevel;
 import Controller.Exceptions.*;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
+import Model.Board.FlightBoard;
 import Model.Enums.Crewmates;
+import Model.Game;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
@@ -108,7 +110,13 @@ import java.util.Map;
      */
     public PlaceAlienState(Controller controller) {
         super(controller);
-        List<Player> players = controller.getModel().getPlayers();
+
+        Game model= this.getController().getModel();
+        FlightBoard flightBoard= model.getFlightBoard();
+
+        flightBoard.setUpcomingCardDeck();
+
+        List<Player> players = model.getPlayers();
         MatchLevel matchLevel = controller.getMatchLevel();
         for (Player player : players) {
             CondensedShip condensedShip = player.getShipBoard().getCondensedShip();
@@ -117,7 +125,7 @@ import java.util.Map;
 
                 //Since the central cabin can only contain humans, we need to set it to cannot contain purple or brown aliens
                 SpaceshipComponent centralTile = player.getShipBoard().getComponent(new Coordinates(7,7));
-                if((centralTile != null) && !condensedShip.getCabins().contains(centralTile)) {
+                if((centralTile != null) && condensedShip.getCabins().contains(centralTile)) {
                     Cabin centralCabin = (Cabin) centralTile;
                     centralCabin.setCanContainPurple(0);
                     centralCabin.setCanContainBrown(0);
@@ -224,6 +232,24 @@ import java.util.Map;
         if (!canInsertAliens.getCanInstertBrown() && !canInsertAliens.getCanInsertPurple()) {
             playersAlienAvailability.remove(currentPlayer);
             fillCabinsWithHumans(shipBoard.getCondensedShip());
+            shipBoard.setValid(true);
+        }
+
+        //If a Player have placed all crew
+        boolean havePlacedAllCrew = true;
+        List<Cabin> allCabins = shipBoard.getCondensedShip().getCabins();
+        int length=allCabins.size();
+
+        for(int i=0;(i<length)&&havePlacedAllCrew;i++){
+            Cabin currentCabin = allCabins.get(i);
+            if (currentCabin.getOccupants() == Crewmates.EMPTY) {
+                havePlacedAllCrew = false;
+            }
+
+        }
+
+        if(havePlacedAllCrew){
+            playersAlienAvailability.remove(currentPlayer);
             shipBoard.setValid(true);
         }
 

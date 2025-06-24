@@ -56,7 +56,7 @@ public class GetComponentCommand extends Command {
                     throw new IllegalArgumentException("Could not parse the index. Did you provide an Integer?");
                 }
 
-                return new FinishBuildingCommand(username, index);
+                return new GetComponentCommand(username, index);
             }
 
             @Override

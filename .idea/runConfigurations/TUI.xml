@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TUI" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="View.Client.Client" />
-    <module name="GC06" />
+    <module name="Ing_SW_Project" />
     <option name="PROGRAM_PARAMETERS" value="--nogui" />
     <extension name="coverage">
       <pattern>
