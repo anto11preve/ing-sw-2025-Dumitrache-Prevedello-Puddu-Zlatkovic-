@@ -106,8 +106,8 @@ public class TestStateManager {
     private static GameSnapshot createLobbyWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 2);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
+            controller.login("Anna");
+            controller.login("Bob");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
@@ -117,10 +117,10 @@ public class TestStateManager {
     private static GameSnapshot createLobbyWith4PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 3);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.login("Player3");
-            controller.login("Player4");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.login("Carl");
+            controller.login("Diana");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
@@ -130,9 +130,9 @@ public class TestStateManager {
     private static GameSnapshot createBuildingWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 4);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.startGame("Player1");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
@@ -142,9 +142,9 @@ public class TestStateManager {
     private static GameSnapshot createBuildingWith2PlayersLevel2() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 4);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.startGame("Player1");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
@@ -156,7 +156,7 @@ public class TestStateManager {
         try {
             controller.login("Anna");
             controller.login("Bob");
-            controller.startGame("Carl");
+            controller.login("Carl");
             controller.startGame("Anna");
             controller.preBuiltShip("Anna", 0);
             controller.preBuiltShip("Bob", 1);
@@ -215,8 +215,8 @@ public class TestStateManager {
         GameSnapshot snapshot = finishedBuildingAllValid(level);
         Controller controller = snapshot.getController();
         try {
-            controller.finishBuilding("Anna", 0);
-            controller.finishBuilding("Bob", 1);
+            controller.finishBuilding("Anna", 1);
+            controller.finishBuilding("Bob", 2);
         } catch (InvalidCommand | InvalidParameters e) {
             throw new RuntimeException("Failed to start flight phase", e);
         }

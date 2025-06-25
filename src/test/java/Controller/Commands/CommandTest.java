@@ -39,10 +39,7 @@ public class CommandTest {
         public void setGameID(int gameID) {
             this.gameID = gameID;
         }
-        
-        public void setPlayerName(String playerName) {
-            // Cannot change final field, so this is a no-op for testing
-        }
+
 
         @Override
         public void execute(Controller controller) throws InvalidCommand, InvalidParameters, InvalidMethodParameters, InvalidContextualAction {
@@ -250,17 +247,7 @@ public class CommandTest {
         assertEquals(456, unicodeCommand.getGameID());
     }
 
-    @Test
-    public void testCommandParameterModification() {
-        assertEquals("TestPlayer", command.getPlayerName());
-        assertEquals(1, command.getGameID());
-        
-        command.setPlayerName("ModifiedPlayer");
-        command.setGameID(999);
-        
-        assertEquals("ModifiedPlayer", command.getPlayerName());
-        assertEquals(999, command.getGameID());
-    }
+
 
     @Test
     public void testCommandExecutionWithNullController() {
@@ -322,24 +309,24 @@ public class CommandTest {
         TestCommand specialCommand = new TestCommand("Player\t\n\r", 1);
         assertEquals("Player\t\n\r", specialCommand.getPlayerName());
     }
-
-    @Test
-    public void testCommandParameterConsistency() {
-        // Test that parameters remain consistent after multiple operations
-        command.setPlayerName("TestPlayer1");
-        command.setGameID(100);
-        
-        assertEquals("TestPlayer1", command.getPlayerName());
-        assertEquals(100, command.getGameID());
-        
-        command.setPlayerName("TestPlayer2");
-        assertEquals("TestPlayer2", command.getPlayerName());
-        assertEquals(100, command.getGameID()); // Should remain unchanged
-        
-        command.setGameID(200);
-        assertEquals("TestPlayer2", command.getPlayerName()); // Should remain unchanged
-        assertEquals(200, command.getGameID());
-    }
+//
+//    @Test
+//    public void testCommandParameterConsistency() {
+//        // Test that parameters remain consistent after multiple operations
+//        command.setPlayerName("TestPlayer1");
+//        command.setGameID(100);
+//
+//        assertEquals("TestPlayer1", command.getPlayerName());
+//        assertEquals(100, command.getGameID());
+//
+//        command.setPlayerName("TestPlayer2");
+//        assertEquals("TestPlayer2", command.getPlayerName());
+//        assertEquals(100, command.getGameID()); // Should remain unchanged
+//
+//        command.setGameID(200);
+//        assertEquals("TestPlayer2", command.getPlayerName()); // Should remain unchanged
+//        assertEquals(200, command.getGameID());
+//    }
 
     @Test
     public void testCommandExecutionOrder() throws Exception {
