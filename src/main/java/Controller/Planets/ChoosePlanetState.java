@@ -22,10 +22,6 @@ import java.util.List;
  */
 public class ChoosePlanetState extends State {
     /**
-     * The context of the game, which contains information about the current state and players.
-     */
-    Context context;
-    /**
      * The list of planets that have been chosen by players.
      */
     List<Planet> chosenPlanets;

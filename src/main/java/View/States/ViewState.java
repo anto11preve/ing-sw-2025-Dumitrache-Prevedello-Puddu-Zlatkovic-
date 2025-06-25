@@ -9,6 +9,10 @@ public interface ViewState {
         throw new UnsupportedOperationException("Cannot invoke viewComponent on " + this.getClass().getSimpleName());
     }
 
+    default ViewState backToShip() {
+        throw new UnsupportedOperationException("Cannot invoke backToShip on " + this.getClass().getSimpleName());
+    }
+
     default List<String> getAvailableVisualizers() {
         return List.of();
     }
