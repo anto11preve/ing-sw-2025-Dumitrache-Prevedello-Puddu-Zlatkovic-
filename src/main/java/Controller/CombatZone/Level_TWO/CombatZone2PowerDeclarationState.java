@@ -92,11 +92,43 @@ public class CombatZone2PowerDeclarationState extends State {
             throw new InvalidParameters("Not enough batteries to declare this amount");
         }
         if(worst < 0){
-            controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0));
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                context.addSpecialPlayer(player);
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().getFlightBoard().deltaFlightDays(context.getSpecialPlayers().getFirst(), -context.getDaysLost());
+                    controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone2PowerDeclarationState(context));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0));
+                controller.getModel().setError(false);
+            }
+
         } else {
-            controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0, worst));
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                if(amount > worst){
+                    context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    context.addSpecialPlayer(player);
+                    worst = amount;
+                }
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().getFlightBoard().deltaFlightDays(context.getSpecialPlayers().getFirst(), -context.getDaysLost());
+                    controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone2PowerDeclarationState(context));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0, worst));
+                controller.getModel().setError(false);
+            }
+
         }
     }
 

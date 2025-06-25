@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+interface NostroRunnable extends Runnable, Serializable{
+
+}
+
 public class Context implements Serializable {
     private transient Controller controller;
     private transient List<Player> players;
@@ -29,7 +33,7 @@ public class Context implements Serializable {
     private int credits;
     private int daysLost;
     private int diceNumber;
-    private transient Runnable visual;
+    private NostroRunnable visual;
 
 
     public Context(Controller controller) {

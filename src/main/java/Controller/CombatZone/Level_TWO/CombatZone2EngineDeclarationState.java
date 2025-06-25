@@ -1,5 +1,8 @@
 package Controller.CombatZone.Level_TWO;
 
+import Controller.CombatZone.Level_ONE.CombatZone1CrewRemovalState;
+import Controller.CombatZone.Level_ONE.CombatZone1EngineDeclarationState;
+import Controller.CombatZone.Level_ONE.CombatZone1_E_BatteryRemovalState;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.DoubleType;
@@ -79,11 +82,40 @@ public class CombatZone2EngineDeclarationState extends State {
         }
 
         if(worst < 0){
-            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries));
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                context.addSpecialPlayer(player);
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().setState(new CombatZone2GoodsRemovalState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone2EngineDeclarationState(context, worst));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries));
+                controller.getModel().setError(false);
+            }
         } else {
-            controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries, worst));
-            controller.getModel().setError(false);
+            if (amount == player.getShipBoard().getCondensedShip().getBaseThrust()) {
+                if(amount > worst){
+                    context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    context.addSpecialPlayer(player);
+                    worst = amount;
+                }
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().setState(new CombatZone2GoodsRemovalState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone2EngineDeclarationState(context, worst));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone2_E_BatteryRemovalState(context, amount, batteries, worst));
+                controller.getModel().setError(false);
+            }
+
         }
     }
 

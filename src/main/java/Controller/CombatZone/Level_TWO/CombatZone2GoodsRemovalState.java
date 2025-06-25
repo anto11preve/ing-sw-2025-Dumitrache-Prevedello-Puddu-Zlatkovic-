@@ -18,8 +18,6 @@ import java.util.List;
 
 public class CombatZone2GoodsRemovalState extends State {
 
-   
-
     private GoodCounter goodCounter;
 
     private int amount;
@@ -28,13 +26,13 @@ public class CombatZone2GoodsRemovalState extends State {
     public CombatZone2GoodsRemovalState(Context context) {
         super(context);
         this.amount = context.getRequiredGoods();
-        this.setPlayerInTurn(context.getPlayers().getFirst());
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     public CombatZone2GoodsRemovalState(Context context, int amount) {
         super(context);
         this.amount = amount;
-        this.setPlayerInTurn(context.getPlayers().getFirst());
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
 
@@ -43,7 +41,7 @@ public class CombatZone2GoodsRemovalState extends State {
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not your turn");
         }

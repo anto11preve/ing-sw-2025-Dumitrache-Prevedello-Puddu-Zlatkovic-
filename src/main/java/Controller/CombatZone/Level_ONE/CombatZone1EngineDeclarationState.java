@@ -13,7 +13,7 @@ import Model.Player;
 import java.util.List;
 
 public class CombatZone1EngineDeclarationState extends State {
-    private final double worst;
+    private double worst;
 
     public CombatZone1EngineDeclarationState(Context context) {
         super(context);
@@ -87,12 +87,43 @@ public class CombatZone1EngineDeclarationState extends State {
             throw new InvalidParameters("Not enough double engines to declare this amount");
         }
 
+
+
         if(worst < 0){
-            controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries));
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                context.addSpecialPlayer(player);
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().setState(new CombatZone1CrewRemovalState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone1EngineDeclarationState(context, worst));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries));
+                controller.getModel().setError(false);
+            }
         } else {
-            controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries, worst));
-            controller.getModel().setError(false);
+            if (amount == player.getShipBoard().getCondensedShip().getBaseThrust()) {
+                if(amount > worst){
+                    context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    context.addSpecialPlayer(player);
+                    worst = amount;
+                }
+                context.removePlayer(player);
+                if(context.getPlayers().isEmpty()){
+                    controller.getModel().setState(new CombatZone1CrewRemovalState(context));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone1EngineDeclarationState(context, worst));
+                    controller.getModel().setError(false);
+                }
+            } else {
+                controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries, worst));
+                controller.getModel().setError(false);
+            }
+
         }
     }
 

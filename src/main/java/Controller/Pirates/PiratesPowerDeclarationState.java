@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Controller.Slavers.SlaversCrewRemovalState;
 import Controller.Slavers.SlaversPowerDeclarationState;
@@ -26,7 +27,7 @@ public class PiratesPowerDeclarationState extends State {
     /**
      * The context in which this state operates, providing access to the game controller.
      */
-    Context context;
+
 
     /**
      * Constructs a PiratesPowerDeclarationState with the specified context.
@@ -131,9 +132,44 @@ public class PiratesPowerDeclarationState extends State {
                 controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
                 controller.getModel().setError(false);
             }
-        } else {    //se non perdi
-            controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
-            controller.getModel().setError(false);
+        } else { //se non perdi
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                if(amount > context.getPower()){
+                    controller.getModel().setState(new PiratesRewardState(context));
+                    controller.getModel().setError(false);
+                } else if(amount == context.getPower()){
+                    context.removePlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        if (!context.getSpecialPlayers().isEmpty()) {
+                            controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
+                            controller.getModel().setError(false);
+                        } else {
+                            controller.getModel().setState(new FlightPhase(controller));
+                            controller.getModel().setError(false);
+                        }
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+                else{
+                    context.removePlayer(player);
+                    context.addSpecialPlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+            } else {
+                controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
+                controller.getModel().setError(false);
+            }
+
         }
     }
 

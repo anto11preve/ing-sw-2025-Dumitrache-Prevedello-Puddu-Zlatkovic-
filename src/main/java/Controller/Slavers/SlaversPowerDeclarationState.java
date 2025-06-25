@@ -20,7 +20,7 @@ public class SlaversPowerDeclarationState extends State {
     /**
      * Context object that holds the game state and player information.
      */
-    Context context;
+
 
     /**
      * Constructor to initialize the state with the current game context.
@@ -130,8 +130,37 @@ public class SlaversPowerDeclarationState extends State {
                 controller.getModel().setError(false);
             }
         }else{
-            controller.getModel().setState(new SlaversBatteryRemovalState(context, amount, batteries)); //usa batterie
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                if(amount > context.getPower()){
+                    controller.getModel().setState(new SlaversRewardsState(context));
+                } else if(amount == context.getPower()){
+                    context.removePlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+                else{
+                    context.removePlayer(player);
+                    context.addSpecialPlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+            } else {
+                controller.getModel().setState(new SlaversBatteryRemovalState(context, amount, batteries)); //usa batterie
+                controller.getModel().setError(false);
+            }
+
         }
     }
 

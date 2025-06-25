@@ -57,7 +57,7 @@ public abstract class SpaceshipComponent implements Serializable {
 
     public void visualize(){
         System.out.println("==========================");
-        System.out.println("Visualizing component: " + type);
+        System.out.println("Visualizing component: " + this.getClass().getSimpleName());
         System.out.println("Image Path: " + imagePath);
         System.out.println("Front Connector: " + frontConnector);
         System.out.println("Rear Connector: " + rearConnector);

@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Player;
 
@@ -113,10 +114,22 @@ public class OpenSpaceEngineDeclarationState extends State {
             throw new InvalidParameters("Not enough batteries to declare this amount");
         }
 
+        if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+            context.removePlayer(player);
+            if(context.getPlayers().isEmpty()){         //passati tutti
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            }
+            else{       //manca qualcuno da gestire
+                controller.getModel().setState(new OpenSpaceEngineDeclarationState(context));
+                controller.getModel().setError(false);
+            }
 
+        } else {
+            controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount, batteries));
+            controller.getModel().setError(false);
+        }
 
-        controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, amount, batteries));
-        controller.getModel().setError(false);
     }
 
     public List<String> getAvailableCommands(){

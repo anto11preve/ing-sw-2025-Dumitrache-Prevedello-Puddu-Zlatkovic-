@@ -17,10 +17,7 @@ import java.util.List;
  * they intend to use to surpass the smugglers' power threshold.
  */
 public class SmugglersPowerDeclarationState extends State {
-    /**
-     * Context object that holds the game state and player information.
-     */
-    Context context;
+
 
     /**
      * Constructor to initialize the state with the current game context.
@@ -128,8 +125,38 @@ public class SmugglersPowerDeclarationState extends State {
                 controller.getModel().setError(false);
             }
         }else{
-            controller.getModel().setState(new SmugglersBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
-            controller.getModel().setError(false);
+            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+                if(amount > context.getPower()){
+                    controller.getModel().setState(new SmugglersLandState(context));
+                    controller.getModel().setError(false);
+                } else if(amount == context.getPower()){
+                    context.removePlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+                else{
+                    context.removePlayer(player);
+                    context.addSpecialPlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
+            } else {
+                controller.getModel().setState(new SmugglersBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
+                controller.getModel().setError(false);
+            }
+
         }
     }
     @Override

@@ -26,7 +26,7 @@ import java.util.List;
  * applying the shot effects or allowing them to block the shot if conditions are met.</p>
  */
 public class PiratesManageShotState extends State{
-    Context context;
+
     int number;
     int turn;   ///Turno del giocatore speciale che dve subire la cannonata
     boolean hit = false;

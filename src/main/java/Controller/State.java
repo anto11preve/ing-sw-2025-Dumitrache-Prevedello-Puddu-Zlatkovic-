@@ -31,7 +31,7 @@ public abstract class State implements Serializable {
 
     public State(Context context) {
         this.context = context;
-    };
+    }
 
     public void onEnter() {}
 
