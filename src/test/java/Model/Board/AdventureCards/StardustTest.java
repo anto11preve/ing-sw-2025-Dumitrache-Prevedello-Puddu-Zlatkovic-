@@ -99,4 +99,29 @@ public class StardustTest {
         
         assertTrue(output.length() > 0);
     }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        Stardust card = new Stardust(4, CardLevel.LEARNER);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 4", result[1]);
+        assertEquals("Nome: Polvere Stellare", result[2]);
+        assertEquals("Livello: LEARNER", result[3]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        Stardust card = new Stardust(4, CardLevel.LEARNER);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
+    }
 }

@@ -1,97 +1,95 @@
 package Model.Ship.Components;
-import Model.Enums.Card;
-import Model.Enums.ConnectorType;
-import Model.Ship.Components.BatteryCompartment;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
+import Model.Enums.*;
+import Model.Ship.ShipBoard;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Tests for the BatteryCompartment component which stores and manages batteries.
- * Tests battery capacity, consumption, and limits.
- */
 public class BatteryCompartmentTest {
 
-    private BatteryCompartment battery;
-
-    /**
-     * Sets up a battery compartment with capacity of 2 before each test.
-     * The compartment starts fully charged with 2 batteries.
-     */
-    @BeforeEach
-    public void setUp() {
-        // Create a BatteryCompartment with 2 batteries
-        battery = new BatteryCompartment(
-                Card.BATTERY_COMPARTMENT,
-                ConnectorType.SINGLE,
-                ConnectorType.SINGLE,
-                ConnectorType.NONE,
-                ConnectorType.NONE,
-                2
-        );
+    @Test
+    public void testConstructor() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3);
+        
+        assertEquals(Card.BATTERY_COMPARTMENT, battery.getType());
+        assertEquals(3, battery.getCapacity());
+        assertEquals(3, battery.getBatteries());
     }
 
-    /**
-     * Tests that the battery compartment is initialized with the correct capacity and charge:
-     * - The capacity should match the constructor parameter
-     * - The initial battery count should equal the capacity
-     */
     @Test
-    public void testInitialCapacityAndCharge() {
-        // Test that the battery is initialized with the correct capacity and battery count
-        assertEquals(2, battery.getCapacity(), "Capacity should be 2");
-        assertEquals(2, battery.getBatteries(), "Initial battery count should be 2");
+    public void testSetBatteries() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 5);
+        
+        battery.setBatteries(2);
+        assertEquals(2, battery.getBatteries());
+        
+        battery.setBatteries(0);
+        assertEquals(0, battery.getBatteries());
     }
 
-    /**
-     * Tests setting and getting the battery count:
-     * - setBatteries() should update the battery count
-     * - getBatteries() should return the current count
-     */
     @Test
-    public void testSetAndGetBatteries() {
-        // Test manually updating the battery count
-        battery.setBatteries(1);
-        assertEquals(1, battery.getBatteries(), "Battery count should be updated to 1");
+    public void testRemoveBattery() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 2);
+        
+        assertEquals(2, battery.getBatteries());
+        
+        battery.removeBattery();
+        assertEquals(1, battery.getBatteries());
+        
+        battery.removeBattery();
+        assertEquals(0, battery.getBatteries());
+        
+        assertThrows(IllegalStateException.class, battery::removeBattery);
     }
 
-    /**
-     * Tests removing a battery when batteries are available:
-     * - removeBattery() should decrease the count by 1
-     * - The operation should succeed when batteries are available
-     */
     @Test
-    public void testRemoveBatterySuccessfully() {
-        // Remove a battery and check the remaining count
-        battery.removeBattery();
-        assertEquals(1, battery.getBatteries(), "Battery count should decrease by 1");
+    public void testAddedToShip() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3);
+        ShipBoard ship = new ShipBoard();
+        battery.setShipBoard(ship);
+        
+        battery.added();
+        assertTrue(ship.getCondensedShip().getBatteryCompartments().contains(battery));
+        
+        assertThrows(RuntimeException.class, battery::added);
     }
 
-    /**
-     * Tests removing all batteries:
-     * - Multiple removals should work until zero is reached
-     * - The battery count should not go below zero
-     */
     @Test
-    public void testRemoveBatteryToZero() {
-        // Remove all batteries
-        battery.removeBattery();
-        battery.removeBattery();
-        assertEquals(0, battery.getBatteries(), "Battery count should be 0 after two removals");
+    public void testRemovedFromShip() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3);
+        ShipBoard ship = new ShipBoard();
+        battery.setShipBoard(ship);
+        
+        battery.added();
+        battery.removed();
+        assertFalse(ship.getCondensedShip().getBatteryCompartments().contains(battery));
+        
+        assertThrows(RuntimeException.class, battery::removed);
     }
 
-    /**
-     * Tests removing batteries when none are left:
-     * - Attempting to remove beyond zero should throw an exception
-     * - The exception should be IllegalStateException
-     */
     @Test
-    public void testRemoveBatteryThrowsExceptionWhenEmpty() {
-        // Removing beyond zero should throw exception
-        battery.removeBattery();
-        battery.removeBattery();
-        assertThrows(IllegalStateException.class, () -> battery.removeBattery(),
-                "Should throw when trying to remove battery with none left");
+    public void testVisualize() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3);
+        battery.visualize();
+    }
+
+    @Test
+    public void testRenderMethods() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3);
+        
+        String[] smallRender = battery.renderSmall();
+        assertNotNull(smallRender);
+        assertEquals(3, smallRender.length);
+        assertTrue(smallRender[1].contains("BAT"));
+        
+        battery.renderBig();
+    }
+
+    @Test
+    public void testZeroBatteries() {
+        BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 0);
+        assertEquals(0, battery.getCapacity());
+        assertEquals(0, battery.getBatteries());
+        assertThrows(IllegalStateException.class, battery::removeBattery);
     }
 }

@@ -88,7 +88,9 @@ public class ShieldGenerator extends SpaceshipComponent {
 
     public String[] renderSmall() {
         String[] righe = new String[3];
-        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        righe[0] = String.format("╔═ %s ═╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
         String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         switch (this.getOrientation()){
@@ -105,7 +107,8 @@ public class ShieldGenerator extends SpaceshipComponent {
                 righe[1] = String.format("%s S←↑ %s", sx, dx);
                 break;
         }
-        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
         return righe;
     }
 
@@ -117,7 +120,7 @@ public class ShieldGenerator extends SpaceshipComponent {
                 this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        righe[1] = "║  BATRY  ║";
+        righe[1] = "║  SHIELD ║";
 
         righe[2] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?

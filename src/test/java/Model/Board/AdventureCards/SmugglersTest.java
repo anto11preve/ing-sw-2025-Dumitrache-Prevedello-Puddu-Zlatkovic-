@@ -26,21 +26,31 @@ public class SmugglersTest {
     @Test
     public void testJsonConstructorCard5() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", "5");
+        json.addProperty("id", 5);
         json.addProperty("type", "Smugglers");
         json.addProperty("level", "LEARNER");
-        json.addProperty("enemyStrength", 4);
-        json.addProperty("stealGoodsOnLoss", 2);
-
+        json.addProperty("power", 4);
+        
+        // Add required penalty field
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("stealGoodsOnLoss", 2);
+        penalty.addProperty("days", 1);
+        JsonArray shots = new JsonArray();
+        JsonObject shot = new JsonObject();
+        shot.addProperty("isLarge", false);
+        shot.addProperty("direction", "FRONT");
+        shots.add(shot);
+        penalty.add("shots", shots);
+        json.add("penalty", penalty);
+        
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("GREEN"));
         rewardGoods.add(new JsonPrimitive("BLUE"));
         json.add("rewardGoods", rewardGoods);
-
-        json.addProperty("dayCost", 1);
+        
         json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
-
+        
         Smugglers card = new Smugglers(json);
         assertEquals(5, card.getId());
         assertEquals(CardLevel.LEARNER, card.getLevel());
@@ -52,21 +62,31 @@ public class SmugglersTest {
     @Test
     public void testJsonConstructorCard40() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", "40");
+        json.addProperty("id", 40);
         json.addProperty("type", "Smugglers");
         json.addProperty("level", "LEVEL_TWO");
-        json.addProperty("enemyStrength", 8);
-        json.addProperty("stealGoodsOnLoss", 3);
-
+        json.addProperty("power", 8);
+        
+        // Add required penalty field
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("stealGoodsOnLoss", 3);
+        penalty.addProperty("days", 2);
+        JsonArray shots = new JsonArray();
+        JsonObject shot = new JsonObject();
+        shot.addProperty("isLarge", false);
+        shot.addProperty("direction", "FRONT");
+        shots.add(shot);
+        penalty.add("shots", shots);
+        json.add("penalty", penalty);
+        
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("RED"));
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         json.add("rewardGoods", rewardGoods);
-
-        json.addProperty("dayCost", 1);
+        
         json.addProperty("imagePath", "src/main/resources/pics/cards/40.jpg");
-
+        
         Smugglers card = new Smugglers(json);
         assertEquals(40, card.getId());
         assertEquals(CardLevel.LEVEL_TWO, card.getLevel());
@@ -78,21 +98,31 @@ public class SmugglersTest {
     @Test
     public void testJsonConstructorCard45() {
         JsonObject json = new JsonObject();
-        json.addProperty("id", "45");
+        json.addProperty("id", 45);
         json.addProperty("type", "Smugglers");
         json.addProperty("level", "LEVEL_ONE");
-        json.addProperty("enemyStrength", 4);
-        json.addProperty("stealGoodsOnLoss", 2);
-
+        json.addProperty("power", 4);
+        
+        // Add required penalty field
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("stealGoodsOnLoss", 2);
+        penalty.addProperty("days", 1);
+        JsonArray shots = new JsonArray();
+        JsonObject shot = new JsonObject();
+        shot.addProperty("isLarge", false);
+        shot.addProperty("direction", "FRONT");
+        shots.add(shot);
+        penalty.add("shots", shots);
+        json.add("penalty", penalty);
+        
         JsonArray rewardGoods = new JsonArray();
         rewardGoods.add(new JsonPrimitive("YELLOW"));
         rewardGoods.add(new JsonPrimitive("GREEN"));
         rewardGoods.add(new JsonPrimitive("BLUE"));
         json.add("rewardGoods", rewardGoods);
-
-        json.addProperty("dayCost", 1);
+        
         json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
-
+        
         Smugglers card = new Smugglers(json);
         assertEquals(45, card.getId());
         assertEquals(CardLevel.LEVEL_ONE, card.getLevel());
@@ -112,12 +142,37 @@ public class SmugglersTest {
     }
 
     /**
-     * Tests the visualize method.
+     * Tests the visualize method using JSON constructor.
      */
     @Test
     public void testVisualize() {
-        List<Good> goods = Arrays.asList(Good.YELLOW, Good.GREEN, Good.BLUE);
-        Smugglers card = new Smugglers(5, CardLevel.LEARNER, 4, 2, 1, goods);
+        JsonObject json = new JsonObject();
+        json.addProperty("id", 5);
+        json.addProperty("type", "Smugglers");
+        json.addProperty("level", "LEARNER");
+        json.addProperty("power", 4);
+        
+        // Add required penalty field
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("stealGoodsOnLoss", 2);
+        penalty.addProperty("days", 1);
+        JsonArray shots = new JsonArray();
+        JsonObject shot = new JsonObject();
+        shot.addProperty("isLarge", false);
+        shot.addProperty("direction", "FRONT");
+        shots.add(shot);
+        penalty.add("shots", shots);
+        json.add("penalty", penalty);
+        
+        JsonArray rewardGoods = new JsonArray();
+        rewardGoods.add(new JsonPrimitive("YELLOW"));
+        rewardGoods.add(new JsonPrimitive("GREEN"));
+        rewardGoods.add(new JsonPrimitive("BLUE"));
+        json.add("rewardGoods", rewardGoods);
+        
+        json.addProperty("imagePath", "src/main/resources/pics/cards/5.jpg");
+        
+        Smugglers card = new Smugglers(json);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
@@ -127,7 +182,49 @@ public class SmugglersTest {
 
         System.setOut(originalOut);
         String output = outputStream.toString();
-
+        
         assertTrue(output.length() > 0);
+    }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", 5);
+        json.addProperty("level", "LEARNER");
+        json.addProperty("power", 4);
+        json.addProperty("imagePath", "test.jpg");
+        
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("stealGoodsOnLoss", 2);
+        penalty.addProperty("days", 1);
+        json.add("penalty", penalty);
+        
+        JsonArray rewardGoods = new JsonArray();
+        rewardGoods.add(new JsonPrimitive("RED"));
+        json.add("rewardGoods", rewardGoods);
+        
+        Smugglers card = new Smugglers(json);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 5", result[1]);
+        assertEquals("Nome: Contrabbandieri", result[2]);
+        assertEquals("Livello: LEARNER", result[3]);
+        assertEquals("Power:                 4", result[4]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        List<Good> goods = Arrays.asList(Good.RED);
+        Smugglers card = new Smugglers(5, CardLevel.LEARNER, 4, 2, 1, goods);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
     }
 }

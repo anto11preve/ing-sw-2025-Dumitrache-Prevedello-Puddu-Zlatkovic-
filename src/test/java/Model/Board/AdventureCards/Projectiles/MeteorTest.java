@@ -35,4 +35,30 @@ public class MeteorTest {
         Meteor rear = new Meteor(false, Side.REAR);
         assertEquals(Side.REAR, rear.getSide());
     }
+
+    @Test
+    public void testInheritance() {
+        Meteor meteor = new Meteor(true, Side.FRONT);
+        assertTrue(meteor instanceof Projectile);
+        assertTrue(meteor instanceof Meteor);
+    }
+
+    @Test
+    public void testBigAndSmallMeteors() {
+        Meteor bigMeteor = new Meteor(true, Side.FRONT);
+        Meteor smallMeteor = new Meteor(false, Side.FRONT);
+        
+        assertTrue(bigMeteor.isBig());
+        assertFalse(smallMeteor.isBig());
+        assertEquals(bigMeteor.getSide(), smallMeteor.getSide());
+    }
+
+    @Test
+    public void testGettersConsistency() {
+        Meteor meteor = new Meteor(true, Side.LEFT);
+        
+        assertEquals(meteor.isBig(), meteor.isBig());
+        assertEquals(meteor.getSide(), meteor.getSide());
+        assertSame(meteor.getSide(), meteor.getSide());
+    }
 }
