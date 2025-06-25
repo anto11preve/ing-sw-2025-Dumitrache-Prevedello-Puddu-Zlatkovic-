@@ -1,6 +1,8 @@
 package Model.Ship;
 
-public class DoubleCannonsCounter {
+import java.io.Serializable;
+
+public class DoubleCannonsCounter implements Serializable {
     int  frontCannons;
     int  otherCannons;
 

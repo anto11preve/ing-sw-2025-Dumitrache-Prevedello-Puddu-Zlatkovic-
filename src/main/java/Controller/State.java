@@ -19,6 +19,8 @@ public abstract class State implements Serializable {
 
     private Player playerInTurn;
 
+    protected Context context;
+
     public Controller getController() {
         return controller;
     }
@@ -27,7 +29,9 @@ public abstract class State implements Serializable {
         this.controller = controller;
     }
 
-    public State(){};
+    public State(Context context) {
+        this.context = context;
+    };
 
     public void onEnter() {}
 

@@ -17,11 +17,11 @@ import java.util.List;
 
 //TODO: correggere firma
 public class MeteorsCheckShipState extends State {
-    private Context context;
+   
     private final int number;
 
     public MeteorsCheckShipState(Context context, int number) {
-        this.context = context;
+        super(context);
         this.number = number;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }

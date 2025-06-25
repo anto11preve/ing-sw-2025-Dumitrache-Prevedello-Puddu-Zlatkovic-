@@ -1,6 +1,8 @@
 package Model.Board;
 
-public class Timer {
+import java.io.Serializable;
+
+public class Timer implements Serializable {
     private Phase phase;
     private long targetTime;
 

@@ -99,4 +99,30 @@ public class SlaversTest {
         
         assertTrue(output.length() > 0);
     }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        Slavers card = new Slavers(19, CardLevel.LEVEL_ONE, 6, 3, 1, 5);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 19", result[1]);
+        assertEquals("Nome: Schiavisti", result[2]);
+        assertEquals("Livello: LEVEL_ONE", result[3]);
+        assertEquals("Power:                6", result[4]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        Slavers card = new Slavers(19, CardLevel.LEVEL_ONE, 6, 3, 1, 5);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
+    }
 }

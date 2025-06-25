@@ -3,9 +3,10 @@ package Model.Board.AdventureCards.Components;
 import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.Good;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Planet {
+public class Planet implements Serializable {
     private String name;
     private final Goods landingReward;
     private boolean occupied;

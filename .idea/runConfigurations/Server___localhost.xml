@@ -1,16 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Server @ localhost" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="Controller.Server.Server" />
-    <module name="Ing_SW_Project" />
+  <configuration default="false" name="Server @ localhost" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/target/GC06-1.0-Server.jar" />
     <option name="PROGRAM_PARAMETERS" value="--hostname localhost" />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="Controller.Server.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2" />
   </configuration>
 </component>

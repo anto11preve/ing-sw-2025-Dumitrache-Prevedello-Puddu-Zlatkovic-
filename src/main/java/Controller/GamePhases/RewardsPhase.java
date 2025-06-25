@@ -9,6 +9,7 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Model.Ship.GoodCounter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -33,22 +34,28 @@ public class RewardsPhase extends State {
             }
         }
 
-        // Ricompensa per il giocatore con meno connettori esposti (nave più bella)
-        int numConnExp = -1;
-        Player cleanestPlayer = null;
-        for(Player p : this.getController().getModel().getFlightBoard().getTurnOrder()){
-            int connExp = p.getShipBoard().getExposedConnectors().size();
-            if(numConnExp == -1 || connExp < numConnExp){
-                numConnExp = connExp;
-                cleanestPlayer = p;
+        int minExposedConnectors = Integer.MAX_VALUE;
+        List<Player> winnersOfMostBeautifulShip = new ArrayList<>();
+
+        // Find the minimum number of exposed connectors
+        for (Player player : this.getController().getModel().getFlightBoard().getTurnOrder()) {
+            // FIXED: Use getTotalExposedConnectorCount() instead of getExposedConnectors().size()
+            // This counts each individual exposed connector, not just positions with exposed connectors
+            int exposedConnectorCount = player.getShipBoard().getTotalExposedConnectorCount();
+
+            if (exposedConnectorCount < minExposedConnectors) {
+                minExposedConnectors = exposedConnectorCount;
+                winnersOfMostBeautifulShip.clear();
+                winnersOfMostBeautifulShip.add(player);
+            } else if (exposedConnectorCount == minExposedConnectors) {
+                winnersOfMostBeautifulShip.add(player);
             }
         }
-        //TODO: controllare se si usa così getExposedConnectors
 
-        if(this.getController().getMatchLevel() == MatchLevel.TRIAL) {
-            cleanestPlayer.deltaCredits(2);
-        } else {
-            cleanestPlayer.deltaCredits(4);
+        // Award credits to all players with the minimum exposed connectors
+        int rewardAmount = (this.getController().getMatchLevel() == MatchLevel.TRIAL) ? 2 : 4;
+        for (Player winner : winnersOfMostBeautifulShip) {
+            winner.deltaCredits(rewardAmount);
         }
 
         for(Player p : this.getController().getModel().getFlightBoard().getTurnOrder()){
@@ -165,6 +172,6 @@ public class RewardsPhase extends State {
 
     @Override
     public List<String> getAvailableCommands(){
-        return List.of("Logout");
+        return List.of("Leave");
     }
 }

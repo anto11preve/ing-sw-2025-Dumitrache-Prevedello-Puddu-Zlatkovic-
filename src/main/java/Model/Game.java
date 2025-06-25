@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
  */
 public class Game implements Serializable, Cloneable {
     private final List<Player> players;
-    private transient final MatchLevel level;
+    private final MatchLevel level;
     private final SpaceshipComponent[] tiles;
-    private transient final FlightBoard flightBoard;
+    private final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
     private final transient List<ShipBoard> preBuiltShips;
@@ -370,7 +370,9 @@ public class Game implements Serializable, Cloneable {
 
     public void setState(State phase) {
         this.state = phase;
-        phase.onEnter();
+        if (phase!=null) {
+            phase.onEnter();
+        }
     }
 
     public State getState() {
@@ -498,7 +500,7 @@ public class Game implements Serializable, Cloneable {
     }
 
     public Game(Game oldGame){
-        this.players = oldGame.players;
+        this.players = new ArrayList<>(oldGame.players);
         this.level = oldGame.level;
         this.tiles = oldGame.tiles;
         this.flightBoard = oldGame.flightBoard;

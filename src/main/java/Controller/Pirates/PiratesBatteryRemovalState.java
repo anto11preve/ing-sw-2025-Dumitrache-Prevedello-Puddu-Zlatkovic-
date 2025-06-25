@@ -29,7 +29,7 @@ public class PiratesBatteryRemovalState extends State{
     /**
      * The context of the game, which contains information about the current state and players.
      */
-    private Context context;
+   
     /**
      * The declared power of the player, which is the amount of power they intend to use.
      */
@@ -47,7 +47,7 @@ public class PiratesBatteryRemovalState extends State{
      * @param batteries The number of batteries the player has to remove.
      */
     public PiratesBatteryRemovalState(Context context, double declaredPower, int batteries) {
-        this.context = context;
+        super(context);
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.setPlayerInTurn(context.getPlayers().getFirst());
@@ -170,7 +170,7 @@ public class PiratesBatteryRemovalState extends State{
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem",
-                        "GetReward" );
+        return List.of( "UseBattery",
+                        "GetCreditsReward" );
     }
 }

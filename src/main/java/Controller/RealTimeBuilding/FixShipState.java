@@ -26,7 +26,7 @@ import java.util.Map;
  public class FixShipState extends State {
 
     /** List of players with invalid ships that need to be corrected */
-    List<Player> playersWithInvalidShip=new ArrayList<>();
+    List<Player> playersWithInvalidShip = new ArrayList<>();
 
     /** Valid coordinates for component placement */
     Map<Integer, List<Integer>> validCoordinates = new HashMap<>();

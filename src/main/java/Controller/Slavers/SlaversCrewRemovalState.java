@@ -22,7 +22,7 @@ public class SlaversCrewRemovalState extends State {
     /**
      * Context object that holds the game state and player information.
      */
-    private Context context;
+   
 
     /**
      * Constructor to initialize the state with the current game context.
@@ -30,7 +30,7 @@ public class SlaversCrewRemovalState extends State {
      * @param context the shared game context
      */
     public SlaversCrewRemovalState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
@@ -96,6 +96,6 @@ public class SlaversCrewRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem" );
+        return List.of( "UseCrew" );
     }
 }

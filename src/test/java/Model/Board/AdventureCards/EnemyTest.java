@@ -16,7 +16,7 @@ public class EnemyTest {
             super(id, level, power, new DaysPenalty(lossDays), winDays, new Credits(credits));
         }
         
-        public TestEnemy(JsonObject json, DaysPenalty lossPenalty, int days, Credits winReward) {
+        public TestEnemy(JsonObject json, DaysPenalty lossPenalty, Credits winReward) {
             super(json, lossPenalty, winReward);
         }
 
@@ -48,10 +48,15 @@ public class EnemyTest {
     public void testJsonConstructor() {
         JsonObject json = new JsonObject();
         json.addProperty("id", 2);
-        json.addProperty("level", "LEVEL2");
+        json.addProperty("level", "LEVEL_TWO");
         json.addProperty("power", 5);
+        json.addProperty("imagePath", "test/path.jpg");
         
-        TestEnemy enemy = new TestEnemy(json, new DaysPenalty(3), 2, new Credits(4));
+        JsonObject penalty = new JsonObject();
+        penalty.addProperty("days", 2);
+        json.add("penalty", penalty);
+        
+        TestEnemy enemy = new TestEnemy(json, new DaysPenalty(3), new Credits(4));
         assertEquals(2, enemy.getId());
         assertEquals(CardLevel.LEVEL_TWO, enemy.getLevel());
         assertEquals(5, enemy.getPower());

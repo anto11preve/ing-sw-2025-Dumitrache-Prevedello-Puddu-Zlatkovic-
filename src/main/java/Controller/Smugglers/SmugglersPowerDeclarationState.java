@@ -28,7 +28,7 @@ public class SmugglersPowerDeclarationState extends State {
      * @param context the shared game context
      */
     public SmugglersPowerDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -135,7 +135,7 @@ public class SmugglersPowerDeclarationState extends State {
     @Override
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclaresDouble"
+            "DeclaresDoubleCannon"
         );
     }
 }

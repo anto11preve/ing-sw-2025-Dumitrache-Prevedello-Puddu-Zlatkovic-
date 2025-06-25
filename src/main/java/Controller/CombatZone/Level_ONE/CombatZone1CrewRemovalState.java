@@ -14,10 +14,10 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone1CrewRemovalState extends State {
-    private Context context;
+   
 
     public CombatZone1CrewRemovalState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -63,7 +63,7 @@ public class CombatZone1CrewRemovalState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "UseItem"
+            "UseCrew"
         );
     }
 

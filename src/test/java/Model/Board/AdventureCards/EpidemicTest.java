@@ -60,6 +60,7 @@ public class EpidemicTest {
         JsonObject json = new JsonObject();
         json.addProperty("id", 50);
         json.addProperty("level", "LEVEL_TWO");
+        json.addProperty("imagePath", "test.png");
         
         Epidemic card = new Epidemic(json);
         assertEquals(50, card.getId());
@@ -84,5 +85,30 @@ public class EpidemicTest {
         String output = outputStream.toString();
         
         assertTrue(output.length() > 0);
+    }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        Epidemic card = new Epidemic(37, CardLevel.LEVEL_TWO);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 37", result[1]);
+        assertEquals("Nome: Epidemia", result[2]);
+        assertEquals("Livello: LEVEL_TWO", result[3]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        Epidemic card = new Epidemic(37, CardLevel.LEVEL_TWO);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
     }
 }

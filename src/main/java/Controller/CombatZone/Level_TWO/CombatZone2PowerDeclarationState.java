@@ -14,15 +14,15 @@ import Model.Player;
 import java.util.List;
 
 public class CombatZone2PowerDeclarationState extends State {
-    private Context context;
+   
     private double worst = -1;
 
     public CombatZone2PowerDeclarationState(Context context) {
-        this.context = context;
+        super(context);
     }
 
     public CombatZone2PowerDeclarationState(Context context, double worst) {
-        this.context = context;
+        super(context);
         this.worst = worst;
     }
 
@@ -102,7 +102,7 @@ public class CombatZone2PowerDeclarationState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclaresDouble"
+            "DeclaresDoubleCannon"
         );
     }
 }

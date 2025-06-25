@@ -2,7 +2,9 @@ package Model.Board.AdventureCards.Projectiles;
 
 import Model.Enums.Side;
 
-public abstract class Projectile {
+import java.io.Serializable;
+
+public abstract class Projectile implements Serializable {
     private final boolean big;
     private final Side side;
 

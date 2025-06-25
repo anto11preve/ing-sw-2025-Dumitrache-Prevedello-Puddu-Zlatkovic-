@@ -1,4 +1,6 @@
 package Model.Board.AdventureCards.Penalties;
 
-public abstract class Penalty {
+import java.io.Serializable;
+
+public abstract class Penalty implements Serializable {
 }

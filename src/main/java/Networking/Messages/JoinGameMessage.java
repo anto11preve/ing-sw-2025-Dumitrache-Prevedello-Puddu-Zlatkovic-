@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Server.Server;
 import Networking.Agent;
 import Networking.Network;
+import View.Client.ClientState;
 
 public class JoinGameMessage implements Message {
     private final int gameID;
@@ -28,6 +29,9 @@ public class JoinGameMessage implements Message {
         final Controller game = server.getGame(this.gameID);
 
         if(username == null || game == null){
+            network.send(new ClientMessage(
+                    ClientState::net_JoinFailed
+            ));
             return;
         }
 

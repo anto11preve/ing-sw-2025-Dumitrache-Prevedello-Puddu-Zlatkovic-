@@ -13,17 +13,16 @@ import Model.Player;
 import java.util.List;
 
 public class CombatZone1EngineDeclarationState extends State {
-    private final Context context;
     private final double worst;
 
     public CombatZone1EngineDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.worst = -1;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone1EngineDeclarationState(Context context, double worst) {
-        this.context = context;
+        super(context);
         this.worst = worst;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
@@ -99,7 +98,7 @@ public class CombatZone1EngineDeclarationState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclareDouble"
+            "DeclareDoubleEngine"
         );
     }
 }

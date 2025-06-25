@@ -16,10 +16,9 @@ import java.util.List;
 import java.util.Random;
 
 public class CombatZone1CannonShotsState extends State {
-    private final Context context;
 
     public CombatZone1CannonShotsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -39,6 +38,8 @@ public class CombatZone1CannonShotsState extends State {
         int dado1 = controller.getModel().rollDice(); // numero tra 1 e 6
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
+
+        context.setDiceNumber(number);
 
         for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             context.addSpecialPlayer(p);

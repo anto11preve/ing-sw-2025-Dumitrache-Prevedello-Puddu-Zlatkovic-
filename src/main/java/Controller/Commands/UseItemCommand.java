@@ -69,8 +69,6 @@ public class UseItemCommand extends Command {
         return new CommandConstructor() {
             @Override
             public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
-                //TODO: ItemType itemType
-
                 final int row;
                 try{
                     row = Integer.parseInt(args.get("row"));
@@ -91,7 +89,7 @@ public class UseItemCommand extends Command {
 
             @Override
             public List<String> getArguments() {
-                return List.of("", "row", "column");
+                return List.of("row", "column");
             }
         };
     }
@@ -100,8 +98,6 @@ public class UseItemCommand extends Command {
         return new CommandConstructor() {
             @Override
             public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
-                //TODO: ItemType itemType
-
                 final int row;
                 try{
                     row = Integer.parseInt(args.get("row"));
@@ -122,7 +118,7 @@ public class UseItemCommand extends Command {
 
             @Override
             public List<String> getArguments() {
-                return List.of("", "row", "column");
+                return List.of( "row", "column");
             }
         };
     }

@@ -28,7 +28,7 @@ public class PiratesCannonShotsState extends State{
     /**
      * The context of the game, which contains information about the current state and players.
      */
-    private Context context;
+   
 
     /**
      * Constructs a new PiratesCannonShotsState.
@@ -36,7 +36,7 @@ public class PiratesCannonShotsState extends State{
      * @param context The context of the game.
      */
     public PiratesCannonShotsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
@@ -67,6 +67,7 @@ public class PiratesCannonShotsState extends State{
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
+        context.setDiceNumber(number);
 
         Projectile shot = context.getProjectiles().getFirst();
         boolean out = false;

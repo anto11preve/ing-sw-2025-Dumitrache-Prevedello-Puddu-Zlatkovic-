@@ -99,4 +99,29 @@ public class OpenSpaceTest {
         
         assertTrue(output.length() > 0);
     }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        OpenSpace card = new OpenSpace(1, CardLevel.LEARNER);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 1", result[1]);
+        assertEquals("Nome: Spazio Aperto", result[2]);
+        assertEquals("Livello: LEARNER", result[3]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        OpenSpace card = new OpenSpace(1, CardLevel.LEARNER);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
+    }
 }

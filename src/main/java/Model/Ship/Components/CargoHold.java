@@ -57,6 +57,10 @@ public class CargoHold extends SpaceshipComponent {
 
     }
 
+    public boolean isSpecial(){
+        return this.isSpecial;
+    }
+
     @Override
     public void visualize() {
         super.visualize();
@@ -141,15 +145,19 @@ public class CargoHold extends SpaceshipComponent {
 
     public String[] renderSmall() {
         String[] righe = new String[3];
-        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        righe[0] = String.format("╔═ %s ═╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
         String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         righe[1] = String.format("%s CAR %s", sx, dx);
-        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
         return righe;
     }
 
-    public String[] renderBigArray() {
+    @Override
+    public String[] renderBig() {
         String[] righe = new String[5];
 
         // Riga superiore
@@ -157,7 +165,15 @@ public class CargoHold extends SpaceshipComponent {
                 this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        righe[1] = "║  BATRY  ║";
+
+
+
+
+        if(this.isSpecial){
+            righe[1] = "║ CARGO-S ║";
+        }else{
+            righe[1] = "║ CARGO-B ║";
+        }
 
         righe[2] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?

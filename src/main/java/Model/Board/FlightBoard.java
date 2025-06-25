@@ -7,6 +7,7 @@ import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 import Controller.Enums.MatchLevel;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ import java.util.*;
  * do not exist while flying (but this is a less pressing
  * issue than the one stated earlier).
  */
-public class FlightBoard {
+public class FlightBoard implements Serializable {
     private final int cellNumber;
 
     private Timer timer;
@@ -128,12 +129,12 @@ public class FlightBoard {
 
         assert (3 == peekableCardDecks.size());
         for (CardDeck cardDeck : peekableCardDecks) {
-            assert (4 == cardDeck.peekCards().size());
+            assert (3 == cardDeck.peekCards().size());
         }
         this.peekableCardDecks = peekableCardDecks;
 
         this.hiddenCardDeck = hiddenCardDeck;
-        assert (4 == this.hiddenCardDeck.peekCards().size());
+        assert (3 == this.hiddenCardDeck.peekCards().size());
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
@@ -169,17 +170,19 @@ public class FlightBoard {
         List<Player> dubbedPlayers = new ArrayList<>();
         int length = players.length;
 
-        int firstPlayerDistance = playerTotalDistance.get(players[length-1]);
+        if (length>0) {
+            int firstPlayerDistance = playerTotalDistance.get(players[length-1]);
 
-        if(playerTotalDistance.get(players[0])>firstPlayerDistance) {
-            firstPlayerDistance = playerTotalDistance.get(players[0]);
-        }
+            if(playerTotalDistance.get(players[0])>firstPlayerDistance) {
+                firstPlayerDistance = playerTotalDistance.get(players[0]);
+            }
 
-        for(int i=0;i<length;i++){
+            for(int i=0;i<length;i++){
 
-            int otherPlayerDistance = playerTotalDistance.get(players[i]);
-            if((firstPlayerDistance-otherPlayerDistance)>cellNumber){
-                dubbedPlayers.add(players[i]);
+                int otherPlayerDistance = playerTotalDistance.get(players[i]);
+                if((firstPlayerDistance-otherPlayerDistance)>cellNumber){
+                    dubbedPlayers.add(players[i]);
+                }
             }
         }
 
@@ -422,35 +425,41 @@ public class FlightBoard {
         Player[] turnOrder = getTurnOrder();
 
         // Print table header
-        System.out.println("┌───────────────────────────────────────────────────┐");
-        System.out.println("│                 FLIGHT BOARD STATUS               │");
-        System.out.println("├───────────────────────────────────────────────────┤");
-        System.out.printf("│ %-3s │ %-25s │ %-15s │%n", "Pos", "Player Name", "Credits");
-        System.out.println("├─────┼───────────────────────────┼─────────────────┤");
+        System.out.println("┌─────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                         FLIGHT BOARD STATUS                         │");
+        System.out.println("├─────────────────────────────────────────────────────────────────────┤");
+        System.out.printf("│ %-3s │ %-25s │ %-15s │ %-15s │%n", "Pos", "Player Name", "Credits", "Position");
+        System.out.println("├─────┼───────────────────────────┼─────────────────┼─────────────────┤");
 
-        // Print each player's information in turn order
-        for (int i = 0; i < turnOrder.length; i++) {
-            Player player = turnOrder[i];
-            String playerName = player.getName();
-            int credits = player.getCredits();
+        if (turnOrder.length > 0) {
+            // Print each player's information in turn order
+            for (int i = 0; i < turnOrder.length; i++) {
+                Player player = turnOrder[i];
+                String playerName = player.getName();
+                int credits = player.getCredits();
+                int position = playerPositions.get(player); // Assumo esista questo metodo
 
-            // Add current turn indicator for the first player (current turn)
-            String turnIndicator = (player.equals(playerInTurn)) ? "▶ " : "  ";
+                // Add current turn indicator for the first player (current turn)
+                String turnIndicator = (player.equals(playerInTurn)) ? "▶ " : "  ";
 
-            // Truncate player name if it's too long to fit in the table
-            if (playerName.length() > 25) {
-                playerName = playerName.substring(0, 22) + "...";
+                // Truncate player name if it's too long to fit in the table
+                if (playerName.length() > 25) {
+                    playerName = playerName.substring(0, 22) + "...";
+                }
+
+                String displayName = turnIndicator + playerName;
+
+                System.out.printf("│ %-3d │ %-25s │ %-15d │ %-15d │%n",
+                        (i + 1), displayName, credits, position);
             }
-
-            String displayName = turnIndicator + playerName;
-
-            System.out.printf("│ %-3d │ %-25s │ %-15d │%n", (i + 1), displayName, credits);
         }
 
         // Print table footer
-        System.out.println("└─────┴───────────────────────────┴─────────────────┘");
-        System.out.println("Turn Order: 1st = " + turnOrder[0].getName() +
-                " | Last = " + turnOrder[turnOrder.length - 1].getName());
+        System.out.println("└─────┴───────────────────────────┴─────────────────┴─────────────────┘");
+        if (turnOrder.length > 0) {
+            System.out.println("Turn Order: 1st = " + turnOrder[0].getName() +
+                    " | Last = " + turnOrder[turnOrder.length - 1].getName());
+        }
     }
 
 

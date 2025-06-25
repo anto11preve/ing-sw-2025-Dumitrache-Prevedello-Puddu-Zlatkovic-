@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class AbandonedStationDecidingState extends State {
     /** The shared context containing game state and references. */
-    private Context context;
+   
 
     /**
      * Constructs the state with the given context.
@@ -31,7 +31,7 @@ public class AbandonedStationDecidingState extends State {
      * @param context the game context used to access controller and shared state.
      */
     public AbandonedStationDecidingState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -107,7 +107,7 @@ public class AbandonedStationDecidingState extends State {
     public List<String> getAvailableCommands(){
         return List.of(
             "SkipReward",
-            "GetReward"
+            "GetGoodReward"
         );
     }
 }

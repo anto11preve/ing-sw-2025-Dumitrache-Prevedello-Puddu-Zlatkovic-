@@ -28,7 +28,7 @@ public class SlaversRewardsState extends State{
      * @param context the shared game context
      */
     public SlaversRewardsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -100,6 +100,6 @@ public class SlaversRewardsState extends State{
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "GetReward", "SkipReward" );
+        return List.of( "GetCreditsReward", "SkipReward" );
     }
 }

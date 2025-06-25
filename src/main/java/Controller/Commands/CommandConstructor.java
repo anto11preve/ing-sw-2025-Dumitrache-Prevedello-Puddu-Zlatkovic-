@@ -44,7 +44,7 @@ public interface CommandConstructor {
             commandConstructors.putAll(Map.of(
                     "GetCreditsReward", GetRewardCommand.getCreditsConstructor(),
                     "LeaveRace", LeaveRaceCommand.getConstructor(),
-                    "Logout", LogoutCommand.getConstructor(),
+                    "Leave", LogoutCommand.getConstructor(),
                     "LookDeck", LookDeckCommand.getConstructor(),
                     "MoveGood", MoveGoodCommand.getConstructor(),
                     "PickNextCard", PickNextCardCommand.getConstructor(),
@@ -59,7 +59,7 @@ public interface CommandConstructor {
                     "SkipReward", SkipRewardCommand.getConstructor(),
                     "StartGame", StartGameCommand.getConstructor(),
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
-                    "UseBatterie", UseItemCommand.getBatteriesConstructor(),
+                    "UseBattery", UseItemCommand.getBatteriesConstructor(),
                     "UseCrew", UseItemCommand.getCrewConstructor(),
                     "PreBuiltShip", PreBuiltShipCommand.getConstructor()
             ));

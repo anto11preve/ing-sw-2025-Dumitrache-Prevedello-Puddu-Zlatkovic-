@@ -3,6 +3,7 @@ package Model.Ship;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * It can be used to count the total number of alien crew members,
  * and also track whether at least one brown or purple alien is present.
  */
-public class AlienCounter {
+public class AlienCounter implements Serializable {
     private boolean brownAlien;
     private boolean purpleAlien;
 

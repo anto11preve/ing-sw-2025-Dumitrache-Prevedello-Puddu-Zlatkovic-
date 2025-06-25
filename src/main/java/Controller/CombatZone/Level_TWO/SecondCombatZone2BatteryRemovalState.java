@@ -16,11 +16,11 @@ import java.util.List;
 
 public class SecondCombatZone2BatteryRemovalState extends State {
 
-    private Context context;
+   
     private int amount;
 
     public SecondCombatZone2BatteryRemovalState(Context context, int amount) {
-        this.context = context;
+        super(context);
         this.amount = amount;
     }
 
@@ -77,6 +77,6 @@ public class SecondCombatZone2BatteryRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem");
+        return List.of( "UseBattery");
     }
 }

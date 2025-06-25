@@ -2,7 +2,9 @@ package Model.Ship;
 
 import Model.Enums.Good;
 
-public class GoodCounter {
+import java.io.Serializable;
+
+public class GoodCounter implements Serializable {
     private int red;
     private int yellow;
     private int green;

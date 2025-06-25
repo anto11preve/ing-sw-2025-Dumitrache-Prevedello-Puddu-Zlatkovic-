@@ -1,6 +1,8 @@
 package Model.Ship;
 
-public class EnginesCounter {
+import java.io.Serializable;
+
+public class EnginesCounter implements Serializable {
     private int singleEngines;
     private int doubleEngines;
 

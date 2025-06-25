@@ -3,14 +3,12 @@ package Model.Ship;
 import Controller.Enums.MatchLevel;
 import Model.Enums.*;
 import Model.Exceptions.InvalidMethodParameters;
-import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.Engine;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.Utils.DirectionSideUtils;
-import javafx.geometry.Orientation;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -18,12 +16,12 @@ import java.util.*;
  * Full-featured ShipBoard for Galaxy Trucker.
  * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
  */
-public class ShipBoard {
+public class ShipBoard implements Serializable {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
     private final SpaceshipComponent[][] components;
-    private SpaceshipComponent activeComponent;
+    private transient SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
     private boolean isValid = false;
@@ -786,74 +784,77 @@ public class ShipBoard {
      */
     public Map<Coordinates, List<Side>> getExposedConnectors() {
         Map<Coordinates, List<Side>> exposedConnectors = new HashMap<>();
-        boolean[][] externalReachable = new boolean[ROWS][COLS];
 
-        // Step 1: flood fill from borders to mark reachable empty spaces
-        Queue<Coordinates> queue = new LinkedList<>();
-        for (int i = 0; i < ROWS; i++) {
-            if (components[i][0] == null) queue.add(new Coordinates(i, 0));
-            if (components[i][COLS - 1] == null) queue.add(new Coordinates(i, COLS - 1));
-        }
-        for (int j = 0; j < COLS; j++) {
-            if (components[0][j] == null) queue.add(new Coordinates(0, j));
-            if (components[ROWS - 1][j] == null) queue.add(new Coordinates(ROWS - 1, j));
-        }
-
-        while (!queue.isEmpty()) {
-            Coordinates pos = queue.poll();
-            int row = pos.getI();
-            int col = pos.getJ();
-            if (!isValidPosition(row, col)) continue;
-            if (externalReachable[row][col]) continue;
-            externalReachable[row][col] = true;
-
-            int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-            for (int[] d : dirs) {
-                int newRow = row + d[0];
-                int newCol = col + d[1];
-                if (isValidPosition(newRow, newCol) && components[newRow][newCol] == null) {
-                    queue.add(new Coordinates(newRow, newCol));
-                }
-            }
-        }
-
-        // Step 2: for each component, check exposed connectors
+        // Check each component for exposed connectors
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                SpaceshipComponent comp = components[row][col];
-                if (comp == null) continue;
-                List<Side> exposed = new ArrayList<>();
+                SpaceshipComponent component = components[row][col];
+                if (component == null) continue;
 
+                List<Side> exposedSides = new ArrayList<>();
+
+                // Check each side of the component
                 for (Side side : Side.values()) {
-                    ConnectorType connector = comp.getConnectorAt(side);
+                    ConnectorType connector = component.getConnectorAt(side);
+
+                    // Skip sides without connectors
                     if (connector == ConnectorType.NONE) continue;
 
+                    // Get adjacent position
                     int[] offset = getOffset(side);
                     int adjRow = row + offset[0];
                     int adjCol = col + offset[1];
 
                     boolean isExposed = false;
+
+                    // Check if connector is exposed
                     if (!isValidPosition(adjRow, adjCol)) {
+                        // Adjacent position is out of bounds - connector is exposed
                         isExposed = true;
                     } else if (components[adjRow][adjCol] == null) {
+                        // Adjacent position is empty - connector is exposed
                         isExposed = true;
                     } else {
-                        ConnectorType neighborConnector = components[adjRow][adjCol].getConnectorAt(getOppositeSide(side));
+                        // Adjacent position has a component - check connector compatibility
+                        SpaceshipComponent neighborComponent = components[adjRow][adjCol];
+                        ConnectorType neighborConnector = neighborComponent.getConnectorAt(getOppositeSide(side));
                         isExposed = !connectorsAreConnected(connector, neighborConnector);
                     }
 
                     if (isExposed) {
-                        exposed.add(side);
+                        exposedSides.add(side);
                     }
                 }
 
-                if (!exposed.isEmpty()) {
-                    exposedConnectors.put(new Coordinates(row, col), exposed);
+                // Add component to result if it has exposed connectors
+                if (!exposedSides.isEmpty()) {
+                    exposedConnectors.put(new Coordinates(row, col), exposedSides);
                 }
             }
         }
+
         return exposedConnectors;
     }
+
+
+    /**
+     * Utility method to count the total number of exposed connectors across all components.
+     * This method should be used when counting individual exposed connectors rather than
+     * just the number of components with exposed connectors.
+     *
+     * @return the total count of individual exposed connectors
+     */
+    public int getTotalExposedConnectorCount() {
+        int totalCount = 0;
+        Map<Coordinates, List<Side>> exposedConnectors = getExposedConnectors();
+
+        for (List<Side> exposedSides : exposedConnectors.values()) {
+            totalCount += exposedSides.size();
+        }
+
+        return totalCount;
+    }
+
 
 
     /**
@@ -914,6 +915,7 @@ public class ShipBoard {
             System.out.printf("   %d   ", j + 4); // o qualsiasi offset tu voglia
         }
         System.out.println();
+
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
@@ -940,7 +942,6 @@ public class ShipBoard {
                         needsToBeEmpty = true;
                     }
                 } else {
-
                     if( (j == 0 || j == 1 || j == 3 || j == 5 || j == 6) && i == 0 ){
                         needsToBeEmpty = true;
                     } else if (i == 1 && (j == 0 || j == 6)){
@@ -964,17 +965,23 @@ public class ShipBoard {
             String[] casellaA = null, casellaB = null, casellaC = null;
             if (i == 0) { // prima riga - casella A
                 if (activeComponent != null) {
-                    casellaA = activeComponent.renderSmall();
+                    casellaA = activeComponent.renderBig();
                 } else {
-                    renderEmpty();
+                    casellaA = renderEmpty();
                 }
             }
             if (i == 1) { // seconda riga - caselle B e C
-                if(!reservedComponents.isEmpty()) {
-                    casellaB = reservedComponents.get(0).renderSmall();
-                    if (reservedComponents.size() > 1) {
-                        casellaC = reservedComponents.get(1).renderSmall();
-                    }
+                if (!reservedComponents.isEmpty()) {
+                    casellaB = reservedComponents.get(0).renderBig();
+                } else {
+                    casellaB = renderEmpty(); // FIX: show empty slot when no reserved components
+                }
+
+                // Second reserved component slot
+                if (reservedComponents.size() > 1) {
+                    casellaC = reservedComponents.get(1).renderBig();
+                } else {
+                    casellaC = renderEmpty(); // FIX: show empty slot when only one reserved component
                 }
             }
 
@@ -1014,10 +1021,15 @@ public class ShipBoard {
             }
         }
 
-// Legenda su 3 colonne
+        // Informazioni dalla condensedShip
+        System.out.println("\nSHIP STATUS:");
+        System.out.println("Batteries: "+ condensedShip.getTotalBatteries() +"  Crew: " + condensedShip.getTotalCrew());
+        System.out.println("Power: " + condensedShip.getBasePower() + "  Thrust: " + condensedShip.getBaseThrust());
+
+        // Legenda su 3 colonne
         System.out.println("\nLEGENDA:");
 
-// Array con i tuoi contenuti personalizzati
+        // Array con i tuoi contenuti personalizzati
         String[] legenda = {
                 "BAT - Battery compartment",
                 "CAR - Cargo hold",
@@ -1031,11 +1043,9 @@ public class ShipBoard {
                 "BAL - Brown Alien",
                 "SH  - Shield",
                 "↑   - Orientation"
-
-                // Aggiungi altri elementi qui...
         };
 
-// Stampa su 3 colonne
+        // Stampa su 3 colonne
         for (int i = 0; i < legenda.length; i += 3) {
             // Prima colonna
             System.out.printf("%-30s", legenda[i]);

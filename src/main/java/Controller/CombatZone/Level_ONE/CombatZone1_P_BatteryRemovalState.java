@@ -16,20 +16,20 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone1_P_BatteryRemovalState extends State {
-    private Context context;
+   
     private double declaredPower;
     private int batteries;
     private double worst;
 
     public CombatZone1_P_BatteryRemovalState(Context context, double declaredPower, int batteries) {
-        this.context = context;
+        super(context);
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone1_P_BatteryRemovalState(Context context, double declaredPower, int batteries, double worst) {
-        this.context = context;
+        super(context);
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.worst = worst;
@@ -102,6 +102,6 @@ public class CombatZone1_P_BatteryRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem");
+        return List.of( "UseBattery");
     }
 }
