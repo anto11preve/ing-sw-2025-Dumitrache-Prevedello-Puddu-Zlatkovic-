@@ -29,7 +29,7 @@ public class Context implements Serializable {
     private int credits;
     private int daysLost;
     private int diceNumber;
-    private transient Runnable visual;
+    private Runnable visual;
 
 
     public Context(Controller controller) {

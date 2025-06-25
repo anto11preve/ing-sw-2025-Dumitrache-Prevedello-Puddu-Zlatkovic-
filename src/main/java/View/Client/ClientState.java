@@ -98,6 +98,10 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke list on " + this.getClass().getName());
     }
 
+    default void viewCard() {
+        throw new UnsupportedOperationException("Cannot invoke viewCard on " + this.getClass().getName());
+    }
+
     default void viewComponent(String username, Coordinates coordinates){
         throw new UnsupportedOperationException("Cannot invoke viewComponent on " + this.getClass().getName());
     }
@@ -121,5 +125,4 @@ public interface ClientState {
     default void viewTiles(){
         throw new UnsupportedOperationException("Cannot invoke viewShipBoard on " + this.getClass().getName());
     }
-
 }

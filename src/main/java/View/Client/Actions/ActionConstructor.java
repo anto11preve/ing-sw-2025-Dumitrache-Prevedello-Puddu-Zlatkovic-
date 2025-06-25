@@ -5,6 +5,7 @@ import View.Client.ClientState;
 import View.Client.Visualizes.ViewComponent;
 import View.Client.Visualizes.ViewShipBoard;
 import View.Client.Visualizes.Visualize;
+import View.States.ViewCardState;
 import View.States.ViewFlightBoardState;
 import View.States.ViewTilesState;
 
@@ -36,11 +37,12 @@ public interface ActionConstructor {
 
             /*Visualizers*/
             actionConstructors.putAll(Map.of(
+                    "BackToShip", _ -> (Visualize) () -> Client.view.getState().backToShip(),
+                    "ViewCard", _ -> (Visualize) ViewCardState::new,
+                    "ViewComponent", ViewComponent.getConstructor(),
                     "ViewFlightBoard", _ -> (Visualize) ViewFlightBoardState::new,
                     "ViewShipBoard", ViewShipBoard.getConstructor(),
-                    "ViewTiles", _ -> (Visualize) ViewTilesState::new,
-                    "ViewComponent", ViewComponent.getConstructor(),
-                    "BackToShip", _ -> (Visualize) () -> Client.view.getState().backToShip()
+                    "ViewTiles", _ -> (Visualize) ViewTilesState::new
             ));
         }
 
