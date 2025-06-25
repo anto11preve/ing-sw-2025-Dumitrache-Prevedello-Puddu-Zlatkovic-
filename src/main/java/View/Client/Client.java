@@ -55,7 +55,11 @@ public class Client implements Agent {
     }
 
     public synchronized void execute(Action action) {
-        this.state = action.execute(this.state);
+        try {
+            this.state = action.execute(this.state);
+        } catch (UnsupportedOperationException e) {
+            view.log(e.getMessage());
+        }
 
         if(this.state.isDone()){
             view.setMenuState(new StopState());

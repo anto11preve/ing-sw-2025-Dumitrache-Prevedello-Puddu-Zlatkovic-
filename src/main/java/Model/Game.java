@@ -495,7 +495,7 @@ public class Game implements Serializable, Cloneable {
     }
 
     public Game(Game oldGame){
-        this.players = oldGame.players;
+        this.players = new ArrayList<>(oldGame.players);
         this.level = oldGame.level;
         this.tiles = oldGame.tiles;
         this.flightBoard = oldGame.flightBoard;
