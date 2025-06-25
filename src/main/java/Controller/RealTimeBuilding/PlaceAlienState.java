@@ -16,6 +16,7 @@ import Model.Ship.CondensedShip;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ import java.util.Map;
 
 
     /** Map tracking which aliens each player can still insert */
-    Map<Player, CanInsertAliens> playersAlienAvailability;
+    Map<Player, CanInsertAliens> playersAlienAvailability=new HashMap<>();
 
     /**
      * Fills all empty cabins with human crew.

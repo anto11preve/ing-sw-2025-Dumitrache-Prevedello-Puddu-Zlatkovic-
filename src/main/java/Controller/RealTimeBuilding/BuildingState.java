@@ -231,7 +231,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(1);
+                    currentPlayer.getShipBoard().removeReservedComponent(0);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -248,7 +248,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(2);
+                    currentPlayer.getShipBoard().removeReservedComponent(1);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);

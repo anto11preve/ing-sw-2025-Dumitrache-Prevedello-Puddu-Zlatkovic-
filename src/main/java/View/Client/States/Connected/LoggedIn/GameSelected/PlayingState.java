@@ -40,7 +40,7 @@ public abstract class PlayingState extends GameSelectedState {
 
     @Override
     public void viewShipBoard(String username) {
-        this.getGame().getPlayer(username).getShipBoard().render();
+        this.getGame().getPlayer(username).getShipBoard().render(this.getGame().getLevel());
     }
 
     @Override

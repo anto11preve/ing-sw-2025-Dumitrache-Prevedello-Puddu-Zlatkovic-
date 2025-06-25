@@ -42,16 +42,26 @@ public class TestStateManager {
         // Building phase with components placed
 
 
+        // Building phase with 1 wrong ship in Level 2
         saveGameSnapshot("build_end_2_good_1_bad_L2", finishedBuilding1wrongL2(MatchLevel.LEVEL2));
 
+        // Building phase with 1 wrong ship in Trial
         saveGameSnapshot("build_end_2_good_1_bad_Trial", finishedBuilding1wrongL2(MatchLevel.TRIAL));
 
+        // Building phase with all valid ships in Level 2
         saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
 
+        // Building phase with all valid ships in Trial
         saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
 
+        // Building phase with all valid ships in Level 2 with NO alien support ship
         saveGameSnapshot("build_end_2_good_NO_alien_L2", finishedBuildingAllValid());
 
+        // Flight phase started with 2 players in Trial
+        saveGameSnapshot("flight_phase_2_players_trial", flightPhase2Players(MatchLevel.TRIAL));
+
+        // Flight phase started with 2 players in Level 2
+        saveGameSnapshot("flight_phase_2_players_L2", flightPhase2Players(MatchLevel.LEVEL2));
 
     }
 
@@ -136,9 +146,9 @@ public class TestStateManager {
             controller.login("Bob");
             controller.startGame("Carl");
             controller.startGame("Anna");
-            controller.preBuiltShip("Anna", 1);
-            controller.preBuiltShip("Bob", 2);
-            controller.preBuiltShip("Carl", 3);
+            controller.preBuiltShip("Anna", 0);
+            controller.preBuiltShip("Bob", 1);
+            controller.preBuiltShip("Carl", 2);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
@@ -158,8 +168,8 @@ public class TestStateManager {
             controller.login("Anna");
             controller.login("Bob");
             controller.startGame("Anna");
-            controller.preBuiltShip("Anna", 1);
-            controller.preBuiltShip("Bob", 2);
+            controller.preBuiltShip("Anna", 0);
+            controller.preBuiltShip("Bob", 1);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
@@ -178,14 +188,42 @@ public class TestStateManager {
             controller.login("Anna");
             controller.login("Bob");
             controller.startGame("Anna");
-            controller.preBuiltShip("Anna", 2);
-            controller.preBuiltShip("Bob", 2);
+            controller.preBuiltShip("Anna", 1);
+            controller.preBuiltShip("Bob", 1);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
 
         return new GameSnapshot(controller, "Finished building phase with alien support ship in Level 2");
+
+    }
+
+    public static GameSnapshot flightPhase2Players(MatchLevel level) {
+        GameSnapshot snapshot = finishedBuildingAllValid(level);
+        Controller controller = snapshot.getController();
+        try {
+            controller.finishBuilding("Anna", 0);
+            controller.finishBuilding("Bob", 1);
+        } catch (InvalidCommand | InvalidParameters e) {
+            throw new RuntimeException("Failed to start flight phase", e);
+        }
+
+        if(level == MatchLevel.LEVEL2) {
+
+            try {
+                controller.placeCrew("Anna", new Coordinates(7, 6), CrewType.PURPLE_ALIEN);
+            }catch (InvalidCommand | InvalidParameters e) {
+                throw new RuntimeException("Failed to start flight phase", e);
+            }
+        }
+
+        if( level == MatchLevel.LEVEL2) {
+            return new GameSnapshot(controller, "Flight phase started with 2 players in Level 2");
+        } else {
+            return new GameSnapshot(controller, "Flight phase started with 2 players in Trial");
+        }
+
 
     }
 
