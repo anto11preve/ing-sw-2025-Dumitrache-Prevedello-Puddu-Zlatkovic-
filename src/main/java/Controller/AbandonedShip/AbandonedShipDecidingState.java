@@ -28,7 +28,7 @@ import java.util.List;
 public class AbandonedShipDecidingState extends State {
 
     /** The shared context containing game state and references. */
-    private Context context;
+   
 
     /**
      * Constructs the state with the given context.
@@ -36,7 +36,7 @@ public class AbandonedShipDecidingState extends State {
      * @param context the game context used to access controller and shared state.
      */
     public AbandonedShipDecidingState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

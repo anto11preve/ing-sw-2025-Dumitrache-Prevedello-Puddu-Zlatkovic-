@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class AbandonedShipCrewRemovalState extends State {
     /** The shared context containing game state and references. */
-    private Context context;
+   
 
     /**
      * Constructs the state with the given context.
@@ -37,7 +37,7 @@ public class AbandonedShipCrewRemovalState extends State {
      * @param context the game context used to access controller and shared state.
      */
     public AbandonedShipCrewRemovalState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

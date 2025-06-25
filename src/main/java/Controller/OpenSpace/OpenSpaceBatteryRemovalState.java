@@ -27,7 +27,7 @@ public class OpenSpaceBatteryRemovalState extends State {
     /**
      * The context in which this state operates, providing access to the game controller.
      */
-    private Context context;
+   
     /**
      * The number of batteries that must be removed to confirm the use of double engines.
      */
@@ -42,7 +42,7 @@ public class OpenSpaceBatteryRemovalState extends State {
      * @param declaredPower The number of batteries that must be removed.
      */
     public OpenSpaceBatteryRemovalState(Context context, double declaredPower, int batteries) {
-        this.context = context;
+        super(context);
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.setPlayerInTurn(context.getPlayers().getFirst());

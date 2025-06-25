@@ -16,10 +16,10 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone2CheckShipState extends State {
-    private Context context;
+   
 
     public CombatZone2CheckShipState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

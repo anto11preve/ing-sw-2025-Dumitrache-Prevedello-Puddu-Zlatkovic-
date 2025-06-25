@@ -19,12 +19,11 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone1ManageShotState extends State {
-    private final Context context;
     private final int number; //TODO: non controlla se il numero è valido o se è out of bounds, occhio perchè getComponent ritorna null se non trova il componente
     boolean hit = false;
 
     public CombatZone1ManageShotState(Context context,  int number) {
-        this.context = context;
+        super(context);
         this.number = number;
     }
 

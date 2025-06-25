@@ -22,7 +22,7 @@ public class OpenSpaceEngineDeclarationState extends State {
     /**
      * The context in which this state operates, providing access to the game controller.
      */
-    private Context context;
+   
 
     /**
      * Constructs an OpenSpaceEngineDeclarationState with the specified context.
@@ -30,7 +30,7 @@ public class OpenSpaceEngineDeclarationState extends State {
      * @param context The context providing access to the current game context.
      */
     public OpenSpaceEngineDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

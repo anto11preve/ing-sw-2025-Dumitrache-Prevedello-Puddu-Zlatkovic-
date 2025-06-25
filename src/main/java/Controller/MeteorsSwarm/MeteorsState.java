@@ -25,7 +25,7 @@ public class MeteorsState extends State {
     Context context;
 
     public MeteorsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

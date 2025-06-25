@@ -34,7 +34,7 @@ public class PiratesPowerDeclarationState extends State {
      * @param context The context providing access to the current game context.
      */
     public PiratesPowerDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

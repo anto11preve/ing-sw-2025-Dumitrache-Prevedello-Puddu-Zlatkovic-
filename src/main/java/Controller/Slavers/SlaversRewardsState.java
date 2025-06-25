@@ -28,7 +28,7 @@ public class SlaversRewardsState extends State{
      * @param context the shared game context
      */
     public SlaversRewardsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

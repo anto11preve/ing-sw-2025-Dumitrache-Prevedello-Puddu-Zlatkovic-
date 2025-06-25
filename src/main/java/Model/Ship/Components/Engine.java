@@ -100,7 +100,7 @@ public class Engine extends SpaceshipComponent {
         return righe;
     }
 
-    public String[] renderBigArray() {
+    public String[] renderBig() {
         String[] righe = new String[5];
 
         // Riga superiore

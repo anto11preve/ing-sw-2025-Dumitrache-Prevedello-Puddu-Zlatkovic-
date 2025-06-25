@@ -16,14 +16,14 @@ import java.util.List;
 
 //TODO: cambiare firma
 public class PiratesCheckShipState extends State {
-    private Context context;
+   
     int number;
     int turn;
 
     /// Turno del giocatore speciale che dve subire la cannonata
 
     public PiratesCheckShipState(Context context, int number, int turn) {
-        this.context = context;
+        super(context);
         this.number = number;
         this.turn = turn;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());

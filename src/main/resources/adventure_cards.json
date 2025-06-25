@@ -31,14 +31,14 @@
     "level": "LEARNER",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "RED"
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "RED",
           "BLUE",
@@ -46,7 +46,7 @@
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "YELLOW"
         ]
@@ -165,7 +165,7 @@
     "level": "LEVEL_ONE",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "GREEN",
@@ -175,7 +175,7 @@
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "RED",
           "YELLOW",
@@ -183,7 +183,7 @@
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "RED",
           "BLUE",
@@ -192,7 +192,7 @@
         ]
       },
       {
-        "name": "Planet 4",
+        "name": "Planet4",
         "goods": [
           "RED",
           "GREEN"
@@ -210,7 +210,7 @@
     "level": "LEVEL_ONE",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "YELLOW",
           "GREEN",
@@ -219,7 +219,7 @@
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "YELLOW",
           "YELLOW"
@@ -237,20 +237,20 @@
     "level": "LEVEL_ONE",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "GREEN",
           "GREEN"
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "YELLOW"
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "BLUE",
           "BLUE",
@@ -481,7 +481,7 @@
     "level": "LEVEL_TWO",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "RED",
@@ -490,7 +490,7 @@
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "RED",
           "RED",
@@ -499,7 +499,7 @@
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "RED",
           "BLUE",
@@ -520,14 +520,14 @@
     "level": "LEVEL_TWO",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "RED"
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "GREEN",
           "GREEN",
@@ -547,14 +547,14 @@
     "level": "LEVEL_TWO",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "YELLOW"
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "YELLOW",
           "GREEN",
@@ -562,14 +562,14 @@
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "GREEN",
           "GREEN"
         ]
       },
       {
-        "name": "Planet 4",
+        "name": "Planet4",
         "goods": [
           "YELLOW"
         ]
@@ -586,7 +586,7 @@
     "level": "LEVEL_TWO",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "GREEN",
           "GREEN",
@@ -595,14 +595,14 @@
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "YELLOW",
           "YELLOW"
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "BLUE",
           "BLUE",
@@ -814,14 +814,14 @@
     "level": "LEVEL_ONE",
     "planets": [
       {
-        "name": "Planet 1",
+        "name": "Planet1",
         "goods": [
           "RED",
           "RED"
         ]
       },
       {
-        "name": "Planet 2",
+        "name": "Planet2",
         "goods": [
           "RED",
           "BLUE",
@@ -829,7 +829,7 @@
         ]
       },
       {
-        "name": "Planet 3",
+        "name": "Planet3",
         "goods": [
           "YELLOW"
         ]

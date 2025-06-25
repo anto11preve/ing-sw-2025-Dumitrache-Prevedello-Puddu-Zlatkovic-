@@ -39,7 +39,7 @@ public class PiratesManageShotState extends State{
      * @param turn    The turn of the special player who is to be hit by the cannon shot.
      */
     public PiratesManageShotState(Context context, int number, int turn) {
-        this.context = context;
+        super(context);
         this.number = number;
         this.turn = turn;
         this.setPlayerInTurn(context.getSpecialPlayers().get(turn));

@@ -36,7 +36,7 @@ public class ChoosePlanetState extends State {
      * @param context The context of the game.
      */
     public ChoosePlanetState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
@@ -47,7 +47,7 @@ public class ChoosePlanetState extends State {
      * @param choosenPlanets The list of planets that have been chosen by players so far.
      */
     public ChoosePlanetState(Context context, List<Planet> choosenPlanets) {
-        this.context = context;
+        super(context);
         this.chosenPlanets = choosenPlanets;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }

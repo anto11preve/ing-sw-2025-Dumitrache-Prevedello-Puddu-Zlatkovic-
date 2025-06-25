@@ -12,17 +12,17 @@ import Model.Player;
 import java.util.List;
 
 public class CombatZone2EngineDeclarationState extends State {
-    private Context context;
+   
     private double worst;
 
     public CombatZone2EngineDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.worst = -1;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone2EngineDeclarationState(Context context, double worst) {
-        this.context = context;
+        super(context);
         this.worst = worst;
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }

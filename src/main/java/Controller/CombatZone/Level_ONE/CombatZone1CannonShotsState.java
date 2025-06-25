@@ -16,10 +16,9 @@ import java.util.List;
 import java.util.Random;
 
 public class CombatZone1CannonShotsState extends State {
-    private final Context context;
 
     public CombatZone1CannonShotsState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

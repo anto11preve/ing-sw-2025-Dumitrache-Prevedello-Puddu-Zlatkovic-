@@ -24,7 +24,7 @@ public class PlanetsLandState extends State {
     /**
      * The context of the game, which contains information about the current state and players.
      */
-    private Context context;
+   
     /**
      * The list of planets that have been chosen by players.
      */
@@ -36,7 +36,7 @@ public class PlanetsLandState extends State {
      * @param context The context of the game.
      */
     public PlanetsLandState(Context context, List<Planet> chosenPlanets) {
-        this.context = context;
+        super(context);
         this.chosenPlanets = chosenPlanets;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }

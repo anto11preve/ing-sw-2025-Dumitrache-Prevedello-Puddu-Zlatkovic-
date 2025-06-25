@@ -24,7 +24,7 @@ public class SmugglersBatteryRemovalState extends State{
     /**
      * Context object that holds the game state and players information.
      */
-    private Context context;
+   
     /**
      * The declared power of the player.
      */
@@ -42,7 +42,7 @@ public class SmugglersBatteryRemovalState extends State{
      * @param batteries    the number of batteries the player has to remove
      */
     public SmugglersBatteryRemovalState(Context context, double declaredPower, int batteries) {
-        this.context = context;
+        super(context);
         this.declaredPower = declaredPower;
         this.batteries = batteries;
         this.setPlayerInTurn(context.getPlayers().getFirst());

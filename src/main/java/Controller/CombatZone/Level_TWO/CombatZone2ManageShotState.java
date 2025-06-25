@@ -21,12 +21,11 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone2ManageShotState extends State {
-    private final Context context;
     private final int number;
     boolean hit = false;
 
     public CombatZone2ManageShotState(Context context,  int number) {
-        this.context = context;
+        super(context);
         this.number = number;
     }
 

@@ -23,7 +23,7 @@ public class SmugglersLandState extends State{
     /**
      * Context object that holds the game state and player information.
      */
-    private Context context;
+   
 
     /**
      * Constructor to initialize the state with the current game context.
@@ -31,7 +31,7 @@ public class SmugglersLandState extends State{
      * @param context the shared game context
      */
     public SmugglersLandState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

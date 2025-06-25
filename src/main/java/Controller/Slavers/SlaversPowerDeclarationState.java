@@ -28,7 +28,7 @@ public class SlaversPowerDeclarationState extends State {
      * @param context the shared game context
      */
     public SlaversPowerDeclarationState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

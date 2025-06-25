@@ -27,7 +27,7 @@ public class SmugglersGoodsRemovalState extends State{
     /**
      * Context object that holds the game state and player information.
      */
-    private Context context;
+   
     /**
      * The good counter that tracks the number of goods to be removed.
      */
@@ -43,7 +43,7 @@ public class SmugglersGoodsRemovalState extends State{
      * @param context the shared game context
      */
     public SmugglersGoodsRemovalState(Context context) {
-        this.context = context;
+        super(context);
         this.amount = context.getRequiredGoods();
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
@@ -55,7 +55,7 @@ public class SmugglersGoodsRemovalState extends State{
      * @param amount  the number of goods yet to be removed
      */
     public SmugglersGoodsRemovalState(Context context, int amount) {
-        this.context = context;
+        super(context);
         this.amount = amount;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }

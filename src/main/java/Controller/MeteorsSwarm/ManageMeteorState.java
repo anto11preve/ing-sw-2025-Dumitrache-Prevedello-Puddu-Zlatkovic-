@@ -26,7 +26,6 @@ public class ManageMeteorState extends State {
     /**
      * The context of the game, which contains the current state and player information.
      */
-    private final Context context;
 
     /** The row or column index (depending on the meteor's direction) targeted by the meteor. */
     private final int number;
@@ -41,7 +40,7 @@ public class ManageMeteorState extends State {
      * @param number the index (row or column) that the meteor will impact
      */
     public ManageMeteorState(Context context, int number) {
-        this.context = context;
+        super(context);
         this.number = number;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }

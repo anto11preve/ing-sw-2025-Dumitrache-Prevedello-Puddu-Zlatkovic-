@@ -424,7 +424,7 @@ public class FlightBoard implements Serializable {
 
         // Print table header
         System.out.println("┌─────────────────────────────────────────────────────────────────────┐");
-        System.out.println("│                         FLIGHT BOARD STATUS                        │");
+        System.out.println("│                         FLIGHT BOARD STATUS                         │");
         System.out.println("├─────────────────────────────────────────────────────────────────────┤");
         System.out.printf("│ %-3s │ %-25s │ %-15s │ %-15s │%n", "Pos", "Player Name", "Credits", "Position");
         System.out.println("├─────┼───────────────────────────┼─────────────────┼─────────────────┤");

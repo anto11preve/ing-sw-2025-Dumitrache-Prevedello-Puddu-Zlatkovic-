@@ -31,7 +31,7 @@ public class PiratesRewardState extends State {
      * @param context The context of the game.
      */
     public PiratesRewardState(Context context) {
-        this.context = context;
+        super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 

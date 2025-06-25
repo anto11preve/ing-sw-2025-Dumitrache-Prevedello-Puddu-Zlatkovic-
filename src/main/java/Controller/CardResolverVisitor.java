@@ -69,7 +69,7 @@ public class CardResolverVisitor {
          */
         Context context = new Context(controller, card);
         CombatZone Ccard = (CombatZone) card;
-        if(Ccard.getLevel() == CardLevel.LEVEL_ONE){
+        if(Ccard.getLevel() == CardLevel.LEARNER){
             int numPlayers = controller.getModel().getFlightBoard().getTurnOrder().length;
             if(numPlayers == 1){
                 controller.getModel().setState(new FlightPhase(controller));
