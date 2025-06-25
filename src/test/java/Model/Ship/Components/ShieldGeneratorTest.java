@@ -32,7 +32,7 @@ public class ShieldGeneratorTest {
         
         ShieldGenerator shield = new ShieldGenerator(json);
         assertEquals(Card.SHIELD_GENERATOR, shield.getType());
-        assertEquals(Direction.DOWN, shield.getOrientation());
+        assertEquals(Direction.UP, shield.getOrientation());
         assertEquals(ConnectorType.UNIVERSAL, shield.getConnectorAt(Side.FRONT));
         assertEquals(ConnectorType.SINGLE, shield.getConnectorAt(Side.REAR));
         assertEquals(ConnectorType.DOUBLE, shield.getConnectorAt(Side.LEFT));

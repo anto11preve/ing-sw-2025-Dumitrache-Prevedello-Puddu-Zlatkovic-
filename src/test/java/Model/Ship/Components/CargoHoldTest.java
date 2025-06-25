@@ -33,7 +33,7 @@ public class CargoHoldTest {
         JsonObject json = new JsonObject();
         json.addProperty("type", "CARGO_HOLD");
         json.addProperty("imagePath", "test.png");
-        json.addProperty("capacity", 4);
+        json.addProperty("cargoCapacity", 4);
         json.addProperty("isSpecial", true);
         
         JsonObject connectors = new JsonObject();
@@ -210,7 +210,7 @@ public class CargoHoldTest {
         String[] render = cargo.renderBig();
         assertNotNull(render);
         assertEquals(5, render.length);
-        assertTrue(render[1].contains("CARGO"));
+        assertTrue(render[1].contains("CARGO-B"));
     }
 
     @Test
@@ -220,7 +220,7 @@ public class CargoHoldTest {
         String[] render = cargo.renderBig();
         assertNotNull(render);
         assertEquals(5, render.length);
-        assertTrue(render[1].contains("CARGOS"));
+        assertTrue(render[1].contains("CARGO-S"));
     }
 
     @Test

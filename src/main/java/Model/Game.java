@@ -367,7 +367,9 @@ public class Game implements Serializable, Cloneable {
 
     public void setState(State phase) {
         this.state = phase;
-        phase.onEnter();
+        if (phase!=null) {
+            phase.onEnter();
+        }
     }
 
     public State getState() {

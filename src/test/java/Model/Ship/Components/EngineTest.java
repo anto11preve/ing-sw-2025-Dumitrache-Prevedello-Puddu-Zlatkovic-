@@ -29,7 +29,7 @@ public class EngineTest {
         JsonObject json = new JsonObject();
         json.addProperty("type", "ENGINE");
         json.addProperty("imagePath", "test.png");
-        json.addProperty("isDouble", false);
+        json.addProperty("isDoubleEngine", false);
         
         JsonObject connectors = new JsonObject();
         connectors.addProperty("front", "UNIVERSAL");
@@ -52,7 +52,7 @@ public class EngineTest {
         JsonObject json = new JsonObject();
         json.addProperty("type", "ENGINE");
         json.addProperty("imagePath", "test.png");
-        json.addProperty("isDouble", true);
+        json.addProperty("isDoubleEngine", true);
         
         JsonObject connectors = new JsonObject();
         connectors.addProperty("front", "UNIVERSAL");
@@ -175,7 +175,8 @@ public class EngineTest {
         String[] render = singleEngine.renderBig();
         assertNotNull(render);
         assertEquals(5, render.length);
-        assertTrue(render[1].contains("ENGINE"));
+        assertTrue(render[1].contains("ENGIN"));
+        assertTrue(render[3].contains("SINGL"));
     }
 
     @Test
@@ -185,7 +186,9 @@ public class EngineTest {
         String[] render = doubleEngine.renderBig();
         assertNotNull(render);
         assertEquals(5, render.length);
-        assertTrue(render[1].contains("ENGINED"));
+        assertTrue(render[1].contains("ENGIN"));
+        assertTrue(render[3].contains("DOUBL"));
+
     }
 
     @Test

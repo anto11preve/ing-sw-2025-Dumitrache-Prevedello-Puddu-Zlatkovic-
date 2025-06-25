@@ -63,7 +63,7 @@ public class Engine extends SpaceshipComponent {
             throw new RuntimeException("Cargo Hold already added to the ship.");
         } else {
             getShipBoard().getCondensedShip().getEnginesList().add(this);
-            if(isDouble){
+            if(!isDouble){
                 getShipBoard().getCondensedShip().getEngines().incrementSingleEngines();
             } else {
                 getShipBoard().getCondensedShip().getEngines().incrementDoubleEngines();
@@ -77,7 +77,7 @@ public class Engine extends SpaceshipComponent {
             throw new RuntimeException("Cargo Hold not found in the ship.");
         } else {
             getShipBoard().getCondensedShip().getEnginesList().remove(this);
-            if(isDouble){
+            if(!isDouble){
                 getShipBoard().getCondensedShip().getEngines().decrementSingleEngines();
             } else {
                 getShipBoard().getCondensedShip().getEngines().decrementDoubleEngines();
@@ -88,7 +88,9 @@ public class Engine extends SpaceshipComponent {
 
     public String[] renderSmall() {
         String[] righe = new String[3];
-        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        righe[0] = String.format("╔═ %s ═╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
         String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         if (!this.isDouble) {
@@ -96,11 +98,13 @@ public class Engine extends SpaceshipComponent {
         } else {
             righe[1] = String.format("%s E2%s %s", sx, this.getOrientation().getFreccia(), dx);
         }
-        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
         return righe;
     }
 
-    public String[] renderBigArray() {
+    @Override
+    public String[] renderBig() {
         String[] righe = new String[5];
 
         // Riga superiore

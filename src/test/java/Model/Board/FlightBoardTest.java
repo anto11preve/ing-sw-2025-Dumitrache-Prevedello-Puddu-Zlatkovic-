@@ -656,6 +656,7 @@ public class FlightBoardTest {
     public void testGetDubbedPlayers() {
         CardDeck deck = new CardDeck();
         FlightBoard board = new FlightBoard(new ArrayList<>(), deck, MatchLevel.TRIAL);
+
         List<Player> dubbedPlayers = board.getDubbedPlayers();
         assertNotNull(dubbedPlayers);
         assertTrue(dubbedPlayers.isEmpty());

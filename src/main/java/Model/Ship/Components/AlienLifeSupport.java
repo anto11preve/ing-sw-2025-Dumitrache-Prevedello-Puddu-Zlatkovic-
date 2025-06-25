@@ -101,7 +101,9 @@ public class AlienLifeSupport extends SpaceshipComponent {
 
     public String[] renderSmall() {
         String[] righe = new String[3];
-        righe[0] = String.format("╔═ %d ═╗", this.getConnectorAt(Side.FRONT).getNumero());
+        righe[0] = String.format("╔═ %s ═╗",
+                this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
         String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         if (this.getColor() == AlienColor.BROWN) {
@@ -111,7 +113,8 @@ public class AlienLifeSupport extends SpaceshipComponent {
         } else {
             righe[1] = String.format("%s ?AL %s", sx, dx); // Fallback case, should not happen
         }
-        righe[2] = String.format("╚═ %d ═╝", this.getConnectorAt(Side.REAR).getNumero());
+        righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
+                        String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
         return righe;
     }
 
