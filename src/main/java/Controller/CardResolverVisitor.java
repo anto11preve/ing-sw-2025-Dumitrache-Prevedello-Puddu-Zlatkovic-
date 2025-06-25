@@ -78,7 +78,7 @@ public class CardResolverVisitor {
             }
 
             Player currentPlayer = controller.getModel().getFlightBoard().getTurnOrder()[0];
-            for(int i = 0; i<numPlayers; i++){
+            for(int i = 0; i<numPlayers-1; i++){
                 Player nextPlayer = controller.getModel().getFlightBoard().getTurnOrder()[(i+1)];
                 if(nextPlayer.getShipBoard().getCondensedShip().getTotalCrew() > currentPlayer.getShipBoard().getCondensedShip().getTotalCrew()){
                     currentPlayer = nextPlayer;

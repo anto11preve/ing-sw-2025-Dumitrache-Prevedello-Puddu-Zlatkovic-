@@ -23,7 +23,7 @@ public class ShipBoard implements Serializable {
     private final SpaceshipComponent[][] components;
     private transient SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
-    private transient final CondensedShip condensedShip;
+    private final CondensedShip condensedShip;
     private boolean isValid = false;
 
     public ShipBoard() {
@@ -915,6 +915,7 @@ public class ShipBoard implements Serializable {
             System.out.printf("   %d   ", j + 4); // o qualsiasi offset tu voglia
         }
         System.out.println();
+
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
@@ -941,7 +942,6 @@ public class ShipBoard implements Serializable {
                         needsToBeEmpty = true;
                     }
                 } else {
-
                     if( (j == 0 || j == 1 || j == 3 || j == 5 || j == 6) && i == 0 ){
                         needsToBeEmpty = true;
                     } else if (i == 1 && (j == 0 || j == 6)){
@@ -1021,10 +1021,15 @@ public class ShipBoard implements Serializable {
             }
         }
 
-// Legenda su 3 colonne
+        // Informazioni dalla condensedShip
+        System.out.println("\nSHIP STATUS:");
+        System.out.println("Batteries: "+ condensedShip.getTotalBatteries() +"  Crew: " + condensedShip.getTotalCrew());
+        System.out.println("Power: " + condensedShip.getBasePower() + "  Thrust: " + condensedShip.getBaseThrust());
+
+        // Legenda su 3 colonne
         System.out.println("\nLEGENDA:");
 
-// Array con i tuoi contenuti personalizzati
+        // Array con i tuoi contenuti personalizzati
         String[] legenda = {
                 "BAT - Battery compartment",
                 "CAR - Cargo hold",
@@ -1038,11 +1043,9 @@ public class ShipBoard implements Serializable {
                 "BAL - Brown Alien",
                 "SH  - Shield",
                 "↑   - Orientation"
-
-                // Aggiungi altri elementi qui...
         };
 
-// Stampa su 3 colonne
+        // Stampa su 3 colonne
         for (int i = 0; i < legenda.length; i += 3) {
             // Prima colonna
             System.out.printf("%-30s", legenda[i]);

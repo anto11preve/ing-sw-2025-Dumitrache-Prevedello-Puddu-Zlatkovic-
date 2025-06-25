@@ -5,12 +5,13 @@ import Model.Enums.Direction;
 import Model.Enums.Good;
 import Model.Ship.Components.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CondensedShip {
+public class CondensedShip implements Serializable {
     private final List<Cabin> cabins;
     private final List<BatteryCompartment> batteryCompartments;
     private final List<CargoHold> cargoHolds;

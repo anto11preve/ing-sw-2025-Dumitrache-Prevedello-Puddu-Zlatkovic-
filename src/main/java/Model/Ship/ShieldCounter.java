@@ -1,6 +1,8 @@
 package Model.Ship;
 
-public class ShieldCounter {
+import java.io.Serializable;
+
+public class ShieldCounter implements Serializable {
     private int northShields;
     private int eastShields;
     private int southShields;

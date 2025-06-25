@@ -63,7 +63,7 @@ public class Engine extends SpaceshipComponent {
             throw new RuntimeException("Cargo Hold already added to the ship.");
         } else {
             getShipBoard().getCondensedShip().getEnginesList().add(this);
-            if(isDouble){
+            if(!isDouble){
                 getShipBoard().getCondensedShip().getEngines().incrementSingleEngines();
             } else {
                 getShipBoard().getCondensedShip().getEngines().incrementDoubleEngines();
@@ -77,7 +77,7 @@ public class Engine extends SpaceshipComponent {
             throw new RuntimeException("Cargo Hold not found in the ship.");
         } else {
             getShipBoard().getCondensedShip().getEnginesList().remove(this);
-            if(isDouble){
+            if(!isDouble){
                 getShipBoard().getCondensedShip().getEngines().decrementSingleEngines();
             } else {
                 getShipBoard().getCondensedShip().getEngines().decrementDoubleEngines();
