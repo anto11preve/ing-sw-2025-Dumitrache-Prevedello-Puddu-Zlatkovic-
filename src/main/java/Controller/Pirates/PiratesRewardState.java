@@ -21,11 +21,6 @@ import java.util.List;
  */
 public class PiratesRewardState extends State {
     /**
-     * The context of the game, which contains information about the current state and players.
-     */
-    Context context;
-
-    /**
      * Constructs a new PiratesRewardState.
      *
      * @param context The context of the game.

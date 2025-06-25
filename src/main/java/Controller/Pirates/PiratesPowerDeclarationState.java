@@ -24,11 +24,6 @@ import java.util.List;
  */
 public class PiratesPowerDeclarationState extends State {
     /**
-     * The context in which this state operates, providing access to the game controller.
-     */
-    Context context;
-
-    /**
      * Constructs a PiratesPowerDeclarationState with the specified context.
      *
      * @param context The context providing access to the current game context.

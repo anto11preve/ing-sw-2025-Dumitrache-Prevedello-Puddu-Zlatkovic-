@@ -18,11 +18,6 @@ import java.util.List;
  */
 public class SmugglersPowerDeclarationState extends State {
     /**
-     * Context object that holds the game state and player information.
-     */
-    Context context;
-
-    /**
      * Constructor to initialize the state with the current game context.
      *
      * @param context the shared game context
