@@ -91,6 +91,6 @@ public class LogInState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of("Logout", "StartGame");
+        return List.of("Leave", "StartGame");
     }
 }
