@@ -129,12 +129,12 @@ public class FlightBoard implements Serializable {
 
         assert (3 == peekableCardDecks.size());
         for (CardDeck cardDeck : peekableCardDecks) {
-            assert (4 == cardDeck.peekCards().size());
+            assert (3 == cardDeck.peekCards().size());
         }
         this.peekableCardDecks = peekableCardDecks;
 
         this.hiddenCardDeck = hiddenCardDeck;
-        assert (4 == this.hiddenCardDeck.peekCards().size());
+        assert (3 == this.hiddenCardDeck.peekCards().size());
 
         this.upcomingCardDeck = null;
         this.playerPositions = new HashMap<>();
@@ -170,17 +170,19 @@ public class FlightBoard implements Serializable {
         List<Player> dubbedPlayers = new ArrayList<>();
         int length = players.length;
 
-        int firstPlayerDistance = playerTotalDistance.get(players[length-1]);
+        if (length>0) {
+            int firstPlayerDistance = playerTotalDistance.get(players[length-1]);
 
-        if(playerTotalDistance.get(players[0])>firstPlayerDistance) {
-            firstPlayerDistance = playerTotalDistance.get(players[0]);
-        }
+            if(playerTotalDistance.get(players[0])>firstPlayerDistance) {
+                firstPlayerDistance = playerTotalDistance.get(players[0]);
+            }
 
-        for(int i=0;i<length;i++){
+            for(int i=0;i<length;i++){
 
-            int otherPlayerDistance = playerTotalDistance.get(players[i]);
-            if((firstPlayerDistance-otherPlayerDistance)>cellNumber){
-                dubbedPlayers.add(players[i]);
+                int otherPlayerDistance = playerTotalDistance.get(players[i]);
+                if((firstPlayerDistance-otherPlayerDistance)>cellNumber){
+                    dubbedPlayers.add(players[i]);
+                }
             }
         }
 

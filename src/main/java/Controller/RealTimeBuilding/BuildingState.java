@@ -232,7 +232,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(1);
+                    currentPlayer.getShipBoard().removeReservedComponent(0);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -249,7 +249,7 @@ public class BuildingState extends State {
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
-                    currentPlayer.getShipBoard().removeReservedComponent(2);
+                    currentPlayer.getShipBoard().removeReservedComponent(1);
 
                     model.addComponent(activeComponent);
                     currentPlayer.getShipBoard().setActiveComponent(null);
@@ -410,12 +410,12 @@ public class BuildingState extends State {
      */
     public void finishBuilding(String name, int position) throws InvalidCommand, InvalidParameters {
         Game model= this.getController().getModel();
-        Timer timer= model.getFlightBoard().getTimer();
-        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
-        if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
-            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
-        }
-        else{
+//        Timer timer= model.getFlightBoard().getTimer();
+//        //if the timer is null it's a trial game, so no timer is present, and no needs to go to HourGlassFinishedState
+//        if(timer!=null && timer.getPhase()== Timer.Phase.LAST_PHASE && timer.getTimeLeft()==0.0f){
+//            this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
+//        }
+//        else{
             Player currentPlayer = this.getController().getModel().getPlayer(name);
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
@@ -490,7 +490,7 @@ public class BuildingState extends State {
 
 
 
-        }
+//        }
 
     }
 

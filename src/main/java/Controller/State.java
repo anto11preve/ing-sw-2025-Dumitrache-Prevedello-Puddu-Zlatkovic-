@@ -124,6 +124,9 @@ public abstract class State implements Serializable {
         return false;
     }
 
+    public Context getContext() {
+        return this.context;
+    }
 
     public abstract List<String> getAvailableCommands(
 

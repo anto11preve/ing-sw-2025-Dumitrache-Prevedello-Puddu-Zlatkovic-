@@ -1,19 +1,10 @@
 package Model.Ship;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Tests for the ShieldCounter class which tracks shields in different directions.
- * Tests shield counting functionality for all four cardinal directions.
- */
 public class ShieldCounterTest {
 
-    /**
-     * Tests the constructor to ensure a new ShieldCounter is properly initialized:
-     * - Shield counts in all directions should start at zero
-     */
     @Test
     public void testConstructor() {
         ShieldCounter counter = new ShieldCounter();
@@ -22,27 +13,68 @@ public class ShieldCounterTest {
         assertEquals(0, counter.getSouthShields());
         assertEquals(0, counter.getWestShields());
     }
-    
-    /**
-     * Tests setting shield counts in different directions:
-     * - Shield counts can be set independently for each direction
-     * - Each direction's count is tracked separately
-     * - Setting one direction doesn't affect other directions
-     */
+
     @Test
-    public void testSetShields() {
+    public void testNorthShields() {
         ShieldCounter counter = new ShieldCounter();
+        counter.setNorthShields(5);
+        assertEquals(5, counter.getNorthShields());
         
-        counter.setNorthShields(2);
-        assertEquals(2, counter.getNorthShields());
+        counter.incrementNorthShields();
+        assertEquals(6, counter.getNorthShields());
         
-        counter.setEastShields(1);
-        assertEquals(1, counter.getEastShields());
+        counter.decrementNorthShields();
+        assertEquals(5, counter.getNorthShields());
         
-        counter.setSouthShields(3);
+        counter.setNorthShields(0);
+        assertThrows(IllegalArgumentException.class, counter::decrementNorthShields);
+    }
+
+    @Test
+    public void testEastShields() {
+        ShieldCounter counter = new ShieldCounter();
+        counter.setEastShields(3);
+        assertEquals(3, counter.getEastShields());
+        
+        counter.incrementEastShields();
+        assertEquals(4, counter.getEastShields());
+        
+        counter.decrementEastShields();
+        assertEquals(3, counter.getEastShields());
+        
+        counter.setEastShields(0);
+        assertThrows(IllegalArgumentException.class, counter::decrementEastShields);
+    }
+
+    @Test
+    public void testSouthShields() {
+        ShieldCounter counter = new ShieldCounter();
+        counter.setSouthShields(2);
+        assertEquals(2, counter.getSouthShields());
+        
+        counter.incrementSouthShields();
         assertEquals(3, counter.getSouthShields());
         
-        counter.setWestShields(2);
-        assertEquals(2, counter.getWestShields());
+        counter.decrementSouthShields();
+        assertEquals(2, counter.getSouthShields());
+        
+        counter.setSouthShields(0);
+        assertThrows(IllegalArgumentException.class, counter::decrementSouthShields);
+    }
+
+    @Test
+    public void testWestShields() {
+        ShieldCounter counter = new ShieldCounter();
+        counter.setWestShields(4);
+        assertEquals(4, counter.getWestShields());
+        
+        counter.incrementWestShields();
+        assertEquals(5, counter.getWestShields());
+        
+        counter.decrementWestShields();
+        assertEquals(4, counter.getWestShields());
+        
+        counter.setWestShields(0);
+        assertThrows(IllegalArgumentException.class, counter::decrementWestShields);
     }
 }

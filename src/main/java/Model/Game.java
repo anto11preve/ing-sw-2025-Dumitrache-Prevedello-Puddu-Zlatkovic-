@@ -55,7 +55,7 @@ public class Game implements Serializable, Cloneable {
                 for (ShipBoard ship : shipsL1) {
 
                     System.out.println("Ship is valid:" + ship.validateShip());
-
+                    ship.render(MatchLevel.TRIAL);
 
                 }
 
@@ -67,6 +67,9 @@ public class Game implements Serializable, Cloneable {
                 for (ShipBoard ship : shipsL2) {
 
                     System.out.println("Ship is valid:" + ship.validateShip());
+                    System.out.println("Ship can contain brown aliens: " + ship.getCondensedShip().canContainBrown());
+                    System.out.println("Ship can contain purple aliens: " + ship.getCondensedShip().canContainPurple());
+                    ship.render(MatchLevel.LEVEL2);
 
 
                 }
@@ -367,7 +370,9 @@ public class Game implements Serializable, Cloneable {
 
     public void setState(State phase) {
         this.state = phase;
-        phase.onEnter();
+        if (phase!=null) {
+            phase.onEnter();
+        }
     }
 
     public State getState() {

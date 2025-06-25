@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-interface NostroRunnable extends Runnable, Serializable{
-
-}
+/*TODO: make better*/
+interface SerializableRunnable extends Runnable, Serializable {}
 
 public class Context implements Serializable {
     private transient Controller controller;
@@ -27,13 +26,13 @@ public class Context implements Serializable {
     private int crewmates;
     private int power;
     private int requiredGoods;
-    private transient List<Good> goods;
-    private transient List<Projectile> projectiles;
-    private transient List<Planet> planets;
+    private List<Good> goods;
+    private List<Projectile> projectiles;
+    private List<Planet> planets;
     private int credits;
     private int daysLost;
     private int diceNumber;
-    private NostroRunnable visual;
+    private SerializableRunnable visual;
 
 
     public Context(Controller controller) {
@@ -115,8 +114,8 @@ public class Context implements Serializable {
         this(controller);
         this.visual = () -> {
             System.out.println("Open Space");
+            System.out.println("---------------------------------------");
         };
-        System.out.println("---------------------------------------");
         this.visual.run();
 
     }

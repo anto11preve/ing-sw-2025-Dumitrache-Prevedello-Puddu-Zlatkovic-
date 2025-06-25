@@ -1,7 +1,9 @@
 package TestUtils;
 
 import Controller.Controller;
-import Model.Game;
+import Controller.Exceptions.InvalidCommand;
+import Controller.Exceptions.InvalidParameters;
+import Controller.RealTimeBuilding.HourGlassFinishedState;
 import Model.Ship.Coordinates;
 import Model.Enums.Direction;
 import Controller.Enums.*;
@@ -22,28 +24,65 @@ public class TestStateManager {
     /**
      * Creates and saves common test states
      */
-    public TestStateManager() {
+    public static void initializeCommonStates() {
         // Empty lobby
-        saveGameSnapshot("empty_lobby_trial", createEmptyLobby());
+        saveGameSnapshot("empty_lobby_trial", createEmptyLobbyTrial());
 
-        // Lobby with 2 players
-        saveGameSnapshot("lobby_2_players_trial", createLobbyWith2Players());
+        // Lobby with 2 players trial
+        saveGameSnapshot("lobby_2_players_trial", createLobbyWith2PlayersTrial());
 
-        // Full lobby (4 players)
-        saveGameSnapshot("lobby_4_players_trial", createFullLobby());
+        // Full lobby (4 players) trial
+        saveGameSnapshot("lobby_4_players_trial", createLobbyWith4PlayersTrial());
 
-        // Building phase just started
-        saveGameSnapshot("building_2_players_trial", createBuildingPhaseStarted());
+        // Building phase just started with 2 players trial
+        saveGameSnapshot("building_2_players_trial", createBuildingWith2PlayersTrial());
+
+        // Building phase just started with 2 players level 2
+        saveGameSnapshot("building_2_players_level2", createBuildingWith2PlayersLevel2());
 
         // Building phase with components placed
-        saveGameSnapshot("building_in_progress", createBuildingInProgress());
+
+
+        // Building phase with 1 wrong ship in Level 2
+        saveGameSnapshot("build_end_2_good_1_bad_L2", finishedBuilding1wrongL2(MatchLevel.LEVEL2));
+
+        // Building phase with 1 wrong ship in Trial
+        saveGameSnapshot("build_end_2_good_1_bad_Trial", finishedBuilding1wrongL2(MatchLevel.TRIAL));
+
+        // Building phase with all valid ships in Level 2
+        saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
+
+        // Building phase with all valid ships in Trial
+        saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
+
+        // Building phase with all valid ships in Level 2 with NO alien support ship
+        saveGameSnapshot("build_end_2_good_NO_alien_L2", finishedBuildingAllValidNoAlien());
+
+        // Hourglass finished states
+
+        // Hourglass finished, all ships are correct, no aliens in any ship, should be used for testing the hourglass finished state
+        saveGameSnapshot("hour_glas_finished_all_ships_are_correct_NO_aliens", hourGlassToFlight());
+
+        // Hourglass finished, all ships are correct, aliens can be placed in some ships
+        saveGameSnapshot("hour_glas_finished_all_ships_are_correct_with_aliens", hourGlassToAliens());
+
+        // Hourglass finished, one ship is wrong, needs fixing
+        saveGameSnapshot("hour_glas_finished_one_ship_wrong", hourGlassToFix());
+
+        // Flight phase started with 2 players in Trial
+        saveGameSnapshot("flight_phase_2_players_trial", flightPhase2Players(MatchLevel.TRIAL));
+
+        // Flight phase started with 2 players in Level 2
+        saveGameSnapshot("flight_phase_2_players_L2", flightPhase2Players(MatchLevel.LEVEL2));
+
     }
+
+
 
     /**
      * Saves a game state with a key, the saving is NOT permanent
-     * @deprecated
+     *
      */
-    @Deprecated
     public static void saveGameSnapshot(String key, GameSnapshot state) {
         savedGameSnapshots.put(key, state);
     }
@@ -55,68 +94,176 @@ public class TestStateManager {
         return savedGameSnapshots.get(key);
     }
 
+
+
+
     // State creation methods
-    private static GameSnapshot createEmptyLobby() {
+    private static GameSnapshot createEmptyLobbyTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 1);
         return new GameSnapshot(controller, "Empty lobby - no players");
     }
 
-    private static GameSnapshot createLobbyWith2Players() {
+    private static GameSnapshot createLobbyWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 2);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
+            controller.login("Anna");
+            controller.login("Bob");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
         return new GameSnapshot(controller, "Lobby with 2 players");
     }
 
-    private static GameSnapshot createFullLobby() {
+    private static GameSnapshot createLobbyWith4PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 3);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.login("Player3");
-            controller.login("Player4");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.login("Carl");
+            controller.login("Diana");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
         return new GameSnapshot(controller, "Full lobby with 4 players");
     }
 
-    private static GameSnapshot createBuildingPhaseStarted() {
+    private static GameSnapshot createBuildingWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 4);
         try {
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.startGame("Player1");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
         return new GameSnapshot(controller, "Building phase just started");
     }
 
-    private static GameSnapshot createBuildingInProgress() {
-        Controller controller = new Controller(MatchLevel.TRIAL, 5);
+    private static GameSnapshot createBuildingWith2PlayersLevel2() {
+        Controller controller = new Controller(MatchLevel.LEVEL2, 4);
         try {
-            // Setup players and start game
-            controller.login("Player1");
-            controller.login("Player2");
-            controller.startGame("Player1");
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        return new GameSnapshot(controller, "Building phase just started");
+    }
 
-            // Simulate some building actions
-            controller.getComponent("Player1", 0);
-            controller.placeComponent("Player1",
-                    ComponentOrigin.HAND,
-                    new Coordinates(7, 5),
-                    Direction.UP);
+    private static GameSnapshot finishedBuilding1wrongL2(MatchLevel level) {
+        Controller controller = new Controller(level, 1);
+        try {
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.login("Carl");
+            controller.startGame("Anna");
+            controller.preBuiltShip("Anna", 0);
+            controller.preBuiltShip("Bob", 1);
+            controller.preBuiltShip("Carl", 2);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to create test state", e);
         }
-        return new GameSnapshot(controller, "Building phase with components placed");
+        if( level == MatchLevel.LEVEL2) {
+            return new GameSnapshot(controller, "Finished building phase with 1 wrong ship in Level 2");
+        }else{
+            return new GameSnapshot(controller, "Finished building phase with 1 wrong ship in Trial");
+        }
+
+
     }
+
+    private static GameSnapshot finishedBuildingAllValid(MatchLevel level) {
+        Controller controller = new Controller(level, 1);
+        try {
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
+            controller.preBuiltShip("Anna", 0);
+            controller.preBuiltShip("Bob", 1);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        if( level == MatchLevel.LEVEL2) {
+            return new GameSnapshot(controller, "Finished building phase with all valid ship in Level 2");
+        }else{
+            return new GameSnapshot(controller, "Finished building phase with all valid ship in Trial");
+        }
+
+    }
+
+    private static GameSnapshot finishedBuildingAllValidNoAlien() {
+        Controller controller = new Controller(MatchLevel.LEVEL2, 1);
+        try {
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.startGame("Anna");
+            controller.preBuiltShip("Anna", 1);
+            controller.preBuiltShip("Bob", 1);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+
+        return new GameSnapshot(controller, "Finished building phase with alien support ship in Level 2");
+
+    }
+
+    public static GameSnapshot flightPhase2Players(MatchLevel level) {
+        GameSnapshot snapshot = finishedBuildingAllValid(level);
+        Controller controller = snapshot.getController();
+        try {
+            controller.finishBuilding("Anna", 1);
+            controller.finishBuilding("Bob", 2);
+        } catch (InvalidCommand | InvalidParameters e) {
+            throw new RuntimeException("Failed to start flight phase", e);
+        }
+
+        if(level == MatchLevel.LEVEL2) {
+
+            try {
+                controller.placeCrew("Anna", new Coordinates(7, 6), CrewType.PURPLE_ALIEN);
+            }catch (InvalidCommand | InvalidParameters e) {
+                throw new RuntimeException("Failed to start flight phase", e);
+            }
+        }
+
+        if( level == MatchLevel.LEVEL2) {
+            return new GameSnapshot(controller, "Flight phase started with 2 players in Level 2");
+        } else {
+            return new GameSnapshot(controller, "Flight phase started with 2 players in Trial");
+        }
+
+
+    }
+
+    public static GameSnapshot hourGlassToFlight() {
+        GameSnapshot snapshot = finishedBuildingAllValidNoAlien();
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, no aliens in any ship");
+    }
+
+    public static GameSnapshot hourGlassToAliens() {
+        GameSnapshot snapshot = finishedBuildingAllValid(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, aliens  can be placed in some ships");
+    }
+
+    public static GameSnapshot hourGlassToFix() {
+        GameSnapshot snapshot = finishedBuilding1wrongL2(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, one ship is wrong, needs fixing");
+    }
+
+
 
 
 

@@ -17,8 +17,6 @@ import java.util.List;
  * they intend to use to surpass the smugglers' power threshold.
  */
 public class SmugglersPowerDeclarationState extends State {
-
-
     /**
      * Constructor to initialize the state with the current game context.
      *

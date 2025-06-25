@@ -22,8 +22,6 @@ import java.util.Random;
  * to {@link ManageMeteorState} to handle the meteor impact resolution.</p>
  */
 public class MeteorsState extends State {
-
-
     public MeteorsState(Context context) {
         super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
