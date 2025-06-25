@@ -1,5 +1,6 @@
 package View.Client.Actions;
 
+import View.Client.Client;
 import View.Client.ClientState;
 import View.Client.Visualizes.ViewComponent;
 import View.Client.Visualizes.ViewShipBoard;
@@ -38,7 +39,8 @@ public interface ActionConstructor {
                     "ViewFlightBoard", _ -> (Visualize) ViewFlightBoardState::new,
                     "ViewShipBoard", ViewShipBoard.getConstructor(),
                     "ViewTiles", _ -> (Visualize) ViewTilesState::new,
-                    "ViewComponent", ViewComponent.getConstructor()
+                    "ViewComponent", ViewComponent.getConstructor(),
+                    "BackToShip", _ -> (Visualize) () -> Client.view.getState().backToShip()
             ));
         }
 
