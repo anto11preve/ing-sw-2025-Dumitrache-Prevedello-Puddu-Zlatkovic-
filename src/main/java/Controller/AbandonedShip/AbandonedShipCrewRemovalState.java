@@ -103,6 +103,6 @@ public class AbandonedShipCrewRemovalState extends State {
 
     @Override
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem");
+        return List.of( "UseCrew");
     }
 }

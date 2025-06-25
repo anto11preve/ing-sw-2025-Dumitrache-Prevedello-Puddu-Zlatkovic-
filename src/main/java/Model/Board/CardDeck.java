@@ -2,6 +2,7 @@ package Model.Board;
 
 import Model.Board.AdventureCards.AdventureCardFilip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +26,7 @@ import java.util.List;
  * @see List
  * @see AdventureCardFilip
  */
-public class CardDeck implements Iterable<AdventureCardFilip> {
+public class CardDeck implements Iterable<AdventureCardFilip> , Serializable {
     /**
      * {@code List} of {@code AdventureCard}
      *

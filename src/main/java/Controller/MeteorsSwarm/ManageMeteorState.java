@@ -389,7 +389,7 @@ public class ManageMeteorState extends State {
     public List<String> getAvailableCommands(){
         return List.of(
             "End",
-            "UseItem"
+            "UseBattery"
         );
     }
 }

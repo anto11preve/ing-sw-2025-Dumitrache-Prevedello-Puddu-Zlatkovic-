@@ -16,6 +16,8 @@ import Model.Ship.CondensedShip;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ import java.util.Map;
  * Helper class that tracks which types of aliens a player can still insert.
  * Each player can insert at most one brown alien and one purple alien.
  */
- class CanInsertAliens {
+ class CanInsertAliens implements Serializable {
 
     /** Indicates if the player can still insert a brown alien */
     private boolean canInstertBrown;
@@ -85,7 +87,7 @@ import java.util.Map;
 
 
     /** Map tracking which aliens each player can still insert */
-    Map<Player, CanInsertAliens> playersAlienAvailability;
+    Map<Player, CanInsertAliens> playersAlienAvailability = new HashMap<>();
 
     /**
      * Fills all empty cabins with human crew.
@@ -262,7 +264,7 @@ import java.util.Map;
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "PlaceCrew" );
+        return List.of( "PlaceHuman", "PlaceBrownAlien", "PlacePurpleAlien");
     }
 
 

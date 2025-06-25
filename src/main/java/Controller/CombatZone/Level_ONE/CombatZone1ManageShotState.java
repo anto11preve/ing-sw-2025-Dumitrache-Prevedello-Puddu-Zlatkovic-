@@ -193,7 +193,7 @@ public class CombatZone1ManageShotState extends State {
     public List<String> getAvailableCommands(){
         return List.of(
             "End",
-            "UseItem"
+            "UseBattery"
         );
     }
 }

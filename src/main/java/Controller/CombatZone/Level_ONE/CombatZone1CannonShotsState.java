@@ -40,6 +40,8 @@ public class CombatZone1CannonShotsState extends State {
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
+        context.setDiceNumber(number);
+
         for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             context.addSpecialPlayer(p);
         }

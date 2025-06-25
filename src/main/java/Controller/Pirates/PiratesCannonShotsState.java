@@ -67,6 +67,7 @@ public class PiratesCannonShotsState extends State{
         int dado2 = controller.getModel().rollDice(); // numero tra 1 e 6
         int number = dado1 + dado2;
 
+        context.setDiceNumber(number);
 
         Projectile shot = context.getProjectiles().getFirst();
         boolean out = false;

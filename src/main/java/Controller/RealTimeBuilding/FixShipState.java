@@ -14,6 +14,7 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Ship.ShipBoard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Map;
  public class FixShipState extends State {
 
     /** List of players with invalid ships that need to be corrected */
-    List<Player> playersWithInvalidShip;
+    List<Player> playersWithInvalidShip = new ArrayList<>();
 
     /** Valid coordinates for component placement */
     Map<Integer, List<Integer>> validCoordinates = new HashMap<>();

@@ -59,7 +59,7 @@ public interface CommandConstructor {
                     "SkipReward", SkipRewardCommand.getConstructor(),
                     "StartGame", StartGameCommand.getConstructor(),
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
-                    "UseBatterie", UseItemCommand.getBatteriesConstructor(),
+                    "UseBattery", UseItemCommand.getBatteriesConstructor(),
                     "UseCrew", UseItemCommand.getCrewConstructor(),
                     "PreBuiltShip", PreBuiltShipCommand.getConstructor()
             ));

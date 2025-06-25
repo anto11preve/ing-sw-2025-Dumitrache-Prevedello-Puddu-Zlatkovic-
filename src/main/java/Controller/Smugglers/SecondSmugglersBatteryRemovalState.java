@@ -94,7 +94,7 @@ public class SecondSmugglersBatteryRemovalState extends State{
     @Override
     public List<String> getAvailableCommands(){
         return List.of(
-            "UseItem"
+            "UseBattery"
         );
     }
 }

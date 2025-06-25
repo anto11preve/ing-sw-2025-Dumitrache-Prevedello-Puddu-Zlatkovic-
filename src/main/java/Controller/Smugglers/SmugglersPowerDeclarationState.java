@@ -135,7 +135,7 @@ public class SmugglersPowerDeclarationState extends State {
     @Override
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclaresDouble"
+            "DeclaresDoubleCannon"
         );
     }
 }

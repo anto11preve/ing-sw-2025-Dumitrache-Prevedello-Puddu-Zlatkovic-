@@ -77,6 +77,6 @@ public class SecondCombatZone2BatteryRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem");
+        return List.of( "UseBattery");
     }
 }

@@ -103,7 +103,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "UseItem"
+            "UseBattery"
         );
     }
 }

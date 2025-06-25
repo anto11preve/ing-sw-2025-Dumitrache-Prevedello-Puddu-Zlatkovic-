@@ -107,7 +107,7 @@ public class AbandonedStationDecidingState extends State {
     public List<String> getAvailableCommands(){
         return List.of(
             "SkipReward",
-            "GetReward"
+            "GetGoodReward"
         );
     }
 }

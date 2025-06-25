@@ -126,7 +126,7 @@ public class OpenSpaceBatteryRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem" );
+        return List.of( "UseBattery" );
     }
 
 }

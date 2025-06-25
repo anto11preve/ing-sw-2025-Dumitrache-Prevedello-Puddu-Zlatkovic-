@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
  */
 public class Game implements Serializable, Cloneable {
     private final List<Player> players;
-    private transient final MatchLevel level;
+    private final MatchLevel level;
     private final SpaceshipComponent[] tiles;
-    private transient final FlightBoard flightBoard;
+    private final FlightBoard flightBoard;
     private State state;
     private boolean error = false;
     private final transient List<ShipBoard> preBuiltShips;

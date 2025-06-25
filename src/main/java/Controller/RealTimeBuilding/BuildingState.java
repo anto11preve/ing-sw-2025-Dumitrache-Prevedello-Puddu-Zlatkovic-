@@ -115,8 +115,8 @@ public class BuildingState extends State {
             if (oldTile!=null) {
                 oldTile.setVisible();
                 model.addComponent(oldTile);
-                currentPlayer.getShipBoard().setActiveComponent(selectedTile);
             }
+            currentPlayer.getShipBoard().setActiveComponent(selectedTile);
         }
 
 

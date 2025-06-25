@@ -71,7 +71,7 @@ public class DeleteComponentCommand extends Command {
             @Override
             public List<String> getArguments() {
                 return List.of("row", "column");
-            } //TODO: controlla se così o con coordinates
+            }
         };
     }
 }

@@ -139,7 +139,7 @@ public class PiratesPowerDeclarationState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclaresDouble"
+            "DeclaresDoubleCannon"
         );
     }
 }

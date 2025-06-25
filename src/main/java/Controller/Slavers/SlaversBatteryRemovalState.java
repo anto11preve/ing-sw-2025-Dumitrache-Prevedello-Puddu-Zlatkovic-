@@ -164,6 +164,6 @@ public class SlaversBatteryRemovalState extends State{
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem", "GetReward");
+        return List.of( "UseBattery", "GetCreditsReward");
     }
 }

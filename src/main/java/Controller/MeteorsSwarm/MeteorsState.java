@@ -46,6 +46,8 @@ public class MeteorsState extends State {
         int dado2 = rand.nextInt(6) + 1; // numero tra 1 e 6
         int number = dado1 + dado2;
 
+        context.setDiceNumber(number);
+
         for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
             context.addSpecialPlayer(p);
         }

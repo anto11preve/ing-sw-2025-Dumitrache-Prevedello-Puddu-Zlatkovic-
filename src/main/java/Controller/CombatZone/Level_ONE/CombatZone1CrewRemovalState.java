@@ -63,7 +63,7 @@ public class CombatZone1CrewRemovalState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "UseItem"
+            "UseCrew"
         );
     }
 

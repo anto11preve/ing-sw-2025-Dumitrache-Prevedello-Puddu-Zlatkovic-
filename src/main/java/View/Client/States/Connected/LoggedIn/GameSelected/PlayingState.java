@@ -35,12 +35,12 @@ public abstract class PlayingState extends GameSelectedState {
     @Override
     public void viewFlightBoard() {
         /*TODO: fai diventare visualize? di Marco*/
-        this.getGame().getFlightBoard().render();
+        this.getGame().getFlightBoard().visualize(this.getGame().getState().getPlayerInTurn());
     }
 
     @Override
     public void viewShipBoard(String username) {
-        this.getGame().getPlayer(username).getShipBoard().render();
+        this.getGame().getPlayer(username).getShipBoard().render(this.getGame().getLevel());
     }
 
     @Override

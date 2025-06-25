@@ -11,6 +11,7 @@ import Model.Utils.DirectionSideUtils;
 import javafx.geometry.Orientation;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -18,14 +19,14 @@ import java.util.*;
  * Full-featured ShipBoard for Galaxy Trucker.
  * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
  */
-public class ShipBoard {
+public class ShipBoard implements Serializable {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
     private final SpaceshipComponent[][] components;
     private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
-    private final CondensedShip condensedShip;
+    private transient final CondensedShip condensedShip;
     private boolean isValid = false;
 
     public ShipBoard() {
@@ -964,16 +965,16 @@ public class ShipBoard {
             String[] casellaA = null, casellaB = null, casellaC = null;
             if (i == 0) { // prima riga - casella A
                 if (activeComponent != null) {
-                    casellaA = activeComponent.renderSmall();
+                    casellaA = activeComponent.renderBig();
                 } else {
                     renderEmpty();
                 }
             }
             if (i == 1) { // seconda riga - caselle B e C
                 if(!reservedComponents.isEmpty()) {
-                    casellaB = reservedComponents.get(0).renderSmall();
+                    casellaB = reservedComponents.get(0).renderBig();
                     if (reservedComponents.size() > 1) {
-                        casellaC = reservedComponents.get(1).renderSmall();
+                        casellaC = reservedComponents.get(1).renderBig();
                     }
                 }
             }

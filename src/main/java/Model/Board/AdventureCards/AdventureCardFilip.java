@@ -6,11 +6,13 @@ import Controller.Exceptions.InvalidParameters;
 import Model.Enums.CardLevel;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Utils.CardLevelMapper;
+
+import java.io.Serializable;
 import java.util.*;
 import com.google.gson.JsonObject;
 
 // Classe per la gestione delle carte avventura
-public abstract class AdventureCardFilip {
+public abstract class AdventureCardFilip implements Serializable {
     private final int id;
     private final CardLevel level;
     private String imagePath;

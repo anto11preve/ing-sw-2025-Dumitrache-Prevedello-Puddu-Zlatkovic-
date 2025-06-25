@@ -96,6 +96,6 @@ public class SlaversCrewRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "UseItem" );
+        return List.of( "UseCrew" );
     }
 }

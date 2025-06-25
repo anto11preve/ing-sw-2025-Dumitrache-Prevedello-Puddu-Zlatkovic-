@@ -3,7 +3,9 @@ package Model.Board.AdventureCards.Components;
 import Model.Board.AdventureCards.Penalties.Penalty;
 import Model.Enums.Criteria;
 
-public class CombatZoneLine {
+import java.io.Serializable;
+
+public class CombatZoneLine implements Serializable {
     private final Criteria orderingCriteria;
     private final Penalty penalty;
 
