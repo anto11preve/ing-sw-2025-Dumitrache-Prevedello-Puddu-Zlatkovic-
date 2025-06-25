@@ -40,4 +40,28 @@ public class CombatZoneLineTest {
         assertEquals(penalty, line.getPenalty());
         assertEquals(1, ((GoodsPenalty)line.getPenalty()).getAmount());
     }
+
+    @Test
+    public void testGettersConsistency() {
+        DaysPenalty penalty = new DaysPenalty(5);
+        CombatZoneLine line = new CombatZoneLine(Criteria.FIRE_POWER, penalty);
+        
+        assertSame(penalty, line.getPenalty());
+        assertSame(Criteria.FIRE_POWER, line.getOrderingCriteria());
+        
+        // Test multiple calls return same values
+        assertEquals(line.getOrderingCriteria(), line.getOrderingCriteria());
+        assertEquals(line.getPenalty(), line.getPenalty());
+    }
+
+    @Test
+    public void testAllCriteriaTypes() {
+        Penalty penalty = new DaysPenalty(1);
+        
+        for (Criteria criteria : Criteria.values()) {
+            CombatZoneLine line = new CombatZoneLine(criteria, penalty);
+            assertEquals(criteria, line.getOrderingCriteria());
+            assertEquals(penalty, line.getPenalty());
+        }
+    }
 }

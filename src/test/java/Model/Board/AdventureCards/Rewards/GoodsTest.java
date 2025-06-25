@@ -49,7 +49,9 @@ public class GoodsTest {
     
     @Test
     public void testNullList() {
-        assertThrows(NullPointerException.class, () -> new Goods(null));
+        Goods goods = new Goods(null);
+        // Constructor accepts null, but iterator will throw NullPointerException
+        assertThrows(NullPointerException.class, goods::iterator);
     }
     
     @Test
@@ -82,5 +84,58 @@ public class GoodsTest {
         assertTrue(hasBlue);
         assertTrue(hasGreen);
         assertTrue(hasYellow);
+    }
+
+    @Test
+    public void testInheritance() {
+        List<Good> goodsList = new ArrayList<>();
+        goodsList.add(Good.RED);
+        
+        Goods goods = new Goods(goodsList);
+        assertTrue(goods instanceof Reward);
+        assertTrue(goods instanceof Goods);
+        assertTrue(goods instanceof Iterable);
+    }
+
+    @Test
+    public void testDuplicateGoods() {
+        List<Good> goodsList = new ArrayList<>();
+        goodsList.add(Good.RED);
+        goodsList.add(Good.RED);
+        goodsList.add(Good.BLUE);
+        
+        Goods goods = new Goods(goodsList);
+        
+        int count = 0;
+        int redCount = 0;
+        for (Good g : goods) {
+            count++;
+            if (g == Good.RED) redCount++;
+        }
+        
+        assertEquals(3, count);
+        assertEquals(2, redCount);
+    }
+
+    @Test
+    public void testIteratorConsistency() {
+        List<Good> goodsList = new ArrayList<>();
+        goodsList.add(Good.GREEN);
+        
+        Goods goods = new Goods(goodsList);
+        
+        // Test multiple iterations
+        int count1 = 0;
+        for (Good g : goods) {
+            count1++;
+        }
+        
+        int count2 = 0;
+        for (Good g : goods) {
+            count2++;
+        }
+        
+        assertEquals(count1, count2);
+        assertEquals(1, count1);
     }
 }

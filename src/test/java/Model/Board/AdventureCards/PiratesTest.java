@@ -146,4 +146,34 @@ public class PiratesTest {
         
         assertTrue(output.length() > 0);
     }
+
+    /**
+     * Tests the visualizeString method.
+     */
+    @Test
+    public void testVisualizeString() {
+        List<CannonShot> shots = new ArrayList<>();
+        shots.add(new CannonShot(true, Side.FRONT));
+        
+        Pirates card = new Pirates(20, CardLevel.LEVEL_ONE, 5, shots, 1, 4);
+        String[] result = card.visualizeString();
+        
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        assertEquals("==========================", result[0]);
+        assertEquals("ID: 20", result[1]);
+        assertEquals("Nome: Pirati", result[2]);
+        assertEquals("Livello: LEVEL_ONE", result[3]);
+        assertEquals("Power:                5", result[4]);
+    }
+
+    /**
+     * Tests the accept method.
+     */
+    @Test
+    public void testAccept() {
+        List<CannonShot> shots = new ArrayList<>();
+        Pirates card = new Pirates(20, CardLevel.LEVEL_ONE, 5, shots, 1, 4);
+        assertThrows(NullPointerException.class, () -> card.accept(null, null));
+    }
 }

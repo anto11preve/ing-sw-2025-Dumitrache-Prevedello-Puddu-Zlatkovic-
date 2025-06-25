@@ -1,133 +1,265 @@
 package Model.Ship.Components;
 
-import org.junit.jupiter.api.BeforeEach;
+import Model.Enums.*;
+import Model.Ship.ShipBoard;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
-import Model.Enums.Card;
-import Model.Enums.ConnectorType;
-import Model.Enums.Good;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Tests for the CargoHold component which stores goods on the ship.
- * Tests cargo capacity, adding/removing goods, and special cargo functionality.
- */
 public class CargoHoldTest {
-    private CargoHold cargoHold;
 
-    /**
-     * Sets up a special cargo hold with capacity of 3 before each test.
-     * This cargo hold can store any type of good including red goods.
-     */
-    @BeforeEach
-    void setUp() {
-        // Initialize a special CargoHold with capacity of 3
-        cargoHold = new CargoHold(Card.CARGO_HOLD, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, 3, true);
+    @Test
+    public void testNormalCargoHoldConstructor() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        assertEquals(Card.CARGO_HOLD, cargo.getType());
+        assertEquals(3, cargo.getCapacity());
+        assertNotNull(cargo.getGoods());
+        assertEquals(3, cargo.getGoods().length);
+        assertFalse(cargo.isSpecial());
     }
 
-    /**
-     * Tests that the cargo hold correctly reports its capacity.
-     */
     @Test
-    void testCapacity() {
-        // Ensure the capacity is correctly reported
-        assertEquals(3, cargoHold.getCapacity());
+    public void testSpecialCargoHoldConstructor() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 2, true);
+        
+        assertEquals(2, cargo.getCapacity());
+        assertTrue(cargo.isSpecial());
+        assertTrue(cargo.addGood(Good.RED)); // Special cargo can hold red goods
     }
 
-    /**
-     * Tests successfully adding goods to the cargo hold:
-     * - Goods should be added when there is available capacity
-     * - The method should return true to indicate success
-     */
     @Test
-    void testAddGoodSuccess() {
-        // Add valid goods to the cargo hold
-        assertTrue(cargoHold.addGood(Good.BLUE));
-        assertTrue(cargoHold.addGood(Good.GREEN));
+    public void testJsonConstructor() {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "CARGO_HOLD");
+        json.addProperty("imagePath", "test.png");
+        json.addProperty("capacity", 4);
+        json.addProperty("isSpecial", true);
+        
+        JsonObject connectors = new JsonObject();
+        connectors.addProperty("front", "UNIVERSAL");
+        connectors.addProperty("rear", "SINGLE");
+        connectors.addProperty("left", "DOUBLE");
+        connectors.addProperty("right", "NONE");
+        json.add("connectors", connectors);
+        
+        CargoHold cargo = new CargoHold(json);
+        assertEquals(Card.CARGO_HOLD, cargo.getType());
+        assertEquals(4, cargo.getCapacity());
+        assertTrue(cargo.isSpecial());
+        assertEquals(ConnectorType.UNIVERSAL, cargo.getConnectorAt(Side.FRONT));
+        assertEquals(ConnectorType.SINGLE, cargo.getConnectorAt(Side.REAR));
+        assertEquals(ConnectorType.DOUBLE, cargo.getConnectorAt(Side.LEFT));
+        assertEquals(ConnectorType.NONE, cargo.getConnectorAt(Side.RIGHT));
     }
 
-    /**
-     * Tests adding goods when the cargo hold is full:
-     * - Adding beyond capacity should fail
-     * - The method should return false when capacity is reached
-     */
     @Test
-    void testAddGoodFailureDueToCapacity() {
-        // Fill up all slots and ensure an additional good cannot be added
-        cargoHold.addGood(Good.BLUE);
-        cargoHold.addGood(Good.GREEN);
-        cargoHold.addGood(Good.YELLOW);
-        assertFalse(cargoHold.addGood(Good.RED));
+    public void testJsonConstructorMissingCapacity() {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "CARGO_HOLD");
+        json.addProperty("imagePath", "test.png");
+        json.addProperty("isSpecial", false);
+        
+        JsonObject connectors = new JsonObject();
+        connectors.addProperty("front", "UNIVERSAL");
+        connectors.addProperty("rear", "SINGLE");
+        connectors.addProperty("left", "DOUBLE");
+        connectors.addProperty("right", "NONE");
+        json.add("connectors", connectors);
+        
+        assertThrows(RuntimeException.class, () -> new CargoHold(json));
     }
 
-    /**
-     * Tests adding red goods to a non-special cargo hold:
-     * - Regular cargo holds cannot store red goods
-     * - The method should return false when attempting to add red goods
-     */
     @Test
-    void testAddRedGoodToNonSpecialCargoHold() {
-        // Attempt to add a red good to a non-special cargo hold
-        CargoHold normalCargoHold = new CargoHold(Card.CARGO_HOLD, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, 3, false);
-        assertFalse(normalCargoHold.addGood(Good.RED));
+    public void testJsonConstructorMissingIsSpecial() {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "CARGO_HOLD");
+        json.addProperty("imagePath", "test.png");
+        json.addProperty("capacity", 3);
+        
+        JsonObject connectors = new JsonObject();
+        connectors.addProperty("front", "UNIVERSAL");
+        connectors.addProperty("rear", "SINGLE");
+        connectors.addProperty("left", "DOUBLE");
+        connectors.addProperty("right", "NONE");
+        json.add("connectors", connectors);
+        
+        assertThrows(RuntimeException.class, () -> new CargoHold(json));
     }
 
-    /**
-     * Tests removing goods from the cargo hold:
-     * - Removing a good should clear its slot
-     * - The slot should become null after removal
-     */
     @Test
-    void testRemoveGood() {
-        // Add and then remove a good, checking if the slot becomes null
-        cargoHold.addGood(Good.BLUE);
-        cargoHold.addGood(Good.GREEN);
-        cargoHold.removeGood(0);
-        assertNull(cargoHold.getGoods()[0]);
+    public void testAddGoodToNormalCargo() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 2, false);
+        
+        assertTrue(cargo.addGood(Good.BLUE));
+        assertTrue(cargo.addGood(Good.GREEN));
+        assertFalse(cargo.addGood(Good.YELLOW)); // Full
+        assertFalse(cargo.addGood(Good.RED)); // Normal cargo can't hold red
     }
 
-    /**
-     * Tests removing goods with invalid indices:
-     * - Removing with invalid indices should not cause errors
-     * - The goods array should remain intact
-     */
     @Test
-    void testRemoveGoodInvalidIndex() {
-        // Try removing goods at invalid indexes and ensure no exception or null pointer occurs
-        cargoHold.removeGood(-1);
-        cargoHold.removeGood(5);
-        assertNotNull(cargoHold.getGoods());
+    public void testAddGoodToSpecialCargo() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 2, true);
+        
+        assertTrue(cargo.addGood(Good.RED)); // Special cargo can hold red
+        assertTrue(cargo.addGood(Good.BLUE));
+        assertFalse(cargo.addGood(Good.GREEN)); // Full
     }
 
-    /**
-     * Tests adding goods at specific indices:
-     * - Adding at a valid empty index should succeed
-     * - Adding at an occupied index should fail
-     * - Adding at invalid indices should fail
-     */
     @Test
-    void testAddGoodAtSpecificIndex() {
-        // Add a good at a specific valid index
-        assertTrue(cargoHold.addGoodAt(Good.BLUE, 2));
-        assertEquals(Good.BLUE, cargoHold.getGoods()[2]);
-
-        // Try to overwrite the same index which is already occupied
-        assertFalse(cargoHold.addGoodAt(Good.GREEN, 2));
-
-        // Test invalid indexes: negative and out of bounds
-        assertFalse(cargoHold.addGoodAt(Good.YELLOW, -1));
-        assertFalse(cargoHold.addGoodAt(Good.YELLOW, 5));
+    public void testAddAllGoodTypes() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 4, true);
+        
+        assertTrue(cargo.addGood(Good.RED));
+        assertTrue(cargo.addGood(Good.YELLOW));
+        assertTrue(cargo.addGood(Good.GREEN));
+        assertTrue(cargo.addGood(Good.BLUE));
+        assertFalse(cargo.addGood(Good.RED)); // Full
     }
 
-    /**
-     * Tests adding red goods at specific indices in a non-special cargo hold:
-     * - Regular cargo holds cannot store red goods even at specific indices
-     * - The method should return false when attempting to add red goods
-     */
     @Test
-    void testAddRedGoodAtIndexInNonSpecialCargoHold() {
-        // Attempt to add a red good at a specific index in a non-special cargo hold
-        CargoHold normalCargoHold = new CargoHold(Card.CARGO_HOLD, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, ConnectorType.SINGLE, 3, false);
-        assertFalse(normalCargoHold.addGoodAt(Good.RED, 0));
+    public void testAddGoodAt() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        assertTrue(cargo.addGoodAt(Good.BLUE, 0));
+        assertTrue(cargo.addGoodAt(Good.GREEN, 2));
+        assertFalse(cargo.addGoodAt(Good.YELLOW, 0)); // Already occupied
+        assertFalse(cargo.addGoodAt(Good.RED, 1)); // Normal cargo can't hold red
+        assertFalse(cargo.addGoodAt(Good.BLUE, -1)); // Invalid index
+        assertFalse(cargo.addGoodAt(Good.BLUE, 5)); // Invalid index
+    }
+
+    @Test
+    public void testAddGoodAtSpecialCargo() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, true);
+        
+        assertTrue(cargo.addGoodAt(Good.RED, 0)); // Special cargo can hold red
+        assertTrue(cargo.addGoodAt(Good.BLUE, 1));
+        assertTrue(cargo.addGoodAt(Good.GREEN, 2));
+        assertFalse(cargo.addGoodAt(Good.YELLOW, 1)); // Already occupied
+    }
+
+    @Test
+    public void testRemoveGood() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        cargo.addGood(Good.BLUE);
+        cargo.addGood(Good.GREEN);
+        
+        cargo.removeGood(0);
+        assertNull(cargo.getGoods()[0]);
+        assertNotNull(cargo.getGoods()[1]);
+        
+        cargo.removeGood(-1); // Invalid index - should not crash
+        cargo.removeGood(5); // Invalid index - should not crash
+    }
+
+    @Test
+    public void testRemoveGoodFromEmptySlot() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        cargo.removeGood(0); // Remove from empty slot - should not crash
+        assertNull(cargo.getGoods()[0]);
+    }
+
+    @Test
+    public void testAddedToShip() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        ShipBoard ship = new ShipBoard();
+        cargo.setShipBoard(ship);
+        
+        cargo.added();
+        assertTrue(ship.getCondensedShip().getCargoHolds().contains(cargo));
+        
+        assertThrows(RuntimeException.class, cargo::added);
+    }
+
+    @Test
+    public void testRemovedFromShip() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        ShipBoard ship = new ShipBoard();
+        cargo.setShipBoard(ship);
+        
+        cargo.added();
+        cargo.removed();
+        assertFalse(ship.getCondensedShip().getCargoHolds().contains(cargo));
+        
+        assertThrows(RuntimeException.class, cargo::removed);
+    }
+
+    @Test
+    public void testVisualize() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, true);
+        assertDoesNotThrow(() -> cargo.visualize());
+    }
+
+    @Test
+    public void testRenderSmall() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        String[] render = cargo.renderSmall();
+        assertNotNull(render);
+        assertEquals(3, render.length);
+        assertTrue(render[1].contains("CAR"));
+    }
+
+    @Test
+    public void testRenderBig() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, false);
+        
+        String[] render = cargo.renderBig();
+        assertNotNull(render);
+        assertEquals(5, render.length);
+        assertTrue(render[1].contains("CARGO"));
+    }
+
+    @Test
+    public void testRenderBigSpecial() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 3, true);
+        
+        String[] render = cargo.renderBig();
+        assertNotNull(render);
+        assertEquals(5, render.length);
+        assertTrue(render[1].contains("CARGOS"));
+    }
+
+    @Test
+    public void testRenderWithGoods() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 4, true);
+        cargo.addGood(Good.RED);
+        cargo.addGood(Good.BLUE);
+        cargo.addGood(Good.GREEN);
+        
+        String[] render = cargo.renderBig();
+        assertNotNull(render);
+        assertEquals(5, render.length);
+    }
+
+    @Test
+    public void testRenderWithNoneConnectors() {
+        CargoHold cargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, ConnectorType.NONE, 2, false);
+        
+        String[] smallRender = cargo.renderSmall();
+        assertNotNull(smallRender);
+        assertEquals(3, smallRender.length);
+        
+        String[] bigRender = cargo.renderBig();
+        assertNotNull(bigRender);
+        assertEquals(5, bigRender.length);
+    }
+
+    @Test
+    public void testCapacityLimits() {
+        CargoHold smallCargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 1, false);
+        
+        assertTrue(smallCargo.addGood(Good.BLUE));
+        assertFalse(smallCargo.addGood(Good.GREEN)); // Full
+        
+        CargoHold largeCargo = new CargoHold(Card.CARGO_HOLD, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 5, true);
+        
+        for (int i = 0; i < 5; i++) {
+            assertTrue(largeCargo.addGood(Good.BLUE));
+        }
+        assertFalse(largeCargo.addGood(Good.GREEN)); // Full
     }
 }

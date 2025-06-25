@@ -57,6 +57,10 @@ public class CargoHold extends SpaceshipComponent {
 
     }
 
+    public boolean isSpecial(){
+        return this.isSpecial;
+    }
+
     @Override
     public void visualize() {
         super.visualize();
