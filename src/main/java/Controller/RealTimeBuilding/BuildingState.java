@@ -109,11 +109,12 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Component not found");
             }
 
+            selectedTile.setVisible();
+
             this.getController().getModel().getTiles()[index] = null;
 
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
             if (oldTile!=null) {
-                oldTile.setVisible();
                 model.addComponent(oldTile);
             }
             currentPlayer.getShipBoard().setActiveComponent(selectedTile);

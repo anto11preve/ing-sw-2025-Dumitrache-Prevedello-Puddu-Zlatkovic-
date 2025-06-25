@@ -375,7 +375,9 @@ public class LoginCommandTest {
                 new LoginCommand("Player" + i).execute(controller);
                 assertEquals(i, controller.getModel().getPlayers().size());
             }
-            
+
+
+
             // One more should fail
             assertThrows(InvalidParameters.class, () -> 
                 new LoginCommand("Player5").execute(controller));

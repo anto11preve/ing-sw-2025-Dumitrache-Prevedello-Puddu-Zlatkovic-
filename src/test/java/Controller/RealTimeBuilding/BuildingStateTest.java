@@ -6,7 +6,9 @@ import Controller.Enums.*;
 import Controller.Exceptions.*;
 import Model.Enums.Direction;
 import Model.Player;
+import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
+import TestUtils.TestStateManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +26,7 @@ public class BuildingStateTest {
     public void setUp() {
         controller = new Controller(MatchLevel.TRIAL, 1);
         buildingState = new BuildingState(controller);
+        TestStateManager.initializeCommonStates();
         // Don't login players to avoid Server.server null issues
     }
 
@@ -65,8 +68,85 @@ public class BuildingStateTest {
 
     @Test
     public void testGetComponent() {
-        assertThrows(Exception.class, () -> buildingState.getComponent("Player1", 0));
+
+        Controller testController = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna=testController.getModel().getPlayer("Anna");
+        Player bob=testController.getModel().getPlayer("Bob");
+        SpaceshipComponent tilePicked=testController.getModel().getTiles()[0];
+        try {
+            testController.getComponent("Anna", 0);
+        } catch (InvalidCommand e) {
+            throw new RuntimeException(e);
+        } catch (InvalidParameters e) {
+            throw new RuntimeException(e);
+        }
+
+        boolean testTileEliminated =true;
+        int l=testController.getModel().getPlayers().size();
+        for (int i=0;(i<l)&&testTileEliminated;i++) {
+            if(tilePicked==testController.getModel().getTiles()[i]) {
+                testTileEliminated=false;
+            }
+        }
+
+        assertTrue(testTileEliminated); //controlla abbia eliminato dalla mano la tile
+        assertEquals(tilePicked, anna.getShipBoard().getActiveComponent()); //controlla che la carta sia arrivata in mano
+        anna.getShipBoard().render(MatchLevel.LEVEL2);
+        try {
+            testController.reserveComponent("Anna");
+        } catch (InvalidCommand e) {
+            throw new RuntimeException(e);
+        } catch (InvalidParameters e) {
+            throw new RuntimeException(e);
+        }
+        anna.getShipBoard().render(MatchLevel.LEVEL2);
+
+        //controlla che ora active tile sia null
+        assertEquals(null, anna.getShipBoard().getActiveComponent());
+        assertTrue(anna.getShipBoard().getReservedComponents().contains(tilePicked));
+
+        SpaceshipComponent tilePickedOld =testController.getModel().getTiles()[1];
+        try {
+            testController.getComponent("Anna", 1);
+        } catch (InvalidCommand e) {
+            throw new RuntimeException(e);
+        } catch (InvalidParameters e) {
+            throw new RuntimeException(e);
+        }
+
+        testTileEliminated =true;
+        for (int i=0;(i<l)&&testTileEliminated;i++) {
+            if(tilePickedOld ==testController.getModel().getTiles()[i]) {
+                testTileEliminated=false;
+            }
+        }
+
+        assertTrue(testTileEliminated); //controlla abbia eliminato dalla mano la tile
+        assertEquals(tilePickedOld, anna.getShipBoard().getActiveComponent()); //controlla che la carta sia arrivata in mano
+        anna.getShipBoard().render(MatchLevel.LEVEL2);
+
+        tilePicked =testController.getModel().getTiles()[1];
+        try {
+            testController.getComponent("Anna", 1);
+        } catch (InvalidCommand e) {
+            throw new RuntimeException(e);
+        } catch (InvalidParameters e) {
+            throw new RuntimeException(e);
+        }
+
+        testTileEliminated =true;
+        for (int i=0;(i<l)&&testTileEliminated;i++) {
+            if(tilePickedOld ==testController.getModel().getTiles()[i]) {
+                testTileEliminated=false;
+            }
+        }
+
+        //assertThrows(Exception.class, () -> buildingState.getComponent("Player1", 0));
+
+
     }
+
+
 
     @Test
     public void testGetComponentInvalidPlayer() {

@@ -98,12 +98,12 @@ public class TestStateManager {
 
 
     // State creation methods
-    private static GameSnapshot createEmptyLobbyTrial() {
+    public static GameSnapshot createEmptyLobbyTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 1);
         return new GameSnapshot(controller, "Empty lobby - no players");
     }
 
-    private static GameSnapshot createLobbyWith2PlayersTrial() {
+    public static GameSnapshot createLobbyWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 2);
         try {
             controller.login("Anna");
@@ -114,7 +114,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Lobby with 2 players");
     }
 
-    private static GameSnapshot createLobbyWith4PlayersTrial() {
+    public static GameSnapshot createLobbyWith4PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 3);
         try {
             controller.login("Anna");
@@ -127,7 +127,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Full lobby with 4 players");
     }
 
-    private static GameSnapshot createBuildingWith2PlayersTrial() {
+    public static GameSnapshot createBuildingWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 4);
         try {
             controller.login("Anna");
@@ -139,7 +139,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Building phase just started");
     }
 
-    private static GameSnapshot createBuildingWith2PlayersLevel2() {
+    public static GameSnapshot createBuildingWith2PlayersLevel2() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 4);
         try {
             controller.login("Anna");
@@ -151,7 +151,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Building phase just started");
     }
 
-    private static GameSnapshot finishedBuilding1wrongL2(MatchLevel level) {
+    public static GameSnapshot finishedBuilding1wrongL2(MatchLevel level) {
         Controller controller = new Controller(level, 1);
         try {
             controller.login("Anna");
@@ -174,7 +174,7 @@ public class TestStateManager {
 
     }
 
-    private static GameSnapshot finishedBuildingAllValid(MatchLevel level) {
+    public static GameSnapshot finishedBuildingAllValid(MatchLevel level) {
         Controller controller = new Controller(level, 1);
         try {
             controller.login("Anna");
@@ -194,7 +194,7 @@ public class TestStateManager {
 
     }
 
-    private static GameSnapshot finishedBuildingAllValidNoAlien() {
+    public static GameSnapshot finishedBuildingAllValidNoAlien() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 1);
         try {
             controller.login("Anna");

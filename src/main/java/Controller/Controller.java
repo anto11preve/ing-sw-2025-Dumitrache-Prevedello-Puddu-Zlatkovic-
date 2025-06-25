@@ -151,6 +151,11 @@ public class Controller implements Agent {
     }
 
     public synchronized void sendAll() {
+
+        if(Server.server==null){
+            return;
+        }
+
         for(Player player : this.getModel().getPlayers()){
             Network network = Server.server.getNetwork(player.getName());
             if(network != null && !network.isDone()) {
@@ -179,9 +184,13 @@ public class Controller implements Agent {
                     this.model.setError(true);
                 }
 
+
+
                 this.sendAll();
             }
         }
+
+        if(Server.server==null){return;}
 
         Server.server.destroyGame(this.gameID);
     }

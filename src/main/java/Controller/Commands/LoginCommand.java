@@ -50,6 +50,9 @@ public class LoginCommand extends Command {
             action = ClientState::net_JoinFailed;
             throw e;
         } finally {
+            if(Server.server==null){
+                return;
+            }
             final Network network = Server.server.getNetwork(username);
             network.send(new ClientMessage(action));
 

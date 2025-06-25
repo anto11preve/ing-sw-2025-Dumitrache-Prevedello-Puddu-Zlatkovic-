@@ -21,7 +21,7 @@ public class ShipBoard implements Serializable {
     private static final int COLS = 7;
 
     private final SpaceshipComponent[][] components;
-    private transient SpaceshipComponent activeComponent;
+    private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
     private boolean isValid = false;
