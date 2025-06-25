@@ -10,7 +10,11 @@ public interface Visualize extends Action {
 
     @Override
     default ClientState execute(ClientState state) {
-        Client.view.setState(getViewState());
+        try {
+            Client.view.setState(getViewState());
+        } catch (UnsupportedOperationException e) {
+            Client.view.log(e.getMessage());
+        }
         return state;
     }
 

@@ -63,9 +63,7 @@ public class Client implements Agent {
 
         if(this.state.isDone()){
             view.setMenuState(new StopState());
-        } else if (!action.isVisualize()) {
-            /*If the action is just a visualization action,
-             there is no need to change the menu*/
+        } else {
             view.setMenuState(new ChooseActionState());
             view.repaint();
         }
@@ -126,5 +124,6 @@ public class Client implements Agent {
 
         //the command needs to be created with arguments
         view.setMenuState(new ActionCreationState(actionConstructor, providedArguments));
+        view.repaint();
     }
 }
