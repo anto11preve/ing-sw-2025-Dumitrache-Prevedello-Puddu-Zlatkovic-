@@ -3,6 +3,7 @@ package TestUtils;
 import Controller.Controller;
 import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
+import Controller.RealTimeBuilding.HourGlassFinishedState;
 import Model.Ship.Coordinates;
 import Model.Enums.Direction;
 import Controller.Enums.*;
@@ -55,7 +56,18 @@ public class TestStateManager {
         saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
 
         // Building phase with all valid ships in Level 2 with NO alien support ship
-        saveGameSnapshot("build_end_2_good_NO_alien_L2", finishedBuildingAllValid());
+        saveGameSnapshot("build_end_2_good_NO_alien_L2", finishedBuildingAllValidNoAlien());
+
+        // Hourglass finished states
+
+        // Hourglass finished, all ships are correct, no aliens in any ship, should be used for testing the hourglass finished state
+        saveGameSnapshot("hour_glas_finished_all_ships_are_correct_NO_aliens", hourGlassToFlight());
+
+        // Hourglass finished, all ships are correct, aliens can be placed in some ships
+        saveGameSnapshot("hour_glas_finished_all_ships_are_correct_with_aliens", hourGlassToAliens());
+
+        // Hourglass finished, one ship is wrong, needs fixing
+        saveGameSnapshot("hour_glas_finished_one_ship_wrong", hourGlassToFix());
 
         // Flight phase started with 2 players in Trial
         saveGameSnapshot("flight_phase_2_players_trial", flightPhase2Players(MatchLevel.TRIAL));
@@ -182,7 +194,7 @@ public class TestStateManager {
 
     }
 
-    private static GameSnapshot finishedBuildingAllValid() {
+    private static GameSnapshot finishedBuildingAllValidNoAlien() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 1);
         try {
             controller.login("Anna");
@@ -225,6 +237,30 @@ public class TestStateManager {
         }
 
 
+    }
+
+    public static GameSnapshot hourGlassToFlight() {
+        GameSnapshot snapshot = finishedBuildingAllValidNoAlien();
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, no aliens in any ship");
+    }
+
+    public static GameSnapshot hourGlassToAliens() {
+        GameSnapshot snapshot = finishedBuildingAllValid(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, aliens  can be placed in some ships");
+    }
+
+    public static GameSnapshot hourGlassToFix() {
+        GameSnapshot snapshot = finishedBuilding1wrongL2(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, one ship is wrong, needs fixing");
     }
 
 
