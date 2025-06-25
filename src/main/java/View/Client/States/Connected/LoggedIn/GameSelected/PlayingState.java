@@ -2,7 +2,6 @@ package View.Client.States.Connected.LoggedIn.GameSelected;
 
 import Model.Game;
 import Model.Player;
-import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Networking.Network;
 import View.Client.Client;
