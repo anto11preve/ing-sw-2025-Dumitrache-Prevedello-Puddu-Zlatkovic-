@@ -1,6 +1,7 @@
 package View.Client.Actions;
 
 import View.Client.ClientState;
+import View.Client.Visualizes.ViewComponent;
 import View.Client.Visualizes.ViewShipBoard;
 import View.Client.Visualizes.Visualize;
 import View.States.ViewFlightBoardState;
@@ -21,6 +22,7 @@ public interface ActionConstructor {
 
     static Map<String, ActionConstructor> getActionConstructors() {
         if(actionConstructors.isEmpty()) {
+            /*Actions*/
             actionConstructors.putAll(Map.of(
                     "stop", _ -> ClientState::stop,
                     "RMI", _ -> state -> state.chooseProtocol("RMI"),
@@ -28,10 +30,15 @@ public interface ActionConstructor {
                     "connect", ConnectAction.getConstructor(),
                     "login", LoginAction.getConstructor(),
                     "join", JoinAction.getConstructor(),
-                    "create", CreateGameAction.getConstructor(),
+                    "create", CreateGameAction.getConstructor()
+            ));
+
+            /*Visualizers*/
+            actionConstructors.putAll(Map.of(
                     "ViewFlightBoard", _ -> (Visualize) ViewFlightBoardState::new,
                     "ViewShipBoard", ViewShipBoard.getConstructor(),
-                    "ViewTiles", _ -> (Visualize) ViewTilesState::new
+                    "ViewTiles", _ -> (Visualize) ViewTilesState::new,
+                    "ViewComponent", ViewComponent.getConstructor()
             ));
         }
 

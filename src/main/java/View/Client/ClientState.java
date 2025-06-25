@@ -2,7 +2,7 @@ package View.Client;
 
 import Controller.Enums.MatchLevel;
 import Model.Game;
-import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.Coordinates;
 import Networking.Messages.Message;
 
 import java.util.List;
@@ -98,7 +98,7 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke list on " + this.getClass().getName());
     }
 
-    default void viewComponent(SpaceshipComponent component){
+    default void viewComponent(String username, Coordinates coordinates){
         throw new UnsupportedOperationException("Cannot invoke viewComponent on " + this.getClass().getName());
     }
 
