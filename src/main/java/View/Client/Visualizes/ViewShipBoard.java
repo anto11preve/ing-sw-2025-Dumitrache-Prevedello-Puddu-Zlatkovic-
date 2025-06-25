@@ -1,6 +1,5 @@
 package View.Client.Visualizes;
 
-import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
 import View.States.ViewShipBoardState;
 import View.States.ViewState;

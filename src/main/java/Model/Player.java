@@ -13,7 +13,7 @@ import java.io.Serializable;
 // Classe principale del giocatore
 public final class Player implements Serializable {
     private final String name;
-    private transient ShipBoard shipBoard;
+    private ShipBoard shipBoard;
     private int credits;
     private int junk;
 

@@ -3,14 +3,12 @@ package Model.Ship;
 import Controller.Enums.MatchLevel;
 import Model.Enums.*;
 import Model.Exceptions.InvalidMethodParameters;
-import Model.Ship.Components.Cabin;
 import Model.Ship.Components.Cannon;
 import Model.Ship.Components.Engine;
 import Model.Ship.Components.SpaceshipComponent;
-import Model.Utils.DirectionSideUtils;
-import javafx.geometry.Orientation;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -18,14 +16,14 @@ import java.util.*;
  * Full-featured ShipBoard for Galaxy Trucker.
  * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
  */
-public class ShipBoard {
+public class ShipBoard implements Serializable {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
     private final SpaceshipComponent[][] components;
-    private SpaceshipComponent activeComponent;
+    private transient SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
-    private final CondensedShip condensedShip;
+    private transient final CondensedShip condensedShip;
     private boolean isValid = false;
 
     public ShipBoard() {
