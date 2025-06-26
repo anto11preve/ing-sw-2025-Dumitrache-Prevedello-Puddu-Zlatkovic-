@@ -6,6 +6,7 @@ import Networking.Messages.ControllerMessage;
 import Networking.Utils;
 import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
+import View.Client.States.ConnectingState;
 import View.Client.States.ProtocolChoiceState;
 import View.GUI;
 import View.States.MenuStates.ChooseActionState;
@@ -25,21 +26,24 @@ public class Client implements Agent {
     private ClientState state;
 
     public static void main(String[] args) {
-        final boolean useGui = Utils.getPosition("--nogui", args) == -1;
+        final Boolean useRMI = (Utils.getPosition("--useRMI", args) != -1) ? Boolean.TRUE : (Utils.getPosition("--useTCP", args) != -1) ? Boolean.FALSE : null;
 
-        final String hostname = Utils.getOption("--hostname", args);
+        final boolean localhost = Utils.getPosition("--localhost", args) != -1;
 
-        final String port = Utils.getOption("--port", args);
 
-        view = (useGui) ? new GUI() : new TUI();
-        client = new Client(hostname, port);
+        view = new TUI();
+        client = new Client();
+
+        if (useRMI == null) {
+            client.state = new ProtocolChoiceState();
+        } else {
+            client.state = new ConnectingState(useRMI);
+            if(localhost) {
+                client.state = client.state.connect("localhost", null);
+            }
+        }
 
         client.run();
-    }
-
-    private Client(final String hostname, final String port) {
-        /*TODO: make the arguments not be ignored*/
-        this.state = new ProtocolChoiceState();
     }
 
     @Override

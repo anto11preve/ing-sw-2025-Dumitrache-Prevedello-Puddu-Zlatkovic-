@@ -1,5 +1,6 @@
 package Model.Ship.Components;
 
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Side;
