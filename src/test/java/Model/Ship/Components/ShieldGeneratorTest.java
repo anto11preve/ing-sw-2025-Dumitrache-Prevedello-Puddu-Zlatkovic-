@@ -241,7 +241,7 @@ public class ShieldGeneratorTest {
         
         String[] render = shield.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
+        assertEquals(6, render.length);
         assertTrue(render[1].contains("SHIELD"));
     }
 
@@ -255,7 +255,7 @@ public class ShieldGeneratorTest {
         
         String[] bigRender = shield.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
     }
 
     @Test

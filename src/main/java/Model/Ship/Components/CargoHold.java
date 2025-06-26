@@ -151,7 +151,9 @@ public class CargoHold extends SpaceshipComponent {
         String sx = (this.getConnectorAt(Side.LEFT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║");
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         if (isSpecial) {
-            righe[1] = String.format("%s CAR %s", sx, dx);
+            righe[1] = String.format("%s C-S %s", sx, dx);
+        }else{
+            righe[1] = String.format("%s C-B %s", sx, dx);
         }
         righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");

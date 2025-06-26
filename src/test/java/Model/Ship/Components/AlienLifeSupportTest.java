@@ -183,8 +183,8 @@ public class AlienLifeSupportTest {
         
         String[] render = brownSupport.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("ALSBR"));
+        assertEquals(6, render.length);
+        assertTrue(render[2].contains("BROWN"));
     }
 
     @Test
@@ -193,8 +193,8 @@ public class AlienLifeSupportTest {
         
         String[] render = purpleSupport.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("ALSPU"));
+        assertEquals(6, render.length);
+        assertTrue(render[2].contains("PURPLE"));
     }
 
     @Test
@@ -207,6 +207,6 @@ public class AlienLifeSupportTest {
         
         String[] bigRender = support.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
     }
 }

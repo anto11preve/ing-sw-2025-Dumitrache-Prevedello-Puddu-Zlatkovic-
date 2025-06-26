@@ -200,7 +200,7 @@ public class CargoHoldTest {
         String[] render = cargo.renderSmall();
         assertNotNull(render);
         assertEquals(3, render.length);
-        assertTrue(render[1].contains("CAR"));
+        assertTrue(render[1].contains("C-B"));
     }
 
     @Test
@@ -209,8 +209,8 @@ public class CargoHoldTest {
         
         String[] render = cargo.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("CARGO-B"));
+        assertEquals(6, render.length);
+        assertTrue(render[1].contains("NORMAL"));
     }
 
     @Test
@@ -219,8 +219,8 @@ public class CargoHoldTest {
         
         String[] render = cargo.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("CARGO-S"));
+        assertEquals(6, render.length);
+        assertTrue(render[1].contains("SPECIAL"));
     }
 
     @Test
@@ -232,7 +232,7 @@ public class CargoHoldTest {
         
         String[] render = cargo.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
+        assertEquals(6, render.length);
     }
 
     @Test
@@ -245,7 +245,7 @@ public class CargoHoldTest {
         
         String[] bigRender = cargo.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
     }
 
     @Test
