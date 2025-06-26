@@ -927,6 +927,29 @@ public class ShipBoard implements Serializable {
         }
         System.out.println();
 
+        String[] casellaA = null, casellaB = null, casellaC = null;
+
+        // Active component slot (HAND)
+        if (activeComponent != null) {
+            casellaA = activeComponent.renderBig();
+        } else {
+            casellaA = renderEmptyBig();
+        }
+
+        // First reserved component slot
+        if (!reservedComponents.isEmpty()) {
+            casellaB = reservedComponents.get(0).renderBig();
+        } else {
+            casellaB = renderEmptyBig();
+        }
+
+        // Second reserved component slot
+        if (reservedComponents.size() > 1) {
+            casellaC = reservedComponents.get(1).renderBig();
+        } else {
+            casellaC = renderEmptyBig();
+        }
+
         // Ora stampiamo riga per riga componendo i pezzi
         for (int i = 0; i < ROWS; i++) { // righe da 5 a 9
             // Prima otteniamo i disegni di tutti i componenti della riga i
@@ -972,29 +995,7 @@ public class ShipBoard implements Serializable {
                 }
             }
 
-            // Caselle extra (sempre vuote per ora)
-            String[] casellaA = null, casellaB = null, casellaC = null;
-            if (i == 0) { // prima riga - casella A
-                if (activeComponent != null) {
-                    casellaA = activeComponent.renderBig();
-                } else {
-                    casellaA = renderEmpty();
-                }
-            }
-            if (i == 1) { // seconda riga - caselle B e C
-                if (!reservedComponents.isEmpty()) {
-                    casellaB = reservedComponents.get(0).renderBig();
-                } else {
-                    casellaB = renderEmpty(); // FIX: show empty slot when no reserved components
-                }
 
-                // Second reserved component slot
-                if (reservedComponents.size() > 1) {
-                    casellaC = reservedComponents.get(1).renderBig();
-                } else {
-                    casellaC = renderEmpty(); // FIX: show empty slot when only one reserved component
-                }
-            }
 
             // Poi stampiamo riga per riga il disegno
             for (int riga = 0; riga < draw[0].length; riga++) {
@@ -1012,20 +1013,23 @@ public class ShipBoard implements Serializable {
 
                 System.out.print("     "); // spazio separatore
 
-                // Stampiamo le caselle extra con etichette accanto
-                if (i == 0 && casellaA != null) {
+                // Print extra slots with labels, split across multiple rows
+                if (i == 0 && casellaA != null) { // First 3 lines of active component slot
                     System.out.print(casellaA[riga]);
-                    // Stampiamo l'etichetta A solo sulla riga centrale
                     if (riga == draw[0].length / 2) {
                         System.out.print(" HAND");
                     }
-                } else if (i == 1) {
+                } else if (i == 1 && casellaA != null) { // Last 3 lines of active component slot
+                    System.out.print(casellaA[riga + 3]);
+                } else if (i == 2) { // First 3 lines of reserved component slots
                     if (casellaB != null) System.out.print(casellaB[riga]);
                     if (casellaC != null) System.out.print(casellaC[riga]);
-                    // Stampiamo le etichette B e C solo sulla riga centrale
                     if (riga == draw[0].length / 2) {
                         System.out.print(" RESERVED");
                     }
+                } else if (i == 3) { // Last 3 lines of reserved component slots
+                    if (casellaB != null) System.out.print(casellaB[riga + 3]);
+                    if (casellaC != null) System.out.print(casellaC[riga + 3]);
                 }
 
                 System.out.println();
@@ -1092,6 +1096,22 @@ public class ShipBoard implements Serializable {
         righe[0] = "       ";
         righe[1] = "       ";
         righe[2] = "       ";
+        return righe;
+    }
+
+    /**
+     * Renders an empty slot with the same dimensions as renderBig().
+     *
+     * @return array of 5 strings representing an empty big slot
+     */
+    public String[] renderEmptyBig() {
+        String[] righe = new String[6]; // Stesso numero di righe di renderBig()
+        righe[0] = "┌─────────┐";
+        righe[1] = "│         │";
+        righe[2] = "│         │";
+        righe[3] = "│         │";
+        righe[4] = "│         │";
+        righe[5] = "└─────────┘";
         return righe;
     }
 }

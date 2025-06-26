@@ -501,12 +501,16 @@ public class BuildingStateTest {
             controller.getComponent("Anna", 0);
             activeTile = anna.getShipBoard().getActiveComponent();
             controller.reserveComponent("Anna");
+            anna.getShipBoard().render(MatchLevel.LEVEL2);
+            controller.placeComponent("Anna", ComponentOrigin.FIRST_RESERVED, new Coordinates(7, 6), Direction.UP);
+            activeTile = anna.getShipBoard().getActiveComponent();
         } catch (Exception e) {
             fail("Failed to reserve component: " + e.getMessage());
         }
 
         // Cannot place from reserved if empty
-        anna.getShipBoard().getReservedComponents().clear();
+        //anna.getShipBoard().getReservedComponents().removeFirst();
+        anna.getShipBoard().render(MatchLevel.LEVEL2);
         assertThrows(Exception.class,
                 () -> controller.placeComponent("Anna", ComponentOrigin.FIRST_RESERVED, new Coordinates(6, 7), Direction.UP));
 
@@ -531,6 +535,7 @@ public class BuildingStateTest {
         try {
             controller.placeComponent("Anna", ComponentOrigin.FIRST_RESERVED, new Coordinates(6, 7), Direction.UP);
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to place from reserved: " + e.getMessage());
         }
 
