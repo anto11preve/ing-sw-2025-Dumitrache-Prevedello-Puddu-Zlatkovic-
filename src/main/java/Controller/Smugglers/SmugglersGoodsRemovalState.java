@@ -179,7 +179,7 @@ public class SmugglersGoodsRemovalState extends State{
     @Override
     public List<String> getAvailableCommands(){
         return List.of(
-            "MoveGood"
+            "RemoveGood"
         );
     }
 }

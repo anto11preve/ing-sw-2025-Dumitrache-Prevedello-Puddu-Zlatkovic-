@@ -41,6 +41,9 @@ public class OpenSpaceEngineDeclarationState extends State {
         for(Player p : context.getPlayers()) {
             if (p.getShipBoard().getCondensedShip().getTotalBatteries() == 0 && p.getShipBoard().getCondensedShip().getBaseThrust() == 0) {
                 context.getController().getModel().getFlightBoard().removePlayingPlayer(p);
+            } else if (p.getShipBoard().getCondensedShip().getTotalBatteries() == 0 && p.getShipBoard().getCondensedShip().getAliens().hasBrownAlien() &&
+            p.getShipBoard().getCondensedShip().getBaseThrust() == 2) {
+                context.getController().getModel().getFlightBoard().removePlayingPlayer(p);
             }
         }
     }
@@ -82,6 +85,11 @@ public class OpenSpaceEngineDeclarationState extends State {
         int batteries = 0;
         double minPower = player.getShipBoard().getCondensedShip().getBaseThrust();
         double maxPower = player.getShipBoard().getCondensedShip().getMaxThrust();
+
+        if(amount == 2 && player.getShipBoard().getCondensedShip().getAliens().hasBrownAlien()){
+            controller.getModel().setError(true);
+            throw new InvalidParameters(" Cannot declare 2 double engines with a brown alien on board");
+        }
 
         if (amount < minPower || amount > maxPower) {
             controller.getModel().setError(true);
@@ -135,7 +143,7 @@ public class OpenSpaceEngineDeclarationState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "DeclaresDoubleEngine" );
+        return List.of( "DeclareEnginePower" );
     }
 
 }

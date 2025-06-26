@@ -141,6 +141,6 @@ public class CombatZone2GoodsRemovalState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "MoveGood");
+        return List.of( "RemoveGood");
     }
 }

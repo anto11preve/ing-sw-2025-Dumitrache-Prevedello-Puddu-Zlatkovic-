@@ -509,6 +509,73 @@ public class Game implements Serializable, Cloneable {
         this.preBuiltShips = oldGame.preBuiltShips;
 
     }
+
+    /**
+     * Displays a formatted table showing all players ordered by their credit count.
+     * This method provides a clear leaderboard view for the TUI during the rewards phase,
+     * displaying players from highest to lowest credit count. This helps players understand
+     * the final standings and rewards distribution at the end of the game.
+     */
+    public void visualizeRewards() {
+        Player[] allPlayers = flightBoard.getTurnOrder();
+
+        // Sort players by credits in descending order (highest credits first)
+        Player[] playersByCredits = Arrays.stream(allPlayers)
+                .sorted(Comparator.comparingInt(Player::getCredits).reversed())
+                .toArray(Player[]::new);
+
+        // Print table header
+        System.out.println("┌─────────────────────────────────────────────────────┐");
+        System.out.println("│                   REWARDS LEADERBOARD               │");
+        System.out.println("├─────────────────────────────────────────────────────┤");
+        System.out.printf("│ %-4s  │ %-25s │ %-15s │%n", "Rank", "Player Name", "Credits");
+        System.out.println("├───────┼───────────────────────────┼─────────────────┤");
+
+        // Print each player's information ordered by credits
+        for (int i = 0; i < playersByCredits.length; i++) {
+            Player player = playersByCredits[i];
+            String playerName = player.getName();
+            int credits = player.getCredits();
+
+            // Truncate player name if it's too long to fit in the table
+            if (playerName.length() > 25) {
+                playerName = playerName.substring(0, 22) + "...";
+            }
+
+            // Add medal emoji or indicator for top 3 positions
+            String rankIndicator = getRankIndicator(i + 1);
+
+            System.out.printf("│ %-4s │ %-25s │ %-15d │%n",
+                    rankIndicator, playerName, credits);
+        }
+
+        // Print table footer with winner announcement
+        System.out.println("└───────┴───────────────────────────┴─────────────────┘");
+
+        if (playersByCredits.length > 0) {
+            Player winner = playersByCredits[0];
+            System.out.println("🏆 WINNER: " + winner.getName() +
+                    " with " + winner.getCredits() + " credits! 🏆");
+        }
+    }
+
+    /**
+     * Returns a rank indicator string with special symbols for top positions.
+     * Provides visual distinction for podium positions in the leaderboard.
+     *
+     * @param rank the player's rank position (1-based)
+     * @return formatted rank string with appropriate symbol
+     */
+    private String getRankIndicator(int rank) {
+        return switch (rank) {
+            case 1 -> "🥇1st";
+            case 2 -> "🥈2nd";
+            case 3 -> "🥉3rd";
+            default -> "  " + rank + "  ";
+        };
+    }
 }
+
+
 
 

@@ -1033,7 +1033,8 @@ public class ShipBoard implements Serializable {
         // Array con i tuoi contenuti personalizzati
         String[] legenda = {
                 "BAT - Battery compartment",
-                "CAR - Cargo hold",
+                "C-S - Special Cargo hold",
+                "C-B - Base Cargo hold",
                 "CAB - Cabin",
                 "STR - Structural Module",
                 "E1  - Single Engine",
