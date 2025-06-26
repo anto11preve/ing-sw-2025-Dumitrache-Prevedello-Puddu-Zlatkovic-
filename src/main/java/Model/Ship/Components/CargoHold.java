@@ -60,6 +60,13 @@ public class CargoHold extends SpaceshipComponent {
         return this.isSpecial;
     }
 
+    public boolean isEmpty(){
+        for(int i=0; i<capacity; i++){
+            if(goods[i] != null){return false;}
+        }
+        return true;
+    }
+
     @Override
     public void visualize() {
         super.visualize();

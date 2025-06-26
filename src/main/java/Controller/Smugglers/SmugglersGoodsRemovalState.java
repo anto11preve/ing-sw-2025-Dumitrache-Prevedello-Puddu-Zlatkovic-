@@ -66,7 +66,7 @@ public class SmugglersGoodsRemovalState extends State{
         Player player = context.getSpecialPlayers().getFirst();
         boolean availableGoods = false;
         for (CargoHold cargoHold : player.getShipBoard().getCondensedShip().getCargoHolds()) {
-            if (cargoHold.getGoods().length > 0) {
+            if (!cargoHold.isEmpty()) {
                 availableGoods = true;
                 break;
             }
