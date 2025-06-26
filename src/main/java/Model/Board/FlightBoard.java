@@ -33,7 +33,7 @@ import java.util.*;
 public class FlightBoard implements Serializable {
     private final int cellNumber;
 
-    private Map<Player, CardDeck> bookedDecks = new HashMap<>();
+    private transient Map<Player, CardDeck> bookedDecks = new HashMap<>();
 
     private Timer timer;
 
