@@ -26,7 +26,7 @@ public interface CommandConstructor {
      */
     Map<String, CommandConstructor> commandConstructors = new HashMap<>();
 
-    static Map<String, CommandConstructor> getCommandConstructor(){
+    static Map<String, CommandConstructor> getCommandConstructors(){
         if(commandConstructors.isEmpty()) {
             commandConstructors.putAll(Map.of(
                     "ChoosePlanet", ChoosePlanetCommand.getConstructor(),
@@ -69,4 +69,9 @@ public interface CommandConstructor {
 
         return commandConstructors;
     }
+
+    static CommandConstructor getCommandConstructor(String command) {
+        return getCommandConstructors().get(command);
+    }
+
 }

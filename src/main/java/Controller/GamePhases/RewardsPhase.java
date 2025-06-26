@@ -7,7 +7,7 @@ import Controller.State;
 import Model.Enums.Good;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
-import Model.Ship.GoodCounter;
+import View.Client.ClientState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import java.util.List;
 public class RewardsPhase extends State {
     public RewardsPhase(Controller controller) {
         super(controller);
+        controller.setQueuedAction(ClientState::net_Reward);
     }
 
     @Override

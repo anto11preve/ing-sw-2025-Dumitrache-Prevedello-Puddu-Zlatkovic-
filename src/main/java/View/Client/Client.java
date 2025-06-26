@@ -1,14 +1,12 @@
 package View.Client;
 
-import Controller.Commands.CommandConstructor;
 import Networking.Agent;
-import Networking.Messages.ControllerMessage;
 import Networking.Utils;
 import View.Client.Actions.Action;
 import View.Client.Actions.ActionConstructor;
+import View.Client.Actions.ExceptionAction;
 import View.Client.States.ConnectingState;
 import View.Client.States.ProtocolChoiceState;
-import View.GUI;
 import View.States.MenuStates.ChooseActionState;
 import View.States.MenuStates.ActionCreationState;
 import View.States.MenuStates.StopState;
@@ -17,7 +15,6 @@ import View.TUI;
 import View.View;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Client implements Agent {
@@ -74,31 +71,11 @@ public class Client implements Agent {
     }
 
     public void createAction(String action, String[] args){
-        ActionConstructor actionConstructor = ActionConstructor.getActionConstructors().get(action);
+        ActionConstructor actionConstructor = ActionConstructor.getActionConstructor(action);
 
         //the command is not part of the available commands
         if(actionConstructor == null) {
-            final CommandConstructor commandConstructor = CommandConstructor.getCommandConstructor().get(action);
-
-            if(commandConstructor == null){
-                return;
-            }
-
-            actionConstructor = new ActionConstructor() {
-                @Override
-                public Action create(Map<String, String> args) throws IllegalArgumentException {
-                    return state -> state.send(
-                            new ControllerMessage(
-                                    commandConstructor.create(state.getUsername(), args)
-                            )
-                    );
-                }
-
-                @Override
-                public List<String> getArguments() {
-                    return commandConstructor.getArguments();
-                }
-            };
+            return;
         }
 
         //the command is part of the available commands but it doesn't require any arguments
@@ -118,8 +95,8 @@ public class Client implements Agent {
             Action _action;
             try{
                 _action = actionConstructor.create(providedArguments);
-            } catch(IllegalArgumentException e){
-                _action = state -> state;
+            } catch(Exception e){
+                _action = new ExceptionAction(e);
             }
 
             this.execute(_action);
