@@ -4,7 +4,6 @@ import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Good;
 import Model.Enums.Side;
-import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -13,8 +12,8 @@ import com.google.gson.JsonObject;
  */
 public class CargoHold extends SpaceshipComponent {
     private final int capacity;        // Number of slots available in the hold
-    private Good[] goods;              // Goods currently stored in the cargo hold
-    private boolean isSpecial;         // True if this cargo hold can carry red goods
+    private final Good[] goods;              // Goods currently stored in the cargo hold
+    private final boolean isSpecial;         // True if this cargo hold can carry red goods
 
     /**
      * Constructor using explicit parameters.
@@ -232,5 +231,15 @@ public class CargoHold extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public CargoHold clone(){
+        CargoHold clone = new CargoHold(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), this.capacity, this.isSpecial);
+
+        System.arraycopy(this.goods, 0, clone.goods, 0, this.capacity);
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }

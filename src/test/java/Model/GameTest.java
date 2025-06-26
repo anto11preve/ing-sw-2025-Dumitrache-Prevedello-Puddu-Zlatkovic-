@@ -1463,7 +1463,7 @@ public class GameTest {
         Game original = new Game(MatchLevel.TRIAL);
         
         try {
-            Game copy = new Game(original);
+            Game copy = original.clone();
             assertNotNull(copy);
             assertEquals(original.getLevel(), copy.getLevel());
             
@@ -1778,7 +1778,7 @@ public class GameTest {
             public Game clone() {
                 // Force CloneNotSupportedException path
                 System.err.println("Could not clone Game");
-                return new Game(this);
+                return this.clone();
             }
         };
         

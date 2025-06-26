@@ -4,9 +4,6 @@ import Model.Enums.Side;
 import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
-import Model.Enums.Direction;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class representing an engine module for the spaceship.
@@ -14,7 +11,6 @@ import java.util.List;
  * Handles double engine activation via battery.
  */
 public class Engine extends SpaceshipComponent {
-
     private final boolean isDouble;
     //private boolean hasAlien;
 
@@ -134,5 +130,14 @@ public class Engine extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public Engine clone() {
+        Engine clone = new Engine(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), this.isDouble);
+
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }

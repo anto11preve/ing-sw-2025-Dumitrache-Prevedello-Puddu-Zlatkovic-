@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
  * Shield Generators provide directional defense, often requiring battery power.
  */
 public class ShieldGenerator extends SpaceshipComponent {
-
     /**
      * Constructor with explicit parameters.
      */
@@ -151,5 +150,14 @@ public class ShieldGenerator extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public ShieldGenerator clone() {
+        ShieldGenerator clone = new ShieldGenerator(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), this.getOrientation());
+
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }

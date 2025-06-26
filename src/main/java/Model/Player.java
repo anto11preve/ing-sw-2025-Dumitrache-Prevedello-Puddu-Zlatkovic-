@@ -11,7 +11,7 @@ import Model.Ship.ShipBoard;
 import java.io.Serializable;
 
 // Classe principale del giocatore
-public final class Player implements Serializable {
+public final class Player implements Serializable, Cloneable {
     private final String name;
     private ShipBoard shipBoard;
     private int credits;
@@ -91,5 +91,18 @@ public final class Player implements Serializable {
 
     public int getJunk() {
         return junk;
+    }
+
+    @Override
+    public Player clone() {
+        return new Player(this);
+    }
+
+
+    private Player(Player old){
+        this.name = old.name;
+        this.shipBoard = (old.shipBoard != null) ? old.shipBoard.clone() : null;
+        this.credits = old.credits;
+        this.junk = old.junk;
     }
 }

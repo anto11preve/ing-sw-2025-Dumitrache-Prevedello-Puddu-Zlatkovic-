@@ -1,17 +1,13 @@
 package Model.Ship;
 
-import Model.Ship.Components.Cabin;
-import Model.Ship.Components.SpaceshipComponent;
-
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * AlienCounter keeps track of alien crew presence on the ship.
  * It can be used to count the total number of alien crew members,
  * and also track whether at least one brown or purple alien is present.
  */
-public class AlienCounter implements Serializable {
+public class AlienCounter implements Serializable, Cloneable {
     private boolean brownAlien;
     private boolean purpleAlien;
 
@@ -34,5 +30,15 @@ public class AlienCounter implements Serializable {
 
     public void setPurpleAlien(boolean purpleAlien) {
         this.purpleAlien = purpleAlien;
+    }
+
+    @Override
+    public AlienCounter clone() {
+        AlienCounter clone = new AlienCounter();
+
+        clone.brownAlien = this.brownAlien;
+        clone.purpleAlien = this.purpleAlien;
+
+        return clone;
     }
 }

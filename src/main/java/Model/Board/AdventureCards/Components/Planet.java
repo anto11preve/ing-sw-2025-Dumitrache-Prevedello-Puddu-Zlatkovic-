@@ -4,10 +4,11 @@ import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.Good;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Planet implements Serializable {
-    private String name;
+public class Planet implements Serializable, Cloneable {
+    private final String name;
     private final Goods landingReward;
     private boolean occupied;
 
@@ -35,5 +36,19 @@ public class Planet implements Serializable {
 
     public final Goods getLandingReward() {
         return landingReward;
+    }
+
+    @Override
+    public Planet clone() {
+        final List<Good> goods = new ArrayList<>();
+        for(Good good : this.landingReward){
+            goods.add(good);
+        }
+
+        Planet clone = new Planet(this.name, goods);
+
+        clone.occupied = this.occupied;
+
+        return clone;
     }
 }

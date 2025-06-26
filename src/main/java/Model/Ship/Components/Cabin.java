@@ -214,4 +214,16 @@ public class Cabin extends SpaceshipComponent {
 
         return righe;
     }
+
+    @Override
+    public Cabin clone(){
+        Cabin clone = new Cabin(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), null, this.getImagePath());
+
+        clone.occupants = this.occupants;
+        clone.canContainBrown = this.canContainBrown;
+        clone.canContainPurple = this.canContainPurple;
+        clone.orientation = this.getOrientation();
+
+        return clone;
+    }
 }

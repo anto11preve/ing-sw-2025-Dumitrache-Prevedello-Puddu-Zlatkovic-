@@ -4,10 +4,7 @@ import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.AlienColor;
 import Model.Enums.Side;
-import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
-
-import java.io.PrintStream;
 
 /**
  * Represents an Alien Life Support component.
@@ -148,5 +145,14 @@ public class AlienLifeSupport extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public AlienLifeSupport clone() {
+        AlienLifeSupport clone = new AlienLifeSupport(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), this.color);
+
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }
