@@ -204,31 +204,31 @@ public class ManageMeteorState extends State {
                 }
             }
         }
-                /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio
-                if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component != null && component.getConnectorAt(meteor.getSide()) ==null)))){
-                    player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
-                    player.addJunk();
-                    boolean brokenShip = player.getShipBoard().checkIntegrity();
-                    if (!brokenShip) {
-                        controller.getModel().setState(new MeteorsCheckShipState(context, number));
-                        controller.getModel().setError(false);
-                        return;
-                    }
-                }
-                context.removeSpecialPlayer(player);
-                if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
-                    context.removeProjectile(meteor);
-                    if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                        controller.getModel().setState(new FlightPhase(controller));
-                        controller.getModel().setError(false);
-                    } else {
-                        controller.getModel().setState(new MeteorsState(context));
-                        controller.getModel().setError(false);
-                    }
-                } else {
-                    controller.getModel().setState(new ManageMeteorState(context,number));
-                    controller.getModel().setError(false);
-                }
+        /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio
+        if (hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() && (component != null && component.getConnectorAt(meteor.getSide()) == null)))) {
+            player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
+            player.addJunk();
+            boolean brokenShip = player.getShipBoard().checkIntegrity();
+            if (!brokenShip) {
+                controller.getModel().setState(new MeteorsCheckShipState(context, number));
+                controller.getModel().setError(false);
+                return;
+            }
+        }
+        context.removeSpecialPlayer(player);
+        if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
+            context.removeProjectile(meteor);
+            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new MeteorsState(context));
+                controller.getModel().setError(false);
+            }
+        } else {
+            controller.getModel().setState(new ManageMeteorState(context, number));
+            controller.getModel().setError(false);
+        }
 
 
     }
