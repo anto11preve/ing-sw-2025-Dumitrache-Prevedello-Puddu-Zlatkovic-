@@ -101,16 +101,22 @@ public class Engine extends SpaceshipComponent {
 
     @Override
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
                 this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        righe[1] = "║  ENGIN  ║";
+        if (!this.isDouble) {
+            righe[1] = "║  SINGLE ║";
+        } else {
+            righe[1] = "║  DOUBLE ║";
+        }
+        righe[2] = "║  ENGINE ║";
 
-        righe[2] = String.format("%s%s%s",
+
+        righe[3] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
                 "    " + this.getOrientation().getFreccia(),
@@ -118,14 +124,10 @@ public class Engine extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-        if (!this.isDouble) {
-            righe[3] = "║  SINGL  ║";
-        } else {
-            righe[3] = "║  DOUBL  ║";
-        }
+        righe[4] = "║         ║";
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

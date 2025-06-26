@@ -43,6 +43,10 @@ public class LogInState extends State {
     @Override
     public void login(String name) throws InvalidParameters, InvalidCommand{
 
+        if(name==null){
+            throw new InvalidParameters("Name cannot be null");
+        }
+
         Player test= this.getController().getModel().getPlayer(name);
         if(test != null){
             throw new InvalidParameters("Player with this name already connected");

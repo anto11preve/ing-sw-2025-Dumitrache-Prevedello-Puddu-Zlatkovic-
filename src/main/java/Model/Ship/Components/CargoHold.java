@@ -4,6 +4,7 @@ import Model.Enums.Card;
 import Model.Enums.ConnectorType;
 import Model.Enums.Good;
 import Model.Enums.Side;
+import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 /**
@@ -158,7 +159,7 @@ public class CargoHold extends SpaceshipComponent {
         String dx = (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ? String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║");
         if (isSpecial) {
             righe[1] = String.format("%s C-S %s", sx, dx);
-        } else {
+        }else{
             righe[1] = String.format("%s C-B %s", sx, dx);
         }
         righe[2] = String.format("╚═ %s ═╝", this.getConnectorAt(Side.REAR).getNumero() > 0 ?
@@ -168,7 +169,7 @@ public class CargoHold extends SpaceshipComponent {
 
     @Override
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
@@ -180,12 +181,14 @@ public class CargoHold extends SpaceshipComponent {
 
 
         if(this.isSpecial){
-            righe[1] = "║ CARGO-S ║";
+            righe[1] = "║ SPECIAL ║";
         }else{
-            righe[1] = "║ CARGO-B ║";
+            righe[1] = "║ NORMAL  ║";
         }
+        righe[2] = "║  CARGO  ║";
 
-        righe[2] = String.format("%s%s%s",
+
+        righe[3] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
                 "    " + this.getOrientation().getFreccia(),
@@ -193,7 +196,9 @@ public class CargoHold extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-        StringBuilder goodsLine = new StringBuilder("║ ");
+        //righe[4] = "║         ║";
+
+        StringBuilder goodsLine = new StringBuilder("║  ");
         switch(this.getCapacity()) {
             case 1:
                 goodsLine.append("  ");
@@ -220,7 +225,7 @@ public class CargoHold extends SpaceshipComponent {
                 goodsLine.append(" ");
                 break;
             case 3:
-                goodsLine.append(" ");
+                //goodsLine.append(" ");
                 for (Good good : this.getGoods()) {
                     if (good == null) {
                         goodsLine.append("☐ ");
@@ -234,10 +239,10 @@ public class CargoHold extends SpaceshipComponent {
                 goodsLine = new StringBuilder(String.format("║ %d slots ║", this.getCapacity()));
         }
         goodsLine.append(" ║");
-        righe[3] = goodsLine.toString();
+        righe[4] = goodsLine.toString();
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

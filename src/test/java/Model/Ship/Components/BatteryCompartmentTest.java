@@ -40,7 +40,7 @@ public class BatteryCompartmentTest {
         battery.removeBattery();
         assertEquals(0, battery.getBatteries());
         
-        assertThrows(IllegalStateException.class, battery::removeBattery);
+        assertThrows(InvalidContextualAction.class, battery::removeBattery);
     }
 
     @Test
@@ -91,6 +91,6 @@ public class BatteryCompartmentTest {
         BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 0);
         assertEquals(0, battery.getCapacity());
         assertEquals(0, battery.getBatteries());
-        assertThrows(IllegalStateException.class, battery::removeBattery);
+        assertThrows(InvalidContextualAction.class, battery::removeBattery);
     }
 }

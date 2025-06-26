@@ -1,7 +1,10 @@
 package Model.Ship.Components;
 
 import Model.Enums.*;
+import Model.Ship.Coordinates;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * Represents a Cabin component on the spaceship. Cabins can host standard crew
@@ -136,7 +139,11 @@ public class Cabin extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addCabin(this);
         }
-        for(AlienLifeSupport alienLifeSupport : getShipBoard().getCondensedShip().getAlienSupports()) {
+        Coordinates myCoordinates= super.getShipBoard().getIndex(this);
+
+        List<AlienLifeSupport> allAlienLifeSupports = getShipBoard().getCondensedShip().getAlienSupports();
+
+        for(AlienLifeSupport alienLifeSupport : allAlienLifeSupports) {
             if(getShipBoard().areComponentsConnected(this, alienLifeSupport)) {
                 if(alienLifeSupport.getColor() == AlienColor.BROWN){
                     this.incrementCanContainBrown();
@@ -145,6 +152,9 @@ public class Cabin extends SpaceshipComponent {
                 }
             }
         }
+
+
+
     }
 
     @Override
@@ -170,7 +180,7 @@ public class Cabin extends SpaceshipComponent {
     }
 
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
@@ -178,8 +188,9 @@ public class Cabin extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
         righe[1] = "║  CABIN  ║";
+        righe[2] = "║         ║";
 
-        righe[2] = String.format("%s%s%s",
+        righe[3] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
                 "    " + this.getOrientation().getFreccia(),
@@ -189,26 +200,26 @@ public class Cabin extends SpaceshipComponent {
 
         switch (this.getOccupants()) {
             case EMPTY:
-                righe[3] = "║         ║";
+                righe[4] = "║         ║";
                 break;
             case BROWN_ALIEN:
-                righe[3] = "║  BROWN  ║";
+                righe[4] = "║  BROWN  ║";
                 break;
             case PURPLE_ALIEN:
-                righe[3] = "║ PURPLE  ║";
+                righe[4] = "║ PURPLE  ║";
                 break;
             case SINGLE_HUMAN:
-                righe[3] = "║  1 HUM  ║";
+                righe[4] = "║  1 HUM  ║";
                 break;
             case DOUBLE_HUMAN:
-                righe[3] = "║  2 HUM  ║";
+                righe[4] = "║  2 HUM  ║";
                 break;
             default:
-                righe[3] = "║   ?     ║"; // Fallback case, should not happen
+                righe[4] = "║   ?     ║"; // Fallback case, should not happen
         }
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

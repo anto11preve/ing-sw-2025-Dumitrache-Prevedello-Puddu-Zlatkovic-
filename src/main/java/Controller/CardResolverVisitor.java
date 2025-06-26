@@ -20,10 +20,12 @@ import Model.Enums.ConnectorType;
 import Model.Enums.Crewmates;
 import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Game;
 import Model.Player;
 import Model.Ship.Components.Cabin;
 import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
+import Model.Ship.ShipBoard;
 //import com.sun.jdi.connect.Connector;
 
 import java.util.*;
@@ -102,63 +104,34 @@ public class CardResolverVisitor {
         /*
         si scorrono le cabine, e se essa è adiacente a un'altra cabina, si rimuove un membro dell'equipaggio (alieno o umano)
          */
-        System.out.println("Epidemic");
-        for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
-            Set<Cabin> processed = new HashSet<>();
-            for(int i=4; i<10; i++){{
-                for(int j=4; j<9; j++){
-                    if(p.getShipBoard().getCondensedShip().getCabins().contains(p.getShipBoard().getComponent(new Coordinates(i,j)))){
-                    SpaceshipComponent c = p.getShipBoard().getComponent(new Coordinates(i,j));  //come faccio a dire che è una cabina?
-                        int [][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+        Game model=controller.getModel();
 
-                        for(int [] d : directions){
-                            int newRow = i + d[0];
-                            int newColumn = j + d[1];
-
-                            if(p.getShipBoard().getComponent(new Coordinates(newRow,newColumn)) != null){
-                                SpaceshipComponent adjacent = p.getShipBoard().getComponent(new Coordinates(newRow,newColumn));  //come faccio a dire che è una cabina?
-                                if( !processed.contains(adjacent) && p.getShipBoard().getCondensedShip().getCabins().contains(adjacent)){   //da rivedere
-                                    Cabin cNew = (Cabin) c;
-                                    Crewmates firstCabin = cNew.getOccupants();
-                                    Cabin adjacentNew = (Cabin) adjacent;
-                                    Crewmates secondCabin = adjacentNew.getOccupants();    //da rivedere
-                                    switch(firstCabin){
-                                        case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
-                                            cNew.setOccupants(Crewmates.EMPTY);
-                                            break;
-                                        case DOUBLE_HUMAN:
-                                            cNew.setOccupants(Crewmates.SINGLE_HUMAN);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-
-                                    switch(secondCabin){
-                                        case SINGLE_HUMAN, BROWN_ALIEN, PURPLE_ALIEN:
-                                            adjacentNew.setOccupants(Crewmates.EMPTY);
-                                            break;
-                                        case DOUBLE_HUMAN:
-                                            adjacentNew.setOccupants(Crewmates.SINGLE_HUMAN);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-
-                                    processed.add(cNew);
-                                    processed.add(adjacentNew);
-
-                                }
-
+        for(Player player : model.getFlightBoard().getTurnOrder()){
+            ShipBoard playerShipBoard = player.getShipBoard();
+            List<Cabin> allCabins= player.getShipBoard().getCondensedShip().getCabins();
+            int length=allCabins.size();
+            boolean removed=false;
+            for(int i = 0; (i <length)&&!removed; i++){
+                Cabin thisCabin=allCabins.get(i);
+                Crewmates thisCabinOccupants =thisCabin.getOccupants();
+                if (thisCabinOccupants != Crewmates.EMPTY) {
+                    for(int j = 0; j <length&&!removed; j++){
+                        Cabin otherCabin=allCabins.get(j);
+                        if(playerShipBoard.areComponentsConnected(thisCabin, otherCabin)){
+                            removed=true;
+                            if(thisCabinOccupants ==Crewmates.DOUBLE_HUMAN){
+                                thisCabin.setOccupants(Crewmates.SINGLE_HUMAN);
+                            }else{
+                                thisCabin.setOccupants(Crewmates.EMPTY);
                             }
                         }
                     }
                 }
             }
 
-            }
         }
 
-        controller.getModel().setState(new FlightPhase(controller));
+        model.setState(new FlightPhase(controller));
     }
 
     public void visit(MeteorSwarm card, Controller controller) {
@@ -227,33 +200,22 @@ public class CardResolverVisitor {
         System.out.println("Stardust");
         List<Player> playersReversed = new ArrayList<>(List.of(controller.getModel().getFlightBoard().getTurnOrder()));
         Collections.reverse(playersReversed);
+        for(Player p : playersReversed){
+            int counter = 0;
 
-        // Process each player in reverse order
-        for (Player player : playersReversed) {
-            int exposedConnectorCount = 0;
-
-            // Iterate through all exposed connectors on the player's ship
-            for (Map.Entry<Coordinates, List<Side>> entry : player.getShipBoard().getExposedConnectors().entrySet()) {
+            for (Map.Entry<Coordinates, List<Side>> entry : p.getShipBoard().getExposedConnectors().entrySet()) {
                 Coordinates position = entry.getKey();
-                List<Side> exposedSides = entry.getValue();
+                List<Side> sides = entry.getValue();
 
-                if (player.getShipBoard().getComponent(position) != null) {
-                    // Count each exposed connector regardless of type
-                    for (Side side : exposedSides) {
-                        ConnectorType connector = player.getShipBoard().getComponent(position).getConnectorAt(side);
+                for (Side side : sides) {
+                    ConnectorType connector = p.getShipBoard().getComponent(position).getConnectorAt(side); // supponendo che Position abbia questo metodo
 
-                        // All connector types count for Stardust penalty (single, double, universal)
-                        if (connector == ConnectorType.SINGLE ||
-                                connector == ConnectorType.DOUBLE ||
-                                connector == ConnectorType.UNIVERSAL) {
-                            exposedConnectorCount++;
-                        }
+                    if (!(connector == ConnectorType.NONE)) {
+                        counter++;
                     }
                 }
             }
-
-            // Apply flight day penalty (negative delta = losing days)
-            controller.getModel().getFlightBoard().deltaFlightDays(player, -exposedConnectorCount);
+            controller.getModel().getFlightBoard().deltaFlightDays(p, -counter);
         }
 
 

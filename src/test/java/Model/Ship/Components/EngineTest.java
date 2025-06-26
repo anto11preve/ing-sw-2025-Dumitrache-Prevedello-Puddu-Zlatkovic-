@@ -174,9 +174,9 @@ public class EngineTest {
         
         String[] render = singleEngine.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("ENGIN"));
-        assertTrue(render[3].contains("SINGL"));
+        assertEquals(6, render.length);
+        assertTrue(render[2].contains("ENGINE"));
+        assertTrue(render[1].contains("SINGLE"));
     }
 
     @Test
@@ -185,9 +185,9 @@ public class EngineTest {
         
         String[] render = doubleEngine.renderBig();
         assertNotNull(render);
-        assertEquals(5, render.length);
-        assertTrue(render[1].contains("ENGIN"));
-        assertTrue(render[3].contains("DOUBL"));
+        assertEquals(6, render.length);
+        assertTrue(render[2].contains("ENGINE"));
+        assertTrue(render[1].contains("DOUBLE"));
 
     }
 
@@ -222,7 +222,7 @@ public class EngineTest {
         
         String[] bigRender = engine.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
     }
 
     @Test
