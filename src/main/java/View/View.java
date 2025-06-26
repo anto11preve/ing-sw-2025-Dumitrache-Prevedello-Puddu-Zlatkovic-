@@ -30,8 +30,15 @@ public abstract class View implements Runnable {
     }
 
     public void repaint() {
+        String clear = "";
+        for(int i = 0; i < 30; i++){
+            clear = clear + '\n';
+        }
+        System.out.print(clear);
         this.state.paint();
+        System.out.println();
         this.menuState.paint();
+        System.out.print("> ");
     }
 
     public abstract void log(String message);

@@ -15,9 +15,9 @@ public final class TUI extends View {
 
     @Override
     public void showOptions(String prompt, List<String> options){
-        System.out.println(prompt);
+        System.out.println(prompt + ":");
         for(String option : options){
-            System.out.println(option);
+            System.out.println("- " + option);
         }
     }
 
