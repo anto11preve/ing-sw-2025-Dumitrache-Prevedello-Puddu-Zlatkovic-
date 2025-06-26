@@ -16,6 +16,10 @@ public final class Player implements Serializable {
     private ShipBoard shipBoard;
     private int credits;
     private int junk;
+    private boolean error = false;
+    private String errorMessage=null;
+
+
 
 
 
@@ -92,4 +96,11 @@ public final class Player implements Serializable {
     public int getJunk() {
         return junk;
     }
+
+    public boolean isError() {return error;}
+
+    public void setError(boolean error) {this.error = error;}
+
+    public void setErrorMessage(String errorMessage) {this.errorMessage = errorMessage;}
+    public String getErrorMessage() {return errorMessage;}
 }

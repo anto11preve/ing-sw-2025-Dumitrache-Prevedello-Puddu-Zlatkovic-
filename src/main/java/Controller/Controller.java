@@ -179,12 +179,35 @@ public class Controller implements Agent {
             if(command != null){
                 try {
                     command.execute(this);
+
+
                     this.model.setError(false);
+                    this.model.setErrorMessage(null);
+
+                    String playerName=command.getPlayerName();
+                    Player currentPlayer=model.getPlayer(playerName);
+                    if (currentPlayer != null) {
+                        currentPlayer.setError(false);
+                        currentPlayer.setErrorMessage(null);
+                    }else{
+                        System.out.println("Strange bug command didn't throw anything but could not find player "+playerName);
+                    }
                 } catch (InvalidCommand | InvalidParameters | InvalidMethodParameters | InvalidContextualAction e) {
                     this.model.setError(true);
+                    String playerName=command.getPlayerName();
+                    Player currentPlayer=model.getPlayer(playerName);
+
+                    if(currentPlayer != null){
+
+                        this.model.setErrorMessage(playerName+" committed an error: "+e.getMessage());
+                        currentPlayer.setError(true);
+                        currentPlayer.setErrorMessage("You committed an error: "+e.getMessage());
+
+                    }else{
+                        this.model.setErrorMessage("Error: "+e.getMessage());
+                        System.out.println("Player "+command.getPlayerName()+" has no valid player");
+                    }
                 }
-
-
 
                 this.sendAll();
             }
