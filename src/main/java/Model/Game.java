@@ -491,23 +491,27 @@ public class Game implements Serializable, Cloneable {
 
     @Override
     public Game clone(){
-        try {
-            return (Game) super.clone();
-        } catch (CloneNotSupportedException e) {
-            System.err.println("Could not clone Game");
-            return new Game(this);
-        }
+        return new Game(this);
     }
 
-    public Game(Game oldGame){
-        this.players = new ArrayList<>(oldGame.players);
-        this.level = oldGame.level;
-        this.tiles = oldGame.tiles;
-        this.flightBoard = oldGame.flightBoard;
-        this.state = oldGame.state;
-        this.error = oldGame.error;
-        this.preBuiltShips = oldGame.preBuiltShips;
+    private Game(Game old){
+        this.players = new ArrayList<>();
+        for(Player p : old.getPlayers()){
+            this.players.add(p.clone());
+        }
 
+        this.level = old.level;
+        this.tiles = new SpaceshipComponent[old.tiles.length];
+
+        for(int i = 0; i < old.tiles.length; i++){
+            tiles[i] = (old.tiles[i] != null) ? old.tiles[i].clone() : null;
+        }
+
+        this.flightBoard = old.flightBoard.clone();
+        this.state = old.state;
+        this.error = old.error;
+
+        this.preBuiltShips = old.preBuiltShips;
     }
 }
 

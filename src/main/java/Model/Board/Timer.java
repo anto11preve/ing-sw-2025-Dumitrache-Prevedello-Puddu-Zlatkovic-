@@ -2,7 +2,7 @@ package Model.Board;
 
 import java.io.Serializable;
 
-public class Timer implements Serializable {
+public class Timer implements Serializable, Cloneable {
     private Phase phase;
     private long targetTime;
 
@@ -40,5 +40,15 @@ public class Timer implements Serializable {
 
     public enum Phase {
         NOT_USED, START_PHASE, MIDDLE_PHASE, LAST_PHASE
+    }
+
+    @Override
+    public Timer clone() {
+        Timer clone = new Timer();
+
+        clone.phase = this.phase;
+        clone.targetTime = this.targetTime;
+
+        return clone;
     }
 }

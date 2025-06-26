@@ -156,4 +156,15 @@ public class Planets extends AdventureCardFilip implements Iterable<Planet>{
         cardResolverVisitor.visit(this, controller);
     }
 
+    @Override
+    public Planets clone() {
+        Planets clone = new Planets(this.getId(), this.getLevel(), this.landingPenalty.getAmount(), new ArrayList<>());
+
+        for (Planet planet : this.planetList) {
+            clone.planetList.add(planet.clone());
+        }
+
+        return clone;
+    }
+
 }

@@ -3,7 +3,6 @@ package Model.Board.AdventureCards;
 import Controller.CardResolverVisitor;
 import Controller.Controller;
 import Model.Board.AdventureCards.Penalties.GoodsPenalty;
-import Model.Board.AdventureCards.Rewards.Credits;
 import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.CardLevel;
 import Model.Enums.Good;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Smugglers extends Enemy<GoodsPenalty, Goods> {
-    private List<Good> rewardGoods;
-
     public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, List<Good> rewardList) {
         super(id, level, power, new GoodsPenalty(lostGoods), days, new Goods(rewardList));
     }
@@ -36,12 +33,23 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
                 json,
                 new GoodsPenalty(json),
                 // we still need to pass a dummy Goods here
-                new Goods(new ArrayList<>())
+                new Goods(goodsFromJson(json))
         );
 
         // 2) Now populate rewardGoods from JSON
         //rewardGoods.clear();
-        rewardGoods = new ArrayList<>();
+
+    }
+
+    private static List<Good> goodsFromJson(JsonObject json) {
+        final int id;
+        if(json.has("id")){
+            id = json.get("id").getAsInt();
+        }else{
+            throw new RuntimeException("No ID provided");
+        }
+
+        final List<Good> rewardGoods = new ArrayList<>();
         if (json.has("rewardGoods")) {
 
             if (json.has("rewardGoods")) {
@@ -53,11 +61,13 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
                     );
                 }
             }else{
-                throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + getId());
+                throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + id);
             }
         }else{
-            throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + getId());
+            throw new IllegalArgumentException("Missing 'rewardGoods' in JSON at id: " + id);
         }
+
+        return rewardGoods;
     }
 
     @Override
@@ -85,6 +95,10 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
         );
 
         // 5) win‐reward list and its type
+        final List<Good> rewardGoods = new ArrayList<>();
+        for(Good g : this.getWinReward()){
+            rewardGoods.add(g);
+        }
         System.out.print("Reward Goods:          ");
         if (rewardGoods.isEmpty()) {
             System.out.println("(none)");
@@ -129,6 +143,10 @@ public class Smugglers extends Enemy<GoodsPenalty, Goods> {
 
         // 5) win‐reward list and its type
         StringBuilder rewardLine = new StringBuilder("Reward Goods:          ");
+        final List<Good> rewardGoods = new ArrayList<>();
+        for(Good g : this.getWinReward()){
+            rewardGoods.add(g);
+        }
         if (rewardGoods.isEmpty()) {
             rewardLine.append("(none)");
         } else {

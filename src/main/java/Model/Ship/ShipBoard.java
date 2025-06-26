@@ -16,12 +16,12 @@ import java.util.*;
  * Full-featured ShipBoard for Galaxy Trucker.
  * Manages placement, connections, rotations, integrity, firepower, thrust, shields, damage, and exposed connectors.
  */
-public class ShipBoard implements Serializable {
+public class ShipBoard implements Serializable, Cloneable {
     private static final int ROWS = 5;
     private static final int COLS = 7;
 
     private final SpaceshipComponent[][] components;
-    private transient SpaceshipComponent activeComponent;
+    private SpaceshipComponent activeComponent;
     private final List<SpaceshipComponent> reservedComponents;
     private final CondensedShip condensedShip;
     private boolean isValid = false;
@@ -1083,6 +1083,31 @@ public class ShipBoard implements Serializable {
         righe[1] = "       ";
         righe[2] = "       ";
         return righe;
+    }
+
+    @Override
+    public ShipBoard clone() {
+        return new ShipBoard(this);
+    }
+
+    private ShipBoard(ShipBoard old){
+        this.components = new SpaceshipComponent[ROWS][COLS];
+        for(int i = 0; i < ROWS; i++){
+            for(int j = 0; j < COLS; j++){
+                this.components[i] = (old.components[i] != null) ? old.components[i].clone() : null;
+            }
+        }
+
+        this.activeComponent = (old.activeComponent != null) ? old.activeComponent.clone() : null;
+
+        this.reservedComponents = new ArrayList<>();
+
+        for(SpaceshipComponent component : old.reservedComponents){
+            this.reservedComponents.add((component != null) ? component.clone() : null);
+        }
+
+        this.condensedShip = old.condensedShip.clone();
+        this.isValid = old.isValid;
     }
 }
 

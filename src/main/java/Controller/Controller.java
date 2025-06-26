@@ -17,7 +17,6 @@ import Networking.Messages.ClientMessage;
 import Networking.Network;
 import View.Client.Actions.Action;
 import View.Client.Actions.UpdateGameAction;
-import View.Client.ClientState;
 
 import java.util.*;
 
@@ -151,12 +150,13 @@ public class Controller implements Agent {
     }
 
     public synchronized void sendAll() {
+        final Game modelClone = this.model.clone();
         for(Player player : this.getModel().getPlayers()){
             Network network = Server.server.getNetwork(player.getName());
             if(network != null && !network.isDone()) {
 
                 network.send(new ClientMessage(
-                        new UpdateGameAction(new Game(this.model)/*this.model.clone()*/)
+                        new UpdateGameAction(modelClone)
                 ));
                 if(this.queuedAction != null) {
                     network.send(new ClientMessage(this.queuedAction));

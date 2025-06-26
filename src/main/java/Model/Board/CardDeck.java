@@ -26,7 +26,7 @@ import java.util.List;
  * @see List
  * @see AdventureCardFilip
  */
-public class CardDeck implements Iterable<AdventureCardFilip> , Serializable {
+public class CardDeck implements Iterable<AdventureCardFilip> , Serializable, Cloneable {
     /**
      * {@code List} of {@code AdventureCard}
      *
@@ -170,4 +170,14 @@ public class CardDeck implements Iterable<AdventureCardFilip> , Serializable {
         }
     }
 
+    @Override
+    public CardDeck clone() {
+        CardDeck clone = new CardDeck();
+
+        for(AdventureCardFilip card : cards) {
+            clone.cards.add(card.clone());
+        }
+
+        return clone;
+    }
 }

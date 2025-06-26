@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
  * Structural modules serve to expand ship connectivity but do not serve active functions.
  */
 public class StructuralModule extends SpaceshipComponent {
-
     /**
      * Standard constructor with explicit connector types.
      */
@@ -87,5 +86,14 @@ public class StructuralModule extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public StructuralModule clone() {
+        StructuralModule clone = new StructuralModule(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT));
+
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }

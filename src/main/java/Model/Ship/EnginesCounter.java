@@ -2,7 +2,7 @@ package Model.Ship;
 
 import java.io.Serializable;
 
-public class EnginesCounter implements Serializable {
+public class EnginesCounter implements Serializable, Cloneable {
     private int singleEngines;
     private int doubleEngines;
 
@@ -39,5 +39,15 @@ public class EnginesCounter implements Serializable {
         }else{
             throw new IllegalArgumentException("Cannot decrement double engines below zero.");
         }
+    }
+
+    @Override
+    public EnginesCounter clone() {
+        EnginesCounter clone = new EnginesCounter();
+
+        clone.singleEngines = this.singleEngines;
+        clone.doubleEngines = this.doubleEngines;
+
+        return clone;
     }
 }

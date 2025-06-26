@@ -1,13 +1,9 @@
 package Model.Ship.Components;
 
 import Model.Enums.Side;
-import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 import Model.Enums.Card;
 import Model.Enums.ConnectorType;
-import Model.Enums.Direction;
-import java.util.EnumSet;
-import java.util.Set;
 
 /**
  * Cannon – single or double, fires in specific directions based on orientation.
@@ -144,5 +140,14 @@ public class Cannon extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 
         return righe;
+    }
+
+    @Override
+    public Cannon clone() {
+        Cannon clone = new Cannon(this.getType(), this.getConnectorAt(Side.FRONT), this.getConnectorAt(Side.REAR), this.getConnectorAt(Side.LEFT), this.getConnectorAt(Side.RIGHT), this.isDouble);
+
+        clone.orientation = this.getOrientation();
+
+        return clone;
     }
 }
