@@ -125,9 +125,19 @@ public class ShipBoard implements Serializable {
      * @return true if all cells in the board are null, false otherwise
      */
     public boolean isEmpty() {
-        for (SpaceshipComponent[] row : components) {
-            for (SpaceshipComponent c : row) {
-                if (c != null) return false;
+//        for (SpaceshipComponent[] row : components) {
+//            for (SpaceshipComponent c : row) {
+//                if (c != null) return false;
+//            }
+//        }
+
+        for(int i=0; i<ROWS; i++){
+            for(int j=0; j<COLS; j++){
+                if (components[i][j] != null) {
+                    if ((i!=2)&&(j!=3)) {
+                        return false;
+                    }
+                }
             }
         }
         return true;

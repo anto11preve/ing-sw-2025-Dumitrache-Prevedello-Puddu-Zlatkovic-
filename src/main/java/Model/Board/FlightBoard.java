@@ -421,6 +421,8 @@ public class FlightBoard implements Serializable {
         return ffPlayers;
     }
 
+    public Set<Player> getFlyingPlayers() {return playerPositions.keySet();}
+
     public void visualize(Player playerInTurn) {
         Player[] turnOrder = getTurnOrder();
 

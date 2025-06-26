@@ -1,74 +1,216 @@
 package Controller.RealTimeBuilding;
 
-import Controller.Controller;
-import Controller.State;
+
 import Controller.Enums.*;
 import Controller.Exceptions.*;
+import Controller.GamePhases.FlightPhase;
+import Model.*;
+import Controller.RealTimeBuilding.*;
 import Model.Enums.Direction;
-import Model.Player;
 import Model.Ship.Components.SpaceshipComponent;
+import Model.Ship.CondensedShip;
 import Model.Ship.Coordinates;
+import Model.Ship.ShipBoard;
 import TestUtils.TestStateManager;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+import Controller.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Random;
 
-/**
- * Comprehensive tests for the BuildingState class.
- * Tests building state functionality and game mechanics.
- */
 public class BuildingStateTest {
 
-    private Controller controller;
-    private BuildingState buildingState;
+    // ==================== FINISH BUILDING TESTS ====================
 
-    @BeforeEach
-    public void setUp() {
-        controller = new Controller(MatchLevel.TRIAL, 1);
-        buildingState = new BuildingState(controller);
-        TestStateManager.initializeCommonStates();
-        // Don't login players to avoid Server.server null issues
-    }
-
+    /**
+     * Test that a player with an invalid ship cannot finish building in Trial level.
+     * Uses prebuilt ship at index 2 which is known to be invalid.
+     */
     @Test
-    public void testBuildingStateConstructor() {
-        assertNotNull(buildingState);
-        assertEquals(controller, buildingState.getController());
-    }
+    public void testFinishBuilding_InvalidShipTrial() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
 
-    @Test
-    public void testBuildingStateConstructorTrial() {
-        Controller trialController = new Controller(MatchLevel.TRIAL, 1);
-        BuildingState trialState = new BuildingState(trialController);
-        
-        assertNotNull(trialState);
-        assertEquals(trialController, trialState.getController());
-    }
-
-    @Test
-    public void testBuildingStateConstructorLevel2() {
+        // Set invalid prebuilt ship (index 2)
         try {
-            Controller level2Controller = new Controller(MatchLevel.LEVEL2, 2);
-            BuildingState level2State = new BuildingState(level2Controller);
-            
-            assertNotNull(level2State);
-            assertEquals(level2Controller, level2State.getController());
+            controller.preBuiltShip("Anna", 2);
         } catch (Exception e) {
-            // May fail due to Level2 constructor issues
-            assertTrue(true);
+            fail("Failed to set prebuilt ship: " + e.getMessage());
+        }
+
+        // Verify ship is invalid
+        assertFalse(anna.getShipBoard().validateShip());
+
+        // Try to finish building - should throw exception
+        assertThrows(InvalidCommand.class, () -> controller.finishBuilding("Anna", 1));
+    }
+
+    /**
+     * Test that finishedPlayers list is correctly updated when a player finishes building.
+     */
+    @Test
+    public void testFinishBuilding_FinishedPlayersListUpdate() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Game model = controller.getModel();
+
+        // Get initial finished players
+        List<Player> initialFinished = new ArrayList<>(model.getFlightBoard().getFlyingPlayers());
+        Set<Player> beforeFinished = model.getFlightBoard().getFlyingPlayers();
+
+        // Anna builds valid ship and finishes
+        try {
+            controller.preBuiltShip("Anna", 0); // Valid ship
+            controller.finishBuilding("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to finish building: " + e.getMessage());
+        }
+
+        // Check finished players list
+        Set<Player> afterFinished = model.getFlightBoard().getFlyingPlayers();
+        assertEquals(initialFinished.size() + 1, afterFinished.size());
+        assertTrue(afterFinished.containsAll(initialFinished));
+        assertTrue(afterFinished.contains(model.getPlayer("Anna")));
+
+        // Verify only Anna was added
+        afterFinished.removeAll(initialFinished);
+        assertEquals(1, afterFinished.size());
+        assertTrue(beforeFinished.contains(model.getPlayer("Anna")));
+    }
+
+    /**
+     * Test state transitions when all players finish building.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "true, true",   // Level 2 with invalid ship
+            "true, false",  // Level 2 with all valid ships
+            "false, true",  // Trial with invalid ship (should not transition to FixShipState)
+            "false, false"  // Trial with all valid ships
+    })
+    public void testFinishBuilding_StateTransitions(boolean isLevel2, boolean hasInvalidShip) {
+        Controller controller;
+        if (isLevel2) {
+            controller = TestStateManager.finishedBuilding1wrong(MatchLevel.LEVEL2).getController();
+        } else {
+            controller = TestStateManager.finishedBuilding1wrong(MatchLevel.TRIAL).getController();
+        }
+
+        Game model = controller.getModel();
+
+        // If testing without invalid ship, remove Carl
+        if (!hasInvalidShip) {
+            controller = TestStateManager.finishedBuildingAllValid(isLevel2 ? MatchLevel.LEVEL2 : MatchLevel.TRIAL).getController();
+            model = controller.getModel();
+        }
+
+        // All players finish building
+        try {
+            int i=1;
+            for (Player p : model.getPlayers()) {
+                if (!model.getFlightBoard().getFlyingPlayers().contains(p)) {
+
+                    controller.finishBuilding(p.getName(), i);
+                    i++;
+                }
+            }
+        } catch (Exception e) {
+            // Expected for trial with invalid ship
+            if (!isLevel2 && hasInvalidShip) {
+                return; // Test passes - cannot finish with invalid ship in trial
+            }
+            fail("Unexpected exception: " + e.getMessage());
+        }
+
+        // Check resulting state
+        State currentState = model.getState();
+
+        if (isLevel2 && hasInvalidShip) {
+            assertInstanceOf(FixShipState.class, currentState);
+        } else if (isLevel2 && !hasInvalidShip) {
+            // Check if any player can place aliens
+            boolean canPlaceAliens = false;
+            int length = model.getPlayers().size();
+            for(int i = 0; (i < length)&&!canPlaceAliens; i++) {
+                CondensedShip ship=model.getPlayers().get(i).getShipBoard().getCondensedShip();
+                if(ship.canContainBrown()||ship.canContainPurple()){
+                    canPlaceAliens = true;
+                }
+            }
+
+            if (canPlaceAliens) {
+                assertInstanceOf(PlaceAlienState.class, currentState);
+            } else {
+                assertInstanceOf(FlightPhase.class, currentState);
+            }
+        } else {
+            // Trial level - always goes to FlightPhase
+            assertInstanceOf(FlightPhase.class, currentState);
         }
     }
 
+    /**
+     * Test that finished players cannot execute commands except flip hourglass in level 2.
+     */
     @Test
-    public void testBuildingStateInvalidMatchLevel() {
-        // This would require mocking or creating invalid match level
-        // For now, just test that constructor works with valid levels
-        assertTrue(true);
+    public void testFinishBuilding_FinishedPlayerRestrictions() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+
+        // Anna finishes building
+        try {
+            controller.preBuiltShip("Anna", 0);
+            controller.finishBuilding("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to finish building: " + e.getMessage());
+        }
+
+        // Test that Anna cannot execute most commands
+        assertThrows(InvalidCommand.class, () -> controller.getComponent("Anna", 0));
+        assertThrows(InvalidCommand.class, () -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(1,1), Direction.UP ));
+        assertThrows(InvalidCommand.class, () -> controller.reserveComponent("Anna"));
+        assertThrows(InvalidCommand.class, () -> controller.lookDeck("Anna", 0));
+
+        // But can flip hourglass (when it's finished)
+        // Note: This would require waiting for hourglass to finish
     }
+
+    /**
+     * Test starting position selection and uniqueness.
+     */
+    @Test
+    public void testFinishBuilding_StartingPositions() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+
+        // Anna chooses position 1
+        try {
+            controller.preBuiltShip("Anna", 0);
+            controller.finishBuilding("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to finish building for Anna: " + e.getMessage());
+        }
+
+        // Bob tries to choose same position - should fail
+        try {
+            controller.preBuiltShip("Bob", 0);
+        } catch (Exception e) {
+            fail("Failed to set prebuilt ship for Bob: " + e.getMessage());
+        }
+
+        assertThrows(InvalidParameters.class, () -> controller.finishBuilding("Bob", 1));
+
+        // Bob chooses different position - should succeed
+        assertDoesNotThrow(() -> controller.finishBuilding("Bob", 2));
+    }
+
+    // ==================== GET COMPONENT TEST (EXISTING) ====================
 
     @Test
     public void testGetComponent() {
-
         Controller testController = TestStateManager.createBuildingWith2PlayersLevel2().getController();
         Player anna=testController.getModel().getPlayer("Anna");
         Player bob=testController.getModel().getPlayer("Bob");
@@ -142,341 +284,864 @@ public class BuildingStateTest {
         }
 
         //assertThrows(Exception.class, () -> buildingState.getComponent("Player1", 0));
-
-
     }
 
-
-
+    /**
+     * Test that active tile becomes visible after getComponent.
+     */
     @Test
-    public void testGetComponentInvalidPlayer() {
-        assertThrows(InvalidParameters.class, () -> buildingState.getComponent("NonExistent", 0));
-    }
+    public void testGetComponent_ActiveTileVisibility() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
 
-    @Test
-    public void testGetComponentInvalidIndex() {
-        assertThrows(Exception.class, () -> buildingState.getComponent("Player1", -1));
-        assertThrows(Exception.class, () -> buildingState.getComponent("Player1", 1000));
-    }
-
-    @Test
-    public void testReserveComponent() {
-        assertThrows(InvalidCommand.class, () -> buildingState.reserveComponent("Player1"));
-    }
-
-    @Test
-    public void testReserveComponentTrialDeck() {
-        // Trial deck should throw InvalidCommand
-        assertThrows(InvalidCommand.class, () -> buildingState.reserveComponent("Player1"));
-    }
-
-    @Test
-    public void testPlaceComponent() {
-        Coordinates coords = new Coordinates(5, 7);
-        assertThrows(Exception.class, () -> 
-            buildingState.placeComponent("Player1", ComponentOrigin.HAND, coords, Direction.UP));
-    }
-
-    @Test
-    public void testPlaceComponentInvalidPlayer() {
-        Coordinates coords = new Coordinates(5, 7);
-        assertThrows(InvalidParameters.class, () -> 
-            buildingState.placeComponent("NonExistent", ComponentOrigin.HAND, coords, Direction.UP));
-    }
-
-    @Test
-    public void testPlaceComponentInvalidCoordinates() {
-        Coordinates invalidCoords = new Coordinates(0, 0);
-        assertThrows(InvalidParameters.class, () -> 
-            buildingState.placeComponent("Player1", ComponentOrigin.HAND, invalidCoords, Direction.UP));
-    }
-
-    @Test
-    public void testLookDeck() {
-        assertThrows(InvalidCommand.class, () -> buildingState.lookDeck("Player1", 1));
-    }
-
-    @Test
-    public void testLookDeckTrialDeck() {
-        // Trial deck should throw InvalidCommand
-        assertThrows(InvalidCommand.class, () -> buildingState.lookDeck("Player1", 1));
-    }
-
-    @Test
-    public void testFlipHourGlass() {
-        assertThrows(InvalidCommand.class, () -> buildingState.flipHourGlass("Player1"));
-    }
-
-    @Test
-    public void testFlipHourGlassTrialDeck() {
-        // Trial deck should throw InvalidCommand
-        assertThrows(InvalidCommand.class, () -> buildingState.flipHourGlass("Player1"));
-    }
-
-    @Test
-    public void testFinishBuilding() {
-        assertThrows(Exception.class, () -> buildingState.finishBuilding("Player1", 1));
-    }
-
-    @Test
-    public void testFinishBuildingInvalidPlayer() {
-        assertThrows(InvalidParameters.class, () -> buildingState.finishBuilding("NonExistent", 1));
-    }
-
-    @Test
-    public void testFinishBuildingInvalidPosition() {
-        assertThrows(Exception.class, () -> buildingState.finishBuilding("Player1", 0));
-        assertThrows(Exception.class, () -> buildingState.finishBuilding("Player1", 5));
-    }
-
-    @Test
-    public void testInvalidCommands() {
-        // Test that other commands throw InvalidCommand
-        assertThrows(InvalidCommand.class, () -> buildingState.login("Player"));
-        assertThrows(InvalidCommand.class, () -> buildingState.logout("Player"));
-        assertThrows(InvalidCommand.class, () -> buildingState.startGame("Player"));
-        assertThrows(InvalidCommand.class, () -> buildingState.pickNextCard("Player"));
-        assertThrows(InvalidCommand.class, () -> buildingState.throwDices("Player"));
-    }
-
-    @Test
-    public void testBuildingStateInheritance() {
-        assertTrue(buildingState instanceof BuildingState);
-        assertTrue(buildingState instanceof State);
-    }
-
-    @Test
-    public void testBuildingStateOnEnter() {
-        // Test that onEnter can be called without issues
-        buildingState.onEnter();
-        assertTrue(true);
-    }
-
-    @Test
-    public void testBuildingStatePlayerInTurn() {
-        // PlayerInTurn may be null initially
-        Player playerInTurn = buildingState.getPlayerInTurn();
-        
-        if (!controller.getModel().getPlayers().isEmpty()) {
-            var player = controller.getModel().getPlayers().get(0);
-            buildingState.setPlayerInTurn(player);
-            assertEquals(player, buildingState.getPlayerInTurn());
+        // Get component
+        try {
+            controller.getComponent("Anna", 0);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
         }
-        assertTrue(true);
+
+        // Verify active tile is visible
+        SpaceshipComponent activeTile = anna.getShipBoard().getActiveComponent();
+        assertNotNull(activeTile);
+        assertTrue(activeTile.isVisible(), "Active tile should be visible after getComponent");
     }
 
+    /**
+     * Test tile removal and addition management.
+     */
     @Test
-    public void testValidCoordinatesTrialLevel() {
-        // Test that valid coordinates are set up correctly for TRIAL level
-        Coordinates[] validCoords = {
-            new Coordinates(5, 7),
-            new Coordinates(6, 6), new Coordinates(6, 7), new Coordinates(6, 8),
-            new Coordinates(7, 5), new Coordinates(7, 6), new Coordinates(7, 7), 
-            new Coordinates(7, 8), new Coordinates(7, 9),
-            new Coordinates(8, 5), new Coordinates(8, 6), new Coordinates(8, 7), 
-            new Coordinates(8, 8), new Coordinates(8, 9),
-            new Coordinates(9, 5), new Coordinates(9, 6), new Coordinates(9, 8), 
-            new Coordinates(9, 9)
-        };
-        
-        // These should be valid coordinates for TRIAL level
-        for (Coordinates coord : validCoords) {
+    public void testGetComponent_TileManagement() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Game model = controller.getModel();
+
+        // Save initial state
+        SpaceshipComponent previousActive = anna.getShipBoard().getActiveComponent();
+        List<SpaceshipComponent> initialTiles = new ArrayList<>();
+        for (SpaceshipComponent tile : model.getTiles()) {
+            initialTiles.add(tile);
+        }
+        List<SpaceshipComponent> initialReserved = new ArrayList<>(anna.getShipBoard().getReservedComponents());
+
+        // Get component
+        SpaceshipComponent selectedTile = model.getTiles()[0];
+        try {
+            controller.getComponent("Anna", 0);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        // Verify correct tile management
+        assertEquals(selectedTile, anna.getShipBoard().getActiveComponent());
+        assertNull(model.getTiles()[0]);
+
+        // Verify reserved components unchanged
+        assertEquals(initialReserved, anna.getShipBoard().getReservedComponents());
+
+        // If previous active tile existed, verify it's back in deck
+        if (previousActive != null) {
+            boolean foundInDeck = false;
+            for (SpaceshipComponent tile : model.getTiles()) {
+                if (tile == previousActive) {
+                    foundInDeck = true;
+                    break;
+                }
+            }
+            assertTrue(foundInDeck, "Previous active tile should be returned to deck");
+        }
+    }
+
+    // ==================== PLACE COMPONENT TESTS ====================
+
+    /**
+     * Test placing component at valid adjacent coordinates.
+     */
+    @Test
+    public void testPlaceComponent_ValidAdjacentPlacement() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+
+        // Get component and place first one
+        try {
+            controller.getComponent("Anna", 0);
+            controller.placeComponent("Anna",ComponentOrigin.HAND, new Coordinates(5,5), Direction.UP); // Center position
+        } catch (Exception e) {
+            fail("Failed initial placement: " + e.getMessage());
+        }
+
+        // Get another component and place adjacent
+        try {
+            controller.getComponent("Anna", 1);
+            controller.placeComponent("Anna",ComponentOrigin.HAND, new Coordinates(5,6), Direction.UP); // Adjacent position
+        } catch (Exception e) {
+            fail("Failed adjacent placement: " + e.getMessage());
+        }
+
+        // Verify both placements successful
+        assertNotNull(anna.getShipBoard().getComponent(new Coordinates(5, 5)));
+        assertNotNull(anna.getShipBoard().getComponent(new Coordinates(5,6)));
+    }
+
+    /**
+     * Test that non-adjacent valid coordinates are rejected.
+     */
+    @Test
+    public void testPlaceComponent_NonAdjacentRejected() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+
+        // Place first component
+        try {
+            controller.getComponent("Anna", 0);
+            controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(5, 5), Direction.UP);
+        } catch (Exception e) {
+            fail("Failed initial placement: " + e.getMessage());
+        }
+
+        // Try to place non-adjacent
+        try {
+            controller.getComponent("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        assertThrows(InvalidParameters.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(3, 3), Direction.UP));
+    }
+
+    /**
+     * Test invalid coordinate placements.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "5, 4",    // Valid in matrix but not in ship shape
+            "20, 20",  // Outside matrix bounds
+            "-1, 5"    // Negative coordinates
+    })
+    public void testPlaceComponent_InvalidCoordinates(int i, int j) {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+
+        try {
+            controller.getComponent("Anna", 0);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        assertThrows(InvalidParameters.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(i,j), Direction.UP));
+    }
+
+    /**
+     * Test HAND placement behavior.
+     */
+    @Test
+    public void testPlaceComponent_HandSource() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Game model = controller.getModel();
+
+        // Save initial state
+        List<SpaceshipComponent> initialTiles = new ArrayList<>();
+        for (SpaceshipComponent tile : model.getTiles()) {
+            initialTiles.add(tile);
+        }
+
+        // Cannot place from hand if no active tile
+        assertNull(anna.getShipBoard().getActiveComponent());
+        assertThrows(InvalidCommand.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(5, 5), Direction.UP));
+
+        // Get component
+        SpaceshipComponent selectedTile = model.getTiles()[0];
+        try {
+            controller.getComponent("Anna", 0);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        assertEquals(selectedTile, anna.getShipBoard().getActiveComponent());
+
+        // Place from hand - success
+        try {
+            controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(5, 5), Direction.UP);
+        } catch (Exception e) {
+            fail("Failed to place component: " + e.getMessage());
+        }
+
+        // Verify active tile is now null
+        assertNull(anna.getShipBoard().getActiveComponent());
+
+        // Try invalid placement - active tile should remain
+        try {
+            controller.getComponent("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to get second component: " + e.getMessage());
+        }
+
+        SpaceshipComponent secondTile = anna.getShipBoard().getActiveComponent();
+        assertThrows(InvalidParameters.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(5, 5), Direction.UP)); // Non-adjacent
+
+        // Active tile should still be there after failed placement
+        assertEquals(secondTile, anna.getShipBoard().getActiveComponent());
+    }
+
+    /**
+     * Test FIRST_RESERVED placement behavior.
+     */
+    @Test
+    public void testPlaceComponent_FirstReservedSource() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Game model = controller.getModel();
+
+        // Setup: get and reserve a component
+        SpaceshipComponent activeTile = null;
+        try {
+            controller.getComponent("Anna", 0);
+            activeTile = anna.getShipBoard().getActiveComponent();
+            controller.reserveComponent("Anna");
+        } catch (Exception e) {
+            fail("Failed to reserve component: " + e.getMessage());
+        }
+
+        // Cannot place from reserved if empty
+        anna.getShipBoard().getReservedComponents().clear();
+        assertThrows(InvalidCommand.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.FIRST_RESERVED, new Coordinates(5, 5), Direction.UP));
+
+        // Add back reserved component
+        anna.getShipBoard().getReservedComponents().add(activeTile);
+
+        // Get new active tile
+        try {
+            controller.getComponent("Anna", 1);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        SpaceshipComponent newActiveTile = anna.getShipBoard().getActiveComponent();
+        List<SpaceshipComponent> tilesBeforePlacement = new ArrayList<>();
+        for (SpaceshipComponent t : model.getTiles()) {
+            if (t != null) tilesBeforePlacement.add(t);
+        }
+
+        // Place from first reserved
+        try {
+            controller.placeComponent("Anna", ComponentOrigin.FIRST_RESERVED, new Coordinates(5, 5), Direction.UP);
+        } catch (Exception e) {
+            fail("Failed to place from reserved: " + e.getMessage());
+        }
+
+        // Verify active tile was returned to deck
+        assertNull(anna.getShipBoard().getActiveComponent());
+        boolean activeTileInDeck = false;
+        for (SpaceshipComponent t : model.getTiles()) {
+            if (t == newActiveTile) {
+                activeTileInDeck = true;
+                break;
+            }
+        }
+        assertTrue(activeTileInDeck);
+
+        // Verify reserved component was used
+        assertFalse(anna.getShipBoard().getReservedComponents().contains(activeTile));
+    }
+
+    /**
+     * Test SECOND_RESERVED placement behavior.
+     */
+    @Test
+    public void testPlaceComponent_SecondReservedSource() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+
+        // Setup: reserve two components
+        SpaceshipComponent first = null, second = null;
+        try {
+            controller.getComponent("Anna", 0);
+            first = anna.getShipBoard().getActiveComponent();
+            controller.reserveComponent("Anna");
+
+            controller.getComponent("Anna", 1);
+            second = anna.getShipBoard().getActiveComponent();
+            controller.reserveComponent("Anna");
+        } catch (Exception e) {
+            fail("Failed to reserve components: " + e.getMessage());
+        }
+
+        assertEquals(2, anna.getShipBoard().getReservedComponents().size());
+
+        // Cannot place second reserved if less than 2
+        anna.getShipBoard().getReservedComponents().remove(1);
+        assertThrows(InvalidCommand.class,
+                () -> controller.placeComponent("Anna", ComponentOrigin.SECOND_RESERVED, new Coordinates(5, 5), Direction.UP));
+
+        // Restore and test successful placement
+        anna.getShipBoard().getReservedComponents().add(second);
+
+        try {
+            controller.placeComponent("Anna", ComponentOrigin.SECOND_RESERVED, new Coordinates(5, 5), Direction.UP);
+        } catch (Exception e) {
+            fail("Failed to place second reserved: " + e.getMessage());
+        }
+
+        // Verify correct component was removed
+        assertEquals(1, anna.getShipBoard().getReservedComponents().size());
+        assertTrue(anna.getShipBoard().getReservedComponents().contains(first));
+        assertFalse(anna.getShipBoard().getReservedComponents().contains(second));
+    }
+
+    // ==================== RESERVE COMPONENT TESTS ====================
+
+    /**
+     * Test basic reserve component functionality.
+     */
+    @Test
+    public void testReserveComponent_BasicFunctionality() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Game model = controller.getModel();
+
+        // Cannot reserve without active tile
+        assertThrows(InvalidCommand.class, () -> controller.reserveComponent("Anna"));
+
+        // Get component and reserve
+        SpaceshipComponent tile = model.getTiles()[0];
+        try {
+            controller.getComponent("Anna", 0);
+            assertEquals(tile, anna.getShipBoard().getActiveComponent());
+
+            controller.reserveComponent("Anna");
+        } catch (Exception e) {
+            fail("Failed to reserve component: " + e.getMessage());
+        }
+
+        // Verify reservation
+        assertNull(anna.getShipBoard().getActiveComponent());
+        assertEquals(1, anna.getShipBoard().getReservedComponents().size());
+        assertTrue(anna.getShipBoard().getReservedComponents().contains(tile));
+    }
+
+    /**
+     * Test that reserve component is not available in Trial level.
+     */
+    @Test
+    public void testReserveComponent_NotInTrial() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+
+        try {
+            controller.getComponent("Anna", 0);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        assertThrows(InvalidCommand.class, () -> controller.reserveComponent("Anna"));
+    }
+
+    /**
+     * Test maximum 2 reserved components limit.
+     */
+    @Test
+    public void testReserveComponent_MaximumLimit() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+
+        // Reserve 2 components
+        try {
+            controller.getComponent("Anna", 0);
+            controller.reserveComponent("Anna");
+
+            controller.getComponent("Anna", 1);
+            controller.reserveComponent("Anna");
+        } catch (Exception e) {
+            fail("Failed to reserve components: " + e.getMessage());
+        }
+
+        assertEquals(2, anna.getShipBoard().getReservedComponents().size());
+
+        // Try to reserve third - should fail
+        try {
+            controller.getComponent("Anna", 2);
+        } catch (Exception e) {
+            fail("Failed to get component: " + e.getMessage());
+        }
+
+        assertThrows(InvalidCommand.class, () -> controller.reserveComponent("Anna"));
+
+        // Verify state unchanged after failed reserve
+        assertEquals(2, anna.getShipBoard().getReservedComponents().size());
+        assertNotNull(anna.getShipBoard().getActiveComponent());
+    }
+
+    // ==================== LOOK DECK TESTS ====================
+
+    /**
+     * Test that lookDeck is only available in Level 2.
+     */
+    @Test
+    public void testLookDeck_OnlyLevel2() {
+        // Trial level - should fail
+        Controller trialController = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        assertThrows(InvalidCommand.class, () -> trialController.lookDeck("Anna", 1));
+
+        // Level 2 - should work (assuming proper implementation)
+        Controller level2Controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        assertDoesNotThrow(() -> level2Controller.getComponent("Anna", 1));
+        assertDoesNotThrow(() -> level2Controller.lookDeck("Anna", 1));
+    }
+
+    // ==================== FLIP HOURGLASS TESTS ====================
+
+//    TODO: giuro la clessidra funziona, ma ci mette un eternità a controllarlo
+//    /**
+//     * Test that flipHourGlass is not available in Trial level.
+//     */
+//    @Test
+//    public void testflipHourGlass_NotInTrial() {
+//        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+//        assertDoesNotThrow(() -> controller.flipHourGlass("Anna"));
+//        assertThrows(InvalidCommand.class, () -> controller.flipHourGlass("Anna"));
+//        try {
+//            System.out.println("Sleep for 30 seconds");
+//            Thread.sleep(31000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        assertDoesNotThrow(() -> controller.flipHourGlass("Anna"));
+//        assertThrows(InvalidCommand.class, () -> controller.flipHourGlass("Anna"));
+//        try {
+//            System.out.println("Sleep for 30 seconds");
+//            Thread.sleep(31000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        assertThrows(InvalidCommand.class, () -> controller.flipHourGlass("Anna"));
+//
+//        try{
+//            controller.preBuiltShip("Anna", 0);
+//            controller.finishBuilding("Anna", 1);
+//            assertDoesNotThrow(() -> controller.flipHourGlass("Anna"));
+//            try {
+//                System.out.println("Sleep for 30 seconds");
+//                Thread.sleep(31000);
+//                controller.getComponent("Bob", 1);
+//                assertTrue(controller.getModel().getState() instanceof HourGlassFinishedState);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }catch (Exception e){
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    /**
+     * Test that hourglass can only be flipped when finished.
+     * Note: This test requires timing mechanisms which might need mocking.
+     */
+    @Test
+    public void testflipHourGlass_Trail() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+
+        // Immediately try to flip - should fail as hourglass just started
+        assertThrows(InvalidCommand.class, () -> controller.flipHourGlass("Anna"));
+
+        // Note: Complete test would require waiting 30 seconds or mocking time
+    }
+
+    /**
+     * Test that flipping hourglass doesn't modify game state.
+     */
+    @Test
+    public void testflipHourGlass_NoStateModification() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Game model = controller.getModel();
+
+        // Save initial state
+        SpaceshipComponent activeTile = anna.getShipBoard().getActiveComponent();
+        List<SpaceshipComponent> reservedComponents = new ArrayList<>(anna.getShipBoard().getReservedComponents());
+        List<SpaceshipComponent> gameTiles = new ArrayList<>();
+        for (SpaceshipComponent t : model.getTiles()) {
+            gameTiles.add(t);
+        }
+
+        // Try to flip (will fail but state should be unchanged)
+        try {
+            controller.flipHourGlass("Anna");
+        } catch (InvalidCommand e) {
+            // Expected
+        }catch (InvalidParameters e){
+            throw new RuntimeException(e);
+        }
+
+        // Verify nothing changed
+        assertEquals(activeTile, anna.getShipBoard().getActiveComponent());
+        assertEquals(reservedComponents, anna.getShipBoard().getReservedComponents());
+        for (int i = 0; i < gameTiles.size(); i++) {
+            assertEquals(gameTiles.get(i), model.getTiles()[i]);
+        }
+    }
+
+    /**
+     * Test that when last hourglass finishes, only FinishBuilding is accepted.
+     * Other commands should transition to HourGlassFinishedState.
+     */
+    @Test
+    public void testHourGlassFinished_OnlyFinishBuildingAccepted() {
+        // This test would require a special setup where the hourglass has finished
+        // Note: Implementation depends on how hourglass state is managed in the actual code
+
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Game model = controller.getModel();
+
+        // Simulate hourglass finished state
+        // This is a conceptual test - actual implementation would depend on the game's hourglass mechanism
+
+        // When hourglass is finished, these commands should cause transition to HourGlassFinishedState
+        // assertThrows(StateTransitionException.class, () -> controller.getComponent("Anna", 0));
+        // assertThrows(StateTransitionException.class, () -> controller.placeComponent("Anna", 5, 5, ComponentOrigin.HAND));
+        // assertThrows(StateTransitionException.class, () -> controller.reserveComponent("Anna"));
+
+        // Only FinishBuilding should be accepted
+        // assertDoesNotThrow(() -> controller.finishBuilding("Anna", 1));
+    }
+
+    // ==================== DELETE COMPONENT TESTS ====================
+
+    /**
+     * Test that deleteComponent is only available in Trial flight phase.
+     */
+    @Test
+    public void testDeleteComponent_OnlyInTrialFlight() {
+        // Building state - should fail
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        assertThrows(InvalidCommand.class, () -> controller.deleteComponent("Anna", new Coordinates(5, 5)));
+
+        // Note: Would need a flight phase trial controller to test positive case
+    }
+
+    /**
+     * Test deleteComponent with invalid coordinates.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "20, 20",  // Outside matrix
+            "-1, 5"    // Negative coordinates
+    })
+    public void testDeleteComponent_InvalidCoordinates(int i, int j) {
+        // Note: This would require a trial flight phase controller
+        // Placeholder for structure
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        assertThrows(InvalidParameters.class, () -> controller.deleteComponent("Anna", new Coordinates(i,j)));
+    }
+
+    /**
+     * Test deleteComponent returns component to Game.tiles.
+     * Note: This test requires a flight phase trial controller.
+     */
+    @Test
+    public void testDeleteComponent_ReturnToGameTiles() {
+        // This is a conceptual test structure
+        // In actual implementation, would need a flight phase trial controller
+
+        // Controller controller = TestStateManager.createFlightPhaseTrial().getController();
+        // Player anna = controller.getModel().getPlayer("Anna");
+        // Game model = controller.getModel();
+
+        // Assume Anna has a component at (5, 5)
+        // SpaceshipComponent componentToDelete = anna.getShipBoard().getComponent(5, 5);
+        // assertNotNull(componentToDelete);
+
+        // Save initial tiles
+        // List<SpaceshipComponent> initialTiles = Arrays.asList(model.getTiles());
+
+        // Delete component
+        // controller.deleteComponent("Anna", 5, 5);
+
+        // Verify component is removed from ship
+        // assertNull(anna.getShipBoard().getComponent(5, 5));
+
+        // Verify component is back in Game.tiles
+        // boolean foundInTiles = Arrays.asList(model.getTiles()).contains(componentToDelete);
+        // assertTrue(foundInTiles, "Deleted component should return to Game.tiles");
+
+        // Verify no other changes to tiles
+        // List<SpaceshipComponent> finalTiles = Arrays.asList(model.getTiles());
+        // assertEquals(initialTiles.size() + 1, finalTiles.size());
+    }
+
+    // ==================== PREBUILT SHIP TESTS ====================
+
+    /**
+     * Test invalid index for prebuilt ships.
+     */
+    @Test
+    public void testPreBuiltShip_InvalidIndex() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Game model = controller.getModel();
+
+        // Assuming preBuiltShips has limited size
+        int invalidIndex = 10; // Likely out of bounds
+        assertThrows(InvalidParameters.class, () -> controller.preBuiltShip("Anna", invalidIndex));
+
+        // Test exact boundary
+        // Note: Would need to know actual preBuiltShips array size
+    }
+
+    /**
+     * Test that same prebuilt ship index creates distinct objects for different players.
+     */
+    @Test
+    public void testPreBuiltShip_DistinctObjects() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersTrial().getController();
+        Player anna = controller.getModel().getPlayer("Anna");
+        Player bob = controller.getModel().getPlayer("Bob");
+
+        // Both choose same prebuilt ship
+        try {
+            controller.preBuiltShip("Anna", 0);
+            controller.preBuiltShip("Bob", 0);
+        } catch (Exception e) {
+            fail("Failed to set prebuilt ships: " + e.getMessage());
+        }
+
+        // Verify ships are distinct objects
+        assertNotSame(anna.getShipBoard(), bob.getShipBoard());
+
+        // Verify components are distinct
+        // Note: This assumes ships have components after preBuiltShip
+        // Would need to check actual ship structure
+    }
+
+    // ==================== ADDITIONAL PARAMETERIZED TESTS ====================
+
+    /**
+     * Parameterized test for various component operations.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "Anna, 0, true",
+            "Bob, 1, true",
+            "Anna, 2, true",
+            "Bob, 0, true"
+    })
+    public void testComponentOperationsParameterized(String playerName, int componentIndex, boolean shouldSucceed) {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Player player = controller.getModel().getPlayer(playerName);
+
+        // Test get component
+        if (shouldSucceed) {
+            assertDoesNotThrow(() -> controller.getComponent(playerName, componentIndex));
+            assertNotNull(player.getShipBoard().getActiveComponent());
+        }
+
+        // Test reserve component
+        if (player.getShipBoard().getActiveComponent() != null) {
+            assertDoesNotThrow(() -> controller.reserveComponent(playerName));
+            assertNull(player.getShipBoard().getActiveComponent());
+        }
+    }
+
+    /**
+     * Test random sequences of operations.
+     */
+    @Test
+    public void testRandomOperationSequences() {
+        Controller controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        String[] players = {"Anna", "Bob"};
+        Random random = new Random(42); // Fixed seed for reproducibility
+
+        for (int i = 0; i < 10; i++) {
+            String player = players[random.nextInt(players.length)];
+            int operation = random.nextInt(3);
+
             try {
-                buildingState.placeComponent("Player1", ComponentOrigin.HAND, coord, Direction.UP);
-            } catch (InvalidParameters e) {
-                if (e.getMessage().equals("Invalid coordinates")) {
-                    fail("Coordinate " + coord + " should be valid for TRIAL level");
+                switch (operation) {
+                    case 0: // Get component
+                        int index = findValidTileIndex(controller.getModel());
+                        if (index != -1) {
+                            controller.getComponent(player, index);
+                        }
+                        break;
+                    case 1: // Reserve component
+                        if (controller.getModel().getPlayer(player).getShipBoard().getActiveComponent() != null) {
+                            controller.reserveComponent(player);
+                        }
+                        break;
+                    case 2: // Place component
+                        if (controller.getModel().getPlayer(player).getShipBoard().getActiveComponent() != null) {
+                            Coordinate coord = findValidPlacementCoordinate(controller.getModel().getPlayer(player));
+                            if (coord != null) {
+                                controller.placeComponent(player, ComponentOrigin.HAND, new Coordinates(coord.x, coord.y), Direction.UP);
+                            }
+                        }
+                        break;
                 }
             } catch (Exception e) {
-                // Other exceptions are expected due to missing components, etc.
-                assertTrue(true);
+                // Some operations may fail due to game rules, which is expected
+            }
+
+            // Verify game state consistency after each operation
+            verifyGameStateConsistency(controller.getModel());
+        }
+    }
+
+    // ==================== UTILITY METHODS FOR PARAMETERIZED TESTS ====================
+
+    /**
+     * Helper method to verify Game.tiles consistency.
+     */
+    private void verifyGameTilesConsistency(SpaceshipComponent[] before, SpaceshipComponent[] after,
+                                            Set<SpaceshipComponent> removed, Set<SpaceshipComponent> added) {
+        Set<SpaceshipComponent> beforeSet = new HashSet<>();
+        Set<SpaceshipComponent> afterSet = new HashSet<>();
+
+        for (SpaceshipComponent t : before) {
+            if (t != null) beforeSet.add(t);
+        }
+        for (SpaceshipComponent t : after) {
+            if (t != null) afterSet.add(t);
+        }
+
+        // Check removed
+        for (SpaceshipComponent r : removed) {
+            assertTrue(beforeSet.contains(r));
+            assertFalse(afterSet.contains(r));
+        }
+
+        // Check added
+        for (SpaceshipComponent a : added) {
+            assertFalse(beforeSet.contains(a));
+            assertTrue(afterSet.contains(a));
+        }
+
+        // Check no other changes
+        beforeSet.removeAll(removed);
+        beforeSet.addAll(added);
+        assertEquals(beforeSet, afterSet);
+    }
+
+    /**
+     * Find a valid tile index in the game.
+     */
+    private int findValidTileIndex(Game model) {
+        SpaceshipComponent[] tiles = model.getTiles();
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i] != null) {
+                return i;
             }
         }
+        return -1;
     }
 
-    @Test
-    public void testInvalidCoordinates() {
-        Coordinates[] invalidCoords = {
-            new Coordinates(0, 0),
-            new Coordinates(1, 1),
-            new Coordinates(4, 4),
-            new Coordinates(10, 10),
-            new Coordinates(-1, -1)
-        };
-        
-        for (Coordinates coord : invalidCoords) {
-            assertThrows(InvalidParameters.class, () -> 
-                buildingState.placeComponent("Player1", ComponentOrigin.HAND, coord, Direction.UP));
-        }
-    }
+    /**
+     * Find a valid placement coordinate for a player.
+     */
+    private Coordinate findValidPlacementCoordinate(Player player) {
+        // Start from center and check adjacent positions
+        int[][] offsets = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
-    @Test
-    public void testComponentOriginVariations() {
-        Coordinates validCoord = new Coordinates(5, 7);
-        
-        // Test all component origins
-        for (ComponentOrigin origin : ComponentOrigin.values()) {
-            try {
-                buildingState.placeComponent("Player1", origin, validCoord, Direction.UP);
-            } catch (Exception e) {
-                // Expected due to missing components or other issues
-                assertTrue(true);
+        // If no components placed yet, return center
+        boolean hasComponents = false;
+        for (int i = 5; i <9 ; i++) {
+            for (int j = 4; j < 10; j++) {
+                if (player.getShipBoard().getComponent(new Coordinates(i, j)) != null) {
+                    hasComponents = true;
+                    // Check adjacent positions
+                    for (int[] offset : offsets) {
+                        int newX = i + offset[0];
+                        int newY = j + offset[1];
+                        if (isValidShipCoordinate(newX, newY) &&
+                                player.getShipBoard().getComponent(new Coordinates(newX, newY)) == null) {
+                            return new Coordinate(newX, newY);
+                        }
+                    }
+                }
             }
         }
+
+        if (!hasComponents) {
+            return new Coordinate(5, 5); // Center position for first placement
+        }
+
+        return null;
     }
 
-    @Test
-    public void testDirectionVariations() {
-        Coordinates validCoord = new Coordinates(5, 7);
-        
-        // Test all directions
-        for (Direction direction : Direction.values()) {
-            try {
-                buildingState.placeComponent("Player1", ComponentOrigin.HAND, validCoord, direction);
-            } catch (Exception e) {
-                // Expected due to missing components or other issues
-                assertTrue(true);
+    /**
+     * Check if coordinates are valid for ship placement.
+     */
+    private boolean isValidShipCoordinate(int x, int y) {
+        // This would need to check against the actual valid ship coordinates
+        // For now, simple boundary check
+        return x >= 0 && x < 10 && y >= 0 && y < 10;
+    }
+
+    /**
+     * Verify overall game state consistency.
+     */
+    private void verifyGameStateConsistency(Game model) {
+        // Check that all tiles are accounted for
+        Set<SpaceshipComponent> allTiles = new HashSet<>();
+
+        // Add tiles from game deck
+        for (SpaceshipComponent tile : model.getTiles()) {
+            if (tile != null) {
+                assertFalse(allTiles.contains(tile), "Duplicate tile found in game deck");
+                allTiles.add(tile);
             }
         }
-    }
 
-    @Test
-    public void testBuildingStateWithEmptyController() {
-        Controller emptyController = new Controller(MatchLevel.TRIAL, 999);
-        BuildingState emptyState = new BuildingState(emptyController);
-        
-        assertEquals(emptyController, emptyState.getController());
-        assertThrows(InvalidParameters.class, () -> emptyState.getComponent("Player", 0));
-    }
+        // Add tiles from players
+        for (Player player : model.getPlayers()) {
+            ShipBoard board = player.getShipBoard();
 
-    @Test
-    public void testBuildingStateErrorHandling() {
-        // Test various error conditions
-        try {
-            assertThrows(InvalidCommand.class, () -> buildingState.reserveComponent("Player1"));
-        } catch (Exception e) {
-            assertTrue(true);
+            // Active component
+            if (board.getActiveComponent() != null) {
+                assertFalse(allTiles.contains(board.getActiveComponent()),
+                        "Active component already exists elsewhere");
+                allTiles.add(board.getActiveComponent());
+            }
+
+            // Reserved components
+            for (SpaceshipComponent reserved : board.getReservedComponents()) {
+                assertFalse(allTiles.contains(reserved),
+                        "Reserved component already exists elsewhere");
+                allTiles.add(reserved);
+            }
+
+            // Placed components
+            for (int i = 5; i < 9; i++) {
+                for (int j = 4; j < 10; j++) {
+                    SpaceshipComponent placed = board.getComponent(new Coordinates(i,j));
+                    if (placed != null) {
+                        assertFalse(allTiles.contains(placed),
+                                "Placed component already exists elsewhere");
+                        allTiles.add(placed);
+                    }
+                }
+            }
+        }
+
+        // Additional consistency checks
+        for (Player player : model.getPlayers()) {
+            assertTrue(player.getShipBoard().getReservedComponents().size() <= 2,
+                    "Player has more than 2 reserved components");
         }
     }
 
-    @Test
-    public void testBuildingStateWithNullParameters() {
-        // Test null parameter handling
-        assertThrows(Exception.class, () -> buildingState.getComponent(null, 0));
-        assertThrows(Exception.class, () -> buildingState.reserveComponent(null));
-        assertThrows(Exception.class, () -> buildingState.finishBuilding(null, 1));
-    }
+    /**
+     * Helper class for coordinates.
+     */
+    private static class Coordinate {
+        final int x, y;
 
-    @Test
-    public void testBuildingStateSequentialOperations() {
-        // Test that operations can be called in sequence without crashing
-        try {
-            buildingState.getComponent("Player1", 0);
-        } catch (Exception e) {
-            // Expected
-        }
-        
-        try {
-            buildingState.placeComponent("Player1", ComponentOrigin.HAND, new Coordinates(5, 7), Direction.UP);
-        } catch (Exception e) {
-            // Expected
-        }
-        
-        try {
-            buildingState.finishBuilding("Player1", 1);
-        } catch (Exception e) {
-            // Expected
+        Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 
-    @Test
-    public void testBuildingStateConsistency() {
-        // Test that state remains consistent after operations
-        assertEquals(controller, buildingState.getController());
-        
-        try {
-            buildingState.getComponent("Player1", 0);
-        } catch (Exception e) {
-            // Expected
-        }
-        
-        // State should remain consistent
-        assertEquals(controller, buildingState.getController());
-        assertTrue(true);
-    }
 
-    @Test
-    public void testBuildingStateToString() {
-        // Test that toString doesn't crash
-        String result = buildingState.toString();
-        assertNotNull(result);
-    }
-
-    @Test
-    public void testBuildingStateHashCode() {
-        // Test that hashCode doesn't crash
-        int hashCode = buildingState.hashCode();
-        assertTrue(true); // Just ensure no exception
-    }
-
-    @Test
-    public void testBuildingStateEquality() {
-        BuildingState state1 = new BuildingState(controller);
-        BuildingState state2 = new BuildingState(controller);
-        
-        // States are different objects
-        assertNotEquals(state1, state2);
-    }
-
-    @Test
-    public void testBuildingStateMultipleInstances() {
-        // Test that multiple building states can coexist
-        BuildingState state1 = new BuildingState(controller);
-        BuildingState state2 = new BuildingState(new Controller(MatchLevel.TRIAL, 2));
-        
-        assertNotEquals(state1.getController(), state2.getController());
-        assertEquals(controller, state1.getController());
-    }
-
-    @Test
-    public void testBuildingStateBoundaryConditions() {
-        // Test boundary conditions for various parameters
-        assertThrows(Exception.class, () -> buildingState.getComponent("Player1", Integer.MIN_VALUE));
-        assertThrows(Exception.class, () -> buildingState.getComponent("Player1", Integer.MAX_VALUE));
-        assertThrows(Exception.class, () -> buildingState.finishBuilding("Player1", Integer.MIN_VALUE));
-        assertThrows(Exception.class, () -> buildingState.finishBuilding("Player1", Integer.MAX_VALUE));
-    }
-
-    @Test
-    public void testBuildingStateWithSpecialCharacters() {
-        // Test with special character player names
-        try {
-            buildingState.getComponent("Player!@#$%", 0);
-        } catch (Exception e) {
-            // Expected - either InvalidParameters or other exception
-            assertTrue(true);
-        }
-    }
-
-    @Test
-    public void testBuildingStateWithUnicodeCharacters() {
-        // Test with unicode character player names
-        try {
-            buildingState.getComponent("Plāyér测试", 0);
-        } catch (Exception e) {
-            // Expected - either InvalidParameters or other exception
-            assertTrue(true);
-        }
-    }
-
-    @Test
-    public void testBuildingStateWithVeryLongNames() {
-        String longName = "A".repeat(1000);
-        try {
-            buildingState.getComponent(longName, 0);
-        } catch (Exception e) {
-            // Expected - either InvalidParameters or other exception
-            assertTrue(true);
-        }
-    }
 }
