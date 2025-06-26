@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 
-public class GUI extends View {
+public abstract class GUI extends View {
     private Application application = new Application() {
         @Override
         public void start(Stage stage) throws Exception {
