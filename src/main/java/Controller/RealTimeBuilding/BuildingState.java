@@ -555,10 +555,7 @@ public class BuildingState extends State {
             throw new InvalidParameters("No component found at the given coordinates");
         }
 
-        // apply removed on the tile
-        component.removed();
-        // remove the tile from the ship matrix
-        component.setShipBoard(null);
+
 
         try {
             shipBoard.removeComponent(coordinates);

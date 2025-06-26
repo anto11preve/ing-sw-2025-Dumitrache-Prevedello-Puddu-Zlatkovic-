@@ -57,9 +57,11 @@ public class ShipBoardTest {
     public void testRemoveComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         Cabin cabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-        Coordinates coords = new Coordinates(7, 7);
+        Coordinates coords = new Coordinates(6, 7);
         
         board.addComponent(cabin, coords);
+        cabin.setShipBoard(board);
+        cabin.added();
         board.removeComponent(coords);
         assertNull(board.getComponent(coords));
         assertTrue(board.isEmpty());
