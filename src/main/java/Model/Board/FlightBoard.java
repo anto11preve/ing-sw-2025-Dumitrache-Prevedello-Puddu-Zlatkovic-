@@ -33,6 +33,8 @@ import java.util.*;
 public class FlightBoard implements Serializable {
     private final int cellNumber;
 
+    private Map<Player, CardDeck> bookedDecks = new HashMap<>();
+
     private Timer timer;
 
     private List<CardDeck> peekableCardDecks;
@@ -141,6 +143,8 @@ public class FlightBoard implements Serializable {
         this.playerTotalDistance = new HashMap<>();
         this.ffPlayers = new ArrayList<>();
     }
+
+    public Map<Player, CardDeck> getBookedDecks() {return bookedDecks;}
 
     public void render(){
         System.out.println("FlightBoard: " + cellNumber + " cells");

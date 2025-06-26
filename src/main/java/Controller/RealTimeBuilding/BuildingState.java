@@ -5,6 +5,8 @@ import Controller.Enums.ComponentOrigin;
 import Controller.Enums.MatchLevel;
 import Controller.Exceptions.*;
 import Controller.State;
+import Model.Board.CardDeck;
+import Model.Board.FlightBoard;
 import Model.Enums.Direction;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Game;
@@ -36,10 +38,11 @@ public class BuildingState extends State {
 
 
     /** Map of players who have finished assembly with their starting position */
-    Map<Integer, Player> finishedPlayers = new HashMap<>();
+    private Map<Integer, Player> finishedPlayers = new HashMap<>();
 
     /** Valid coordinates for component placement based on game level, key is the row i, values are the corresponding valid columns */
-    Map<Integer, List<Integer>> validCoordinates = new HashMap<>();
+    private Map<Integer, List<Integer>> validCoordinates = new HashMap<>();
+
 
     /**
      * Constructor that initializes the building state.
@@ -74,6 +77,14 @@ public class BuildingState extends State {
         controller.setQueuedAction(ClientState::net_Start);
     }
 
+    private void unbookDeck(Player player){
+        Map<Player, CardDeck> bookedDecks=this.getController().getModel().getFlightBoard().getBookedDecks();
+        if(bookedDecks.containsKey(player)){
+            //remove the entry
+            bookedDecks.remove(player);
+        }
+    }
+
     /**
      * Allows a player to draw a component from the common pool.
      * The component becomes the player's active component.
@@ -96,6 +107,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found, strange bug!!!");
             }
+            unbookDeck(currentPlayer);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -147,6 +159,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
+            unbookDeck(currentPlayer);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -186,6 +199,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
+            unbookDeck(currentPlayer);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -304,10 +318,12 @@ public class BuildingState extends State {
             this.getController().getModel().setState(new HourGlassFinishedState(this.getController(), finishedPlayers));
         }
         else{
+
             Player currentPlayer = this.getController().getModel().getPlayer(name);
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
+            unbookDeck(currentPlayer);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -318,15 +334,23 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Invalid index");
             }
 
-            SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
-            if (oldTile != null) {
-                model.addComponent(oldTile);
-                currentPlayer.getShipBoard().setActiveComponent(null);
+
+
+
+            FlightBoard flightBoard= this.getController().getModel().getFlightBoard();
+            CardDeck deck=flightBoard.getPeekableCardDeck(index);
+            Map<Player, CardDeck> bookedDecks=flightBoard.getBookedDecks();
+
+            if(bookedDecks.values().contains(deck)){
+                throw new InvalidCommand("Booked deck");
+            }else{
+                SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
+                if (oldTile != null) {
+                    model.addComponent(oldTile);
+                    currentPlayer.getShipBoard().setActiveComponent(null);
+                }
+                bookedDecks.put(currentPlayer, deck);
             }
-
-
-            //manca l'implementazione
-            //TODO: implementare la visualizzazione delle carte
 
 
 
@@ -361,6 +385,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
+            unbookDeck(currentPlayer);
 
 //            SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
 //            model.addComponent(oldTile);
@@ -393,6 +418,7 @@ public class BuildingState extends State {
         if(currentPlayer == null) {
             throw new InvalidParameters("Player not found");
         }
+        unbookDeck(currentPlayer);
 
         try {
             ShipBoard shipBoard= model.getPreBuiltShip(index);
@@ -425,6 +451,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
+            unbookDeck(currentPlayer);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
