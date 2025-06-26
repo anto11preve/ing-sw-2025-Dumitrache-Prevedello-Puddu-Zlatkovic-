@@ -399,7 +399,6 @@ public class FlightBoard implements Serializable {
     }
 
 
-    //TODO: invertire ordine 
     public Player[] getTurnOrder() {
         return playerTotalDistance.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))

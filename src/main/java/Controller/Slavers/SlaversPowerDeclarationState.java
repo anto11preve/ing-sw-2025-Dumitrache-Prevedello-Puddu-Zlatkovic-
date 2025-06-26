@@ -160,6 +160,6 @@ public class SlaversPowerDeclarationState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "DeclaresDouble" );
+        return List.of( "DeclaresDoubleCannon" );
     }
 }

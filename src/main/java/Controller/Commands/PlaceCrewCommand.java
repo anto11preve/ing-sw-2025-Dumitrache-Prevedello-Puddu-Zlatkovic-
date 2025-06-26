@@ -81,7 +81,6 @@ public class PlaceCrewCommand extends Command {
                 return new PlaceCrewCommand(username, new Coordinates(row, column), CrewType.HUMAN);
             }
 
-            //TODO: CrewType type
 
             @Override
             public List<String> getArguments() {
@@ -111,7 +110,6 @@ public class PlaceCrewCommand extends Command {
                 return new PlaceCrewCommand(username, new Coordinates(row, column), CrewType.BROWN_ALIEN);
             }
 
-            //TODO: CrewType type
 
             @Override
             public List<String> getArguments() {
@@ -141,7 +139,6 @@ public class PlaceCrewCommand extends Command {
                 return new PlaceCrewCommand(username, new Coordinates(row, column), CrewType.PURPLE_ALIEN);
             }
 
-            //TODO: CrewType type
 
             @Override
             public List<String> getArguments() {

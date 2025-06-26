@@ -141,7 +141,7 @@ public class MoveGoodCommand extends Command {
 
             @Override
             public List<String> getArguments() {
-                return List.of("position", "oldRow", "oldColumn", "newRow", "newColumn", "oldIndex", "newIndex");
+                return List.of("oldRow", "oldColumn", "newRow", "newColumn", "oldIndex", "newIndex");
             }
         };
     }

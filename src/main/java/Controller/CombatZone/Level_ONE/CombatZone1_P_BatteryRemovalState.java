@@ -80,7 +80,7 @@ public class CombatZone1_P_BatteryRemovalState extends State {
             if(context.getSpecialPlayers().isEmpty()){
                 context.addSpecialPlayer(player);
             } else {
-                if(declaredPower > worst){
+                if(declaredPower < worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
                     worst = declaredPower;

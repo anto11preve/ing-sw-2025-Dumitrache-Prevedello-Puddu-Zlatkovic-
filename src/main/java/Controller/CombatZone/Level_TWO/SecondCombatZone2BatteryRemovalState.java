@@ -3,6 +3,7 @@ package Controller.CombatZone.Level_TWO;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -25,27 +26,27 @@ public class SecondCombatZone2BatteryRemovalState extends State {
     }
 
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(amount < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null");
+            throw new InvalidParameters("Coordinates cannot be null");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);

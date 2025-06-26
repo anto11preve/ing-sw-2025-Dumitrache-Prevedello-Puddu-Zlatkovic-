@@ -9,6 +9,7 @@ import Controller.State;
 import Model.Board.AdventureCards.Components.Planet;
 import Model.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ChoosePlanetState extends State {
     public ChoosePlanetState(Context context) {
         super(context);
         this.setPlayerInTurn(context.getPlayers().getFirst());
+        this.chosenPlanets = new ArrayList<>();
     }
 
     /**
@@ -127,8 +129,13 @@ public class ChoosePlanetState extends State {
             controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
             controller.getModel().setError(false);
         } else {
-            controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            if (context.getSpecialPlayers().isEmpty()) {
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+                controller.getModel().setError(false);
+            }
         }
     }
 

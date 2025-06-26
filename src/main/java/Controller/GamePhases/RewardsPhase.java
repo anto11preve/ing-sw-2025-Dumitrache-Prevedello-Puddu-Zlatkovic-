@@ -63,13 +63,15 @@ public class RewardsPhase extends State {
                     .flatMap(cargo -> Arrays.stream(cargo.getGoods()))
                     .toList();
             for(Good g : allGoods){
-                switch(g){
-                    case RED -> p.deltaCredits(4);
-                    case YELLOW -> p.deltaCredits(3);
-                    case GREEN -> p.deltaCredits(2);
-                    case BLUE -> p.deltaCredits(1);
-                    default -> {
-                        // Do nothing for unknown goods
+                if (g != null) {
+                    switch(g){
+                        case RED -> p.deltaCredits(4);
+                        case YELLOW -> p.deltaCredits(3);
+                        case GREEN -> p.deltaCredits(2);
+                        case BLUE -> p.deltaCredits(1);
+                        default -> {
+                            // Do nothing for unknown goods
+                        }
                     }
                 }
             }
@@ -82,13 +84,15 @@ public class RewardsPhase extends State {
                     .flatMap(cargo -> Arrays.stream(cargo.getGoods()))
                     .toList();
             for(Good g : allGoods){
-                switch(g){
-                    case RED -> p.deltaCredits(2);
-                    case YELLOW -> p.deltaCredits(2);
-                    case GREEN -> p.deltaCredits(1);
-                    case BLUE -> p.deltaCredits(1);
-                    default -> {
-                        // Do nothing for unknown goods
+                if (g != null) {
+                    switch(g){
+                        case RED -> p.deltaCredits(2);
+                        case YELLOW -> p.deltaCredits(2);
+                        case GREEN -> p.deltaCredits(1);
+                        case BLUE -> p.deltaCredits(1);
+                        default -> {
+                            // Do nothing for unknown goods
+                        }
                     }
                 }
             }

@@ -78,8 +78,35 @@ public class SlaversCrewRemovalState extends State {
                 }
                 context.removeCrewmate();
 
-                controller.getModel().setState(new SlaversCrewRemovalState(context));
-                controller.getModel().setError(false);
+                //se devo ancora togliere gente
+                if (context.getCrewmates() > 0) {
+                    //se non ho più crew (atterraggio anticipato a fine carta)
+                    if (player.getShipBoard().getCondensedShip().getTotalCrew() > 0) {
+                        controller.getModel().setState(new SlaversCrewRemovalState(context));
+                        controller.getModel().setError(false);
+                    } else {
+                        context.removeSpecialPlayer(player);
+                        if(context.getPlayers().isEmpty()){         //passati tutti
+                            controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
+                            controller.getModel().setError(false);
+                        }
+                        else{       //manca qualcuno da gestire
+                            controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
+                            controller.getModel().setError(false);
+                        }
+                    }
+                } //se non devo più togliere gente
+                else {
+                    context.removeSpecialPlayer(player);
+                    if(context.getPlayers().isEmpty()){         //passati tutti
+                        controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{       //manca qualcuno da gestire
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
+                        controller.getModel().setError(false);
+                    }
+                }
             }
             else{
                 context.removeSpecialPlayer(player);

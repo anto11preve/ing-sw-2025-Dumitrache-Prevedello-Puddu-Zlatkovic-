@@ -91,7 +91,7 @@ public class OpenSpaceBatteryRemovalState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to throw the dice.");
+            throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
         if (batteries > 0) {

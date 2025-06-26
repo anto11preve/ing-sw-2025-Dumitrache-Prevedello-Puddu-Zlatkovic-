@@ -2,9 +2,11 @@ package Controller.Planets;
 
 import Controller.Context;
 import Controller.Controller;
+import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Model.Board.AdventureCards.Components.Planet;
+import Model.Board.AdventureCards.Rewards.Goods;
 import Model.Enums.Good;
 import Model.Player;
 import Model.Ship.Components.CargoHold;
@@ -13,6 +15,7 @@ import Model.Ship.Coordinates;
 import Controller.State;
 import Controller.GamePhases.FlightPhase;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -114,25 +117,27 @@ public class PlanetsLandState extends State {
             throw new InvalidContextualAction("The good cannot be added to the cargo hold");
         }
 
-        while (planet.getLandingReward().iterator().hasNext()) {
-            Good currentGood = planet.getLandingReward().iterator().next();
+        Iterator<Good> iterator = planet.getLandingReward().iterator();
+        while (iterator.hasNext()) {
+            Good currentGood = iterator.next();
             if (currentGood.equals(selectedGood)) {
-                planet.getLandingReward().iterator().remove(); // Rimuove in modo sicuro durante l'iterazione
+                iterator.remove(); // Usa lo stesso iterator del loop
                 break;
             }
         }
 
-        if(planet.getLandingReward().iterator().hasNext()) {
+        Goods rewards = planet.getLandingReward();
+        if(!rewards.iterator().hasNext()) {
             chosenPlanets.removeFirst();
             context.removeSpecialPlayer(player);
-            if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {      //dovrei controllare anche le non conformità delle due liste
-                controller.getModel().setState(new FlightPhase(controller));     //finiti pianeti occupati
+            if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {
+                controller.getModel().setState(new FlightPhase(controller));
                 controller.getModel().setError(false);
             } else {
                 controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
                 controller.getModel().setError(false);
             }
-        } else{
+        } else {
             controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
             controller.getModel().setError(false);
         }
@@ -197,12 +202,12 @@ public class PlanetsLandState extends State {
      * @param playerName the name of the player ending the phase
      */
     @Override
-    public void end(String playerName){
+    public void end(String playerName) throws InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn");
+            throw new InvalidParameters("It's not your turn");
         }
         context.removeSpecialPlayer(player);
         chosenPlanets.removeFirst();
@@ -210,7 +215,7 @@ public class PlanetsLandState extends State {
             controller.getModel().setState(new FlightPhase(controller));     //finiti pianeti occupati
             controller.getModel().setError(false);
         } else {
-            controller.getModel().setState(new FlightPhase(controller));
+            controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
             controller.getModel().setError(false);
         }
     }

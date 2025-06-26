@@ -19,12 +19,13 @@ import Model.Ship.Coordinates;
 import java.util.List;
 
 public class CombatZone1ManageShotState extends State {
-    private final int number; //TODO: non controlla se il numero è valido o se è out of bounds, occhio perchè getComponent ritorna null se non trova il componente
+    private final int number;
     boolean hit = false;
 
     public CombatZone1ManageShotState(Context context,  int number) {
         super(context);
         this.number = number;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     @Override
@@ -33,7 +34,7 @@ public class CombatZone1ManageShotState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
@@ -45,7 +46,7 @@ public class CombatZone1ManageShotState extends State {
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; (i <= 9)&&(!hit); i++) {
-                    Coordinates coordinates = new Coordinates(number, i); //TODO: mi sa che da quando ho modificato le coordinate, non funziona più, basta invertire i e number ma il bug c'era in ogni caso perchè a volte era usata in un modo a volte in un altro
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -55,7 +56,7 @@ public class CombatZone1ManageShotState extends State {
                 }
             case Side.RIGHT:
                 for (int i = 10; (i >= 4)&&(!hit); i--) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -65,7 +66,7 @@ public class CombatZone1ManageShotState extends State {
                 }
             case Side.LEFT:
                 for (int i = 4; (i <= 10&&(!hit)); i++) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -74,8 +75,8 @@ public class CombatZone1ManageShotState extends State {
                     }
                 }
             case Side.REAR:
-                for (int i = 0; (i <= 4&&(!hit)); i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                for (int i = 9; (i >= 5 &&(!hit)); i--) {
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -87,15 +88,12 @@ public class CombatZone1ManageShotState extends State {
 
         if(hit){
             boolean brokenShip = player.getShipBoard().checkIntegrity();
-            if (brokenShip) {
+            if (!brokenShip) {
                 controller.getModel().setState(new CombatZone1CheckShipState(context));
                 controller.getModel().setError(false);
                 return;
             }
         }
-
-        context.removeSpecialPlayer(player);
-        if (context.getSpecialPlayers().isEmpty()) {
             context.removeProjectile(shot);
             if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                 controller.getModel().setState(new FlightPhase(controller));
@@ -104,11 +102,6 @@ public class CombatZone1ManageShotState extends State {
                 controller.getModel().setState(new CombatZone1CannonShotsState(context));
                 controller.getModel().setError(false);
             }
-        } else {
-            controller.getModel().setState(new CombatZone1ManageShotState(context, number));
-            controller.getModel().setError(false);
-        }
-
 
     }
 
@@ -118,19 +111,18 @@ public class CombatZone1ManageShotState extends State {
         Controller controller = context.getController();
         if (itemType != ItemType.BATTERIES) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (player != context.getSpecialPlayers().getFirst()) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
             controller.getModel().setError(true);
             throw new InvalidParameters("The shot is null");
         }
-        SpaceshipComponent component = null;
         if(shot.isBig()){
             controller.getModel().setError(true);
             throw new InvalidContextualAction("Cannot use batteries on a big shot");
@@ -163,13 +155,12 @@ public class CombatZone1ManageShotState extends State {
             SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates);
             if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2)) {   //non è un Battery
                 controller.getModel().setError(true);
-                throw new IllegalArgumentException("The component is not a BatteryCompartment");
+                throw new InvalidParameters("The component is not a BatteryCompartment");
             }
             BatteryCompartment compartment = (BatteryCompartment) component2;
             compartment.removeBattery();
 
-            context.removeSpecialPlayer(player);
-            if (context.getSpecialPlayers().isEmpty()) {
+
                 context.removeProjectile(shot);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                     controller.getModel().setState(new FlightPhase(controller));
@@ -178,13 +169,10 @@ public class CombatZone1ManageShotState extends State {
                 }
                 controller.getModel().setState(new CombatZone1CannonShotsState(context));
                 controller.getModel().setError(false);
-            } else{
-                controller.getModel().setState(new CombatZone1ManageShotState(context, number));
-                controller.getModel().setError(false);
-            }
+
         } else {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("No shield found to use");
+            throw new InvalidParameters("No shield found to use");
         }
 
     }

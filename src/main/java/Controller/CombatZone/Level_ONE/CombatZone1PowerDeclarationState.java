@@ -109,8 +109,10 @@ public class CombatZone1PowerDeclarationState extends State {
 
         } else {
             if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
-                if(amount > worst){
-                    context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                if(amount < worst){
+                    if (context.getSpecialPlayers().getFirst() != null) {
+                        context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    }
                     context.addSpecialPlayer(player);
                     worst = amount;
                 }
@@ -131,7 +133,7 @@ public class CombatZone1PowerDeclarationState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "DeclareDoubleCannon"
+        return List.of( "DeclaresDoubleCannon"
         );
     }
 }

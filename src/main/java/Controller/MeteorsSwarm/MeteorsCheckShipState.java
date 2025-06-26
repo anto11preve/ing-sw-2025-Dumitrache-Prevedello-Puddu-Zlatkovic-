@@ -4,6 +4,7 @@ import Controller.CombatZone.Level_ONE.CombatZone1CannonShotsState;
 import Controller.CombatZone.Level_ONE.CombatZone1CheckShipState;
 import Controller.Context;
 import Controller.Controller;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.CannonShot;
@@ -15,7 +16,6 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
-//TODO: correggere firma
 public class MeteorsCheckShipState extends State {
    
     private final int number;
@@ -27,21 +27,21 @@ public class MeteorsCheckShipState extends State {
     }
 
     @Override
-    public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters {
+    public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null");
+            throw new InvalidParameters("Coordinates cannot be null");
         }
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("No component found at the given coordinates");
+            throw new InvalidParameters("No component found at the given coordinates");
         }
 
         player.getShipBoard().removeComponent(coordinates);

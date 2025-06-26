@@ -7,6 +7,7 @@ import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
+import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class OpenSpaceEngineDeclarationState extends State {
      * @param amount     the number of double engines the player wants to use
      */
     @Override
-    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
+    public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters, InvalidMethodParameters {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);
@@ -115,6 +116,7 @@ public class OpenSpaceEngineDeclarationState extends State {
         }
 
         if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+            controller.getModel().getFlightBoard().deltaFlightDays(player, (int) amount);
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){         //passati tutti
                 controller.getModel().setState(new FlightPhase(controller));

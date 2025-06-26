@@ -4,6 +4,7 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Controller.State;
 import Model.Player;
@@ -61,7 +62,7 @@ public class SlaversBatteryRemovalState extends State{
      * @param coordinates the coordinates of the component to activate
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters {
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);

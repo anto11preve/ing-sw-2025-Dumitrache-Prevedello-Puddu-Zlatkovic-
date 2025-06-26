@@ -183,7 +183,7 @@ public class CargoHold extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-        StringBuilder goodsLine = new StringBuilder("║  ");
+        StringBuilder goodsLine = new StringBuilder("║ ");
         switch(this.getCapacity()) {
             case 1:
                 goodsLine.append("  ");

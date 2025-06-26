@@ -77,6 +77,7 @@ public class SecondSmugglersBatteryRemovalState extends State{
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
         amount--;
+        context.removeRequiredGood();
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){

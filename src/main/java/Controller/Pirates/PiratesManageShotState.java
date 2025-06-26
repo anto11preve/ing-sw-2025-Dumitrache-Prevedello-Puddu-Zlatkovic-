@@ -73,7 +73,7 @@ public class PiratesManageShotState extends State{
         switch (shot.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; (i <= 9)&&(!hit); i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -83,7 +83,7 @@ public class PiratesManageShotState extends State{
                 }
             case Side.RIGHT:
                 for (int i = 10; (i >= 4)&&(!hit); i--) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -93,7 +93,7 @@ public class PiratesManageShotState extends State{
                 }
             case Side.LEFT:
                 for (int i = 4; (i <= 10)&&(!hit); i++) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -102,8 +102,8 @@ public class PiratesManageShotState extends State{
                     }
                 }
             case Side.REAR:
-                for (int i = 0; (i <= 4)&&(!hit); i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                for (int i = 9; (i >= 5)&&(!hit); i--) {
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -115,7 +115,7 @@ public class PiratesManageShotState extends State{
 
         if(hit){
             boolean brokenShip = player.getShipBoard().checkIntegrity();
-            if (brokenShip) {
+            if (!brokenShip) {
                 controller.getModel().setState(new PiratesCheckShipState(context, number, turn));
                 return;
             }
@@ -219,7 +219,7 @@ public class PiratesManageShotState extends State{
             }
         } else {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("No shield found to use");
+            throw new InvalidParameters("No shield found to use");
         }
 
     }

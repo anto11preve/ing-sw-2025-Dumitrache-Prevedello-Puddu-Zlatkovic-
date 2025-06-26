@@ -3,6 +3,7 @@ package Controller.CombatZone.Level_ONE;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
+import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.Pirates.PiratesCannonShotsState;
 import Controller.Pirates.PiratesManageShotState;
@@ -19,20 +20,20 @@ public class CombatZone1CannonShotsState extends State {
 
     public CombatZone1CannonShotsState(Context context) {
         super(context);
-        this.setPlayerInTurn(context.getPlayers().getFirst());
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     @Override
-    public void throwDices(String playerName) throws InvalidContextualAction {
+    public void throwDices(String playerName) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
             controller.getModel().setError(true);
             throw new InvalidContextualAction("No projectiles available for cannon shots.");
         }
         Player player = controller.getModel().getPlayer(playerName);
-        if (!player.equals(context.getPlayers().getFirst())) {
+        if (!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
         Random rand = new Random();
         int dado1 = controller.getModel().rollDice(); // numero tra 1 e 6
@@ -40,10 +41,6 @@ public class CombatZone1CannonShotsState extends State {
         int number = dado1 + dado2;
 
         context.setDiceNumber(number);
-
-        for(Player p : controller.getModel().getFlightBoard().getTurnOrder()){
-            context.addSpecialPlayer(p);
-        }
 
         Projectile shot = context.getProjectiles().getFirst();
         boolean out = false;

@@ -89,8 +89,16 @@ public class AbandonedShipCrewRemovalState extends State {
             }
             context.removeCrewmate();
 
-            controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
-            controller.getModel().setError(false);
+            if(context.getCrewmates() > 0){
+                controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
+                controller.getModel().setError(false);
+            } else {
+                // No more crew members to remove, transition to flight phase
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            }
+
+
         }
         else{
             controller.getModel().setState(new FlightPhase(controller));

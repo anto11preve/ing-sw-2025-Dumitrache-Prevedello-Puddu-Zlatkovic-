@@ -81,7 +81,7 @@ public class CombatZone2_P_BatteryRemovalState extends State {
             if(context.getSpecialPlayers().isEmpty()){
                 context.addSpecialPlayer(player);
             } else {
-                if(declaredPower > worst){
+                if(declaredPower < worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
                     worst = declaredPower;
@@ -93,7 +93,7 @@ public class CombatZone2_P_BatteryRemovalState extends State {
                 controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
                 controller.getModel().setError(false);
             } else {
-                controller.getModel().setState(new CombatZone2PowerDeclarationState(context));
+                controller.getModel().setState(new CombatZone2PowerDeclarationState(context, worst));
                 controller.getModel().setError(false);
             }
         }
@@ -105,8 +105,7 @@ public class CombatZone2_P_BatteryRemovalState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "useBattery",
-            "endTurn"
+            "UseBattery"
         );
     }
 }

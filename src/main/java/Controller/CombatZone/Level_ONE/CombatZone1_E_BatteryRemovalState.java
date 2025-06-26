@@ -41,17 +41,17 @@ public class CombatZone1_E_BatteryRemovalState extends State {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid item type, expected BATTERIES");
+            throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Declared power cannot be negative");
+            throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Coordinates cannot be null");
+            throw new InvalidParameters("Coordinates cannot be null");
         }
 
         if (batteries < 0) {
@@ -62,7 +62,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not the player's turn");
+            throw new InvalidParameters("It's not the player's turn");
         }
 
         if (batteries > 0) {
@@ -80,7 +80,7 @@ public class CombatZone1_E_BatteryRemovalState extends State {
             if(context.getSpecialPlayers().isEmpty()){
                 context.addSpecialPlayer(player);
             } else {
-                if(declaredPower > worst){
+                if(declaredPower < worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
                     worst = declaredPower;

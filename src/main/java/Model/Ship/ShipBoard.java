@@ -104,6 +104,7 @@ public class ShipBoard implements Serializable {
 
         if (i < 0 || i >= ROWS || j < 0 || j >= COLS) throw new InvalidMethodParameters("Invalid coordinates out of bounds");
         if (components[i][j] != null) {
+            components[i][j].removed();
             components[i][j] = null;
         }
     }

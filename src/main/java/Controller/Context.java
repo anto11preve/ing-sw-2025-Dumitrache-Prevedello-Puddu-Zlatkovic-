@@ -160,6 +160,7 @@ public class Context implements Serializable {
         for (Planet planet : card) {
             this.planets.add(planet);
         }
+
         this.visual = () -> {
             for(Planet planet : planets) {
                 System.out.print("Planet: " + planet.getName() + " ");
@@ -328,6 +329,10 @@ public class Context implements Serializable {
         return players;
     }
 
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
     public void removePlayer(Player player) {
         players.remove(player);
     }
@@ -398,6 +403,12 @@ public class Context implements Serializable {
 
     public int getRequiredGoods() {
         return requiredGoods;
+    }
+
+    public void removeRequiredGood() {
+        if (requiredGoods > 0) {
+            requiredGoods--;
+        }
     }
 
 

@@ -79,7 +79,6 @@ public class PlaceComponentCommand extends Command {
         return new CommandConstructor() {
             @Override
             public PlaceComponentCommand create(String username, Map<String, String> args) throws IllegalArgumentException {
-                //TODO: ComponentOrigin origin
                 final int row, column;
                 final ComponentOrigin origin;
                 final Direction orientation;

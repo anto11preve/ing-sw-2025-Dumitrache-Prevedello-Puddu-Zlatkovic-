@@ -4,6 +4,8 @@ import Controller.Context;
 import Controller.Controller;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
+import Controller.Smugglers.SecondSmugglersBatteryRemovalState;
 import Controller.Smugglers.SmugglersGoodsRemovalState;
 import Controller.State;
 import Model.Board.AdventureCards.Components.CombatZoneLine;
@@ -14,6 +16,8 @@ import Model.Ship.Components.SpaceshipComponent;
 import Model.Ship.Coordinates;
 import Model.Ship.GoodCounter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CombatZone2GoodsRemovalState extends State {
@@ -35,7 +39,33 @@ public class CombatZone2GoodsRemovalState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
-
+    @Override
+    public void onEnter(){
+        Controller controller = context.getController();
+        Player player = context.getSpecialPlayers().getFirst();
+        boolean availableGoods = false;
+        for (CargoHold cargoHold : player.getShipBoard().getCondensedShip().getCargoHolds()) {
+            if (cargoHold.getGoods().length > 0) {
+                availableGoods = true;
+                break;
+            }
+        }
+        if(!availableGoods){
+            if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){
+                controller.getModel().setState(new SecondCombatZone2BatteryRemovalState(context, amount));
+                controller.getModel().setError(false);
+            } else {
+                context.removeSpecialPlayer(player);
+                if(context.getSpecialPlayers().isEmpty()){
+                    controller.getModel().setState(new FlightPhase(controller));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new CombatZone2GoodsRemovalState(context));
+                    controller.getModel().setError(false);
+                }
+            }
+        }
+    }
 
     @Override
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
@@ -48,12 +78,12 @@ public class CombatZone2GoodsRemovalState extends State {
 
         if(oldCoordinates == null){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid coordinates");
+            throw new InvalidParameters("Invalid coordinates");
         }
 
         if(oldIndex < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid index");
+            throw new InvalidParameters("Invalid index");
         }
 
         GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(amount);
@@ -100,6 +130,8 @@ public class CombatZone2GoodsRemovalState extends State {
         cargoHold.removeGood(oldIndex);
         amount--;
         if(amount == 0){
+            List<Player> allPlayers= new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
+            context.setPlayers(allPlayers);
             controller.getModel().setState(new CombatZone2CannonShotsState(context));
             controller.getModel().setError(false);
         } else {

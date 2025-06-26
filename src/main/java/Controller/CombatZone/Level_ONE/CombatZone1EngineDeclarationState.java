@@ -41,18 +41,18 @@ public class CombatZone1EngineDeclarationState extends State {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid double type, only ENGINES are allowed");
+            throw new InvalidParameters("Invalid double type, only ENGINES are allowed");
         }
 
         if(amount < 0){
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("Invalid amount of double, only non negative integers are allowed");
+            throw new InvalidParameters("Invalid amount of double, only non negative integers are allowed");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("It's not your turn to throw the dice.");
+            throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
 
@@ -129,7 +129,7 @@ public class CombatZone1EngineDeclarationState extends State {
 
     public List<String> getAvailableCommands(){
         return List.of(
-            "DeclareDoubleEngine"
+            "DeclaresDoubleEngine"
         );
     }
 }

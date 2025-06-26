@@ -138,9 +138,6 @@ public abstract class SpaceshipComponent implements Serializable {
      * Returns the connector type at a given side considering current orientation.
      */
     public ConnectorType getConnectorAt(Side side) {
-        // Map the logical side based on the current rotation
-        //Side rotatedSide = getRotatedSide(side); // TODO: secondo me considerava il modo che avevo pensato io di gestire l'orientazione, ma per come l'ha impelementato ora, si bugga e basta
-        //switch (rotatedSide) {
         return switch (side) {
             case FRONT -> frontConnector;
             case REAR -> rearConnector;

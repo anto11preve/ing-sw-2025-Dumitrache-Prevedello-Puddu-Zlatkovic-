@@ -3,10 +3,12 @@ package Controller.MeteorsSwarm;
 import Controller.Context;
 import Controller.Controller;
 import Controller.Enums.ItemType;
+import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.Meteor;
+import Model.Enums.Direction;
 import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
 import Model.Player;
@@ -71,7 +73,7 @@ public class ManageMeteorState extends State {
         switch (meteor.getSide()) {
             case Side.FRONT:   //arriva da davanti
                 for (int i = 5; i <= 9; i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -82,7 +84,7 @@ public class ManageMeteorState extends State {
 
             case Side.RIGHT:
                 for (int i = 10; i >= 4; i--) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -93,7 +95,7 @@ public class ManageMeteorState extends State {
 
             case Side.LEFT:
                 for (int i = 4; i <= 10; i++) {
-                    Coordinates coordinates = new Coordinates(i, number);
+                    Coordinates coordinates = new Coordinates(number, i);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -103,8 +105,8 @@ public class ManageMeteorState extends State {
                 break;
 
             case Side.REAR:
-                for (int i = 0; i <= 4; i++) {
-                    Coordinates coordinates = new Coordinates(number, i);
+                for (int i = 9; i >= 4; i--) {
+                    Coordinates coordinates = new Coordinates(i, number);
                     component = player.getShipBoard().getComponent(coordinates);
                     if (component != null) {
                         hit = true;
@@ -119,101 +121,94 @@ public class ManageMeteorState extends State {
         boolean cannonFound = false;
 
         // if he gets hit by a meteor, check if he has a cannon that can be used to protect the ship (in case of a big meteor), or a shield (in case of a small meteor)
-        if(hit){
-            if(meteor.isBig()){
+        if(hit) {
+            if (meteor.isBig()) {
 
-                switch (meteor.getSide()){
+                switch (meteor.getSide()) {
                     case Side.FRONT:
-                        for (int i = 5; i <= 9; i++){
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number));
-                            if(component != null || player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();//... e se non è doppio
-                                if(!cannon.isDouble()){
+                        for (int i = 5; i <= 9; i++) {
+                            SpaceshipComponent component2 = player.getShipBoard().getComponent(new Coordinates(i, number));
+                            if (component2 != null && player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if ((!cannon.isDouble() && cannon.getOrientation() == Direction.RIGHT)) {
                                     break;
                                 }
                             }
                         }
                         break;
                     case Side.RIGHT:
-                        for (int i = 10; i >= 4; i--){
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                        for (int i = 10; i >= 4; i--) {
+                            SpaceshipComponent component2 = player.getShipBoard().getComponent(new Coordinates(number, i));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.RIGHT) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                            component2 = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.RIGHT) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                            component2 = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.RIGHT) {
                                     break;
                                 }
                             }
                         }
                         break;
                     case Side.LEFT:
-                        for (int i = 4; i <= 10; i++){
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                        for (int i = 4; i <= 10; i++) {
+                            SpaceshipComponent component2 = player.getShipBoard().getComponent(new Coordinates(number, i));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.LEFT) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                            component2 = player.getShipBoard().getComponent(new Coordinates(i, number + 1));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.LEFT) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
-                                cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                            component2 = player.getShipBoard().getComponent(new Coordinates(i, number - 1));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
+                                if (!cannon.isDouble() && cannon.getOrientation() == Direction.LEFT) {
                                     break;
                                 }
                             }
                         }
                         break;
                     case Side.REAR:
-                        for (int i = 0; i <= 4; i++){
-                            component = player.getShipBoard().getComponent(new Coordinates(number, i));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
+                        for (int i = 9; i >= 4; i--) {
+                            SpaceshipComponent component2 = player.getShipBoard().getComponent(new Coordinates(i, number));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                                if (!cannon.isDouble()) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(number +1, i));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
+                            component2 = player.getShipBoard().getComponent(new Coordinates(number + 1, i));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                                if (!cannon.isDouble()) {
                                     break;
                                 }
                             }
-                            component = player.getShipBoard().getComponent(new Coordinates(number - 1, i));
-                            if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
-                                Cannon cannon = (Cannon) component;
+                            component2 = player.getShipBoard().getComponent(new Coordinates(number - 1, i));
+                            if (player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
+                                Cannon cannon = (Cannon) component2;
                                 cannonFound = !cannon.isDouble();   //... e se non è doppio
-                                if(!cannon.isDouble()){
+                                if (!cannon.isDouble()) {
                                     break;
                                 }
                             }
@@ -224,13 +219,13 @@ public class ManageMeteorState extends State {
                         break;
                 }
             }
-
+        }
                 /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio
-                if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component == null || component.getConnectorAt(meteor.getSide()) ==null)))){
+                if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component != null && component.getConnectorAt(meteor.getSide()) ==null)))){
                     player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
                     player.addJunk();
                     boolean brokenShip = player.getShipBoard().checkIntegrity();
-                    if (brokenShip) {
+                    if (!brokenShip) {
                         controller.getModel().setState(new MeteorsCheckShipState(context, number));
                         controller.getModel().setError(false);
                         return;
@@ -252,9 +247,6 @@ public class ManageMeteorState extends State {
                 }
 
 
-
-        }
-
     }
 
     /**
@@ -266,7 +258,7 @@ public class ManageMeteorState extends State {
      * @param coordinates the coordinates where the item is used (must be a battery compartment)
      */
     @Override
-    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ){
+    public void useItem(String playerName, ItemType itemType, Coordinates coordinates ) throws InvalidParameters, InvalidContextualAction {
         if (itemType != ItemType.BATTERIES) {
             return; // Handle the case where the item is not a cannon shot
         }
@@ -340,7 +332,7 @@ public class ManageMeteorState extends State {
                 break;
             case Side.REAR:
                 if(meteor.isBig()){
-                    for (int i = 0; i <= 4; i++){
+                    for (int i = 9; i >= 4; i--){
                         component = player.getShipBoard().getComponent(new Coordinates(i, number));
                         if(player.getShipBoard().getCondensedShip().getCannons().contains(component)){  //se è un cannone...
                             Cannon cannon = (Cannon) component;
@@ -363,8 +355,10 @@ public class ManageMeteorState extends State {
 
         if(cannonOrShieldFound) {
             SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates);
-            if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2))   //non è un Battery
-                return;
+            if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2)) {   //non è un Battery
+                controller.getModel().setError(true);
+                throw new InvalidParameters("The component is not a BatteryCompartment");
+            }
             BatteryCompartment compartment = (BatteryCompartment) component2;
             compartment.removeBattery();
 
@@ -381,7 +375,7 @@ public class ManageMeteorState extends State {
             }
         } else {
             controller.getModel().setError(true);
-            throw new IllegalArgumentException("No shield or cannon found to use");
+            throw new InvalidParameters("No shield or cannon found to use");
         }
     }
 

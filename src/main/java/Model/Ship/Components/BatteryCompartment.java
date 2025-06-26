@@ -71,11 +71,11 @@ public class BatteryCompartment extends SpaceshipComponent {
     /**
      * Consumes one battery if available. Throws an exception if no batteries remain.
      */
-    public void removeBattery() throws IllegalStateException {
+    public void removeBattery() throws InvalidContextualAction {
         if (batteries > 0) {
             batteries--;
         } else {
-            throw new IllegalStateException("No batteries left to remove");
+            throw new InvalidContextualAction("No batteries left to remove");
         }
     }
 

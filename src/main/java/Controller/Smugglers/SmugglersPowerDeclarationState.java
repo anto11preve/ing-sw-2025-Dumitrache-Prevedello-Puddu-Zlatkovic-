@@ -5,6 +5,7 @@ import Controller.Controller;
 import Controller.Enums.DoubleType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Model.Enums.Direction;
 import Model.Player;
 import Controller.State;
@@ -123,21 +124,29 @@ public class SmugglersPowerDeclarationState extends State {
                 controller.getModel().setError(false);
             }
         }else{
-            if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
+            //se non devi rimovere batterie
+            if(amount == player.getShipBoard().getCondensedShip().getBasePower()){
+                //se vinci
                 if(amount > context.getPower()){
                     controller.getModel().setState(new SmugglersLandState(context));
                     controller.getModel().setError(false);
+                    //se pareggia:
                 } else if(amount == context.getPower()){
                     context.removePlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
-                        controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        if (!context.getSpecialPlayers().isEmpty()) {
+                            controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                            controller.getModel().setError(false);
+                        }else{
+                            controller.getModel().setState(new FlightPhase(controller));
+                        }
                     }
                     else{       //manca qualcuno da gestire
                         controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
                         controller.getModel().setError(false);
                     }
                 }
+                //se perde:
                 else{
                     context.removePlayer(player);
                     context.addSpecialPlayer(player);

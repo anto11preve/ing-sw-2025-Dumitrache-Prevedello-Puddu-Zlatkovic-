@@ -1,5 +1,6 @@
 package Model.Ship.Components;
 
+import Controller.Exceptions.InvalidContextualAction;
 import Model.Enums.*;
 import Model.Ship.ShipBoard;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public class BatteryCompartmentTest {
     }
 
     @Test
-    public void testRemoveBattery() {
+    public void testRemoveBattery() throws InvalidContextualAction {
         BatteryCompartment battery = new BatteryCompartment(Card.BATTERY_COMPARTMENT, ConnectorType.UNIVERSAL, ConnectorType.SINGLE, ConnectorType.DOUBLE, ConnectorType.NONE, 2);
         
         assertEquals(2, battery.getBatteries());

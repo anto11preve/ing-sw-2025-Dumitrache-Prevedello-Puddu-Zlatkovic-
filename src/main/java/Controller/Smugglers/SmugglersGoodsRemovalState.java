@@ -60,6 +60,35 @@ public class SmugglersGoodsRemovalState extends State{
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    @Override
+    public void onEnter(){
+        Controller controller = context.getController();
+        Player player = context.getSpecialPlayers().getFirst();
+        boolean availableGoods = false;
+        for (CargoHold cargoHold : player.getShipBoard().getCondensedShip().getCargoHolds()) {
+            if (cargoHold.getGoods().length > 0) {
+                availableGoods = true;
+                break;
+            }
+        }
+        //se non trova nessun cargo hold con goods
+        if(!availableGoods){
+            if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){
+                controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+                controller.getModel().setError(false);
+            } else {
+                context.removeSpecialPlayer(player);
+                if(context.getSpecialPlayers().isEmpty()){
+                    controller.getModel().setState(new FlightPhase(controller));
+                    controller.getModel().setError(false);
+                } else {
+                    controller.getModel().setState(new SmugglersGoodsRemovalState(context));
+                    controller.getModel().setError(false);
+                }
+            }
+        }
+    }
+
 
 
     /**
@@ -132,6 +161,7 @@ public class SmugglersGoodsRemovalState extends State{
         }
         cargoHold.removeGood(oldIndex);
         amount--;
+        context.removeRequiredGood();
         if(amount == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
