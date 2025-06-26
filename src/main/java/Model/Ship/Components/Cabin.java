@@ -1,7 +1,10 @@
 package Model.Ship.Components;
 
 import Model.Enums.*;
+import Model.Ship.Coordinates;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * Represents a Cabin component on the spaceship. Cabins can host standard crew
@@ -136,7 +139,11 @@ public class Cabin extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addCabin(this);
         }
-        for(AlienLifeSupport alienLifeSupport : getShipBoard().getCondensedShip().getAlienSupports()) {
+        Coordinates myCoordinates= super.getShipBoard().getIndex(this);
+
+        List<AlienLifeSupport> allAlienLifeSupports = getShipBoard().getCondensedShip().getAlienSupports();
+
+        for(AlienLifeSupport alienLifeSupport : allAlienLifeSupports) {
             if(getShipBoard().areComponentsConnected(this, alienLifeSupport)) {
                 if(alienLifeSupport.getColor() == AlienColor.BROWN){
                     this.incrementCanContainBrown();
@@ -145,6 +152,9 @@ public class Cabin extends SpaceshipComponent {
                 }
             }
         }
+
+
+
     }
 
     @Override

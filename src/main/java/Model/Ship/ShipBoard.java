@@ -293,29 +293,29 @@ public class ShipBoard implements Serializable {
 
         // Check if the connectors are compatible
 
-        int deltaRow = bCoords.getI() - aCoords.getI();
-        int deltaCol = bCoords.getJ() - aCoords.getJ();
+        int deltaI = bCoords.getI() - aCoords.getI();
+        int deltaJ = bCoords.getJ() - aCoords.getJ();
 
         ConnectorType aConnector;
         ConnectorType bConnector;
 
-        if(deltaRow==1){
+        if(deltaJ==1){
             //b is at the right of a
             aConnector = a.getConnectorAt(Side.RIGHT);
             bConnector = b.getConnectorAt(Side.LEFT);
-        } else if (deltaRow==-1) {
+        } else if (deltaJ==-1) {
             //b is at the left of a
             aConnector = a.getConnectorAt(Side.LEFT);
             bConnector = b.getConnectorAt(Side.RIGHT);
         } else {
-           if (deltaCol==-1) {
+           if (deltaI==-1) {
                 //b is below a
-                aConnector = a.getConnectorAt(Side.REAR);
-                bConnector = b.getConnectorAt(Side.FRONT);
-            } else if (deltaCol==1) {
+                aConnector = a.getConnectorAt(Side.FRONT);
+                bConnector = b.getConnectorAt(Side.REAR);
+           } else if (deltaI==1) {
                //b is above a
-               aConnector = a.getConnectorAt(Side.FRONT);
-               bConnector = b.getConnectorAt(Side.REAR);
+               aConnector = a.getConnectorAt(Side.REAR);
+               bConnector = b.getConnectorAt(Side.FRONT);
            }else{
                throw new RuntimeException("Error in areComponentsConnected: components are not adjacent, even though they checked by manhattan distance");
            }

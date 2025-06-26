@@ -8,6 +8,7 @@ import Model.Ship.ShipBoard;
 import com.google.gson.JsonObject;
 
 import java.io.PrintStream;
+import java.util.List;
 
 /**
  * Represents an Alien Life Support component.
@@ -69,7 +70,9 @@ public class AlienLifeSupport extends SpaceshipComponent {
         } else {
             getShipBoard().getCondensedShip().addAlienSupport(this);
         }
-        for(Cabin cabin : getShipBoard().getCondensedShip().getCabins()) {
+
+        List<Cabin> allCabins = getShipBoard().getCondensedShip().getCabins();
+        for(Cabin cabin : allCabins) {
             if(getShipBoard().areComponentsConnected(this, cabin)) {
                 if(this.getColor() == AlienColor.BROWN){
                     cabin.incrementCanContainBrown();
