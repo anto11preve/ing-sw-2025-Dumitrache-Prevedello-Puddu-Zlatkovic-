@@ -2,7 +2,7 @@ package Model.Ship;
 
 import java.io.Serializable;
 
-public class ShieldCounter implements Serializable {
+public class ShieldCounter implements Serializable, Cloneable {
     private int northShields;
     private int eastShields;
     private int southShields;
@@ -73,5 +73,17 @@ public class ShieldCounter implements Serializable {
         }else{
             throw new IllegalArgumentException("Cannot decrement west shields below zero.");
         }
+    }
+
+    @Override
+    public ShieldCounter clone() {
+        ShieldCounter clone = new ShieldCounter();
+
+        clone.northShields = this.northShields;
+        clone.eastShields = this.eastShields;
+        clone.southShields = this.southShields;
+        clone.westShields = this.westShields;
+
+        return clone;
     }
 }

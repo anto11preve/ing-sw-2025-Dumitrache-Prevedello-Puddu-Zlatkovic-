@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CondensedShip implements Serializable {
+public class CondensedShip implements Serializable, Cloneable {
     private final List<Cabin> cabins;
     private final List<BatteryCompartment> batteryCompartments;
     private final List<CargoHold> cargoHolds;
@@ -261,5 +261,50 @@ public class CondensedShip implements Serializable {
         return thrust;
     }
 
+    @Override
+    public CondensedShip clone(){
+        return new CondensedShip(this);
+    }
 
+    private CondensedShip(CondensedShip old) {
+        this.cabins = new ArrayList<>();
+
+        for(Cabin component : old.cabins){
+            this.cabins.add(component.clone());
+        }
+
+        this.batteryCompartments = new ArrayList<>();
+
+        for(BatteryCompartment component : old.batteryCompartments){
+            this.batteryCompartments.add(component.clone());
+        }
+
+        this.cargoHolds = new ArrayList<>();
+
+        for(CargoHold component : old.cargoHolds){
+            this.cargoHolds.add(component.clone());
+        }
+
+        this.cannons = new ArrayList<>();
+
+        for(Cannon component : old.cannons){
+            this.cannons.add(component.clone());
+        }
+
+        this.enginesList = new ArrayList<>();
+
+        for(Engine component : old.enginesList){
+            this.enginesList.add(component.clone());
+        }
+
+        this.alienSupports = new ArrayList<>();
+
+        for(AlienLifeSupport component : old.alienSupports){
+            this.alienSupports.add(component.clone());
+        }
+
+        this.engines = old.engines.clone();
+        this.aliens = old.aliens.clone();
+        this.shields = old.shields.clone();
+    }
 }

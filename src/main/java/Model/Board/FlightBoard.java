@@ -30,7 +30,7 @@ import java.util.*;
  * do not exist while flying (but this is a less pressing
  * issue than the one stated earlier).
  */
-public class FlightBoard implements Serializable {
+public class FlightBoard implements Serializable, Cloneable {
     private final int cellNumber;
 
     private Timer timer;
@@ -45,7 +45,7 @@ public class FlightBoard implements Serializable {
 
     private final Map<Player, Integer> playerTotalDistance;
 
-    private List<Player> ffPlayers;
+    private final List<Player> ffPlayers;
 
     /**
      * FlightBoard default constructor stub.
@@ -461,5 +461,30 @@ public class FlightBoard implements Serializable {
         }
     }
 
+    @Override
+    public FlightBoard clone() {
+        return new FlightBoard(this);
+    }
 
+    private FlightBoard(FlightBoard old) {
+        this.cellNumber = old.cellNumber;
+
+        this.timer = (old.timer != null) ? old.timer.clone() : null;
+
+        if(old.peekableCardDecks != null) {
+            this.peekableCardDecks = new ArrayList<>();
+
+            for (CardDeck deck : old.peekableCardDecks) {
+                this.peekableCardDecks.add(deck.clone());
+            }
+        }
+
+        this.hiddenCardDeck = (old.hiddenCardDeck != null) ? old.hiddenCardDeck.clone() : null;
+
+        this.upcomingCardDeck = (old.upcomingCardDeck != null) ? old.upcomingCardDeck.clone() : null;
+
+        this.playerPositions = new HashMap<>(old.playerPositions);
+        this.playerTotalDistance = new HashMap<>(old.playerTotalDistance);
+        this.ffPlayers = new ArrayList<>(old.ffPlayers);
+    }
 }

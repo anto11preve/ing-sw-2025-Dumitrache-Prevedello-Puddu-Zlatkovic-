@@ -5,14 +5,13 @@ import Controller.Controller;
 import Controller.Exceptions.InvalidParameters;
 import Model.Enums.CardLevel;
 import Model.Exceptions.InvalidMethodParameters;
-import Model.Utils.CardLevelMapper;
 
 import java.io.Serializable;
-import java.util.*;
+
 import com.google.gson.JsonObject;
 
 // Classe per la gestione delle carte avventura
-public abstract class AdventureCardFilip implements Serializable {
+public abstract class AdventureCardFilip implements Serializable, Cloneable {
     private final int id;
     private final CardLevel level;
     private String imagePath;
@@ -92,5 +91,10 @@ public abstract class AdventureCardFilip implements Serializable {
 
     public void accept(CardResolverVisitor cardResolverVisitor, Controller controller) throws InvalidMethodParameters, InvalidParameters {
 
+    }
+
+    @Override
+    public AdventureCardFilip clone() {
+        return this;
     }
 }

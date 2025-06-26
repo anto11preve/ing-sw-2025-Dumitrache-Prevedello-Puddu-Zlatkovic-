@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Abstract class representing a spaceship component.
  * Handles rotation, connectors, and association with the shipboard.
  */
-public abstract class SpaceshipComponent implements Serializable {
+public abstract class SpaceshipComponent implements Serializable, Cloneable {
     private final Card type;
     private ConnectorType frontConnector;
     private ConnectorType rearConnector;
@@ -202,4 +202,6 @@ public abstract class SpaceshipComponent implements Serializable {
 //        // to be implemented if needed
 //    }
 
+    @Override
+    public abstract SpaceshipComponent clone();
 }

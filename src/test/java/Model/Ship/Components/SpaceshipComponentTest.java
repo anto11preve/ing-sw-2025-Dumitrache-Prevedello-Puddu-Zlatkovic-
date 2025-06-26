@@ -24,6 +24,11 @@ public class SpaceshipComponentTest {
 
         @Override
         public void removed() {}
+
+        @Override
+        public SpaceshipComponent clone() {
+            return this;
+        }
     }
 
     @Test
