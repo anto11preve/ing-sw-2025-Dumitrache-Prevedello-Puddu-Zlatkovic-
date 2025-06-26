@@ -829,6 +829,7 @@ public class ShipBoard implements Serializable {
                         SpaceshipComponent neighborComponent = components[adjRow][adjCol];
                         ConnectorType neighborConnector = neighborComponent.getConnectorAt(getOppositeSide(side));
                         isExposed = !connectorsAreConnected(connector, neighborConnector);
+                        System.out.println("\n\n\n\nThere is a Non valid Ship Flying!\nGetExposedConnectors found a single connector connected to a double connector\n\n\n");
                     }
 
                     if (isExposed) {

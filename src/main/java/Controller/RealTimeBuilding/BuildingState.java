@@ -228,7 +228,7 @@ public class BuildingState extends State {
                         throw new InvalidCommand("No active component");
                     }
 
-                    activeTile= currentPlayer.getShipBoard().getReservedComponents().getFirst();
+                    activeTile= reservedComponents.getFirst();
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
                     }
@@ -244,7 +244,7 @@ public class BuildingState extends State {
                         throw new InvalidCommand("No active component");
                     }
 
-                    activeTile= currentPlayer.getShipBoard().getReservedComponents().get(1);
+                    activeTile= reservedComponents.get(1);
 
                     if(!currentPlayer.getShipBoard().isAdjacentToExistingComponent(coordinates)){
                         throw new InvalidParameters("Invalid position, must be adjacent to existing components");
@@ -511,6 +511,10 @@ public class BuildingState extends State {
         // Check if the coordinates are valid
         if (!validCoordinates.containsKey(coordinates.getI()) || !validCoordinates.get(coordinates.getI()).contains(coordinates.getJ())) {
             throw new InvalidParameters("Invalid coordinates");
+        }
+
+        if(coordinates.getI()==7&&coordinates.getJ()==7){
+            throw new InvalidParameters("Central Cabin can't be removed");
         }
         // Check if the coordinates correspond to a valid component
         SpaceshipComponent component = shipBoard.getComponent(coordinates);
