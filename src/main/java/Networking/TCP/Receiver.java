@@ -23,28 +23,24 @@ public class Receiver extends Thread {
     @Override
     public void run() {
         while (!this.network.isDone()) {
-            Message message;
+            Message message = null;
             try {
                 message = (Message) this.in.readObject();
             } catch (IOException e) {
                 if (this.network.isDone()) {
                     return;
                 }
-                System.err.println("Receiver.run(): got an IO error. Guessing the socket is closed. Killing Network manually... ");
-                this.network.setDone();
-                return;
+                /*TODO: implement better logging*/
+                System.err.println("Receiver.run(): got an IO error");
+                e.printStackTrace(System.err);
             } catch (ClassNotFoundException e) {
                 System.err.println("Receiver.run(): received something that is not a Serialized Object. Panic!");
                 throw new RuntimeException(e);
             }
 
-            if (message == null) {
-                System.err.println("Receiver.run(): got a null command. Killing Network... ");
-                this.network.setDone();
-                return;
+            if(message != null) {
+                this.inQueue.enqueue(message);
             }
-
-            this.inQueue.enqueue(message);
         }
     }
 }

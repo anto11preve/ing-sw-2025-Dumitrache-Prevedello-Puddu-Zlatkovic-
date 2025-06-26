@@ -1,5 +1,9 @@
 package View.Client.Actions;
 
+import Controller.Commands.Command;
+import Controller.Commands.CommandConstructor;
+import Networking.Messages.ControllerMessage;
+import Networking.Messages.UpdateListMessage;
 import View.Client.Client;
 import View.Client.ClientState;
 import View.Client.Visualizes.ViewComponent;
@@ -26,13 +30,14 @@ public interface ActionConstructor {
         if(actionConstructors.isEmpty()) {
             /*Actions*/
             actionConstructors.putAll(Map.of(
-                    "stop", _ -> ClientState::stop,
+                    "Stop", _ -> ClientState::stop,
                     "RMI", _ -> state -> state.chooseProtocol("RMI"),
                     "TCP", _ -> state -> state.chooseProtocol("TCP"),
-                    "connect", ConnectAction.getConstructor(),
-                    "login", LoginAction.getConstructor(),
-                    "join", JoinAction.getConstructor(),
-                    "create", CreateGameAction.getConstructor()
+                    "Connect", ConnectAction.getConstructor(),
+                    "Login", LoginAction.getConstructor(),
+                    "Join", JoinAction.getConstructor(),
+                    "Create", CreateGameAction.getConstructor(),
+                    "UpdateList", _ -> (Action) state -> state.send(new UpdateListMessage())
             ));
 
             /*Visualizers*/
@@ -44,8 +49,29 @@ public interface ActionConstructor {
                     "ViewShipBoard", ViewShipBoard.getConstructor(),
                     "ViewTiles", _ -> (Visualize) ViewTilesState::new
             ));
+
+            /*Controller commands*/
+            for(String command : CommandConstructor.getCommandConstructors().keySet()){
+                CommandConstructor constructor = CommandConstructor.getCommandConstructor(command);
+                actionConstructors.put(command, new ActionConstructor() {
+                    @Override
+                    public Action create(Map<String, String> args) throws IllegalArgumentException {
+                        final Command command = constructor.create(Client.client.getState().getUsername(), args);
+                        return state -> state.send(new ControllerMessage(command));
+                    }
+
+                    @Override
+                    public List<String> getArguments() {
+                        return constructor.getArguments();
+                    }
+                });
+            }
         }
 
         return actionConstructors;
+    }
+
+    static ActionConstructor getActionConstructor(String action) {
+        return getActionConstructors().get(action);
     }
 }
