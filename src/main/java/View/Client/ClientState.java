@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ClientState {
     default List<String> getAvailableCommands() {
-        return List.of("stop");
+        return List.of("Stop");
     }
 
     default String getUsername() {

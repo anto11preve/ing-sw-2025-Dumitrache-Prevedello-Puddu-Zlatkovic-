@@ -1,11 +1,31 @@
 package View.States.MenuStates;
 
+import View.Client.Actions.ActionConstructor;
 import View.Client.Client;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseActionState implements MenuState {
     @Override
     public void paint() {
-        Client.view.showOptions("Choose action", Client.client.getState().getAvailableCommands());
+        List<String> actions = new ArrayList<>();
+
+        for(String action : Client.client.getState().getAvailableCommands()) {
+            String message = action;
+
+            final List<String> arguments = ActionConstructor.getActionConstructor(action).getArguments();
+
+            if(arguments != null && !arguments.isEmpty()){
+                for(String argument : arguments) {
+                    message += " <" + argument + ">";
+                }
+            }
+
+            actions.add(message);
+        }
+
+        Client.view.showOptions("Choose action", actions);
     }
 
     @Override

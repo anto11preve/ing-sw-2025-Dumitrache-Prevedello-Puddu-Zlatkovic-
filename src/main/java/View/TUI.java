@@ -9,6 +9,19 @@ public final class TUI extends View {
     private final Console console = System.console();
 
     @Override
+    public void repaint() {
+        String clear = "";
+        for(int i = 0; i < 30; i++){
+            clear = clear + '\n';
+        }
+        System.out.print(clear);
+        this.getState().paint();
+        System.out.println();
+        this.getMenuState().paint();
+        System.out.print("> ");
+    }
+
+    @Override
     public void log(String message) {
         System.err.println(message);
     }

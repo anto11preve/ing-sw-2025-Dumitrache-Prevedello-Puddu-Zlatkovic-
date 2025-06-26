@@ -27,7 +27,7 @@ public abstract class PlayingState extends GameSelectedState {
         List<String> commands = new ArrayList<>();
 
         /*Visualizes*/
-        commands.addAll(List.of("ViewFlightBoard", "ViewShipBoard"));
+        commands.addAll(List.of("ViewFlightBoard", "ViewShip"));
 
         commands.addAll(Client.view.getState().getAvailableVisualizers());
 

@@ -17,7 +17,7 @@ public final class LoginState extends ConnectedState {
     public List<String> getAvailableCommands() {
         final List<String> actions = new ArrayList<>();
 
-        actions.add("login");
+        actions.add("Login");
         actions.addAll(super.getAvailableCommands());
 
         return actions;
