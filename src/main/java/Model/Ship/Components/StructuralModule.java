@@ -61,7 +61,7 @@ public class StructuralModule extends SpaceshipComponent {
     }
 
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
@@ -69,8 +69,9 @@ public class StructuralModule extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
         righe[1] = "║  STRUC  ║";
+        righe[2] = "║         ║";
 
-        righe[2] = String.format("%s%s%s",
+        righe[3] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
                 "    " + this.getOrientation().getFreccia(),
@@ -78,10 +79,11 @@ public class StructuralModule extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-        righe[3] = "║         ║";
+
+        righe[4] = "║         ║";
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

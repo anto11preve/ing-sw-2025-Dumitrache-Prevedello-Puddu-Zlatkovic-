@@ -1316,7 +1316,7 @@ public class GameTest {
         try {
             // We can't directly test main with different var values,
             // but we can test the logic that would be executed
-            String[] args = {};
+            String[] args = {"0"};
             
             // Test case 1 logic by reflection or direct execution
             // This covers the uncovered switch case 1 branch

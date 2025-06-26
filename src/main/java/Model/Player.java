@@ -16,6 +16,10 @@ public final class Player implements Serializable, Cloneable {
     private ShipBoard shipBoard;
     private int credits;
     private int junk;
+    private boolean error = false;
+    private String errorMessage=null;
+
+
 
 
 
@@ -105,4 +109,11 @@ public final class Player implements Serializable, Cloneable {
         this.credits = old.credits;
         this.junk = old.junk;
     }
+
+    public boolean isError() {return error;}
+
+    public void setError(boolean error) {this.error = error;}
+
+    public void setErrorMessage(String errorMessage) {this.errorMessage = errorMessage;}
+    public String getErrorMessage() {return errorMessage;}
 }

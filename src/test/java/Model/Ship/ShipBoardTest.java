@@ -26,7 +26,7 @@ public class ShipBoardTest {
     public void testAddComponent() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
         Cabin cabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-        Coordinates coords = new Coordinates(7, 7);
+        Coordinates coords = new Coordinates(7, 6);
         
         board.addComponent(cabin, coords);
         assertEquals(cabin, board.getComponent(coords));
@@ -324,30 +324,34 @@ public class ShipBoardTest {
     @Test
     public void testAreComponentsConnectedWithIncompatibleConnectors() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        Cabin cabin1 = new Cabin(Card.CABIN, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
         Cabin cabin2 = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.DOUBLE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
-        
-        board.addComponent(cabin1, new Coordinates(8, 7));
+        Cabin cabin1 = new Cabin(Card.CABIN, ConnectorType.SINGLE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+
+
         board.addComponent(cabin2, new Coordinates(7, 7));
+        board.addComponent(cabin1, new Coordinates(8, 7));
+
         
         // The current implementation of areComponentsConnected has a bug in the direction checking
         // It's checking row differences for horizontal connections and column differences for vertical connections
         // This should be fixed in the ShipBoard class, but for now we'll update the test to match the actual behavior
-        assertTrue(board.areComponentsConnected(cabin1, cabin2));
+        assertFalse(board.areComponentsConnected(cabin1, cabin2));
     }
 
     @Test
     public void testAreComponentsConnectedWithNoneConnectors() throws InvalidMethodParameters {
         ShipBoard board = new ShipBoard();
-        Cabin cabin1 = new Cabin(Card.CABIN, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
         Cabin cabin2 = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+        Cabin cabin1 = new Cabin(Card.CABIN, ConnectorType.NONE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
+
         
-        board.addComponent(cabin1, new Coordinates(8, 7));
+
         board.addComponent(cabin2, new Coordinates(7, 7));
+        board.addComponent(cabin1, new Coordinates(8, 7));
         
         // Due to the same direction checking bug, we need to update this test
         // The current implementation will check the wrong connectors for these positions
-        assertTrue(board.areComponentsConnected(cabin1, cabin2));
+        assertFalse(board.areComponentsConnected(cabin1, cabin2));
     }
 
     @Test

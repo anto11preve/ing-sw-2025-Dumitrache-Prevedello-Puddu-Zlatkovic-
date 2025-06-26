@@ -111,16 +111,17 @@ public class BatteryCompartment extends SpaceshipComponent {
     }
 
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
                 this.getConnectorAt(Side.FRONT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.FRONT).getNumero()) : "═");
 
-        righe[1] = "║  BATRY  ║";
+        righe[1] = "║ BATTERY ║";
+        righe[2] = "║ COMPART ║";
 
-        righe[2] = String.format("%s%s%s",
+        righe[3] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
                 "    " + this.getOrientation().getFreccia(),
@@ -128,10 +129,10 @@ public class BatteryCompartment extends SpaceshipComponent {
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
-        righe[3] = String.format("║    %d    ║", this.getBatteries());
+        righe[4] = String.format("║    %d    ║", this.getBatteries());
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

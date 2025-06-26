@@ -216,7 +216,7 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
         assertTrue(bigRender[1].contains("CABIN"));
     }
 
@@ -227,8 +227,8 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
-        assertTrue(bigRender[3].contains("1 HUM"));
+        assertEquals(6, bigRender.length);
+        assertTrue(bigRender[4].contains("1 HUM"));
     }
 
     @Test
@@ -238,8 +238,8 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
-        assertTrue(bigRender[3].contains("2 HUM"));
+        assertEquals(6, bigRender.length);
+        assertTrue(bigRender[4].contains("2 HUM"));
     }
 
     @Test
@@ -249,8 +249,8 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
-        assertTrue(bigRender[3].contains("BROWN"));
+        assertEquals(6, bigRender.length);
+        assertTrue(bigRender[4].contains("BROWN"));
     }
 
     @Test
@@ -260,8 +260,8 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
-        assertTrue(bigRender[3].contains("PURPLE"));
+        assertEquals(6, bigRender.length);
+        assertTrue(bigRender[4].contains("PURPLE"));
     }
 
     @Test
@@ -274,6 +274,6 @@ public class CabinTest {
         
         String[] bigRender = cabin.renderBig();
         assertNotNull(bigRender);
-        assertEquals(5, bigRender.length);
+        assertEquals(6, bigRender.length);
     }
 }

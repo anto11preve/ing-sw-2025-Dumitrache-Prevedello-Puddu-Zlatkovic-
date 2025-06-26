@@ -260,7 +260,7 @@ public class LoginCommandTest {
             controller.login("ExistingPlayer");
             
             LoginCommand duplicateCommand = new LoginCommand("ExistingPlayer");
-            assertThrows(NullPointerException.class, () -> duplicateCommand.execute(controller));
+            assertThrows(InvalidParameters.class, () -> duplicateCommand.execute(controller));
         } catch (Exception e) {
             // Expected due to Server.server being null or Player constructor issues
             assertTrue(true);
@@ -375,7 +375,11 @@ public class LoginCommandTest {
                 new LoginCommand("Player" + i).execute(controller);
                 assertEquals(i, controller.getModel().getPlayers().size());
             }
-            
+
+
+
+            assertEquals(4, controller.getModel().getPlayers().size());
+
             // One more should fail
             assertThrows(InvalidParameters.class, () -> 
                 new LoginCommand("Player5").execute(controller));

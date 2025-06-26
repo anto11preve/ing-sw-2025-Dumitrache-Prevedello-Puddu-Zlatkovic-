@@ -131,17 +131,19 @@ public class CondensedShipTest {
 
     @Test
     public void testCanContainAliens() {
-        CondensedShip ship = new CondensedShip();
-        assertFalse(ship.canContainBrown());
-        assertFalse(ship.canContainPurple());
+        ShipBoard ship=new ShipBoard();
+        CondensedShip condensedShip = ship.getCondensedShip();
+        assertFalse(condensedShip.canContainBrown());
+        assertFalse(condensedShip.canContainPurple());
         
         Cabin cabin = new Cabin(Card.CABIN, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, Crewmates.EMPTY);
         cabin.setCanContainBrown(1);
         cabin.setCanContainPurple(1);
-        ship.addCabin(cabin);
+        cabin.setShipBoard(ship);
+        condensedShip.addCabin(cabin);
         
-        assertTrue(ship.canContainBrown());
-        assertTrue(ship.canContainPurple());
+        assertTrue(condensedShip.canContainBrown());
+        assertTrue(condensedShip.canContainPurple());
     }
 
     @Test

@@ -5,7 +5,6 @@ import Controller.Exceptions.InvalidCommand;
 import Controller.Exceptions.InvalidParameters;
 import Controller.RealTimeBuilding.HourGlassFinishedState;
 import Model.Ship.Coordinates;
-import Model.Enums.Direction;
 import Controller.Enums.*;
 
 import java.util.HashMap;
@@ -44,10 +43,10 @@ public class TestStateManager {
 
 
         // Building phase with 1 wrong ship in Level 2
-        saveGameSnapshot("build_end_2_good_1_bad_L2", finishedBuilding1wrongL2(MatchLevel.LEVEL2));
+        saveGameSnapshot("build_end_2_good_1_bad_L2", finishedBuilding1wrong(MatchLevel.LEVEL2));
 
         // Building phase with 1 wrong ship in Trial
-        saveGameSnapshot("build_end_2_good_1_bad_Trial", finishedBuilding1wrongL2(MatchLevel.TRIAL));
+        saveGameSnapshot("build_end_2_good_1_bad_Trial", finishedBuilding1wrong(MatchLevel.TRIAL));
 
         // Building phase with all valid ships in Level 2
         saveGameSnapshot("build_end_2_good_L2", finishedBuildingAllValid(MatchLevel.LEVEL2));
@@ -98,12 +97,12 @@ public class TestStateManager {
 
 
     // State creation methods
-    private static GameSnapshot createEmptyLobbyTrial() {
+    public static GameSnapshot createEmptyLobbyTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 1);
         return new GameSnapshot(controller, "Empty lobby - no players");
     }
 
-    private static GameSnapshot createLobbyWith2PlayersTrial() {
+    public static GameSnapshot createLobbyWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 2);
         try {
             controller.login("Anna");
@@ -114,7 +113,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Lobby with 2 players");
     }
 
-    private static GameSnapshot createLobbyWith4PlayersTrial() {
+    public static GameSnapshot createLobbyWith4PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 3);
         try {
             controller.login("Anna");
@@ -127,7 +126,20 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Full lobby with 4 players");
     }
 
-    private static GameSnapshot createBuildingWith2PlayersTrial() {
+    public static GameSnapshot createLobbyWith4Players(MatchLevel matchLevel) {
+        Controller controller = new Controller(matchLevel, 3);
+        try {
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.login("Carl");
+            controller.login("Diana");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        return new GameSnapshot(controller, "Full lobby with 4 players");
+    }
+
+    public static GameSnapshot createBuildingWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 4);
         try {
             controller.login("Anna");
@@ -139,7 +151,7 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Building phase just started");
     }
 
-    private static GameSnapshot createBuildingWith2PlayersLevel2() {
+    public static GameSnapshot createBuildingWith2PlayersLevel2() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 4);
         try {
             controller.login("Anna");
@@ -151,7 +163,19 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Building phase just started");
     }
 
-    private static GameSnapshot finishedBuilding1wrongL2(MatchLevel level) {
+    public static GameSnapshot createBuildingWith4Players(MatchLevel matchLevel) {
+        Controller controller = new Controller(matchLevel, 4);
+        try {
+            controller= createLobbyWith4Players(matchLevel).getController();
+            controller.startGame("Anna");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        return new GameSnapshot(controller, "Building phase just started");
+    }
+
+
+    public static GameSnapshot finishedBuilding1wrong(MatchLevel level) {
         Controller controller = new Controller(level, 1);
         try {
             controller.login("Anna");
@@ -174,7 +198,7 @@ public class TestStateManager {
 
     }
 
-    private static GameSnapshot finishedBuildingAllValid(MatchLevel level) {
+    public static GameSnapshot finishedBuildingAllValid(MatchLevel level) {
         Controller controller = new Controller(level, 1);
         try {
             controller.login("Anna");
@@ -194,7 +218,7 @@ public class TestStateManager {
 
     }
 
-    private static GameSnapshot finishedBuildingAllValidNoAlien() {
+    public static GameSnapshot finishedBuildingAllValidNoAlien() {
         Controller controller = new Controller(MatchLevel.LEVEL2, 1);
         try {
             controller.login("Anna");
@@ -209,6 +233,30 @@ public class TestStateManager {
 
         return new GameSnapshot(controller, "Finished building phase with alien support ship in Level 2");
 
+    }
+
+    public static GameSnapshot hourGlassToFlight() {
+        GameSnapshot snapshot = finishedBuildingAllValidNoAlien();
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, no aliens in any ship");
+    }
+
+    public static GameSnapshot hourGlassToAliens() {
+        GameSnapshot snapshot = finishedBuildingAllValid(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, aliens  can be placed in some ships");
+    }
+
+    public static GameSnapshot hourGlassToFix() {
+        GameSnapshot snapshot = finishedBuilding1wrong(MatchLevel.LEVEL2);
+        Controller controller = snapshot.getController();
+        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
+
+        return new GameSnapshot(controller, "Hourglass finished, one ship is wrong, needs fixing");
     }
 
     public static GameSnapshot flightPhase2Players(MatchLevel level) {
@@ -239,82 +287,56 @@ public class TestStateManager {
 
     }
 
-    public static GameSnapshot hourGlassToFlight() {
-        GameSnapshot snapshot = finishedBuildingAllValidNoAlien();
-        Controller controller = snapshot.getController();
-        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
-
-        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, no aliens in any ship");
-    }
-
-    public static GameSnapshot hourGlassToAliens() {
-        GameSnapshot snapshot = finishedBuildingAllValid(MatchLevel.LEVEL2);
-        Controller controller = snapshot.getController();
-        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
-
-        return new GameSnapshot(controller, "Hourglass finished, all ships are correct, aliens  can be placed in some ships");
-    }
-
-    public static GameSnapshot hourGlassToFix() {
-        GameSnapshot snapshot = finishedBuilding1wrongL2(MatchLevel.LEVEL2);
-        Controller controller = snapshot.getController();
-        controller.getModel().setState(new HourGlassFinishedState(controller, new HashMap<>()));
-
-        return new GameSnapshot(controller, "Hourglass finished, one ship is wrong, needs fixing");
-    }
 
 
-
-
-
-
-    /**
-     * Creates a custom game state based on specific requirements
-     */
-    public static class GameSnapshotBuilder {
-        private Controller controller;
-        private MatchLevel matchLevel = MatchLevel.TRIAL;
-        private int gameId = 100;
-
-        public GameSnapshotBuilder withMatchLevel(MatchLevel level) {
-            this.matchLevel = level;
-            return this;
-        }
-
-        public GameSnapshotBuilder withGameId(int id) {
-            this.gameId = id;
-            return this;
-        }
-
-        public GameSnapshotBuilder withPlayers(String... playerNames) {
-            if (controller == null) {
-                controller = new Controller(matchLevel, gameId);
-            }
-            try {
-                for (String name : playerNames) {
-                    controller.login(name);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to add players", e);
-            }
-            return this;
-        }
-
-        public GameSnapshotBuilder startGame() {
-            try {
-                String admin = controller.getModel().getPlayers().get(0).getName();
-                controller.startGame(admin);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to start game", e);
-            }
-            return this;
-        }
-
-        public GameSnapshot build(String description) {
-            if (controller == null) {
-                controller = new Controller(matchLevel, gameId);
-            }
-            return new GameSnapshot(controller, description);
-        }
-    }
+//
+//    /**
+//     * Creates a custom game state based on specific requirements
+//     */
+//    public static class GameSnapshotBuilder {
+//        private Controller controller;
+//        private MatchLevel matchLevel = MatchLevel.TRIAL;
+//        private int gameId = 100;
+//
+//        public GameSnapshotBuilder withMatchLevel(MatchLevel level) {
+//            this.matchLevel = level;
+//            return this;
+//        }
+//
+//        public GameSnapshotBuilder withGameId(int id) {
+//            this.gameId = id;
+//            return this;
+//        }
+//
+//        public GameSnapshotBuilder withPlayers(String... playerNames) {
+//            if (controller == null) {
+//                controller = new Controller(matchLevel, gameId);
+//            }
+//            try {
+//                for (String name : playerNames) {
+//                    controller.login(name);
+//                }
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to add players", e);
+//            }
+//            return this;
+//        }
+//
+//        public GameSnapshotBuilder startGame() {
+//            try {
+//                String admin = controller.getModel().getPlayers().get(0).getName();
+//                controller.startGame(admin);
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to start game", e);
+//            }
+//            return this;
+//        }
+//
+//        public GameSnapshot build(String description) {
+//            if (controller == null) {
+//                controller = new Controller(matchLevel, gameId);
+//            }
+//            return new GameSnapshot(controller, description);
+//        }
+//    }
 }

@@ -112,7 +112,7 @@ public class ShieldGenerator extends SpaceshipComponent {
     }
 
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
@@ -124,8 +124,8 @@ public class ShieldGenerator extends SpaceshipComponent {
         righe[2] = String.format("%s%s%s",
                 (this.getConnectorAt(Side.LEFT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.LEFT).getNumero()) : "║"),
-                "    " + this.getOrientation().getFreccia(),
-                "    " + (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ?
+                "         ",
+                (this.getConnectorAt(Side.RIGHT).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.RIGHT).getNumero()) : "║")
         );
 
@@ -143,9 +143,10 @@ public class ShieldGenerator extends SpaceshipComponent {
                 righe[3] = "║   ← ↑   ║";
                 break;
         }
+        righe[4] = "║         ║";
 
         // Riga inferiore
-        righe[4] = String.format("╚══  %s  ══╝",
+        righe[5] = String.format("╚══  %s  ══╝",
                 this.getConnectorAt(Side.REAR).getNumero() > 0 ?
                         String.valueOf(this.getConnectorAt(Side.REAR).getNumero()) : "═");
 

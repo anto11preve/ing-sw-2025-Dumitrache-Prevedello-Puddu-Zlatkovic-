@@ -31,6 +31,9 @@ public class Game implements Serializable, Cloneable {
     private boolean error = false;
     private final transient List<ShipBoard> preBuiltShips;
     private final transient Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
+    private String errorMessage=null;
+
+
 
 
 
@@ -38,6 +41,19 @@ public class Game implements Serializable, Cloneable {
     public static void main(String[] args) {
 
         int var=0;
+
+        if (args.length >0) {
+            try {
+                var= Integer.parseInt(args[0]);
+                System.out.println("Hai inserito il numero: " + var);
+            } catch (NumberFormatException e) {
+                System.out.println("L'argomento non è un intero valido.");
+            }
+        }
+
+
+
+
         // This variable can be set to 0, 1, or 2 to test different functionalities
         // 0: Pre-built ships
         // 1: Component loader and modification
@@ -578,6 +594,9 @@ public class Game implements Serializable, Cloneable {
             default -> "  " + rank + "  ";
         };
     }
+
+    public void setErrorMessage(String errorMessage) {this.errorMessage = errorMessage;}
+    public String getErrorMessage() {return errorMessage;}
 }
 
 
