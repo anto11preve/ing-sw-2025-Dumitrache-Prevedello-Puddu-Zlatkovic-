@@ -19,19 +19,20 @@ import java.util.List;
  * Players must remove crew members until they have no remaining required removals.
  */
 public class SlaversCrewRemovalState extends State {
-    /**
-     * Context object that holds the game state and player information.
-     */
-   
+
+
+   private int crewmates;
 
     /**
      * Constructor to initialize the state with the current game context.
      *
      * @param context the shared game context
      */
-    public SlaversCrewRemovalState(Context context) {
+    public SlaversCrewRemovalState(Context context, int crewmates) {
         super(context);
+        this.crewmates = crewmates;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
+
     }
 
     /**
@@ -82,40 +83,42 @@ public class SlaversCrewRemovalState extends State {
                 if (context.getCrewmates() > 0) {
                     //se non ho più crew (atterraggio anticipato a fine carta)
                     if (player.getShipBoard().getCondensedShip().getTotalCrew() > 0) {
-                        controller.getModel().setState(new SlaversCrewRemovalState(context));
+                        controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates));
                         controller.getModel().setError(false);
                     } else {
                         context.removeSpecialPlayer(player);
-                        if(context.getPlayers().isEmpty()){         //passati tutti
+                        if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                             controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
                             controller.getModel().setError(false);
                         }
                         else{       //manca qualcuno da gestire
-                            controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
+                            controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
                             controller.getModel().setError(false);
                         }
                     }
                 } //se non devo più togliere gente
                 else {
                     context.removeSpecialPlayer(player);
-                    if(context.getPlayers().isEmpty()){         //passati tutti
+                    if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                         controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
                         controller.getModel().setError(false);
                     }
                     else{       //manca qualcuno da gestire
-                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
+                        context.setCrewmates(crewmates);
+                        controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
                         controller.getModel().setError(false);
                     }
                 }
             }
             else{
                 context.removeSpecialPlayer(player);
-                if(context.getPlayers().isEmpty()){         //passati tutti
+                if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
                     controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire
-                    controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
+                    context.setCrewmates(crewmates);
+                    controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
                     controller.getModel().setError(false);
                 }
             }

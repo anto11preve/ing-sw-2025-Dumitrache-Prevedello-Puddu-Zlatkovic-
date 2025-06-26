@@ -6,6 +6,7 @@ import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.Slavers.SlaversBatteryRemovalState;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -100,8 +101,12 @@ public class SmugglersBatteryRemovalState extends State{
             } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
-                    controller.getModel().setError(false);
+                    if (!context.getSpecialPlayers().isEmpty()) {
+                        controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    } else{
+                        controller.getModel().setState(new FlightPhase(controller));
+                    }
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire

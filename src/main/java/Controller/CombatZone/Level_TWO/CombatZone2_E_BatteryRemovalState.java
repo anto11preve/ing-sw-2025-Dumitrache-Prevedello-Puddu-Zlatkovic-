@@ -67,7 +67,7 @@ public class CombatZone2_E_BatteryRemovalState extends State {
 
         if (batteries > 0) {
             SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
-            if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
+            if(component == null && !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
                 controller.getModel().setError(true);
                 throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
             }

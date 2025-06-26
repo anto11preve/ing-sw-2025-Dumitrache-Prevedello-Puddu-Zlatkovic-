@@ -124,7 +124,7 @@ public class SmugglersGoodsRemovalState extends State{
             throw new InvalidParameters("Invalid index");
         }
 
-        GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(amount);
+        GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(context.getRequiredGoods());
         if(goodCounter.getRed() + goodCounter.getBlue() + goodCounter.getGreen() + goodCounter.getYellow() == 0){       //non ha abbastanza goods da scartare
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){   //se almeno ha delle batterie
                 controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
@@ -160,14 +160,14 @@ public class SmugglersGoodsRemovalState extends State{
             throw new InvalidContextualAction("Need to remove another type of good");
         }
         cargoHold.removeGood(oldIndex);
-        amount--;
         context.removeRequiredGood();
-        if(amount == 0){
+        if(context.getRequiredGoods() == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
                 controller.getModel().setState(new FlightPhase(controller));
                 controller.getModel().setError(false);
             } else {
+                context.setRequiredGoods(amount);
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
                 controller.getModel().setError(false);
             }

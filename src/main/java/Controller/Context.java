@@ -33,6 +33,9 @@ public class Context implements Serializable {
     private int daysLost;
     private int diceNumber;
     private SerializableRunnable visual;
+    private AdventureCardFilip adventureCard;
+
+
 
 
     public Context(Controller controller) {
@@ -276,7 +279,7 @@ public class Context implements Serializable {
                         break;
                     }
                     case 1 -> {
-                        this.requiredGoods = ((CrewPenalty) line.getPenalty()).getAmount();
+                        this.requiredGoods = ((GoodsPenalty) line.getPenalty()).getAmount();
                         i++;
                         break;
                     }
@@ -359,6 +362,10 @@ public class Context implements Serializable {
         return crewmates;
     }
 
+    public void setCrewmates(int crewmates) {
+        this.crewmates = crewmates;
+    }
+
     public void removeCrewmate() {
         if (crewmates > 0) {
             crewmates--;
@@ -367,6 +374,10 @@ public class Context implements Serializable {
 
     public List<Good> getGoods() {
         return goods;
+    }
+
+    public void setGoods(List<Good> goods) {
+        this.goods = goods;
     }
 
 
@@ -403,6 +414,10 @@ public class Context implements Serializable {
 
     public int getRequiredGoods() {
         return requiredGoods;
+    }
+
+    public void setRequiredGoods(int requiredGoods) {
+        this.requiredGoods = requiredGoods;
     }
 
     public void removeRequiredGood() {

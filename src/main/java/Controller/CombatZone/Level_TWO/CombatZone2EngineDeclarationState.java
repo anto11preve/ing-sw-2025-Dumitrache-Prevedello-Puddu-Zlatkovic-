@@ -98,7 +98,7 @@ public class CombatZone2EngineDeclarationState extends State {
             }
         } else {
             if (amount == player.getShipBoard().getCondensedShip().getBaseThrust()) {
-                if(amount > worst){
+                if(amount < worst){
                     context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
                     context.addSpecialPlayer(player);
                     worst = amount;

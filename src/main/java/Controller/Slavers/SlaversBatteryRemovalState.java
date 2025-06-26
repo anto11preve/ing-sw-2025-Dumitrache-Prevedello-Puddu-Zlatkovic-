@@ -6,6 +6,7 @@ import Controller.Enums.ItemType;
 import Controller.Enums.RewardType;
 import Controller.Exceptions.InvalidContextualAction;
 import Controller.Exceptions.InvalidParameters;
+import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Player;
 import Model.Ship.Components.BatteryCompartment;
@@ -105,8 +106,14 @@ public class SlaversBatteryRemovalState extends State{
             } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
-                    controller.getModel().setError(false);
+                    if (!context.getSpecialPlayers().isEmpty()) {
+                        controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
+                    else{
+                        controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
+                        controller.getModel().setError(false);
+                    }
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
@@ -117,7 +124,7 @@ public class SlaversBatteryRemovalState extends State{
                 context.removePlayer(player);
                 context.addSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
+                    controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
                     controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire

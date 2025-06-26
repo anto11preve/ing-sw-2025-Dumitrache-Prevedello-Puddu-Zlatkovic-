@@ -83,6 +83,13 @@ public class PlanetsLandState extends State {
             controller.getModel().setError(true);
             throw new InvalidContextualAction("The planet is not occupied");
         }
+
+//        Goods rewards = planet.getLandingReward();
+//        if(!rewards.iterator().hasNext()){
+//            controller.getModel().setError(true);
+//            throw new InvalidContextualAction("There are no goods to collect from this planet");
+//        }
+
         if(CargoHoldIndex < 0 || CargoHoldIndex >= cargoHold.getCapacity()) {
             controller.getModel().setError(true);
             throw new InvalidParameters("Invalid cargo hold index");
@@ -126,21 +133,8 @@ public class PlanetsLandState extends State {
             }
         }
 
-        Goods rewards = planet.getLandingReward();
-        if(!rewards.iterator().hasNext()) {
-            chosenPlanets.removeFirst();
-            context.removeSpecialPlayer(player);
-            if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {
-                controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
-            } else {
-                controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-                controller.getModel().setError(false);
-            }
-        } else {
-            controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-            controller.getModel().setError(false);
-        }
+        controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
+        controller.getModel().setError(false);
 
     }
 

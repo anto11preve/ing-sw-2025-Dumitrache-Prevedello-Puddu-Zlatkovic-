@@ -101,7 +101,7 @@ public class CombatZone2GoodsRemovalState extends State {
                         currentPlayer = nextPlayer;
                     }
                 }
-                context.addSpecialPlayer(player);
+                context.addSpecialPlayer(currentPlayer);
                 controller.getModel().setState(new CombatZone2CannonShotsState(context));
                 controller.getModel().setError(false);
 

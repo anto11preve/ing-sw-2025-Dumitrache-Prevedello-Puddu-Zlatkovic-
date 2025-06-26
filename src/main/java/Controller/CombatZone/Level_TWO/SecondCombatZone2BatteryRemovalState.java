@@ -23,6 +23,7 @@ public class SecondCombatZone2BatteryRemovalState extends State {
     public SecondCombatZone2BatteryRemovalState(Context context, int amount) {
         super(context);
         this.amount = amount;
+        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SecondCombatZone2BatteryRemovalState extends State {
         }
 
         Player player = controller.getModel().getPlayer(playerName);
-        if(!player.equals(context.getPlayers().getFirst())) {
+        if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
             throw new InvalidParameters("It's not the player's turn");
         }
@@ -61,13 +62,13 @@ public class SecondCombatZone2BatteryRemovalState extends State {
         if(amount == 0){
             int numPlayers = controller.getModel().getFlightBoard().getTurnOrder().length;
             Player currentPlayer = controller.getModel().getFlightBoard().getTurnOrder()[0];
-            for(int i = 0; i<numPlayers; i++){
+            for(int i = 0; i<numPlayers-1; i++){
                 Player nextPlayer = controller.getModel().getFlightBoard().getTurnOrder()[(i+1)];
                 if(nextPlayer.getShipBoard().getCondensedShip().getTotalCrew() > currentPlayer.getShipBoard().getCondensedShip().getTotalCrew()){
                     currentPlayer = nextPlayer;
                 }
             }
-            context.addSpecialPlayer(player);
+            context.addSpecialPlayer(currentPlayer);
             controller.getModel().setState(new CombatZone2CannonShotsState(context));
             controller.getModel().setError(false);
         }

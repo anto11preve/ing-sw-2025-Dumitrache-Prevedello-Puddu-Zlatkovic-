@@ -19,6 +19,7 @@ public class CombatZone2PowerDeclarationState extends State {
 
     public CombatZone2PowerDeclarationState(Context context) {
         super(context);
+        this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
     public CombatZone2PowerDeclarationState(Context context, double worst) {
@@ -111,7 +112,9 @@ public class CombatZone2PowerDeclarationState extends State {
         } else {
             if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
                 if(amount < worst){
-                    context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    if (context.getSpecialPlayers().getFirst() != null) {
+                        context.removeSpecialPlayer(context.getSpecialPlayers().getFirst());
+                    }
                     context.addSpecialPlayer(player);
                     worst = amount;
                 }
