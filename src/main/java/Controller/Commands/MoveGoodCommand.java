@@ -145,4 +145,43 @@ public class MoveGoodCommand extends Command {
             }
         };
     }
+
+    public static CommandConstructor getRemoveConstructor() {
+        return new CommandConstructor() {
+            @Override
+            public Command create(String username, Map<String, String> args) throws IllegalArgumentException {
+                final int row;
+                try{
+                    row = Integer.parseInt(args.get("row"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the row. Did you provide an Integer?");
+                }
+
+                final int column;
+                try{
+                    column = Integer.parseInt(args.get("oldColumn"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the column. Did you provide an Integer?");
+                }
+
+                final int index;
+                try{
+                    index = Integer.parseInt(args.get("index"));
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("Could not parse the index. Did you provide an Integer?");
+                }
+
+
+                return new MoveGoodCommand(username,
+                        new Coordinates(row, column),
+                        null,
+                        index, index);
+            }
+
+            @Override
+            public List<String> getArguments() {
+                return List.of("row", "column", "index");
+            }
+        };
+    }
 }

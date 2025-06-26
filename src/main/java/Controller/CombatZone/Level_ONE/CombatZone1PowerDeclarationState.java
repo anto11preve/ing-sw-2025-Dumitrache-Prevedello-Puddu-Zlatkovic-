@@ -133,7 +133,7 @@ public class CombatZone1PowerDeclarationState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "DeclaresDoubleCannon"
+        return List.of( "DeclareFirePower"
         );
     }
 }

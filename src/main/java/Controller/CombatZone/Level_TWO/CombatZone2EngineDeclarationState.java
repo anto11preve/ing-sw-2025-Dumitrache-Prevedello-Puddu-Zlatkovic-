@@ -120,6 +120,6 @@ public class CombatZone2EngineDeclarationState extends State {
     }
 
     public List<String> getAvailableCommands(){
-        return List.of( "DeclaresDoubleEngine");
+        return List.of( "DeclareEnginePower");
     }
 }

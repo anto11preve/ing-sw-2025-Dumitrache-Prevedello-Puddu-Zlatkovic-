@@ -30,8 +30,8 @@ public interface CommandConstructor {
         if(commandConstructors.isEmpty()) {
             commandConstructors.putAll(Map.of(
                     "ChoosePlanet", ChoosePlanetCommand.getConstructor(),
-                    "DeclaresDoubleCannon", DeclaresDoubleCommand.getCannonConstructor(),
-                    "DeclaresDoubleEngine", DeclaresDoubleCommand.getEngineConstructor(),
+                    "DeclareFirePower", DeclaresDoubleCommand.getCannonConstructor(),
+                    "DeclareEnginePower", DeclaresDoubleCommand.getEngineConstructor(),
                     "DeleteComponent", DeleteComponentCommand.getConstructor(),
                     "End", EndCommand.getConstructor(),
                     "FinishBuilding", FinishBuildingCommand.getConstructor(),
@@ -61,7 +61,8 @@ public interface CommandConstructor {
                     "ThrowDices", ThrowDicesCommand.getConstructor(),
                     "UseBattery", UseItemCommand.getBatteriesConstructor(),
                     "UseCrew", UseItemCommand.getCrewConstructor(),
-                    "PreBuiltShip", PreBuiltShipCommand.getConstructor()
+                    "PreBuiltShip", PreBuiltShipCommand.getConstructor(),
+                    "RemoveGood", MoveGoodCommand.getRemoveConstructor()
             ));
         }
 
