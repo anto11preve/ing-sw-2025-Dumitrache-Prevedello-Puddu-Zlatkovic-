@@ -9,9 +9,7 @@ import View.Client.ClientState;
 import View.Client.Visualizes.ViewComponent;
 import View.Client.Visualizes.ViewShipBoard;
 import View.Client.Visualizes.Visualize;
-import View.States.ViewCardState;
-import View.States.ViewFlightBoardState;
-import View.States.ViewTilesState;
+import View.States.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +44,9 @@ public interface ActionConstructor {
                     "ViewCard", _ -> (Visualize) ViewCardState::new,
                     "ViewComponent", ViewComponent.getConstructor(),
                     "ViewFlightBoard", _ -> (Visualize) ViewFlightBoardState::new,
-                    "ViewShipBoard", ViewShipBoard.getConstructor(),
-                    "ViewTiles", _ -> (Visualize) ViewTilesState::new
+                    "ViewShip", ViewShipBoard.getConstructor(),
+                    "ViewTiles", _ -> (Visualize) ViewTilesState::new,
+                    "ViewRewards", _ -> (Visualize) ViewRewardsState::new
             ));
 
             /*Controller commands*/
