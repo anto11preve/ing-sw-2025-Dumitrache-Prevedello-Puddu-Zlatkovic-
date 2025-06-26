@@ -134,7 +134,7 @@ public class ShipBoard implements Serializable {
         for(int i=0; i<ROWS; i++){
             for(int j=0; j<COLS; j++){
                 if (components[i][j] != null) {
-                    if ((i!=2)&&(j!=3)) {
+                    if ((i!=2)||(j!=3)) {
                         return false;
                     }
                 }

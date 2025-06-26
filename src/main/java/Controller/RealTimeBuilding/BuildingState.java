@@ -342,7 +342,7 @@ public class BuildingState extends State {
             Map<Player, CardDeck> bookedDecks=flightBoard.getBookedDecks();
 
             if(bookedDecks.values().contains(deck)){
-                throw new InvalidCommand("Booked deck");
+                throw new InvalidParameters("Booked deck");
             }else{
                 SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
                 if (oldTile != null) {

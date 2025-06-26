@@ -205,7 +205,6 @@ public class Controller implements Agent {
 
                     }else{
                         this.model.setErrorMessage("Error: "+e.getMessage());
-                        System.out.println("Player "+command.getPlayerName()+" has no valid player");
                     }
                 }
 

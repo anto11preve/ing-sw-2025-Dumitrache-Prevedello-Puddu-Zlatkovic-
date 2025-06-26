@@ -18,11 +18,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Random;
+
+import java.util.*;
 
 public class BuildingStateTest {
 
@@ -251,8 +248,10 @@ public class BuildingStateTest {
         try {
             testController.getComponent("Anna", 1);
         } catch (InvalidCommand e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (InvalidParameters e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -267,12 +266,14 @@ public class BuildingStateTest {
         assertEquals(tilePickedOld, anna.getShipBoard().getActiveComponent()); //controlla che la carta sia arrivata in mano
         anna.getShipBoard().render(MatchLevel.LEVEL2);
 
-        tilePicked =testController.getModel().getTiles()[1];
+        tilePicked =testController.getModel().getTiles()[2];
         try {
-            testController.getComponent("Anna", 1);
+            testController.getComponent("Anna", 2);
         } catch (InvalidCommand e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (InvalidParameters e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -569,28 +570,28 @@ public class BuildingStateTest {
             first = anna.getShipBoard().getActiveComponent();
             controller.reserveComponent("Anna");
 
-            controller.getComponent("Anna", 1);
-            second = anna.getShipBoard().getActiveComponent();
-            controller.reserveComponent("Anna");
+
         } catch (Exception e) {
             fail("Failed to reserve components: " + e.getMessage());
         }
 
-        assertEquals(2, anna.getShipBoard().getReservedComponents().size());
+        assertEquals(1, anna.getShipBoard().getReservedComponents().size());
 
         // Cannot place second reserved if less than 2
-        anna.getShipBoard().getReservedComponents().remove(1);
         assertDoesNotThrow(() -> controller.getComponent("Anna", 1));
         assertDoesNotThrow(() -> controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(6, 7), Direction.UP));
-        assertThrows(InvalidCommand.class,
+        assertThrows(InvalidParameters.class,
                 () -> controller.placeComponent("Anna", ComponentOrigin.SECOND_RESERVED, new Coordinates(6, 7), Direction.UP));
 
-        // Restore and test successful placement
-        anna.getShipBoard().getReservedComponents().add(second);
 
         try {
-            controller.placeComponent("Anna", ComponentOrigin.SECOND_RESERVED, new Coordinates(6, 7), Direction.UP);
+            controller.getComponent("Anna", 100);
+            second = anna.getShipBoard().getActiveComponent();
+            controller.reserveComponent("Anna");
+            assertEquals(2, anna.getShipBoard().getReservedComponents().size());
+            controller.placeComponent("Anna", ComponentOrigin.SECOND_RESERVED, new Coordinates(8, 7), Direction.UP);
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to place second reserved: " + e.getMessage());
         }
 
@@ -694,9 +695,61 @@ public class BuildingStateTest {
         assertThrows(InvalidCommand.class, () -> trialController.lookDeck("Anna", 1));
 
         // Level 2 - should work (assuming proper implementation)
-        Controller level2Controller = TestStateManager.createBuildingWith2PlayersLevel2().getController();
+        Controller level2Controller = TestStateManager.createBuildingWith4Players(MatchLevel.LEVEL2).getController();
         assertDoesNotThrow(() -> level2Controller.getComponent("Anna", 1));
+        Player anna=level2Controller.getModel().getPlayer("Anna");
+        anna.getShipBoard().render(MatchLevel.LEVEL2);
+        assertThrows(InvalidCommand.class,() -> level2Controller.lookDeck("Anna", 1));
+        assertDoesNotThrow(() -> level2Controller.placeComponent("Anna", ComponentOrigin.HAND, new Coordinates(6, 7), Direction.UP));
         assertDoesNotThrow(() -> level2Controller.lookDeck("Anna", 1));
+
+
+
+        Player bob=level2Controller.getModel().getPlayer("Bob");
+        bob.getShipBoard().render(MatchLevel.LEVEL2);
+        assertThrows(InvalidCommand.class,() -> level2Controller.lookDeck("Bob", 2));
+        assertDoesNotThrow(() -> level2Controller.getComponent("Bob", 2));
+        assertDoesNotThrow(() -> level2Controller.placeComponent("Bob", ComponentOrigin.HAND, new Coordinates(6, 7), Direction.UP));
+        assertThrows(InvalidParameters.class, () -> level2Controller.lookDeck("Bob", 1));
+        assertDoesNotThrow(() -> level2Controller.lookDeck("Bob", 2));
+
+        assertDoesNotThrow(() -> level2Controller.getComponent("Anna", 3));
+        //mazzo 1 ora dovrebbe essere libero
+
+
+        Player carl=level2Controller.getModel().getPlayer("Carl");
+        //carl.getShipBoard().render(MatchLevel.LEVEL2);
+        assertThrows(InvalidCommand.class,() -> level2Controller.lookDeck("Carl", 1));
+        assertDoesNotThrow(() -> level2Controller.getComponent("Carl", 4));
+        assertDoesNotThrow(() -> level2Controller.placeComponent("Carl", ComponentOrigin.HAND, new Coordinates(6, 7), Direction.UP));
+        assertThrows(InvalidParameters.class,() -> level2Controller.lookDeck("Carl", 2));
+        SpaceshipComponent oldActiveTile=level2Controller.getModel().getTiles()[5];
+
+        assertDoesNotThrow(() -> level2Controller.getComponent("Carl", 5));
+        SpaceshipComponent[] tilesArray = level2Controller.getModel().getTiles();
+        List<SpaceshipComponent> allOldTiles = new ArrayList<>();
+
+        for (SpaceshipComponent tile : tilesArray) {
+            if (tile != null) {
+                allOldTiles.add(tile);
+            }
+        }
+
+        assertDoesNotThrow(() -> level2Controller.lookDeck("Carl", 3));
+        tilesArray = level2Controller.getModel().getTiles();
+        List<SpaceshipComponent> allNewTiles = new ArrayList<>();
+
+        for (SpaceshipComponent tile : tilesArray) {
+            if (tile != null) {
+                allNewTiles.add(tile);
+            }
+        }
+        assertTrue(allNewTiles.containsAll(allOldTiles));
+        assertTrue(allNewTiles.contains(oldActiveTile));
+        System.out.println(allNewTiles.size());
+        System.out.println(allOldTiles.size());
+        assertTrue(allNewTiles.size()==allOldTiles.size()+1);
+        assertDoesNotThrow(() -> level2Controller.lookDeck("Carl", 3));
     }
 
     // ==================== FLIP HOURGLASS TESTS ====================

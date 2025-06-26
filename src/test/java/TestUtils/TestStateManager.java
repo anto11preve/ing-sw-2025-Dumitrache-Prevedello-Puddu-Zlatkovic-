@@ -126,6 +126,19 @@ public class TestStateManager {
         return new GameSnapshot(controller, "Full lobby with 4 players");
     }
 
+    public static GameSnapshot createLobbyWith4Players(MatchLevel matchLevel) {
+        Controller controller = new Controller(matchLevel, 3);
+        try {
+            controller.login("Anna");
+            controller.login("Bob");
+            controller.login("Carl");
+            controller.login("Diana");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        return new GameSnapshot(controller, "Full lobby with 4 players");
+    }
+
     public static GameSnapshot createBuildingWith2PlayersTrial() {
         Controller controller = new Controller(MatchLevel.TRIAL, 4);
         try {
@@ -149,6 +162,18 @@ public class TestStateManager {
         }
         return new GameSnapshot(controller, "Building phase just started");
     }
+
+    public static GameSnapshot createBuildingWith4Players(MatchLevel matchLevel) {
+        Controller controller = new Controller(matchLevel, 4);
+        try {
+            controller= createLobbyWith4Players(matchLevel).getController();
+            controller.startGame("Anna");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create test state", e);
+        }
+        return new GameSnapshot(controller, "Building phase just started");
+    }
+
 
     public static GameSnapshot finishedBuilding1wrong(MatchLevel level) {
         Controller controller = new Controller(level, 1);

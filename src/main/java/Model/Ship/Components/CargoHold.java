@@ -174,7 +174,7 @@ public class CargoHold extends SpaceshipComponent {
         if(this.isSpecial){
             righe[1] = "║ SPECIAL ║";
         }else{
-            righe[1] = "║ NORMAL ║";
+            righe[1] = "║ NORMAL  ║";
         }
         righe[2] = "║  CARGO  ║";
 
@@ -216,7 +216,7 @@ public class CargoHold extends SpaceshipComponent {
                 goodsLine.append(" ");
                 break;
             case 3:
-                goodsLine.append(" ");
+                //goodsLine.append(" ");
                 for (Good good : this.getGoods()) {
                     if (good == null) {
                         goodsLine.append("☐ ");

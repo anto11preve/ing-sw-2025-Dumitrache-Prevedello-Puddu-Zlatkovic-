@@ -113,7 +113,7 @@ public class ShieldGenerator extends SpaceshipComponent {
     }
 
     public String[] renderBig() {
-        String[] righe = new String[5];
+        String[] righe = new String[6];
 
         // Riga superiore
         righe[0] = String.format("╔══  %s  ══╗",
