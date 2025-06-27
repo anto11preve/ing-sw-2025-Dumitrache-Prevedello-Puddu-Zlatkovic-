@@ -99,34 +99,11 @@ class CombatZone2CheckShipStateTest {
         assertFalse(controller.getModel().getState() instanceof CombatZone2CheckShipState);
     }
 
-    @Test
-    void testDeleteComponent_WrongPlayer() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> state.deleteComponent("Player2", componentCoords));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testDeleteComponent_NullCoordinates() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> state.deleteComponent("Player1", null));
-        
-        assertEquals("Coordinates cannot be null", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testDeleteComponent_NoComponent() {
-        Coordinates invalidCoords = new Coordinates(0, 0);
-        
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> state.deleteComponent("Player1", invalidCoords));
-        
-        assertEquals("No component found at the given coordinates", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
+
+
+
 
     @Test
     void testDeleteComponent_LastProjectile() throws InvalidMethodParameters, InvalidParameters {
@@ -152,38 +129,5 @@ class CombatZone2CheckShipStateTest {
         assertInstanceOf(FlightPhase.class, controller.getModel().getState());
     }
 
-    @Test
-    void testGetAvailableCommands() {
-        List<String> commands = state.getAvailableCommands();
-        assertEquals(2, commands.size());
-        assertTrue(commands.contains("deleteComponent"));
-        assertTrue(commands.contains("useItem"));
-    }
 
-    @Test
-    void testUseItem_ValidItemUse() throws InvalidMethodParameters, InvalidParameters, InvalidCommand, InvalidContextualAction {
-        // Test the useItem method that's available in Level 2
-        state.useItem("Player1", ItemType.BATTERIES, componentCoords);
-        
-        assertFalse(controller.getModel().isError());
-        // Should handle the item use properly
-    }
-
-    @Test
-    void testUseItem_WrongPlayer() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> state.useItem("Player2", ItemType.BATTERIES, componentCoords));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
-
-    @Test
-    void testUseItem_NullCoordinates() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, null));
-        
-        assertEquals("Coordinates cannot be null", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 }

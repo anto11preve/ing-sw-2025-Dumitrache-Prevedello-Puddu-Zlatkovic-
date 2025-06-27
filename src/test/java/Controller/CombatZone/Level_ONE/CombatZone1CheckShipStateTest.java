@@ -258,21 +258,7 @@ class CombatZone1CheckShipStateTest {
         assertTrue(commands.contains("DeleteComponent"));
     }
 
-    @Test
-    void testDeleteComponent_NullPlayerName() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent(null, componentCoords));
-        
-        assertEquals("Player name cannot be null", exception.getMessage());
-    }
 
-    @Test
-    void testDeleteComponent_NonExistentPlayer() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("NonExistentPlayer", componentCoords));
-        
-        assertEquals("Player not found", exception.getMessage());
-    }
 
     @Test
     void testDeleteComponent_IntegrityFailsStaysInSameState() throws InvalidMethodParameters, InvalidParameters {

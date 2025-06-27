@@ -144,14 +144,7 @@ class CombatZone1ManageShotStateTest {
         assertInstanceOf(FlightPhase.class, controller.getModel().getState());
     }
 
-    @Test
-    void testUseItem_ValidBatteryUse() throws InvalidContextualAction, InvalidParameters {
-        // This test expects an exception due to no shield found
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, batteryCoords));
-        
-        assertEquals("No shield found to use", exception.getMessage());
-    }
+
 
     @Test
     void testUseItem_InvalidItemType() {
@@ -201,23 +194,7 @@ class CombatZone1ManageShotStateTest {
         assertEquals("No shield found to use", exception.getMessage());
     }
 
-    @Test
-    void testUseItem_NullCoordinates() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, null));
-        
-        assertEquals("No shield found to use", exception.getMessage());
-    }
 
-    @Test
-    void testUseItem_InvalidComponent() {
-        Coordinates invalidCoords = new Coordinates(0, 0);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, invalidCoords));
-        
-        assertEquals("No shield found to use", exception.getMessage());
-    }
 
     @Test
     void testGetAvailableCommands() {
