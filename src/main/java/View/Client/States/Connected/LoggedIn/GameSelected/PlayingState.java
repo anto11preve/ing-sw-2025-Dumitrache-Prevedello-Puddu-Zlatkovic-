@@ -68,7 +68,7 @@ public abstract class PlayingState extends GameSelectedState {
      *
      * @return A list of strings representing the available visualizers.
      */
-    /*Visualizers - TODO: make all these view agnostic*/
+    /*Visualizers*/
     @Override
     public void viewFlightBoard() {
         this.getGame().getFlightBoard().visualize(this.getGame().getState().getPlayerInTurn());

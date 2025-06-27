@@ -33,7 +33,6 @@ Networking
 Networking.Messages
 Networking.RMI
 Networking.TCP
-org.example.ing_sw_project
 View
 View.Client
 View.Client.Actions

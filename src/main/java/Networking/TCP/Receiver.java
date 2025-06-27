@@ -30,9 +30,6 @@ public class Receiver extends Thread {
                 if (this.network.isDone()) {
                     return;
                 }
-                /*TODO: implement better logging*/
-                System.err.println("Receiver.run(): got an IO error");
-                e.printStackTrace(System.err);
             } catch (ClassNotFoundException e) {
                 System.err.println("Receiver.run(): received something that is not a Serialized Object. Panic!");
                 throw new RuntimeException(e);

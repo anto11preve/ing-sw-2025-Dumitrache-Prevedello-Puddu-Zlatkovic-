@@ -53,7 +53,11 @@ public final class TUI extends View {
         log = message;
     }
 
-    //TODO: DOCUMENTATION
+    /**
+     * Displays a list of options to the user.
+     * @param prompt   The prompt message to display before the options.
+     * @param options  The list of options to show to the user.
+     */
     @Override
     public void showOptions(String prompt, List<String> options){
         System.out.println(prompt + ":");

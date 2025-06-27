@@ -119,7 +119,6 @@ public final class GameSelectionState extends LoggedInState {
             games.add(game.toString());
         }
 
-        /*TODO: make this work well...*/
         Client.view.showOptions("Games are ", games);
     }
 }
