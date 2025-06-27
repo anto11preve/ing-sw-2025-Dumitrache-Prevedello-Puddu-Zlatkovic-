@@ -3,6 +3,7 @@ package View.Client.States.Connected.LoggedIn;
 import Model.Game;
 import Networking.Messages.LeaveGameMessage;
 import Networking.Network;
+import View.Client.Client;
 import View.Client.ClientState;
 import View.Client.States.Connected.LoggedInState;
 
@@ -79,6 +80,15 @@ public abstract class GameSelectedState extends LoggedInState {
     @Override
     public ClientState updateGame(Game game){
         this.game = game;
+
+        String errors = null;
+        final String error, playerError;
+        if((error = game.getErrorMessage()) != null){
+            errors = "\u001B[33m" + error;
+        }if((playerError = game.getPlayer(this.getUsername()).getErrorMessage()) != null){
+            errors = (errors != null) ? errors + "\n" + "\u001B[31m" + playerError : "\u001B[31m" + playerError;
+        }
+        Client.view.log(errors);
 
         return this;
     }

@@ -47,6 +47,9 @@ public class LoginAction implements Action {
 
             @Override
             public Action create(Map<String, String> args) throws IllegalArgumentException {
+                if(args.get("username") == null){
+                    throw new IllegalArgumentException("Username is required");
+                }
                 return new LoginAction(args.get("username"));
             }
 

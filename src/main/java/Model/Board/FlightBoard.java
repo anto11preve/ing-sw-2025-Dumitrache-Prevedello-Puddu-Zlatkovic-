@@ -33,7 +33,7 @@ import java.util.*;
 public class FlightBoard implements Serializable, Cloneable {
     private final int cellNumber;
 
-    private transient Map<Player, CardDeck> bookedDecks = new HashMap<>();
+    private Map<String, CardDeck> bookedDecks = new HashMap<>();
 
     private Timer timer;
 
@@ -144,7 +144,7 @@ public class FlightBoard implements Serializable, Cloneable {
         this.ffPlayers = new ArrayList<>();
     }
 
-    public Map<Player, CardDeck> getBookedDecks() {return bookedDecks;}
+    public Map<String, CardDeck> getBookedDecks() {return bookedDecks;}
 
     public void render(){
         System.out.println("FlightBoard: " + cellNumber + " cells");
@@ -497,5 +497,9 @@ public class FlightBoard implements Serializable, Cloneable {
         this.playerPositions = new HashMap<>(old.playerPositions);
         this.playerTotalDistance = new HashMap<>(old.playerTotalDistance);
         this.ffPlayers = new ArrayList<>(old.ffPlayers);
+
+        for(String name : old.bookedDecks.keySet()) {
+            this.bookedDecks.put(name, old.bookedDecks.get(name).clone());
+        }
     }
 }

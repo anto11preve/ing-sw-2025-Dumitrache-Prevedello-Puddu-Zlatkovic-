@@ -212,6 +212,10 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke start on " + this.getClass().getName());
     }
 
+    default ClientState net_ViewCardDeck(String username) {
+        throw new UnsupportedOperationException("Cannot invoke viewCardDeck on " + this.getClass().getName());
+    }
+
     /**
      * Updates the game state with the provided game instance.
      * This method is used to refresh the game state in the client.
@@ -234,12 +238,12 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke updateList on " + this.getClass().getName());
     }
 
+    /*Visualizations*/
 
     /**
      * Lists the available games in a user-friendly format.
      * This method collects the game IDs from the gamesList and displays them using the Client's view.
      */
-    /*Visualizations*/
     default void list(){
         throw new UnsupportedOperationException("Cannot invoke list on " + this.getClass().getName());
     }
@@ -250,6 +254,10 @@ public interface ClientState {
      */
     default void viewCard() {
         throw new UnsupportedOperationException("Cannot invoke viewCard on " + this.getClass().getName());
+    }
+
+    default void viewCardDeck() {
+        throw new UnsupportedOperationException("Cannot invoke viewCardDeck on " +  this.getClass().getName());
     }
 
     /**

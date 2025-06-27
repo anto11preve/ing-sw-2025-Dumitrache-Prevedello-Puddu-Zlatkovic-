@@ -142,7 +142,7 @@ public class CardDeck implements Iterable<AdventureCardFilip> , Serializable, Cl
         Collections.shuffle(cards);
     }
 
-    public void render(List<AdventureCardFilip> mazzo) {
+    public static void render(List<AdventureCardFilip> mazzo) {
         if (mazzo == null || mazzo.isEmpty()) {
             System.out.println("Empty Deck");
             return;

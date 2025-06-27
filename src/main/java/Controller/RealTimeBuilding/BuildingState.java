@@ -16,6 +16,7 @@ import Model.Ship.Coordinates;
 import Model.Board.Timer;
 import Controller.GamePhases.FlightPhase;
 import Model.Ship.ShipBoard;
+import View.Client.Actions.Action;
 import View.Client.ClientState;
 
 import java.util.HashMap;
@@ -83,8 +84,8 @@ public class BuildingState extends State {
      *
      * @param player The player whose deck booking is to be removed
      */
-    private void unbookDeck(Player player){
-        Map<Player, CardDeck> bookedDecks=this.getController().getModel().getFlightBoard().getBookedDecks();
+    private void unbookDeck(String player){
+        Map<String, CardDeck> bookedDecks=this.getController().getModel().getFlightBoard().getBookedDecks();
         if(bookedDecks.containsKey(player)){
             //remove the entry
             bookedDecks.remove(player);
@@ -113,7 +114,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found, strange bug!!!");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -166,7 +167,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -206,7 +207,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -330,7 +331,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }
@@ -346,7 +347,7 @@ public class BuildingState extends State {
 
             FlightBoard flightBoard= this.getController().getModel().getFlightBoard();
             CardDeck deck=flightBoard.getPeekableCardDeck(index);
-            Map<Player, CardDeck> bookedDecks=flightBoard.getBookedDecks();
+            Map<String, CardDeck> bookedDecks=flightBoard.getBookedDecks();
 
             if(bookedDecks.values().contains(deck)){
                 throw new InvalidParameters("Booked deck");
@@ -356,7 +357,9 @@ public class BuildingState extends State {
                     model.addComponent(oldTile);
                     currentPlayer.getShipBoard().setActiveComponent(null);
                 }
-                bookedDecks.put(currentPlayer, deck);
+                bookedDecks.put(name, deck);
+
+                this.getController().setQueuedAction((Action) state -> state.net_ViewCardDeck(name));
             }
 
 
@@ -392,7 +395,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
 
 //            SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
 //            model.addComponent(oldTile);
@@ -434,7 +437,7 @@ public class BuildingState extends State {
         if(currentPlayer == null) {
             throw new InvalidParameters("Player not found");
         }
-        unbookDeck(currentPlayer);
+        unbookDeck(name);
 
         try {
             ShipBoard shipBoard= model.getPreBuiltShip(index);
@@ -467,7 +470,7 @@ public class BuildingState extends State {
             if (currentPlayer == null) {
                 throw new InvalidParameters("Player not found");
             }
-            unbookDeck(currentPlayer);
+            unbookDeck(name);
             if (finishedPlayers.containsValue(currentPlayer)) {
                 throw new InvalidCommand("Player already finished");
             }

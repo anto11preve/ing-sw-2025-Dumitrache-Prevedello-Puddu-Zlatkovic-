@@ -1114,7 +1114,7 @@ public class ShipBoard implements Serializable, Cloneable {
         this.components = new SpaceshipComponent[ROWS][COLS];
         for(int i = 0; i < ROWS; i++){
             for(int j = 0; j < COLS; j++){
-                this.components[i] = (old.components[i] != null) ? old.components[i].clone() : null;
+                this.components[i][j] = (old.components[i][j] != null) ? old.components[i][j].clone() : null;
             }
         }
 
