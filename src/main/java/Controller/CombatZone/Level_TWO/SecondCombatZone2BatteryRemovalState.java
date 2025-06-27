@@ -15,6 +15,13 @@ import Controller.State;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player may remove batteries from their ship
+ * during the  combat zone because the player does not have enough goods.
+ *
+ * <p>This state allows a player to remove batteries from their ship's battery compartments,
+ * and if all batteries are removed, it transitions to the next state based on the remaining batteries.</p>
+ */
 public class SecondCombatZone2BatteryRemovalState extends State {
 
    
@@ -26,6 +33,20 @@ public class SecondCombatZone2BatteryRemovalState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Handles the use of an item by a player during the combat zone phase, specifically for using batteries.
+     * <p>
+     * Validates the item type, player turn, declared power, battery count, and coordinates before applying effects.
+     * If all batteries have been removed, updates the special player list and transitions to the next game state.
+     * If batteries remain, updates the state to allow further battery removal.
+     *
+     * @param playerName the name of the player attempting to use the item
+     * @param itemType the type of item being used (must be {@code ItemType.BATTERIES})
+     * @param coordinates the coordinates of the component from which the battery is to be removed
+     * @throws InvalidMethodParameters if any input is null, negative, or otherwise structurally invalid
+     * @throws InvalidContextualAction if the action is not valid in the current context
+     * @throws InvalidParameters if any parameters are invalid
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

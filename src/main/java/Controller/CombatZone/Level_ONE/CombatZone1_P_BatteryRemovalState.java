@@ -15,10 +15,20 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player may remove batteries from their ship
+ * during the combat zone phase of the game.
+ *
+ * <p>This state allows a player to remove batteries from their ship's battery compartments,
+ * and if all batteries are removed, it transitions to the next state based on the declared power.</p>
+ */
 public class CombatZone1_P_BatteryRemovalState extends State {
    
     private double declaredPower;
     private int batteries;
+    /**
+     * The worst declared power among the players, used to determine the player with the lowest power.
+     */
     private double worst;
 
     public CombatZone1_P_BatteryRemovalState(Context context, double declaredPower, int batteries) {
@@ -36,6 +46,21 @@ public class CombatZone1_P_BatteryRemovalState extends State {
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
+    /**
+     * Allows a player to use a battery item on a specific component during the power declaration phase of combat.
+     * <p>
+     * Validates the item type, player turn, coordinates, battery count, and declared power before proceeding.
+     * If a valid BatteryCompartment is found at the given coordinates, a battery is removed from it.
+     * When all required batteries have been used, updates the special player list and transitions to the next game state.
+     * If batteries are still required, transitions to the appropriate battery removal state to continue the process.
+     *
+     * @param playerName the name of the player attempting to use the item
+     * @param itemType the type of item being used (must be {@code ItemType.BATTERIES})
+     * @param coordinates the coordinates of the component from which the battery is to be removed
+     * @throws InvalidMethodParameters if any input is null, negative, or otherwise structurally invalid
+     * @throws InvalidContextualAction if the specified component is not a valid battery compartment
+     * @throws InvalidParameters if the action violates the current game rules (e.g., not the player's turn or wrong item type)
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

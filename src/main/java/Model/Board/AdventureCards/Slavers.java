@@ -11,6 +11,11 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a slavers encounter card in the game.
+ * This card has a crew penalty for losing, a reward in credits for winning,
+ * and a days penalty for winning.
+ */
 public class Slavers extends Enemy<CrewPenalty, Credits> {
     public Slavers(int id, CardLevel level, int power, int crew, int days, int credits) {
         super(id, level, power, new CrewPenalty(crew), days, new Credits(credits));

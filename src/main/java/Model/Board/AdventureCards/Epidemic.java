@@ -8,6 +8,10 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an epidemic event card in the game.
+ * This class extends AdventureCardFilip, which handles the properties of adventure cards.
+ */
 public class Epidemic extends AdventureCardFilip {
 
 

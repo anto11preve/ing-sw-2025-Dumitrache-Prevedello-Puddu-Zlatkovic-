@@ -14,6 +14,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a meteor swarm in the game.
+ * This class extends AdventureCardFilip and implements Iterable<Meteor>.
+ * It contains a list of meteors, each with a size and direction.
+ */
 public class MeteorSwarm extends AdventureCardFilip implements Iterable<Meteor> {
     private final List<Meteor> meteors;
 

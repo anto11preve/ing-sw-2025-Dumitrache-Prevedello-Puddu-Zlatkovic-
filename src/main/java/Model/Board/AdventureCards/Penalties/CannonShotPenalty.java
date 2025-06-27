@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Represents a penalty that consists of a series of cannon shots.
+ * This class implements Iterable to allow iteration over the cannon shots.
+ */
 public class CannonShotPenalty extends Penalty implements Iterable<CannonShot> {
     private final List<CannonShot> CannonShots;
 

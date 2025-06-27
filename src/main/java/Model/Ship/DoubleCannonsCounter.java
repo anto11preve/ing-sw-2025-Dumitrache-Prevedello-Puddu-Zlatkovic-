@@ -2,6 +2,10 @@ package Model.Ship;
 
 import java.io.Serializable;
 
+/**
+ * DoubleCannonsCounter keeps track of the number of front and other cannons on a ship.
+ * It can be used to count the total number of cannons and differentiate between front and other cannons.
+ */
 public class DoubleCannonsCounter implements Serializable {
     int  frontCannons;
     int  otherCannons;

@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Represents a reward in the form of goods in the game.
+ * This class extends the Reward class, which handles the properties of rewards.
+ */
 public class Goods extends Reward implements Iterable<Good> {
     private final List<Good> goods;
 

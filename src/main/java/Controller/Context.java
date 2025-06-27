@@ -19,6 +19,12 @@ import java.util.List;
 /*TODO: make better*/
 interface SerializableRunnable extends Runnable, Serializable {}
 
+/**
+ * The Context class represents the current state of the game, including players, resources, and actions.
+ * It is used to manage the game flow and provide information to the controller.
+ * It works as the dynamic variant of the card that can change based on the current game situation.
+ * This class is serializable to allow saving and restoring game states.
+ */
 public class Context implements Serializable {
     private transient Controller controller;
     private transient List<Player> players;

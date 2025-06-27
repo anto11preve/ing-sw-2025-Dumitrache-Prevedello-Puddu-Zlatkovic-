@@ -9,6 +9,11 @@ import Model.Enums.CardLevel;
 import java.util.*;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents an abandoned ship adventure card in the game.
+ * This card has a crew penalty for winning, a reward in credits for landing,
+ * and a penalty in days for landing.
+ */
 public class AbandonedShip extends AdventureCardFilip {
     private final CrewPenalty winPenalty;
     private final Credits landingReward;

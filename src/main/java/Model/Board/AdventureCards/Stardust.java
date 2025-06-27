@@ -10,6 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a Stardust adventure card in the game.
+ * This card is a special type of adventure card with no specific penalties or rewards defined.
+ */
 public class Stardust extends AdventureCardFilip {
 
 

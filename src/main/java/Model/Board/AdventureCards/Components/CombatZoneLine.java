@@ -5,6 +5,10 @@ import Model.Enums.Criteria;
 
 import java.io.Serializable;
 
+/**
+ * Represents a line in the combat zone adventure card.
+ * Each line consists of an ordering criteria and a penalty.
+ */
 public class CombatZoneLine implements Serializable {
     private final Criteria orderingCriteria;
     private final Penalty penalty;

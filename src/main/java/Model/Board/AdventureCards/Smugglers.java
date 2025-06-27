@@ -13,6 +13,11 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a smugglers adventure card in the game.
+ * This card has a goods penalty for losing, a reward in goods for winning,
+ * and a penalty in days for winning.
+ */
 public class Smugglers extends Enemy<GoodsPenalty, Goods> {
     public Smugglers(int id, CardLevel level, int power, int lostGoods, int days, List<Good> rewardList) {
         super(id, level, power, new GoodsPenalty(lostGoods), days, new Goods(rewardList));

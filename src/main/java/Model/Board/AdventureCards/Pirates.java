@@ -18,7 +18,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-
+/**
+ * Represents the pirate card in the game.
+ * This class extends the Enemy class, which handles the properties of enemies.
+ */
 public class Pirates extends Enemy<CannonShotPenalty, Credits> {
 
     public Pirates(int id, CardLevel level, int power, List<CannonShot> cannonShots, int days, int credits) {

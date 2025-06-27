@@ -15,6 +15,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a card that contains a list of planets, each with its own landing rewards and a landing penalty.
+ * This class implements Iterable to allow iteration over the planets.
+ */
 public class Planets extends AdventureCardFilip implements Iterable<Planet>{
     private final List<Planet> planetList;
     private final DaysPenalty landingPenalty;

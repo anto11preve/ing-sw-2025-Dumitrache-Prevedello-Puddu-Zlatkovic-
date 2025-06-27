@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a planet in the game, which can be landed on by players.
+ * Each planet has a name, a landing reward in the form of goods, and a status indicating whether it is occupied.
+ */
 public class Planet implements Serializable, Cloneable {
     private final String name;
     private final Goods landingReward;

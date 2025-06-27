@@ -20,6 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents the state in which a player must remove goods from their ship
+ * during the combat zone.
+ *
+ * <p>This state allows a player to remove goods from their ship's cargo holds,
+ * and if all required goods are removed, it transitions to the next state.</p>
+ */
 public class CombatZone2GoodsRemovalState extends State {
 
     private GoodCounter goodCounter;
@@ -38,6 +45,16 @@ public class CombatZone2GoodsRemovalState extends State {
         this.amount = amount;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
+
+    /**
+     * Executes logic upon entering the current game state during the second combat zone phase.
+     * <p>
+     * Checks whether the current special player has any goods in their cargo holds. If not,
+     * and the player has remaining batteries, transitions to a battery removal state.
+     * If there are no batteries either, the player is removed from the special players list.
+     * The game then transitions to either the next player's goods removal state or the flight phase,
+     * depending on whether special players remain.
+     */
 
     @Override
     public void onEnter(){
@@ -67,6 +84,22 @@ public class CombatZone2GoodsRemovalState extends State {
         }
     }
 
+    /**
+     * Remove a good from one cargo hold during the combat zone phase.
+     * It ingores the newCoordinates and newIndex parameters as they are not used in this context.
+     * <p>
+     * Validates the player's turn, coordinates, and indices before proceeding with the removal of goods.
+     * If the player has insufficient goods, it transitions to a battery removal state or cannon shots state.
+     * If the good is successfully removed, it updates the game state accordingly.
+     *
+     * @param name the name of the player performing the action
+     * @param oldCoordinates the coordinates of the cargo hold from which to remove the good
+     * @param newCoordinates not used in this context
+     * @param oldIndex the index of the good to be removed
+     * @param newIndex not used in this context
+     * @throws InvalidContextualAction if the action is not valid in the current context
+     * @throws InvalidParameters if any parameters are invalid for this action
+     */
     @Override
     public void moveGood(String name, Coordinates oldCoordinates, Coordinates newCoordinates, int oldIndex, int newIndex) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

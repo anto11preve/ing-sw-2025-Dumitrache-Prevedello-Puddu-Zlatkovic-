@@ -14,6 +14,12 @@ import Model.Player;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player declares engine power during the combat zone phase of the game.
+ *
+ * <p>This state allows a player to declare the amount of engine power they wish to use,
+ * and if the declaration is valid, it transitions to the next state for battery removal or crew removal.</p>
+ */
 public class CombatZone2EngineDeclarationState extends State {
    
     private double worst;
@@ -30,6 +36,18 @@ public class CombatZone2EngineDeclarationState extends State {
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
+    /**
+     * Allows a player to declare their total engine during the combat zone phase.
+     * Validates the double type, amount, and player's turn before proceeding with the declaration.
+     *
+     * <p>If the declaration is valid, it transitions to the next state for battery removal or crew removal.</p>
+     *
+     * @param playerName the name of the player declaring the engine power
+     * @param doubleType the type of double engine being declared (must be {@code DoubleType.ENGINES})
+     * @param amount the amount of engine power being declared
+     * @throws InvalidContextualAction if it is not the player's turn to declare engine power
+     * @throws InvalidParameters if the double type is invalid or the amount is out of bounds
+     */
     @Override
     public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

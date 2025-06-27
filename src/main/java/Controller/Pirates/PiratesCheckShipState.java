@@ -15,12 +15,19 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player checks their ship's integrity
+ * after being hit by cannon shots during the pirates phase of the game.
+ *
+ * <p>This state allows a player to remove components from their ship
+ * and checks if the ship remains intact after the removal.</p>
+ */
 public class PiratesCheckShipState extends State {
    
     int number;
+    /** Holds the turn for the cannon shot management
+     *  */
     int turn;
-
-    /// Turno del giocatore speciale che dve subire la cannonata
 
     public PiratesCheckShipState(Context context, int number, int turn) {
         super(context);
@@ -29,6 +36,18 @@ public class PiratesCheckShipState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Deletes a component from the player's ship at the specified coordinates.
+     * <p>
+     * Validates that it is the correct player's turn, that the coordinates are not null,
+     * and that a component exists at those coordinates. If all checks pass, the component is removed,
+     * and the player receives junk. The game state is then updated based on the ship's integrity.
+     *
+     * @param playerName the name of the player attempting to delete a component
+     * @param coordinates the coordinates of the component to be deleted
+     * @throws InvalidMethodParameters if any input is null or structurally invalid
+     * @throws InvalidParameters if it is not the player's turn or if no component exists at the given coordinates
+     */
     @Override
     public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();

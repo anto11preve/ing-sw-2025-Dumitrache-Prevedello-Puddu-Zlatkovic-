@@ -2,6 +2,11 @@ package Model.Ship;
 
 import java.io.Serializable;
 
+/**
+ * Coordinates represents a point in a 2D grid with integer coordinates.
+ * It provides methods to access the coordinates and calculate the Manhattan distance
+ * to another coordinate.
+ */
 public class Coordinates implements Serializable {
     private int i;
     private int j;

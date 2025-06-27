@@ -8,6 +8,10 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the open space in the game, which is a type of adventure card.
+ * This class extends AdventureCardFilip, which handles the basic properties of adventure cards.
+ */
 public class OpenSpace extends AdventureCardFilip {
 
     public OpenSpace(int id, CardLevel level) {

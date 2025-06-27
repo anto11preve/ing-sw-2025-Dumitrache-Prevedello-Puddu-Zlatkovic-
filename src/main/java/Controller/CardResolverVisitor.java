@@ -30,6 +30,11 @@ import Model.Ship.ShipBoard;
 
 import java.util.*;
 
+/**
+ * CardResolverVisitor is a visitor class that handles the resolution of various adventure cards in the game.
+ * Each method corresponds to a specific card type and defines the first state of the card and create the context for it.
+ */
+
 public class CardResolverVisitor {
 
     public CardResolverVisitor() {}
@@ -207,11 +212,13 @@ public class CardResolverVisitor {
                 Coordinates position = entry.getKey();
                 List<Side> sides = entry.getValue();
 
-                for (Side side : sides) {
-                    ConnectorType connector = p.getShipBoard().getComponent(position).getConnectorAt(side); // supponendo che Position abbia questo metodo
+                if (p.getShipBoard().getComponent(position) != null) {
+                    for (Side side : sides) {
+                        ConnectorType connector = p.getShipBoard().getComponent(position).getConnectorAt(side); // supponendo che Position abbia questo metodo
 
-                    if (!(connector == ConnectorType.NONE)) {
-                        counter++;
+                        if (!(connector == ConnectorType.NONE)) {
+                            counter++;
+                        }
                     }
                 }
             }

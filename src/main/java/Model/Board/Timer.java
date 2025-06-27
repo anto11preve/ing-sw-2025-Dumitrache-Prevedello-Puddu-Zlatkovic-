@@ -2,6 +2,11 @@ package Model.Board;
 
 import java.io.Serializable;
 
+/**
+ * Represents a timer used in the game building phases.
+ * This class tracks the current phase and the target time for the next phase.
+ * It implements Serializable to allow instances to be serialized.
+ */
 public class Timer implements Serializable, Cloneable {
     private Phase phase;
     private long targetTime;

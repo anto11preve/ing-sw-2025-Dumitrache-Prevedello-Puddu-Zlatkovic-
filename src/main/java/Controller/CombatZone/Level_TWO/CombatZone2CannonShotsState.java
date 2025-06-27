@@ -16,6 +16,12 @@ import Model.Player;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents the state in which a player may throw the dice to determine where the shot is aimed.
+ *
+ * <p>This state allows a player to roll dice to determine the outcome of cannon shots,
+ * and if the shot is valid, it transitions to the next state to manage the shot.</p>
+ */
 public class CombatZone2CannonShotsState extends State {
 
     public CombatZone2CannonShotsState(Context context) {
@@ -23,6 +29,18 @@ public class CombatZone2CannonShotsState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Executes the dice roll for a cannon shot during the combat zone.
+     * <p>
+     * Validates that projectiles are available and that it is the correct player's turn before rolling two dice.
+     * The sum of the dice determines the trajectory of the next projectile. If the result falls outside the valid range
+     * for the projectile's side, the shot is considered out of bounds and the projectile is discarded.
+     * The game state is then updated based on whether additional projectiles remain or not.
+     *
+     * @param playerName the name of the player attempting to roll the dice
+     * @throws InvalidContextualAction if there are no projectiles available to shoot
+     * @throws InvalidParameters if the action is attempted by a player out of turn
+     */
     @Override
     public void throwDices(String playerName) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

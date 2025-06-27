@@ -2,6 +2,10 @@ package Model.Ship;
 
 import java.io.Serializable;
 
+/**
+ * EnginesCounter keeps track of the number of single and double engines on a ship.
+ * It provides methods to increment and decrement the counts, ensuring they do not go below zero.
+ */
 public class EnginesCounter implements Serializable, Cloneable {
     private int singleEngines;
     private int doubleEngines;

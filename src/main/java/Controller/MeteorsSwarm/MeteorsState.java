@@ -27,6 +27,18 @@ public class MeteorsState extends State {
         this.setPlayerInTurn(context.getPlayers().getFirst());
     }
 
+    /**
+     * Executes the dice roll for a meteor storm event.
+     * <p>
+     * Validates that projectiles are available and that it is the correct player's turn before rolling two dice.
+     * The sum of the dice determines the trajectory of the meteor. If the result falls outside the valid range
+     * for the projectile's side, the meteor is considered out of bounds and removed.
+     * The game state is then updated based on whether additional projectiles remain or not.
+     *
+     * @param playerName the name of the player attempting to roll the dice
+     * @throws InvalidContextualAction if there are no projectiles available to shoot
+     * @throws InvalidMethodParameters if the action is attempted by a player out of turn
+     */
     @Override
     public void throwDices(String playerName) throws InvalidMethodParameters, InvalidContextualAction {
         Controller controller = context.getController();

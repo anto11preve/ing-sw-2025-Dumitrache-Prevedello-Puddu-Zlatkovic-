@@ -20,6 +20,13 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player manages a cannon shot during the combat zone.
+ * <p>
+ * This state allows a player to handle the effects of a cannon shot on their ship's components,
+ * and to use batteries to mitigate damage from the shot.
+ * </p>
+ */
 public class CombatZone2ManageShotState extends State {
     private final int number;
     boolean hit = false;
@@ -30,6 +37,18 @@ public class CombatZone2ManageShotState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Handles the end of a cannon shot by checking the player's ship for damage without using any batteries.
+     * <p>
+     * Validates that it is the correct player's turn, checks if the shot is valid,
+     * and processes the shot's effects on the ship's components.
+     * If a component is hit, it is removed and junk is added to the player's inventory.
+     * If the ship remains intact, transitions to the next state; otherwise, updates the game state accordingly.
+     *
+     * @param playerName the name of the player whose ship is being checked
+     * @throws InvalidMethodParameters if any input is null or structurally invalid
+     * @throws InvalidParameters if it is not the player's turn or if no component is hit
+     */
     @Override
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();

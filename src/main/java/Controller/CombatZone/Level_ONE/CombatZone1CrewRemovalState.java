@@ -16,6 +16,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents the state in which a player may remove crew members from their ship
+ * during the combat zone phase of the game.
+ *
+ * <p>This state allows a player to remove crew members from their ship's cabins,
+ * and if all crew members are removed, it transitions to the next state based on the declared power.</p>
+ */
 public class CombatZone1CrewRemovalState extends State {
    
 
@@ -24,6 +31,20 @@ public class CombatZone1CrewRemovalState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Allows a player to remove a crewmate on a specific cabin during the crew removal phase of combat.
+     * <p>
+     * Validates the item type, player turn, coordinates, and crew count before proceeding.
+     * If a valid Cabin is found at the given coordinates, a crew member is removed from it.
+     * When all required crew members have been removed, updates the special player list and transitions to the next game state.
+     * If crew members are still required, transitions to the appropriate crew removal state to continue the process.
+     *
+     * @param playerName the name of the player attempting to remove a crew member
+     * @param itemType the type of item being used (must be {@code ItemType.CREW})
+     * @param coordinates the coordinates of the cabin from which the crew member is to be removed
+     * @throws InvalidContextualAction if there are not enough crew members to remove
+     * @throws InvalidParameters if it is not the player's turn or if no cabin exists at the given coordinates
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

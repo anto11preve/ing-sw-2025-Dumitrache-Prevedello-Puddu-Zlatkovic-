@@ -20,6 +20,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents the combat zone in the game, which consists of multiple lines of combat criteria and penalties.
+ * This class implements Iterable to allow iteration over the combat lines.
+ */
 public class CombatZone extends AdventureCardFilip implements Iterable<CombatZoneLine> {
     private final List<CombatZoneLine> lines;
 

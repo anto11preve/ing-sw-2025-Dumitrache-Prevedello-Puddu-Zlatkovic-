@@ -4,6 +4,10 @@ import Model.Enums.Good;
 
 import java.io.Serializable;
 
+/**
+ * GoodCounter keeps track of the number of goods of different types on a ship.
+ * It provides methods to add and remove goods, ensuring that the count does not go below zero.
+ */
 public class GoodCounter implements Serializable {
     private int red;
     private int yellow;

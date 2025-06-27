@@ -18,6 +18,13 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player manages a cannon shot during the combat zone.
+ * <p>
+ * This state allows a player to handle the effects of a cannon shot on their ship's components,
+ * and to use batteries to mitigate damage from the shot.
+ * </p>
+ */
 public class CombatZone1ManageShotState extends State {
     private final int number;
     boolean hit = false;
@@ -28,6 +35,18 @@ public class CombatZone1ManageShotState extends State {
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Handles the end of a cannon shot by checking the player's ship for damage without using any batteries.
+     * <p>
+     * Validates that it is the correct player's turn, checks if the shot is valid,
+     * and processes the shot's effects on the ship's components.
+     * If a component is hit, it is removed and junk is added to the player's inventory.
+     * If the ship remains intact, transitions to the next state; otherwise, updates the game state accordingly.
+     *
+     * @param playerName the name of the player whose ship is being checked
+     * @throws InvalidMethodParameters if any input is null or structurally invalid
+     * @throws InvalidParameters if it is not the player's turn or if no component is hit
+     */
     @Override
     public void end(String playerName) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
@@ -106,6 +125,19 @@ public class CombatZone1ManageShotState extends State {
     }
 
 
+    /**
+     * Uses a battery to mitigate the effects of a cannon shot.
+     * <p>
+     * Validates that it is the correct player's turn, checks if the item type is BATTERIES,
+     * and verifies that a shield exists on the ship. If all checks pass, the battery is used,
+     * and the game state is updated accordingly.
+     *
+     * @param playerName the name of the player using the item
+     * @param itemType the type of item being used (expected to be BATTERIES)
+     * @param coordinates the coordinates of the battery compartment
+     * @throws InvalidContextualAction if batteries cannot be used on a big shot or no shield is found
+     * @throws InvalidParameters if it is not the player's turn or if an invalid item type is provided
+     */
     @Override
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates ) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();

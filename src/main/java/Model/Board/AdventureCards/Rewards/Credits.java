@@ -3,6 +3,10 @@ package Model.Board.AdventureCards.Rewards;
 import Model.Board.AdventureCards.Components.Planet;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a reward in the form of credits in the game.
+ * This class extends the Reward class, which handles the properties of rewards.
+ */
 public class Credits extends Reward{
     private final int amount;
 

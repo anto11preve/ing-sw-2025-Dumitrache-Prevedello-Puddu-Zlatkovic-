@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class CondensedShip implements Serializable, Cloneable {
     private final List<Cabin> cabins;
     private final List<BatteryCompartment> batteryCompartments;

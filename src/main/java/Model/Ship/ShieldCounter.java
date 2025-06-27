@@ -2,6 +2,10 @@ package Model.Ship;
 
 import java.io.Serializable;
 
+/**
+ * ShieldCounter keeps track of the number of shields on each side of a ship.
+ * It provides methods to increment and decrement the counts, ensuring they do not go below zero.
+ */
 public class ShieldCounter implements Serializable, Cloneable {
     private int northShields;
     private int eastShields;

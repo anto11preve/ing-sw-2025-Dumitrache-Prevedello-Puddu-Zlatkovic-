@@ -16,14 +16,32 @@ import Model.Ship.Coordinates;
 
 import java.util.List;
 
+/**
+ * Represents the state in which a player checks their ship's integrity
+ * after a cannon shot during the combat zone.
+ *
+ * <p>This state allows a player to remove components from their ship
+ * and checks if the ship remains intact after the removal.</p>
+ */
 public class CombatZone2CheckShipState extends State {
-   
 
     public CombatZone2CheckShipState(Context context) {
         super(context);
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
+    /**
+     * Deletes a component from the player's ship at the specified coordinates.
+     * <p>
+     * Validates that it is the correct player's turn, that the coordinates are not null,
+     * and that a component exists at those coordinates. If all checks pass, the component is removed,
+     * and the player receives junk. The game state is then updated based on the ship's integrity.
+     *
+     * @param playerName the name of the player attempting to delete a component
+     * @param coordinates the coordinates of the component to be deleted
+     * @throws InvalidMethodParameters if any input is null or structurally invalid
+     * @throws InvalidParameters if it is not the player's turn or if no component exists at the given coordinates
+     */
     @Override
     public void deleteComponent(String playerName, Coordinates coordinates) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();

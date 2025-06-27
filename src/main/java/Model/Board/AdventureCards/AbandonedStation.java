@@ -14,6 +14,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents an abandoned station adventure card in the game.
+ * This card has a crew requirement for landing, a reward in goods for landing,
+ * and a penalty in days for landing.
+ */
 public class AbandonedStation extends AdventureCardFilip {
     private final int crew;
     private final Goods landingReward;
