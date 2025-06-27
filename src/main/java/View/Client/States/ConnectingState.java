@@ -36,7 +36,7 @@ public final class ConnectingState implements ClientState {
     public List<String> getAvailableCommands() {
         List<String> actions = new ArrayList<>();
 
-        actions.add("connect");
+        actions.add("Connect");
 
         actions.addAll(ClientState.super.getAvailableCommands());
 

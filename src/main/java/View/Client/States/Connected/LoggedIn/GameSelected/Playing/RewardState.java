@@ -29,7 +29,6 @@ public class RewardState extends PlayingState {
     /*Visualizer*/
     @Override
     public void viewRewards() {
-        /*TODO implements this*/
-        throw new UnsupportedOperationException("TODO: implement this");
+        this.getGame().visualizeRewards();
     }
 }
