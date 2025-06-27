@@ -754,7 +754,6 @@ public class BuildingStateTest {
 
     // ==================== FLIP HOURGLASS TESTS ====================
 
-//    TODO: giuro la clessidra funziona, ma ci mette un eternità a controllarlo
 //    /**
 //     * Test that flipHourGlass is not available in Trial level.
 //     */

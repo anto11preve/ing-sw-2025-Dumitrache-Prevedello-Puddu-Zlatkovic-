@@ -42,8 +42,6 @@ public abstract class LoggedInState extends ConnectedState {
      */
     @Override
     public ClientState stop(){
-        /*TODO: implement logoutMessage*/
-        this.getNetwork().send(new EmptyMessage());
         return super.stop();
     }
 }

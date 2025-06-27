@@ -51,7 +51,7 @@ public final class FlightState extends PlayingState {
      * This method retrieves the card information from the game and prints it to the console.
      * It is used to visualize the current state of the player's card during flight.
      */
-    /*Visualizer - TODO: make view agnostic*/
+    /*Visualizer*/
     @Override
     public void viewCard(){
         for(String line : this.getGame().renderCard()){

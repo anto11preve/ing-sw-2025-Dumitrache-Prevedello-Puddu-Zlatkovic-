@@ -1,5 +1,3 @@
-//TODO: new game creation shouldn't be done by the controller directly, since a new controller must be created for each game.
-
 // StartGameCommand.java
 package Controller.Commands;
 

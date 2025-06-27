@@ -58,7 +58,7 @@ public final class BuildingState extends PlayingState {
         return this;
     }
 
-    /*Visualizers - TODO: make view agnostic*/
+    /*Visualizers*/
     @Override
     public void viewCardDeck() {
         final Game game = this.getGame();

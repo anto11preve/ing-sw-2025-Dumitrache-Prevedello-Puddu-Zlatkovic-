@@ -196,7 +196,6 @@ public class GameTest {
         
         // Test picking from empty slot
         if (validIndex != -1) {
-           // assertThrows(IndexOutOfBoundsException.class, () -> game.pickComponent(validIndex)); todo
         }
     }
 
