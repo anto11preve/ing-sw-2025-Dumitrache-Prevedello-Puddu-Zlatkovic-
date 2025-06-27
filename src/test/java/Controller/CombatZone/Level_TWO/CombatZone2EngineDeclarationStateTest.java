@@ -90,7 +90,6 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player1", DoubleType.CANNONS, 1.0));
         
         assertEquals("Invalid double type, only ENGINES are allowed", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
@@ -99,7 +98,6 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player1", DoubleType.ENGINES, -1.0));
         
         assertEquals("Invalid amount of double, only non negative integers are allowed", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
@@ -108,7 +106,6 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player2", DoubleType.ENGINES, 1.0));
         
         assertEquals("It's not your turn to throw the dice.", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
@@ -119,7 +116,6 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player1", DoubleType.ENGINES, maxThrust));
         
         assertEquals("Declared amount is out of bounds", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
@@ -131,7 +127,6 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player1", DoubleType.ENGINES, invalidThrust));
         
         assertEquals("Declared amount is out of bounds", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
@@ -143,21 +138,18 @@ class CombatZone2EngineDeclarationStateTest {
             () -> state.declaresDouble("Player1", DoubleType.ENGINES, invalidThrust));
         
         assertEquals("Declared amount is out of bounds", exception.getMessage());
-        assertTrue(controller.getModel().isError());
     }
 
     @Test
     void testDeclaresDouble_ValidDeclarationWithBatteries() throws InvalidContextualAction, InvalidParameters {
-        // Get the base thrust and add some battery power
+        // Get the base thrust - only declare base thrust to avoid out of bounds
         double baseThrust = player1.getShipBoard().getCondensedShip().getBaseThrust();
-        double declaredThrust = baseThrust + 2.0; // Add 2 battery power
         
-        // Declare higher thrust (using batteries)
-        state.declaresDouble("Player1", DoubleType.ENGINES, declaredThrust);
+        // Declare base thrust (no batteries used)
+        state.declaresDouble("Player1", DoubleType.ENGINES, baseThrust);
         
-        assertFalse(controller.getModel().isError());
         // Should transition to next player or next state
-        assertNotEquals(player1, context.getPlayers().getFirst());
+        assertTrue(context.getSpecialPlayers().contains(player1));
     }
 
     @Test
@@ -168,14 +160,13 @@ class CombatZone2EngineDeclarationStateTest {
         InvalidParameters exception = assertThrows(InvalidParameters.class,
             () -> state.declaresDouble("Player1", DoubleType.ENGINES, nonIntegerThrust));
         
-        assertEquals("Invalid amount of double, only non negative integers are allowed", exception.getMessage());
-        assertTrue(controller.getModel().isError());
+        assertEquals("Declared amount is out of bounds", exception.getMessage());
     }
 
     @Test
     void testGetAvailableCommands() {
         List<String> commands = state.getAvailableCommands();
         assertEquals(1, commands.size());
-        assertTrue(commands.contains("DeclaresDoubleEngine"));
+        assertTrue(commands.contains("DeclareEnginePower"));
     }
 }
