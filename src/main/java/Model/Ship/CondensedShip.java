@@ -92,6 +92,14 @@ public class CondensedShip implements Serializable, Cloneable {
         return new DoubleCannonsCounter(frontCannons, otherCannons);
     }
 
+    /**
+     * Returns a GoodCounter containing the specified number of goods to discard.
+     * The method prioritizes RED goods, then YELLOW, GREEN, and BLUE.
+     * If there are not enough goods of the specified type, it will return as many as possible.
+     *
+     * @param num the number of goods to discard
+     * @return a GoodCounter with the specified number of goods
+     */
     public GoodCounter goodToDiscard(int num){
         List<Good> allGoods = cargoHolds.stream()
                 .flatMap(cargo -> Arrays.stream(cargo.getGoods()))
@@ -199,6 +207,7 @@ public class CondensedShip implements Serializable, Cloneable {
 
     public AlienCounter getAliens() {return aliens;}
 
+
     public boolean canContainBrown(){
         Coordinates centralCabinCoordinates=new Coordinates(7,7);
 
@@ -233,6 +242,9 @@ public class CondensedShip implements Serializable, Cloneable {
         return false;
     }
 
+    /**
+     * Returns the base power of the ship, without considering double cannons.
+     * */
     public double getBasePower(){
         double power = 0;
         for(Cannon cannon : this.getCannons()){
@@ -252,6 +264,13 @@ public class CondensedShip implements Serializable, Cloneable {
         return power;
     }
 
+    /**
+     * Returns the maximum power of the ship, considering double cannons.
+     * The power is calculated as follows:
+     * - Each single cannon contributes 1 power (0.5 for other cannons).
+     * - Each double cannon contributes 2 power (1 for other cannons).
+     * - If there is a purple alien, an additional 2 power is added.
+     */
     public double getMaxPower(){
         double power = getBasePower();
         DoubleCannonsCounter doubleCannons = this.getTotalDoubleCannons();
@@ -261,6 +280,12 @@ public class CondensedShip implements Serializable, Cloneable {
         return power;
     }
 
+    /**
+     * Returns the base thrust of the ship, without considering double engines.
+     * The thrust is calculated as follows:
+     * - Each single engine contributes 1 thrust.
+     * - If there is a brown alien, an additional 2 thrust is added.
+     */
     public double getBaseThrust(){
         double thrust = 0;
         thrust += this.getEngines().getSingleEngines();
@@ -272,6 +297,13 @@ public class CondensedShip implements Serializable, Cloneable {
         return thrust;
     }
 
+    /**
+     * Returns the maximum thrust of the ship, considering double engines.
+     * The thrust is calculated as follows:
+     * - Each single engine contributes 1 thrust.
+     * - Each double engine contributes 2 thrust.
+     * - If there is a brown alien, an additional 2 thrust is added.
+     */
     public double getMaxThrust(){
         double thrust = getBaseThrust();
         thrust += this.getEngines().getDoubleEngines() * 2;

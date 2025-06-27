@@ -39,6 +39,13 @@ public class CardResolverVisitor {
 
     public CardResolverVisitor() {}
 
+    /**
+     * Visits an AbandonedShip card and sets the game state to AbandonedShipDecidingState.
+     * This state allows players to decide how to handle the abandoned ship event.
+     *
+     * @param card The AbandonedShip card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit(AbandonedShip card, Controller controller) {
         /*
         si fa uno alla volta, fino a che qualcuno effettivamente la svolge, in ordine di rotta
@@ -48,6 +55,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new AbandonedShipDecidingState(context));
     }
 
+    /**
+     * Visits an AbandonedStation card and sets the game state to AbandonedStationDecidingState.
+     * This state allows players to decide how to handle the abandoned station event.
+     *
+     * @param card The AbandonedStation card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit(AbandonedStation card, Controller controller) {
         /*
         si fa uno alla volta, fino a che qualcuno effettivamente la svolge, in ordine di rotta
@@ -58,6 +72,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new AbandonedStationDecidingState(context));
     }
 
+    /**
+     * Visits a Planets card and sets the game state to ChoosePlanetState.
+     * This state allows players to choose a planet to interact with.
+     *
+     * @param card The Planets card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( Planets card, Controller controller) {
         /*
 
@@ -66,6 +87,16 @@ public class CardResolverVisitor {
         controller.getModel().setState(new ChoosePlanetState(context));
     }
 
+    /**
+     * Visits a CombatZone card and handles the combat zone event based on the card level.
+     * For level 1, it calculates the player with the least firepower and deducts flight days.
+     * For level 2, it sets the state to CombatZone2PowerDeclarationState for power declaration.
+     *
+     * @param card The CombatZone card being visited
+     * @param controller The game controller managing the game state
+     * @throws InvalidMethodParameters If the card level is invalid
+     * @throws InvalidParameters If there are issues with player parameters
+     */
     public void visit(CombatZone card, Controller controller) throws InvalidMethodParameters, InvalidParameters {
         /*
         1. si calcola il giocatore con meno potenza di fuoco e si perdono giorni di volo
@@ -105,6 +136,14 @@ public class CardResolverVisitor {
 
     }
 
+    /**
+     * Visits an Epidemic card and processes the epidemic event.
+     * It iterates through each player's ship board, checks cabins for occupants,
+     * and removes a crew member if the cabin is adjacent to another cabin.
+     *
+     * @param card The Epidemic card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( Epidemic card, Controller controller) {
         /*
         si scorrono le cabine, e se essa è adiacente a un'altra cabina, si rimuove un membro dell'equipaggio (alieno o umano)
@@ -139,6 +178,13 @@ public class CardResolverVisitor {
         model.setState(new FlightPhase(controller));
     }
 
+    /**
+     * Visits a MeteorSwarm card and sets the game state to MeteorsState.
+     * This state handles the meteor swarm event, where players must deal with incoming meteors.
+     *
+     * @param card The MeteorSwarm card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit(MeteorSwarm card, Controller controller) {
         /*
         il leader tira due dadi e determina riga e colonna che vengono colpite
@@ -156,6 +202,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new MeteorsState(context));
     }
 
+    /**
+     * Visits an OpenSpace card and sets the game state to OpenSpaceEngineDeclarationState.
+     * This state allows players to declare their engine power for the open space event.
+     *
+     * @param card The OpenSpace card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( OpenSpace card, Controller controller) {
         /*
         deve ricevere in qualche modo il numero di batterie che ciascun giocatore vuole usare
@@ -165,6 +218,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new OpenSpaceEngineDeclarationState(context));
     }
 
+    /**
+     * Visits a Pirates card and sets the game state to PiratesPowerDeclarationState.
+     * This state allows players to declare their power against pirates.
+     *
+     * @param card The Pirates card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( Pirates card, Controller controller) {
         /*
         come i controabbandieri
@@ -175,6 +235,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new PiratesPowerDeclarationState(context));
     }
 
+    /**
+     * Visits a Slavers card and sets the game state to SlaversPowerDeclarationState.
+     * This state allows players to declare their power against slavers.
+     *
+     * @param card The Slavers card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( Slavers card, Controller controller) {
         /*
         come i controabbandieri
@@ -185,6 +252,13 @@ public class CardResolverVisitor {
         controller.getModel().setState(new SlaversPowerDeclarationState(context));
     }
 
+    /**
+     * Visits a Smugglers card and sets the game state to SmugglersPowerDeclarationState.
+     * This state allows players to declare their power against smugglers.
+     *
+     * @param card The Smugglers card being visited
+     * @param controller The game controller managing the game state
+     */
     public void visit( Smugglers card, Controller controller) {
         /*
         in ordine di rotta, si decide se il giocatore vince/perde o si va avanti, in base alla potenza di fuoco
@@ -196,6 +270,15 @@ public class CardResolverVisitor {
         controller.getModel().setState(new SmugglersPowerDeclarationState(context));
     }
 
+    /**
+     * Visits a Stardust card and processes the Stardust event.
+     * It iterates through players in reverse turn order, checking for exposed connectors
+     * and deducting flight days based on the number of exposed connectors.
+     *
+     * @param card The Stardust card being visited
+     * @param controller The game controller managing the game state
+     * @throws InvalidMethodParameters If there are issues with method parameters
+     */
     public void visit( Stardust card, Controller controller) throws InvalidMethodParameters {
         /*
         in ordine inverso di rotta si scorre per vedere se un giocatore ha connettori esposti, e

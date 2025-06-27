@@ -13,6 +13,10 @@ import View.Client.ClientState;
 
 import java.util.List;
 
+/**
+ * Represents the Flight Phase of the game, where players take turns to resolve adventure cards
+ * and manage their actions during the flight.
+ */
 public class FlightPhase extends State {
 
     public FlightPhase(Controller controller) {
@@ -20,6 +24,9 @@ public class FlightPhase extends State {
         controller.setQueuedAction(ClientState::net_Fly);
     }
 
+    /**
+     * Checks if any player has to do an early landing.
+     */
     @Override
     public void onEnter() {
         for(Player p: this.getController().getModel().getFlightBoard().getTurnOrder()){
@@ -35,6 +42,15 @@ public class FlightPhase extends State {
         }
     }
 
+    /**
+     * Allows a player to pick the next adventure card from the deck.
+     * The player must be the one whose turn it is to pick a card.
+     *
+     * @param playerName The name of the player picking the card.
+     * @throws InvalidContextualAction If the action is not valid in the current context.
+     * @throws InvalidParameters If the parameters provided are invalid.
+     * @throws InvalidMethodParameters If the method parameters are invalid.
+     */
     @Override
     public void pickNextCard(String playerName) throws InvalidContextualAction, InvalidParameters, InvalidMethodParameters {
         Controller controller = this.getController();
@@ -50,6 +66,9 @@ public class FlightPhase extends State {
         
     }
 
+    /**
+     * Allows the player to leave the game early.
+     * */
     @Override
     public void leaveRace(String playerName){
         Controller controller = this.getController();

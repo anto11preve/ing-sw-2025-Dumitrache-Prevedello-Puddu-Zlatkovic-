@@ -143,10 +143,16 @@ public class Controller implements Agent {
         model.getState().throwDices(playerName);
     }
 
+    /**
+     * Sets an action to be queued for sending to clients.
+     * */
     public synchronized void setQueuedAction(Action action){
         this.queuedAction = action;
     }
 
+    /**
+     * Sends the current game state and any queued action to all players.
+     */
     public synchronized void sendAll() {
         final Game modelClone = this.model.clone();
 
@@ -170,6 +176,10 @@ public class Controller implements Agent {
         this.queuedAction = null;
     }
 
+    /**
+     * The main loop of the controller that processes commands.
+     * It continues until the game state is marked as done.
+     */
     public void run(){
         while(!this.model.getState().isDone()){
             final Command command = this.dequeueCommand();

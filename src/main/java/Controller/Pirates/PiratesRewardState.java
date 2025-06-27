@@ -20,9 +20,6 @@ import java.util.List;
  * cannon shot phase (if someone else before lost) or returns to the main flight phase.</p>
  */
 public class PiratesRewardState extends State {
-    /**
-     * The context of the game, which contains information about the current state and players.
-     */
 
 
     /**
