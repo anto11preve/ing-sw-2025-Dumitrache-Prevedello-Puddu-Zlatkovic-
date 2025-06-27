@@ -465,6 +465,11 @@ public class FlightBoard implements Serializable, Cloneable {
             System.out.println("Turn Order: 1st = " + turnOrder[0].getName() +
                     " | Last = " + turnOrder[turnOrder.length - 1].getName());
         }
+
+        if(getTimer() != null) {
+            System.out.println("Timer: " + getTimer().getTimeLeft() + " seconds left" +
+                    " | Phase: " + getTimer().getPhase());
+        }
     }
 
     @Override

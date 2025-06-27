@@ -21,16 +21,14 @@ import java.util.List;
 public class SlaversCrewRemovalState extends State {
 
 
-   private int crewmates;
 
     /**
      * Constructor to initialize the state with the current game context.
      *
      * @param context the shared game context
      */
-    public SlaversCrewRemovalState(Context context, int crewmates) {
+    public SlaversCrewRemovalState(Context context) {
         super(context);
-        this.crewmates = crewmates;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
 
     }
@@ -83,7 +81,7 @@ public class SlaversCrewRemovalState extends State {
                 if (context.getCrewmates() > 0) {
                     //se non ho più crew (atterraggio anticipato a fine carta)
                     if (player.getShipBoard().getCondensedShip().getTotalCrew() > 0) {
-                        controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates));
+                        controller.getModel().setState(new SlaversCrewRemovalState(context));
                         controller.getModel().setError(false);
                     } else {
                         context.removeSpecialPlayer(player);
@@ -91,8 +89,9 @@ public class SlaversCrewRemovalState extends State {
                             controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
                             controller.getModel().setError(false);
                         }
-                        else{       //manca qualcuno da gestire
-                            controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
+                        else{   //manca qualcuno da gestire
+                            context.setCrewmates(context.getDefaultAmount());
+                            controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
                             controller.getModel().setError(false);
                         }
                     }
@@ -104,8 +103,8 @@ public class SlaversCrewRemovalState extends State {
                         controller.getModel().setError(false);
                     }
                     else{       //manca qualcuno da gestire
-                        context.setCrewmates(crewmates);
-                        controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
+                        context.setCrewmates(context.getDefaultAmount());
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
                         controller.getModel().setError(false);
                     }
                 }
@@ -117,8 +116,8 @@ public class SlaversCrewRemovalState extends State {
                     controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire
-                    context.setCrewmates(crewmates);
-                    controller.getModel().setState(new SlaversCrewRemovalState(context, crewmates)); //manca qualcuno da gestire
+                    context.setCrewmates(context.getDefaultAmount());
+                    controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
                     controller.getModel().setError(false);
                 }
             }

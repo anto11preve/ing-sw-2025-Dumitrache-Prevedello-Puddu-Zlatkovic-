@@ -32,10 +32,7 @@ public class SmugglersGoodsRemovalState extends State{
      * The good counter that tracks the number of goods to be removed.
      */
     private GoodCounter goodCounter;
-    /**
-     * The amount of goods to be removed.
-     */
-    private int amount;
+
 
     /**
      * Constructor to initialize the state with the current game context.
@@ -44,21 +41,10 @@ public class SmugglersGoodsRemovalState extends State{
      */
     public SmugglersGoodsRemovalState(Context context) {
         super(context);
-        this.amount = context.getRequiredGoods();
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
-    /**
-     * Constructor to initialize the state with the current game context and a specific amount.
-     *
-     * @param context the shared game context
-     * @param amount  the number of goods yet to be removed
-     */
-    public SmugglersGoodsRemovalState(Context context, int amount) {
-        super(context);
-        this.amount = amount;
-        this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
-    }
+
 
     @Override
     public void onEnter(){
@@ -74,7 +60,7 @@ public class SmugglersGoodsRemovalState extends State{
         //se non trova nessun cargo hold con goods
         if(!availableGoods){
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){
-                controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+                controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
                 controller.getModel().setError(false);
             } else {
                 context.removeSpecialPlayer(player);
@@ -127,7 +113,7 @@ public class SmugglersGoodsRemovalState extends State{
         GoodCounter goodCounter = player.getShipBoard().getCondensedShip().goodToDiscard(context.getRequiredGoods());
         if(goodCounter.getRed() + goodCounter.getBlue() + goodCounter.getGreen() + goodCounter.getYellow() == 0){       //non ha abbastanza goods da scartare
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){   //se almeno ha delle batterie
-                controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+                controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
                 controller.getModel().setError(false);
             } else {    //se no non gli succede niente
                 context.removeSpecialPlayer(player);
@@ -167,12 +153,12 @@ public class SmugglersGoodsRemovalState extends State{
                 controller.getModel().setState(new FlightPhase(controller));
                 controller.getModel().setError(false);
             } else {
-                context.setRequiredGoods(amount);
+                context.setRequiredGoods(context.getDefaultAmount());
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
                 controller.getModel().setError(false);
             }
         } else {
-                controller.getModel().setState(new SmugglersGoodsRemovalState(context, amount));
+                controller.getModel().setState(new SmugglersGoodsRemovalState(context));
             controller.getModel().setError(false);
         }
     }

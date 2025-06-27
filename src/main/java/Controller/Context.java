@@ -27,6 +27,7 @@ public class Context {
     private int crewmates;
     private int power;
     private int requiredGoods;
+    private int defaultAmount;
     private List<Good> goods;
     private List<Projectile> projectiles;
     private List<Planet> planets;
@@ -178,6 +179,7 @@ public class Context {
         this.credits = card.getWinReward().getAmount();
         this.daysLost = card.getWinPenalty().getAmount();
         this.crewmates = card.getLossPenalty().getAmount();
+        this.defaultAmount = card.getLossPenalty().getAmount();
         this.power = card.getPower();
         this.visual = () -> {
             this.render.add("Slavers");
@@ -200,6 +202,7 @@ public class Context {
         this.daysLost = card.getWinPenalty().getAmount();
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();
+        this.defaultAmount = card.getLossPenalty().getAmount();
         this.visual = () -> {
             this.render.add("Smugglers");
             this.render.add("Power required: " + this.power);
@@ -438,6 +441,10 @@ public class Context {
     }
     public void setDiceNumber(int diceNumber) {
         this.diceNumber = diceNumber;
+    }
+
+    public int getDefaultAmount() {
+        return this.defaultAmount;
     }
 
     public List<String> getRender() {

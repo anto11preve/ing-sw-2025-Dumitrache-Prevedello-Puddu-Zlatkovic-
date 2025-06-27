@@ -60,7 +60,7 @@ public class SlaversRewardsState extends State{
         context.removePlayer(player);
 
         if(!context.getSpecialPlayers().isEmpty()){
-            controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates()));
+            controller.getModel().setState(new SlaversCrewRemovalState(context));
             controller.getModel().setError(false);
         } else {
             controller.getModel().setState(new FlightPhase(controller));
@@ -86,7 +86,7 @@ public class SlaversRewardsState extends State{
         context.removePlayer(player);
 
         if(!context.getSpecialPlayers().isEmpty()){
-            controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates()));
+            controller.getModel().setState(new SlaversCrewRemovalState(context));
             controller.getModel().setError(false);
         } else {
             controller.getModel().setState(new FlightPhase(controller));

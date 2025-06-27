@@ -107,7 +107,7 @@ public class SlaversBatteryRemovalState extends State{
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     if (!context.getSpecialPlayers().isEmpty()) {
-                        controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
                         controller.getModel().setError(false);
                     }
                     else{
@@ -124,7 +124,7 @@ public class SlaversBatteryRemovalState extends State{
                 context.removePlayer(player);
                 context.addSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
-                    controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
+                    controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
                     controller.getModel().setError(false);
                 }
                 else{       //manca qualcuno da gestire

@@ -119,7 +119,7 @@ public class SlaversPowerDeclarationState extends State {
             context.addSpecialPlayer(player);
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){
-                controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates()));  //tutti i giocatori gestiti
+                controller.getModel().setState(new SlaversCrewRemovalState(context));  //tutti i giocatori gestiti
                 controller.getModel().setError(false);
             }else{
                 controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
@@ -133,7 +133,7 @@ public class SlaversPowerDeclarationState extends State {
                     context.removePlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
                         if (!context.getSpecialPlayers().isEmpty()) {
-                            controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
+                            controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
                             controller.getModel().setError(false);
                         } else {
                             controller.getModel().setState(new FlightPhase(controller));
@@ -148,7 +148,7 @@ public class SlaversPowerDeclarationState extends State {
                     context.removePlayer(player);
                     context.addSpecialPlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
-                        controller.getModel().setState(new SlaversCrewRemovalState(context, context.getCrewmates())); //tutti i giocatori gestiti
+                        controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
                         controller.getModel().setError(false);
                     }
                     else{       //manca qualcuno da gestire

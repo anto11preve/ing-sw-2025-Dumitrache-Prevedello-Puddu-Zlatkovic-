@@ -26,17 +26,14 @@ public class SecondSmugglersBatteryRemovalState extends State{
     /**
      * The amount of batteries to be removed.
      */
-    private int amount;
 
     /**
      * Constructor to initialize the state with the current game context and a specific amount.
      *
      * @param context the shared game context
-     * @param amount  the number of batteries yet to be removed
      */
-    public SecondSmugglersBatteryRemovalState(Context context, int amount) {
+    public SecondSmugglersBatteryRemovalState(Context context) {
         super(context);
-        this.amount = amount;
         this.setPlayerInTurn(context.getSpecialPlayers().getFirst());
     }
 
@@ -58,10 +55,7 @@ public class SecondSmugglersBatteryRemovalState extends State{
             controller.getModel().setError(true);
             throw new InvalidParameters("Invalid coordinates");
         }
-        if(amount <= 0){
-            controller.getModel().setError(true);
-            throw new InvalidParameters("Invalid amount, must be non negative");
-        }
+
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
             controller.getModel().setError(true);
@@ -76,19 +70,19 @@ public class SecondSmugglersBatteryRemovalState extends State{
 
         BatteryCompartment compartment = (BatteryCompartment) component;
         compartment.removeBattery();
-        amount--;
         context.removeRequiredGood();
-        if(amount == 0){
+        if(context.getRequiredGoods() == 0){
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
                 controller.getModel().setState(new FlightPhase(controller));
                 controller.getModel().setError(false);
             } else {
+                context.setRequiredGoods(context.getDefaultAmount());
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
                 controller.getModel().setError(false);
             }
         } else {
-            controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context, amount));
+            controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
             controller.getModel().setError(false);
         }
     }
