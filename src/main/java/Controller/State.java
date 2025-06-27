@@ -8,7 +8,6 @@ import Model.Player;
 import Model.Ship.Coordinates;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.List;
 
 //import java.util.Map;
@@ -19,7 +18,7 @@ public abstract class State implements Serializable {
 
     private Player playerInTurn;
 
-    protected Context context;
+    protected transient Context context;
 
     public Controller getController() {
         return controller;
@@ -130,9 +129,5 @@ public abstract class State implements Serializable {
         return this.context;
     }
 
-    public abstract List<String> getAvailableCommands(
-
-    );
-
-
+    public abstract List<String> getAvailableCommands();
 }

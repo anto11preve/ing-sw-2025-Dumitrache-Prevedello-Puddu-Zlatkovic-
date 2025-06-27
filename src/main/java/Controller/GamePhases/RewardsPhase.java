@@ -2,10 +2,12 @@ package Controller.GamePhases;
 
 import Controller.Controller;
 import Controller.Enums.MatchLevel;
+import Controller.Exceptions.InvalidParameters;
 import Controller.PreMatchLobby.OffState;
 import Controller.State;
 import Model.Enums.Good;
 import Model.Exceptions.InvalidMethodParameters;
+import Model.Game;
 import Model.Player;
 import View.Client.ClientState;
 
@@ -163,14 +165,18 @@ public class RewardsPhase extends State {
     }
 
     @Override
-    public void logout(String playerName) throws InvalidMethodParameters {
-        Player player = this.getController().getModel().getPlayer(playerName);
-        if (!player.equals(this.getController().getModel().getPlayers().getFirst())) {
-            this.getController().getModel().setError(true);
-            throw new InvalidMethodParameters("Only the Host can end the Game.");
-        }
-        this.getController().getModel().setState(new OffState(this.getController()));
+    public void logout(String name) throws InvalidParameters {
+        final Game model = this.getController().getModel();
 
+        Player removed_player = model.getPlayer(name);
+        if(removed_player == null){
+            throw new InvalidParameters("Player with this name not connected");
+        }
+        model.removePlayer(name);
+        if(model.getPlayers().isEmpty()){
+            model.setState(new OffState(this.getController()));
+        }
+        System.out.println("Player " + name + " logged out");
     }
 
 

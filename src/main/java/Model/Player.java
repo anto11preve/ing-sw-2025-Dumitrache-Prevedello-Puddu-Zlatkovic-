@@ -108,6 +108,7 @@ public final class Player implements Serializable, Cloneable {
         this.shipBoard = (old.shipBoard != null) ? old.shipBoard.clone() : null;
         this.credits = old.credits;
         this.junk = old.junk;
+        this.errorMessage = old.errorMessage;
     }
 
     public boolean isError() {return error;}
