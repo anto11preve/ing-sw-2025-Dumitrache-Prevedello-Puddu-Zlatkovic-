@@ -513,7 +513,7 @@ public class Game implements Serializable, Cloneable {
 
     private Game(Game old){
         this.players = new ArrayList<>();
-        for(Player p : old.getPlayers()){
+        for(Player p : old.players){
             this.players.add(p.clone());
         }
 
