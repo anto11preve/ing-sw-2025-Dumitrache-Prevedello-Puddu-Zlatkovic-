@@ -30,14 +30,9 @@ public final class FlightState extends PlayingState {
     /*Visualizer - TODO: make view agnostic*/
     @Override
     public void viewCard(){
-        final Context context = this.getGame().getState().getContext();
-
-        if(context == null) {
-            Client.view.setState(new ViewFlightBoardState());
-            return;
+        for(String line : this.getGame().renderCard()){
+            System.out.println(line);
         }
-
-        context.render();
     }
 
     @Override

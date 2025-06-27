@@ -4,6 +4,7 @@ import Controller.Controller;
 import Controller.Exceptions.*;
 import Controller.RealTimeBuilding.BuildingState;
 import Controller.State;
+import Model.Game;
 import Model.Player;
 
 import java.util.List;
@@ -64,17 +65,17 @@ public class LogInState extends State {
 
     @Override
     public void logout(String name) throws InvalidParameters {
+        final Game model = this.getController().getModel();
 
-        Player removed_player= this.getController().getModel().getPlayer(name);
+        Player removed_player = model.getPlayer(name);
         if(removed_player == null){
             throw new InvalidParameters("Player with this name not connected");
         }
-        this.getController().getModel().removePlayer(name);
-        if(this.getController().getModel().getPlayers().isEmpty()){
-            this.getController().getModel().setState(new OffState(this.getController()));
+        model.removePlayer(name);
+        if(model.getPlayers().isEmpty()){
+            model.setState(new OffState(this.getController()));
         }
         System.out.println("Player " + name + " logged out");
-        // You can add more logic here if needed
     }
 
     @Override

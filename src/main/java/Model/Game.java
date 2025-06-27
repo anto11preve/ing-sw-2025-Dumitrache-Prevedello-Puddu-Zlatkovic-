@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.Context;
 import Model.Board.AdventureCards.AdventureCardFilip;
 import Model.Board.CardDeck;
 import Model.Board.FlightBoard;
@@ -33,7 +34,7 @@ public class Game implements Serializable, Cloneable {
     private final transient Queue<SpaceshipComponent> centralCabins= new ArrayDeque<>();
     private String errorMessage=null;
 
-
+    private List<String> renderCard;
 
 
 
@@ -525,9 +526,16 @@ public class Game implements Serializable, Cloneable {
 
         this.flightBoard = old.flightBoard.clone();
         this.state = old.state;
+        final Context context = (old.state != null) ? old.state.getContext() : null;
+        this.renderCard = (context != null) ? context.getRender() : new ArrayList<>();
         this.error = old.error;
+        this.errorMessage = old.errorMessage;
 
         this.preBuiltShips = old.preBuiltShips;
+    }
+
+    public List<String> renderCard(){
+        return this.renderCard;
     }
 
     /**

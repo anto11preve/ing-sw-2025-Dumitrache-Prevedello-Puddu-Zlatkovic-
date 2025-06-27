@@ -11,24 +11,19 @@ import Model.Enums.CardLevel;
 import Model.Enums.Good;
 import Model.Player;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-/*TODO: make better*/
-interface SerializableRunnable extends Runnable, Serializable {}
-
 /**
  * The Context class represents the current state of the game, including players, resources, and actions.
  * It is used to manage the game flow and provide information to the controller.
  * It works as the dynamic variant of the card that can change based on the current game situation.
  * This class is serializable to allow saving and restoring game states.
  */
-public class Context implements Serializable {
-    private transient Controller controller;
-    private transient List<Player> players;
-    private transient List<Player> specialPlayers;
+public class Context {
+    private Controller controller;
+    private List<Player> players;
+    private List<Player> specialPlayers;
     private int crewmates;
     private int power;
     private int requiredGoods;
@@ -38,8 +33,8 @@ public class Context implements Serializable {
     private int credits;
     private int daysLost;
     private int diceNumber;
-    private SerializableRunnable visual;
-    private AdventureCardFilip adventureCard;
+    private Runnable visual;
+    private List<String> render;
 
 
 
@@ -48,6 +43,7 @@ public class Context implements Serializable {
         this.controller = controller;
         this.players = new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
         this.specialPlayers = new ArrayList<>();
+        this.render = new ArrayList<>();
 
     }
 
@@ -57,12 +53,12 @@ public class Context implements Serializable {
         this.credits = card.getLandingReward().getAmount();
         this.daysLost = card.getLandingPenalty().getAmount();
         this.visual = () -> {
-            System.out.println("Abandoned Ship");
-            System.out.println("Crew to lose: " + this.crewmates);
+            this.render.add("Abandoned Ship");
+            this.render.add("Crew to lose: " + this.crewmates);
             //winpenalty generica serve dire che e in giorni etc...
-            System.out.println("Credits: " + this.credits);
-            System.out.println("Days: " + this.daysLost);
-            System.out.println("---------------------------------------");
+            this.render.add("Credits: " + this.credits);
+            this.render.add("Days: " + this.daysLost);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -77,16 +73,17 @@ public class Context implements Serializable {
         }
         this.daysLost = card.getLandingPenalty().getAmount();
         this.visual = () -> {
-            System.out.println("Abandoned Station");
-            System.out.println("Crew required: " + this.crewmates);
+            this.render.add("Abandoned Station");
+            this.render.add("Crew required: " + this.crewmates);
             //winpenalty generica serve dire che e in giorni etc...
-            System.out.print("Goods: ");
+            String s = "Goods:";
             for(Good good : this.goods) {
-                System.out.print(good + " ");
+                s += " " + good;
             }
-            System.out.println();
-            System.out.println("Days: " + this.daysLost);
-            System.out.println("---------------------------------------");
+            this.render.add(s);
+            this.render.add("");
+            this.render.add("Days: " + this.daysLost);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -99,21 +96,16 @@ public class Context implements Serializable {
             this.projectiles.add(meteor);
         }
         this.visual = () -> {
-            System.out.println("Meteor Swarm");
-            System.out.println("Total Meteors:  " + projectiles.size());
-            System.out.println("Details:");
+            this.render.add("Meteor Swarm");
+            this.render.add("Total Meteors:  " + projectiles.size());
+            this.render.add("Details:");
             for (int i = 0; i < projectiles.size(); i++) {
                 Projectile m = projectiles.get(i);
-                System.out.printf(
-                        "  #%d → large=%s, dir=%s%n",
-                        i + 1,
-                        m.isBig(),
-                        m.getSide()
-                );
+                this.render.add("  #" + (i + 1) + " → large=" + m.isBig() + ", dir=" + m.getSide());
             }
-            System.out.println();
-            System.out.println("Dices Result : " + this.diceNumber);
-            System.out.println("---------------------------------------");
+            this.render.add("");
+            this.render.add("Dices Result : " + this.diceNumber);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -122,8 +114,8 @@ public class Context implements Serializable {
     public Context(Controller controller, OpenSpace card) {
         this(controller);
         this.visual = () -> {
-            System.out.println("Open Space");
-            System.out.println("---------------------------------------");
+            this.render.add("Open Space");
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -139,24 +131,19 @@ public class Context implements Serializable {
         }
         this.power = card.getPower();
         this.visual = () -> {
-            System.out.println("Pirates");
-            System.out.println("Power required: " + this.power);
-            System.out.println("Total Shots:  " + projectiles.size());
-            System.out.println("Details:");
+            this.render.add("Pirates");
+            this.render.add("Power required: " + this.power);
+            this.render.add("Total Shots:  " + projectiles.size());
+            this.render.add("Details:");
             for (int i = 0; i < projectiles.size(); i++) {
                 Projectile m = projectiles.get(i);
-                System.out.printf(
-                        "  #%d → large=%s, dir=%s%n",
-                        i + 1,
-                        m.isBig(),
-                        m.getSide()
-                );
+                this.render.add("  #" + (i + 1) + " → large=" + m.isBig() + ", dir=" + m.getSide());
             }
-            System.out.println();
-            System.out.println("Dices Result : " + this.diceNumber);
-            System.out.println("Credits: " + this.credits);
-            System.out.println("Days: " + this.daysLost);
-            System.out.println("---------------------------------------");
+            this.render.add("");
+            this.render.add("Dices Result : " + this.diceNumber);
+            this.render.add("Credits: " + this.credits);
+            this.render.add("Days: " + this.daysLost);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -172,13 +159,14 @@ public class Context implements Serializable {
 
         this.visual = () -> {
             for(Planet planet : planets) {
-                System.out.print("Planet: " + planet.getName() + " ");
+                String s = "Planet: " + planet.getName();
                 for(Good good : planet.getLandingReward()) {
-                    System.out.print(good + " ");
+                    s += " " + good;
                 }
-                System.out.println();
-                System.out.println("Days Lost: " + this.daysLost);
-                System.out.println("---------------------------------------");
+                this.render.add(s);
+                this.render.add("");
+                this.render.add("Days Lost: " + this.daysLost);
+                this.render.add("---------------------------------------");
             }
         };
         this.visual.run();
@@ -192,12 +180,12 @@ public class Context implements Serializable {
         this.crewmates = card.getLossPenalty().getAmount();
         this.power = card.getPower();
         this.visual = () -> {
-            System.out.println("Slavers");
-            System.out.println("Power required: " + this.power);
-            System.out.println("Crewmates to lose: " + this.crewmates);
-            System.out.println("Credits: " + this.credits);
-            System.out.println("Days: " + this.daysLost);
-            System.out.println("---------------------------------------");
+            this.render.add("Slavers");
+            this.render.add("Power required: " + this.power);
+            this.render.add("Crewmates to lose: " + this.crewmates);
+            this.render.add("Credits: " + this.credits);
+            this.render.add("Days: " + this.daysLost);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -213,16 +201,17 @@ public class Context implements Serializable {
         this.power = card.getPower();
         this.requiredGoods = card.getLossPenalty().getAmount();
         this.visual = () -> {
-            System.out.println("Smugglers");
-            System.out.println("Power required: " + this.power);
-            System.out.println("Goods to lose: " + this.requiredGoods);
-            System.out.print("Available goods: ");
+            this.render.add("Smugglers");
+            this.render.add("Power required: " + this.power);
+            this.render.add("Goods to lose: " + this.requiredGoods);
+            String s = "Available goods:";
             for(Good good : this.goods) {
-                System.out.print(good + " ");
+                s += " " + good;
             }
-            System.out.println();
-            System.out.println("Days: " + this.daysLost);
-            System.out.println("---------------------------------------");
+            this.render.add(s);
+            this.render.add("");
+            this.render.add("Days: " + this.daysLost);
+            this.render.add("---------------------------------------");
         };
         this.visual.run();
 
@@ -257,22 +246,17 @@ public class Context implements Serializable {
 
             }
             this.visual = () -> {
-                System.out.println("Combat Zone Level One");
-                System.out.println("Lowest Crew loses: " + this.daysLost + " days");
-                System.out.println("Lowest Engine Power loses: " + this.crewmates + " crewmates");
-                System.out.print("Lowest Fire Power gets hit by: ");
+                this.render.add("Combat Zone Level One");
+                this.render.add("Lowest Crew loses: " + this.daysLost + " days");
+                this.render.add("Lowest Engine Power loses: " + this.crewmates + " crewmates");
+                this.render.add("Lowest Fire Power gets hit by: ");
                 for (int j = 0; j < projectiles.size(); j++) {
                     Projectile m = projectiles.get(j);
-                    System.out.printf(
-                            "  #%d → large=%s, dir=%s%n",
-                            j + 1,
-                            m.isBig(),
-                            m.getSide()
-                    );
+                    this.render.add("  #" + (j + 1) + " → large=" + m.isBig() + ", dir=" + m.getSide());
                 }
-                System.out.println();
-                System.out.println("Dices Result : " + this.diceNumber);
-                System.out.println("---------------------------------------");
+                this.render.add("");
+                this.render.add("Dices Result : " + this.diceNumber);
+                this.render.add("---------------------------------------");
             };
         } else if( card.getLevel() == CardLevel.LEVEL_TWO) {
             int i = 0;
@@ -301,22 +285,17 @@ public class Context implements Serializable {
 
             }
             this.visual = () -> {
-                System.out.println("Combat Zone Level Two");
-                System.out.println("Lowest Fire Power loses: " + this.daysLost + " days");
-                System.out.println("Lowest Engine Power loses: " + this.requiredGoods+ " goods");
-                System.out.print("Lowest Crew gets hit by: ");
+                this.render.add("Combat Zone Level Two");
+                this.render.add("Lowest Fire Power loses: " + this.daysLost + " days");
+                this.render.add("Lowest Engine Power loses: " + this.requiredGoods+ " goods");
+                this.render.add("Lowest Crew gets hit by: ");
                 for (int j = 0; j < projectiles.size(); j++) {
                     Projectile m = projectiles.get(j);
-                    System.out.printf(
-                            "  #%d → large=%s, dir=%s%n",
-                            j + 1,
-                            m.isBig(),
-                            m.getSide()
-                    );
+                    this.render.add("  #" + (j + 1) + " → large=" + m.isBig() + ", dir=" + m.getSide());
                 }
-                System.out.println();
-                System.out.println("Dices Result : " + this.diceNumber);
-                System.out.println("---------------------------------------");
+                this.render.add("");
+                this.render.add("Dices Result : " + this.diceNumber);
+                this.render.add("---------------------------------------");
             };
         } else {
             throw new InvalidParameters("Invalid card level for CombatZone: " + card.getLevel());
@@ -461,4 +440,11 @@ public class Context implements Serializable {
         this.diceNumber = diceNumber;
     }
 
+    public List<String> getRender() {
+        this.render = new ArrayList<>();
+
+        if(visual != null) visual.run();
+
+        return this.render;
+    }
 }
