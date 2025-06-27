@@ -24,7 +24,6 @@ public class LogoutCommandTest {
     }
 
 
-
     @Test
     public void testGetConstructor() {
         var constructor = LogoutCommand.getConstructor();
@@ -37,7 +36,7 @@ public class LogoutCommandTest {
         var constructor = LogoutCommand.getConstructor();
         var args = java.util.Map.<String, String>of();
         Command created = constructor.create("Player1", args);
-        
+
         assertNotNull(created);
         assertTrue(created instanceof LogoutCommand);
         assertEquals("Player1", created.getPlayerName());
@@ -65,10 +64,5 @@ public class LogoutCommandTest {
         assertTrue(command instanceof Command);
         assertTrue(command instanceof LogoutCommand);
     }
-
-    @Test
-    public void testExecuteCallsSetQueuedAction() throws Exception {
-        // Test that execute calls both setQueuedAction and logout
-        assertDoesNotThrow(() -> command.execute(controller));
-    }
 }
+

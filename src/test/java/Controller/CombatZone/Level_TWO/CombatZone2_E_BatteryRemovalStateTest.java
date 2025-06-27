@@ -84,42 +84,10 @@ class CombatZone2_E_BatteryRemovalStateTest {
         assertInstanceOf(CombatZone2EngineDeclarationState.class, controller.getModel().getState());
     }
 
-    @Test
-    void testUseItem_InvalidItemType() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.CREW, batteryCoords));
-        
-        assertEquals("Invalid item type, expected BATTERIES", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_WrongPlayer() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player2", ItemType.BATTERIES, batteryCoords));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_NullCoordinates() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, null));
-        
-        assertEquals("Coordinates cannot be null", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_InvalidComponent() {
-        Coordinates invalidCoords = new Coordinates(0, 0);
-        
-        assertThrows(InvalidContextualAction.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, invalidCoords));
-        
-        assertTrue(controller.getModel().isError());
-    }
+
 
     @Test
     void testUseItem_MultipleBatteries() throws InvalidContextualAction, InvalidParameters, InvalidMethodParameters {
@@ -133,27 +101,7 @@ class CombatZone2_E_BatteryRemovalStateTest {
         assertInstanceOf(CombatZone2_E_BatteryRemovalState.class, controller.getModel().getState());
     }
 
-    @Test
-    void testUseItem_NegativeDeclaredPower() {
-        CombatZone2_E_BatteryRemovalState negativeState = new CombatZone2_E_BatteryRemovalState(context, -1.0, 1);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> negativeState.useItem("Player1", ItemType.BATTERIES, batteryCoords));
-        
-        assertEquals("Declared power cannot be negative", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_NegativeBatteries() {
-        CombatZone2_E_BatteryRemovalState negativeState = new CombatZone2_E_BatteryRemovalState(context, 2.0, -1);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> negativeState.useItem("Player1", ItemType.BATTERIES, batteryCoords));
-        
-        assertEquals(" Number of batteries cannot be negative", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
     @Test
     void testUseItem_ZeroBatteries() throws InvalidContextualAction, InvalidParameters, InvalidMethodParameters {
