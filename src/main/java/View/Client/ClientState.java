@@ -85,6 +85,10 @@ public interface ClientState {
         throw new UnsupportedOperationException("Cannot invoke start on " + this.getClass().getName());
     }
 
+    default ClientState net_ViewCardDeck(String username) {
+        throw new UnsupportedOperationException("Cannot invoke viewCardDeck on " + this.getClass().getName());
+    }
+
     default ClientState updateGame(Game game){
         throw new UnsupportedOperationException("Cannot invoke updateGame on " + this.getClass().getName());
     }
@@ -100,6 +104,10 @@ public interface ClientState {
 
     default void viewCard() {
         throw new UnsupportedOperationException("Cannot invoke viewCard on " + this.getClass().getName());
+    }
+
+    default void viewCardDeck() {
+        throw new UnsupportedOperationException("Cannot invoke viewCardDeck on " +  this.getClass().getName());
     }
 
     default void viewComponent(String username, Coordinates coordinates){
