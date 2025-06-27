@@ -28,6 +28,7 @@ import java.util.List;
  * player interactions.</p>
  */
 public class AbandonedShipCrewRemovalState extends State {
+
     /**
      * Constructs the state with the given context.
      *
