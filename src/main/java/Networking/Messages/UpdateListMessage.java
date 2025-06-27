@@ -5,7 +5,15 @@ import Networking.Agent;
 import Networking.Network;
 import View.Client.Actions.UpdateListAction;
 
+/**
+ * Represents a message sent by the server to update the list of game IDs.
+ * This message is handled by the client to refresh the list of available games.
+ */
 public class UpdateListMessage implements Message {
+    /**
+     * Constructs an UpdateListMessage.
+     * This message does not contain any data or perform any action.
+     */
     @Override
     public void handle(Agent agent, Network network){
         final Server server;

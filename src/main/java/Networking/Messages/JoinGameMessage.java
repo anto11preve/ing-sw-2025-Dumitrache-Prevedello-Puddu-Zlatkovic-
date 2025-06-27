@@ -7,13 +7,34 @@ import Networking.Agent;
 import Networking.Network;
 import View.Client.ClientState;
 
+/**
+ * Represents a message sent to join an existing game identified by its game ID.
+ * This message is handled by the server to process the player's request to join a game.
+ */
 public class JoinGameMessage implements Message {
+
+    /**
+     * The ID of the game that the player wants to join.
+     */
     private final int gameID;
 
+    /**
+     * Constructs a JoinGameMessage with the specified game ID.
+     *
+     * @param gameID The ID of the game to join.
+     */
     public JoinGameMessage(int gameID) {
         this.gameID = gameID;
     }
 
+    /**
+     * Handles the message in the context of a server agent.
+     * This method retrieves the username of the player and enqueues a login command for the specified game.
+     *
+     * @param agent The server agent handling the message.
+     * @param network The network over which the message is sent.
+     * @throws UnsupportedOperationException if the agent is not a Server instance.
+     */
     @Override
     public void handle(Agent agent, Network network) throws UnsupportedOperationException {
         final Server server;

@@ -5,7 +5,20 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.*;
 
+/**
+ * Utility class for networking operations.
+ * Provides methods to retrieve command line options and select network interfaces.
+ */
 public class Utils {
+
+
+    /**
+     * Gets the position of a command line option in the provided arguments.
+     *
+     * @param option The command line option to search for.
+     * @param args   The array of command line arguments.
+     * @return The index of the option in the args array, or -1 if not found.
+     */
     public static int getPosition(String option, String[] args){
         for(int i = 0; i < args.length; i++){
             if(args[i].equalsIgnoreCase(option)){
@@ -16,6 +29,13 @@ public class Utils {
         return -1;
     }
 
+    /**
+     * Retrieves the value of a command line option from the provided arguments.
+     *
+     * @param option The command line option to search for.
+     * @param args   The array of command line arguments.
+     * @return The value associated with the option, or null if not found or no value is provided.
+     */
     public static String getOption(String option, String[] args) {
         int i;
         if((i = getPosition(option, args)) != -1 && i + 1 < args.length){
@@ -25,6 +45,14 @@ public class Utils {
         return null;
     }
 
+
+    /**
+     * Selects a network interface based on command line arguments or user input.
+     * If no specific option is provided, it lists available network interfaces and prompts the user to select one.
+     *
+     * @param args The command line arguments.
+     * @return The selected network interface address as a string, or "localhost" if no valid selection is made.
+     */
     public static String NetworkSelector(String[] args) {
         final String option = getOption("--hostname", args);
         if(option != null) {

@@ -9,10 +9,31 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * RMIConnectionHandler is responsible for setting up the RMI connection
+ * between the server and clients. It binds the Dispatcher to the RMI registry
+ * and handles the unbinding when the connection is no longer needed.
+ */
 public class RMIConnectionHandler implements Networking.ConnectionHandler {
+
+    /**
+     * The Dispatcher instance that handles incoming client requests.
+     */
     private final Dispatcher dispatcher;
+    /**
+     * The RMI registry where the Dispatcher is bound.
+     */
     private final Registry registry;
 
+    /**
+     * Constructs an RMIConnectionHandler that sets up the RMI connection
+     * with the specified server, hostname, and port.
+     *
+     * @param server The server instance to connect to.
+     * @param hostname The hostname for the RMI connection.
+     * @param port The port number for the RMI registry.
+     * @throws RemoteException if a remote communication error occurs.
+     */
     public RMIConnectionHandler(Server server, String hostname, String port) throws RemoteException {
         int PORT;
         try {
@@ -33,8 +54,14 @@ public class RMIConnectionHandler implements Networking.ConnectionHandler {
         System.out.println("RMI connection handler started at port " + PORT);
     }
 
+
+    /**
+     * Unbind the dispatcher from the RMI registry and unexport the dispatcher object.
+     * This is done to clean up resources and ensure that the dispatcher is no longer accessible.
+     */
     @Override
     public void setDone() {
+
         try {
             this.registry.unbind("Dispatcher");
         } catch (NotBoundException e) {

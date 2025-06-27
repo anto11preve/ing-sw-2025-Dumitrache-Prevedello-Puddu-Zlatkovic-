@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public final class TUI extends View {
     private final Console console = System.console();
 
