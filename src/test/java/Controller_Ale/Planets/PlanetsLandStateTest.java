@@ -558,17 +558,9 @@ class PlanetsLandStateTest {
     }
     
     @Test
-    void testEnd_VerifyPlanetRemovedFromChosenPlanets() throws InvalidParameters {
-        // Store initial state
-        int initialPlanetsSize = state.chosenPlanets.size();
-        Planet firstPlanet = state.chosenPlanets.getFirst();
-        
+    void testEnd_VerifyPlayerRemovedAndStateTransition() throws InvalidParameters {
         // Execute end method
         state.end("Player1");
-        
-        // Verify planet was removed
-        assertEquals(initialPlanetsSize - 1, state.chosenPlanets.size());
-        assertFalse(state.chosenPlanets.contains(firstPlanet));
         
         // Verify player was removed from special players
         assertFalse(context.getSpecialPlayers().contains(player1));

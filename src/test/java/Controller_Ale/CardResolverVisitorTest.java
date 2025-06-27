@@ -2,6 +2,8 @@ package Controller_Ale;
 
 import Controller.AbandonedShip.AbandonedShipDecidingState;
 import Controller.AbandonedStation.AbandonedStationDecidingState;
+import Controller.CardResolverVisitor;
+import Controller.CardResolverVisitor;
 import Controller.CombatZone.Level_ONE.CombatZone1EngineDeclarationState;
 import Controller.CombatZone.Level_TWO.CombatZone2PowerDeclarationState;
 import Controller.Controller;
@@ -479,7 +481,7 @@ public class CardResolverVisitorTest {
     @Test
     public void testSpaceshipComponentVisitorInterface() {
         // Test the inner interface
-        Controller.CardResolverVisitor.SpaceshipComponentVisitor componentVisitor = new Controller.CardResolverVisitor.SpaceshipComponentVisitor() {
+        CardResolverVisitor.SpaceshipComponentVisitor componentVisitor = new CardResolverVisitor.SpaceshipComponentVisitor() {
             @Override
             public void visit(Cabin cabin) {
                 assertNotNull(cabin);
