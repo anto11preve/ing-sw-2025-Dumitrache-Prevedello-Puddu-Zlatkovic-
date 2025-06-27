@@ -77,6 +77,12 @@ public class BuildingState extends State {
         controller.setQueuedAction(ClientState::net_Start);
     }
 
+    /**
+     * Unbooks the deck for a player if they have booked one.
+     * This is called when a player draws a component or reserves a component.
+     *
+     * @param player The player whose deck booking is to be removed
+     */
     private void unbookDeck(Player player){
         Map<Player, CardDeck> bookedDecks=this.getController().getModel().getFlightBoard().getBookedDecks();
         if(bookedDecks.containsKey(player)){
@@ -410,6 +416,15 @@ public class BuildingState extends State {
 
     }
 
+    /**
+     * Allows a player to choose a pre-built ship from the available options.
+     * The ship is set as the player's ship board.
+     *
+     * @param name Player's name
+     * @param index Index of the pre-built ship (0-2)
+     * @throws InvalidCommand If player has already finished or ship is invalid (Trial)
+     * @throws InvalidParameters If the index is invalid or player doesn't exist
+     */
     @Override
     public void preBuiltShip(String name, int index) throws InvalidCommand, InvalidParameters {
 
@@ -531,6 +546,15 @@ public class BuildingState extends State {
 
     }
 
+    /**
+     * Deletes a component from the player's ship board.
+     * Only available in Trial games.
+     *
+     * @param name Player's name
+     * @param coordinates Coordinates of the component to delete
+     * @throws InvalidCommand If it's not a Trial game
+     * @throws InvalidParameters If the player doesn't exist or coordinates are invalid
+     */
     @Override
     public void deleteComponent(String name, Coordinates coordinates) throws InvalidCommand, InvalidParameters {
 
@@ -587,6 +611,12 @@ public class BuildingState extends State {
 
     }
 
+    /**
+     * Returns the list of available commands in this state.
+     * This includes commands for building, reserving, and placing components,
+     * as well as managing the hourglass and viewing decks.
+     * * @return List of available commands
+     */
     @Override
     public List<String> getAvailableCommands(){
         return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass", "DeleteComponent", "PreBuiltShip");

@@ -12,12 +12,19 @@ import java.util.List;
 
 //import java.util.Map;
 
+/**
+ * Abstract class representing the state of the game.
+ * Each state defines the behavior of the game at a specific point in time.
+ * It provides methods for handling player actions and transitions between states.
+ */
 public abstract class State implements Serializable {
 
     private transient Controller controller;
 
+    /** The player whose turn it is */
     private Player playerInTurn;
 
+    /** Context for the state, used for contextual actions inside a card resolution*/
     protected transient Context context;
 
     public Controller getController() {

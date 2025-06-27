@@ -22,8 +22,7 @@ import java.util.List;
  * to the {@link AbandonedStationLandState} where additional consequences may occur.</p>
  */
 public class AbandonedStationDecidingState extends State {
-    /** The shared context containing game state and references. */
-   
+
 
     /**
      * Constructs the state with the given context.

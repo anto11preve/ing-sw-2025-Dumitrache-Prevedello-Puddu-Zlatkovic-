@@ -28,7 +28,10 @@ import java.util.List;
 public class PiratesManageShotState extends State{
 
     int number;
-    int turn;   ///Turno del giocatore speciale che dve subire la cannonata
+    /**
+     * The turn of the player who is to be hit by the cannon shot.
+     */
+    int turn;
     boolean hit = false;
 
     /**

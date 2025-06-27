@@ -23,8 +23,7 @@ import java.util.List;
  * to ensure it is the player's turn and that the operations are legal according to the game rules.</p>
  */
 public class AbandonedStationLandState extends State {
-    /** The shared context containing game state and references. */
-   
+
 
     /**
      * Constructs the state with the given context.

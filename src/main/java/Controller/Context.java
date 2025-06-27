@@ -22,11 +22,28 @@ import java.util.List;
  */
 public class Context {
     private Controller controller;
+    /**
+     * List of players in the game.
+     * This list is initialized from the controller's flight board turn order.
+     */
     private List<Player> players;
+    /**
+     * List of some players depending on the Card.
+     * This list is initialized as empty and can be modified during the game.
+     */
     private List<Player> specialPlayers;
+
+    /**
+     * Represents the number of crewmates, power, required goods, and other resources.
+     * These values are initialized based on the specific card being played.
+     */
     private int crewmates;
     private int power;
     private int requiredGoods;
+    /**
+     * Represents the default amount of resources, such as goods or crewmates,
+     * that can be used in various game scenarios, usually for enemies.
+     */
     private int defaultAmount;
     private List<Good> goods;
     private List<Projectile> projectiles;
@@ -35,6 +52,10 @@ public class Context {
     private int daysLost;
     private int diceNumber;
     private Runnable visual;
+    /**
+     * List of strings to render the visual representation of the context.
+     * This is used to display information about the current game state.
+     */
     private List<String> render;
 
 
@@ -54,6 +75,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the AbandonedShip card.
+     * Initializes crewmates, credits, daysLost, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the AbandonedShip card being played
+     */
     public Context(Controller controller, AbandonedShip card) {
         this(controller);
         this.crewmates = card.getWinPenalty().getAmount();
@@ -71,6 +99,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the AbandonedStation card.
+     * Initializes crewmates, goods, daysLost, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the AbandonedStation card being played
+     */
     public Context(Controller controller, AbandonedStation card) {
         this(controller);
         this.crewmates = card.getCrew();
@@ -96,6 +131,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the MeteorSwarm card.
+     * Initializes projectiles, diceNumber, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the AsteroidField card being played
+     */
     public Context(Controller controller, MeteorSwarm card) {
         this(controller);
         this.projectiles = new ArrayList<>();
@@ -118,6 +160,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the OpenSpace card.
+     * Initializes visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the OpenSpace card being played
+     */
     public Context(Controller controller, OpenSpace card) {
         this(controller);
         this.visual = () -> {
@@ -128,6 +177,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the Pirates card.
+     * Initializes credits, daysLost, projectiles, power, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the Pirates card being played
+     */
     public Context(Controller controller, Pirates card) {
         this(controller);
         this.credits = card.getWinReward().getAmount();
@@ -156,6 +212,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the Planets card.
+     * Initializes planets, daysLost, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the Planets card being played
+     */
     public Context(Controller controller, Planets card) {
         this(controller);
         this.daysLost = card.getLandingPenalty().getAmount();
@@ -180,6 +243,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the Slavers card.
+     * Initializes credits, daysLost, crewmates, power, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the Slavers card being played
+     */
     public Context(Controller controller, Slavers card) {
         this(controller);
         this.credits = card.getWinReward().getAmount();
@@ -199,6 +269,13 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the Smugglers card.
+     * Initializes goods, daysLost, power, requiredGoods, and visual representation.
+     *
+     * @param controller the controller managing the game
+     * @param card the Smugglers card being played
+     */
     public Context(Controller controller, Smugglers card) {
         this(controller);
         this.goods = new ArrayList<>();
@@ -226,6 +303,14 @@ public class Context {
 
     }
 
+    /**
+     * Constructs a Context for the CombatZone card.
+     * Initializes daysLost, crewmates, projectiles, and visual representation based on the card level.
+     *
+     * @param controller the controller managing the game
+     * @param card the CombatZone card being played
+     * @throws InvalidParameters if the card level is invalid
+     */
     public Context(Controller controller, CombatZone card) throws InvalidParameters {
         this(controller);
         if( card.getLevel() == CardLevel.LEARNER){

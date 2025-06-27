@@ -16,12 +16,21 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Represents the Rewards Phase of the game, where players receive credits based on their performance
+ * and the most beautiful ship is rewarded.
+ */
 public class RewardsPhase extends State {
     public RewardsPhase(Controller controller) {
         super(controller);
         controller.setQueuedAction(ClientState::net_Reward);
     }
 
+    /**
+     * This method is called when the Rewards Phase starts.
+     * It calculates and distributes credits to players based on their performance,
+     * including rewards for the most beautiful ship and goods collected.
+     */
     @Override
     public void onEnter() {
 
@@ -105,6 +114,10 @@ public class RewardsPhase extends State {
 
     }
 
+    /**
+     * Visualizes the rewards leaderboard, displaying players ranked by their credits.
+     * The leaderboard includes a header, player names, their credits, and a winner announcement.
+     */
     public void visualize() {
         Player[] allPlayers = getController().getModel().getFlightBoard().getTurnOrder();
 
@@ -164,6 +177,13 @@ public class RewardsPhase extends State {
         };
     }
 
+    /**
+     * Allows a player to log out from the game.
+     * If the player is not connected, an exception is thrown.
+     *
+     * @param name The name of the player logging out.
+     * @throws InvalidParameters If the player with the given name is not connected.
+     */
     @Override
     public void logout(String name) throws InvalidParameters {
         final Game model = this.getController().getModel();

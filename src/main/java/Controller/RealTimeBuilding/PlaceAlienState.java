@@ -263,6 +263,12 @@ import java.util.Map;
 
     }
 
+    /**
+     * Returns a list of available commands for this state.
+     * In this case, the only commands are "PlaceHuman", "PlaceBrownAlien", and "PlacePurpleAlien".
+     *
+     * @return List of available commands
+     */
     public List<String> getAvailableCommands(){
         return List.of( "PlaceHuman", "PlaceBrownAlien", "PlacePurpleAlien");
     }

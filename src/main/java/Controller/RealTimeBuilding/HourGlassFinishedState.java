@@ -102,6 +102,12 @@ public class HourGlassFinishedState extends State {
 
     }
 
+    /**
+     * Returns a list of available commands for this state.
+     * In this case, the only command is "FinishBuilding".
+     *
+     * @return List of available commands
+     */
     public List<String> getAvailableCommands(){
         return List.of(
             "FinishBuilding"

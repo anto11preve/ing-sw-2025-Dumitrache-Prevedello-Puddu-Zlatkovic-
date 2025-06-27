@@ -27,8 +27,6 @@ import java.util.List;
 
 public class AbandonedShipDecidingState extends State {
 
-    /** The shared context containing game state and references. */
-   
 
     /**
      * Constructs the state with the given context.

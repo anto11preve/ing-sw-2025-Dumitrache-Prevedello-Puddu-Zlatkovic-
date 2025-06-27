@@ -9,6 +9,10 @@ import Model.Player;
 
 import java.util.List;
 
+/**
+ * Represents the LogInState of the game, where players can log in and manage their connection to the game.
+ * This state handles player login, logout, and starting the game.
+ */
 public class LogInState extends State {
 
 //    @Override
@@ -37,10 +41,21 @@ public class LogInState extends State {
 //        }
 //    }
 
+
     public LogInState(Controller controller){
         super(controller);
     }
 
+
+
+    /**
+     * Allows a player to log in to the game.
+     * If the player is already connected or the game is full, an exception is thrown.
+     *
+     * @param name The name of the player logging in.
+     * @throws InvalidParameters If the player with the given name is already connected or if the game is full.
+     * @throws InvalidCommand If the command is invalid in the current context.
+     */
     @Override
     public void login(String name) throws InvalidParameters, InvalidCommand{
 
@@ -63,6 +78,13 @@ public class LogInState extends State {
         // You can add more logic here if needed
     }
 
+    /**
+     * Allows a player to log out from the game.
+     * If the player is not connected, an exception is thrown.
+     *
+     * @param name The name of the player logging out.
+     * @throws InvalidParameters If the player with the given name is not connected.
+     */
     @Override
     public void logout(String name) throws InvalidParameters {
         final Game model = this.getController().getModel();
@@ -78,6 +100,14 @@ public class LogInState extends State {
         System.out.println("Player " + name + " logged out");
     }
 
+    /**
+     * Starts the game if the player is the admin and there are enough players.
+     * If the player is not the admin or there are not enough players, an exception is thrown.
+     *
+     * @param name The name of the player starting the game.
+     * @throws InvalidParameters If the player is not the admin.
+     * @throws InvalidCommand If there are not enough players to start the game.
+     */
     @Override
     public void startGame(String name) throws InvalidParameters, InvalidCommand {
         Player admin= this.getController().getModel().getPlayers().get(0);
@@ -95,6 +125,12 @@ public class LogInState extends State {
         // You can add more logic here if needed
     }
 
+    /**
+     * Returns a list of available commands for the LogInState.
+     * These commands include "Leave" and "StartGame".
+     *
+     * @return List of available commands.
+     */
     public List<String> getAvailableCommands(){
         return List.of("Leave", "StartGame");
     }
