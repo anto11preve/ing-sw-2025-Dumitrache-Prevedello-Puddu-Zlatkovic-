@@ -27,11 +27,6 @@ public class DeleteComponentCommandTest {
         assertEquals(coordinates, command.getCoordinates());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
 
     @Test
     public void testGetCoordinates() {

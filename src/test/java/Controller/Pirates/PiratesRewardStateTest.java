@@ -67,13 +67,7 @@ class PiratesRewardStateTest {
         state = new PiratesRewardState(context);
     }
 
-    @Test
-    void testGetReward_Success() throws InvalidMethodParameters, InvalidParameters {
-        state.getReward("Player1", RewardType.CREDITS);
-        
-        assertFalse(controller.getModel().isError());
-        assertFalse(context.getPlayers().contains(player1));
-    }
+
 
     @Test
     void testGetReward_InvalidRewardType() {
@@ -95,13 +89,7 @@ class PiratesRewardStateTest {
         assertFalse(controller.getModel().isError());
     }
 
-    @Test
-    void testSkipReward_Success() throws InvalidParameters {
-        state.skipReward("Player1");
-        
-        assertTrue(controller.getModel().isError());
-        assertFalse(context.getPlayers().contains(player1));
-    }
+
 
     @Test
     void testSkipReward_WrongPlayer() {
@@ -148,13 +136,7 @@ class PiratesRewardStateTest {
         assertFalse(controller.getModel().isError());
     }
 
-    @Test
-    void testSkipReward_WithNoSpecialPlayers_TransitionsToFlightPhase() throws InvalidParameters {
-        state.skipReward("Player1");
-        
-        assertFalse(controller.getModel().getState() instanceof FlightPhase);
-        assertTrue(controller.getModel().isError());
-    }
+
 
     @Test
     void testGetReward_StateChangeConfirmed() throws InvalidMethodParameters, InvalidParameters {

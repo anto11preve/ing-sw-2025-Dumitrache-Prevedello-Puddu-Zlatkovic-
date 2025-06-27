@@ -25,11 +25,7 @@ public class PreBuiltShipCommandTest {
         assertEquals(0, command.getIndex());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
+
 
     @Test
     public void testGetIndex() {

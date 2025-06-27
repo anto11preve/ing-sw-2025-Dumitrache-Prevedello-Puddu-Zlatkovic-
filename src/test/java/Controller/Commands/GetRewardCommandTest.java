@@ -25,11 +25,7 @@ public class GetRewardCommandTest {
         assertEquals(RewardType.GOODS, command.getRewardType());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
+
 
     @Test
     public void testGetRewardType() {

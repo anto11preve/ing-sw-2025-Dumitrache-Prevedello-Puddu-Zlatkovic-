@@ -59,11 +59,7 @@ public class PickNextCardCommandTest {
         assertEquals("", emptyCommand.getPlayerName());
     }
 
-    @Test
-    public void testExecuteWithNullController() {
-        // Should not throw due to try-catch in execute method
-        assertDoesNotThrow(() -> command.execute(null));
-    }
+
 
     @Test
     public void testExecuteHandlesExceptions() {

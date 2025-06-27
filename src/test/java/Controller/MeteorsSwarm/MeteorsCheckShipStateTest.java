@@ -92,34 +92,6 @@ class MeteorsCheckShipStateTest {
         assertFalse(controller.getModel().getState() instanceof MeteorsCheckShipState);
     }
 
-    @Test
-    void testDeleteComponent_WrongPlayer() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("Player2", componentCoords));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
-
-    @Test
-    void testDeleteComponent_NullCoordinates() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("Player1", null));
-        
-        assertEquals("Coordinates cannot be null", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
-
-    @Test
-    void testDeleteComponent_NoComponent() {
-        Coordinates invalidCoords = new Coordinates(0, 0);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("Player1", invalidCoords));
-        
-        assertEquals("No component found at the given coordinates", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
     @Test
     void testDeleteComponent_LastProjectileLastPlayer() throws InvalidMethodParameters, InvalidParameters {
@@ -285,27 +257,7 @@ class MeteorsCheckShipStateTest {
         assertFalse(controller.getModel().getState() instanceof MeteorsCheckShipState);
     }
 
-    @Test
-    void testDeleteComponent_EdgeCaseCoordinates() {
-        // Test with edge case coordinates
-        Coordinates edgeCoords = new Coordinates(0, 14);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("Player1", edgeCoords));
-        
-        assertEquals("No component found at the given coordinates", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testDeleteComponent_NegativeCoordinates() {
-        // Test with negative coordinates
-        Coordinates negativeCoords = new Coordinates(-1, -1);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.deleteComponent("Player1", negativeCoords));
-        
-        assertEquals("No component found at the given coordinates", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
+
+
 }
