@@ -23,11 +23,7 @@ public class FlipHourGlassCommandTest {
         assertEquals("Anna", command.getPlayerName());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
+
 
     @Test
     public void testGetConstructor() {

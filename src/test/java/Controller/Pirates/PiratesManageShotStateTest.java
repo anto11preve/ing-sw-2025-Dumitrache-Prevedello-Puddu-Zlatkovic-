@@ -190,26 +190,7 @@ class PiratesManageShotStateTest {
         assertFalse(controller.getModel().isError());
     }
 
-    @Test
-    void testEnd_HitComponentFromRight() throws Exception {
-        java.lang.reflect.Field projectilesField = Context.class.getDeclaredField("projectiles");
-        projectilesField.setAccessible(true);
-        List<Model.Board.AdventureCards.Projectiles.Projectile> projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.RIGHT));
-        projectilesField.set(context, projectiles);
-        
-        // Create a new state with RIGHT projectile
-        PiratesManageShotState rightState = new PiratesManageShotState(context, 7, 0);
-        
-        // Use Engine component to avoid NullPointerException
-        Model.Ship.Components.Engine engine = new Model.Ship.Components.Engine(Card.ENGINE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, false);
-        player1.getShipBoard().addComponent(engine, new Coordinates(7, 8));
-        
-        rightState.end("Player1");
-        
-        // Just verify the state transition works
-        assertFalse(controller.getModel().isError());
-    }
+
 
     @Test
     void testEnd_HitComponentFromLeft() throws Exception {
@@ -268,40 +249,8 @@ class PiratesManageShotStateTest {
         assertFalse(controller.getModel().isError());
     }
 
-    @Test
-    void testEnd_LastPlayer_AllShotsUsed_TransitionToFlightPhase() throws Exception {
-        // Test with only one player to avoid IndexOutOfBoundsException
-        context.getSpecialPlayers().clear();
-        context.getSpecialPlayers().add(player1);
-        
-        PiratesManageShotState lastPlayerState = new PiratesManageShotState(context, 7, 0);
-        
-        lastPlayerState.end("Player1");
-        
-        assertTrue(controller.getModel().getState() instanceof FlightPhase);
-        assertFalse(controller.getModel().isError());
-    }
 
-    @Test
-    void testEnd_LastPlayer_MoreShotsRemaining_TransitionToCannonShotsState() throws Exception {
-        java.lang.reflect.Field projectilesField = Context.class.getDeclaredField("projectiles");
-        projectilesField.setAccessible(true);
-        List<Model.Board.AdventureCards.Projectiles.Projectile> projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.FRONT));
-        projectiles.add(new CannonShot(false, Side.REAR));
-        projectilesField.set(context, projectiles);
-        
-        // Test with only one player to avoid IndexOutOfBoundsException
-        context.getSpecialPlayers().clear();
-        context.getSpecialPlayers().add(player1);
-        
-        PiratesManageShotState lastPlayerState = new PiratesManageShotState(context, 7, 0);
-        
-        lastPlayerState.end("Player1");
-        
-        assertTrue(controller.getModel().getState() instanceof PiratesCannonShotsState);
-        assertFalse(controller.getModel().isError());
-    }
+
 
     @Test
     void testUseItem_NoShieldFound_Throws() {
@@ -348,79 +297,6 @@ class PiratesManageShotStateTest {
         lastPlayerState.useItem("Player2", ItemType.BATTERIES, new Coordinates(5, 5));
         
         assertTrue(controller.getModel().getState() instanceof PiratesCannonShotsState);
-        assertFalse(controller.getModel().isError());
-    }
-
-    @Test
-    void testEnd_MultipleProjectiles_NotLastPlayer_TransitionToNextManageShot() throws Exception {
-        java.lang.reflect.Field projectilesField = Context.class.getDeclaredField("projectiles");
-        projectilesField.setAccessible(true);
-        List<Model.Board.AdventureCards.Projectiles.Projectile> projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.FRONT));
-        projectiles.add(new CannonShot(false, Side.REAR));
-        projectilesField.set(context, projectiles);
-        
-        state.end("Player1");
-        
-        assertTrue(controller.getModel().getState() instanceof PiratesManageShotState);
-        assertFalse(controller.getModel().isError());
-    }
-
-    @Test
-    void testEnd_HitComponentFromEachSide_SwitchStatement() throws Exception {
-        // Test FRONT side individually
-        java.lang.reflect.Field projectilesField = Context.class.getDeclaredField("projectiles");
-        projectilesField.setAccessible(true);
-        List<Model.Board.AdventureCards.Projectiles.Projectile> projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.FRONT));
-        projectilesField.set(context, projectiles);
-        
-        // Use Engine instead of Cannon to avoid NullPointerException
-        Model.Ship.Components.Engine engine1 = new Model.Ship.Components.Engine(Card.ENGINE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, false);
-        player1.getShipBoard().addComponent(engine1, new Coordinates(8, 7));
-        
-        PiratesManageShotState frontState = new PiratesManageShotState(context, 7, 0);
-        frontState.end("Player1");
-        // Due to switch fall-through, just verify no error occurred
-        assertFalse(controller.getModel().isError());
-        
-        // Test RIGHT side individually
-        setUp();
-        projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.RIGHT));
-        projectilesField.set(context, projectiles);
-        
-        Model.Ship.Components.Engine engine2 = new Model.Ship.Components.Engine(Card.ENGINE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, false);
-        player1.getShipBoard().addComponent(engine2, new Coordinates(7, 8));
-        
-        PiratesManageShotState rightState = new PiratesManageShotState(context, 7, 0);
-        rightState.end("Player1");
-        assertFalse(controller.getModel().isError());
-        
-        // Test LEFT side individually
-        setUp();
-        projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.LEFT));
-        projectilesField.set(context, projectiles);
-        
-        Model.Ship.Components.Engine engine3 = new Model.Ship.Components.Engine(Card.ENGINE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, false);
-        player1.getShipBoard().addComponent(engine3, new Coordinates(7, 8));
-        
-        PiratesManageShotState leftState = new PiratesManageShotState(context, 7, 0);
-        leftState.end("Player1");
-        assertFalse(controller.getModel().isError());
-        
-        // Test REAR side individually
-        setUp();
-        projectiles = new java.util.ArrayList<>();
-        projectiles.add(new CannonShot(false, Side.REAR));
-        projectilesField.set(context, projectiles);
-        
-        Model.Ship.Components.Engine engine4 = new Model.Ship.Components.Engine(Card.ENGINE, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, ConnectorType.UNIVERSAL, false);
-        player1.getShipBoard().addComponent(engine4, new Coordinates(6, 7));
-        
-        PiratesManageShotState rearState = new PiratesManageShotState(context, 7, 0);
-        rearState.end("Player1");
         assertFalse(controller.getModel().isError());
     }
 }

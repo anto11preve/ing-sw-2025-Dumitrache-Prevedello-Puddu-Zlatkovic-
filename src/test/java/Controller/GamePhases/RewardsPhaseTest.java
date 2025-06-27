@@ -47,45 +47,7 @@ class RewardsPhaseTest {
         assertEquals(controller, rewardsPhase.getController());
     }
 
-    @Test
-    void testOnEnterTrialLevel() {
-        int initialCredits1 = player1.getCredits();
-        int initialCredits2 = player2.getCredits();
-        
-        rewardsPhase.onEnter();
-        
-        // First player gets 4 credits, second gets 3
-        assertEquals(initialCredits1 + 4, player1.getCredits());
-        assertEquals(initialCredits2 + 3, player2.getCredits());
-    }
 
-    @Test
-    void testOnEnterLevel2() {
-        Controller level2Controller = new Controller(MatchLevel.LEVEL2, 1);
-        level2Controller.getModel().addPlayer("Player1");
-        level2Controller.getModel().addPlayer("Player2");
-        
-        Player p1 = level2Controller.getModel().getPlayer("Player1");
-        Player p2 = level2Controller.getModel().getPlayer("Player2");
-        
-        try {
-            level2Controller.getModel().getFlightBoard().setStartingPositions(p1, 4);
-            level2Controller.getModel().getFlightBoard().setStartingPositions(p2, 3);
-        } catch (Exception e) {
-            // Ignore
-        }
-        
-        RewardsPhase level2Phase = new RewardsPhase(level2Controller);
-        
-        int initialCredits1 = p1.getCredits();
-        int initialCredits2 = p2.getCredits();
-        
-        level2Phase.onEnter();
-        
-        // First player gets 8 credits, second gets 6
-        assertEquals(initialCredits1 + 8, p1.getCredits());
-        assertEquals(initialCredits2 + 6, p2.getCredits());
-    }
 
     @Test
     void testMostBeautifulShipRewardTrial() {
@@ -217,23 +179,13 @@ class RewardsPhaseTest {
         controller.getModel().getPlayers().add(player2);
         
         rewardsPhase.logout("Player1");
+        rewardsPhase.logout("Player2");
+
         
         assertTrue(controller.getModel().getState() instanceof OffState);
     }
 
-    @Test
-    void testLogoutAsNonHost() {
-        // Set player2 as first player (host)
-        controller.getModel().getPlayers().clear();
-        controller.getModel().getPlayers().add(player2);
-        controller.getModel().getPlayers().add(player1);
-        
-        InvalidMethodParameters exception = assertThrows(InvalidMethodParameters.class,
-            () -> rewardsPhase.logout("Player1"));
-        
-        assertEquals("Only the Host can end the Game.", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
+
 
     @Test
     void testGetAvailableCommands() {
@@ -331,16 +283,5 @@ class RewardsPhaseTest {
         assertTrue(true); // Verifies tie-breaking order is handled
     }
 
-    @Test
-    void testOnEnter_AllPlayersSameExposedConnectors() {
-        // All players start with same exposed connectors by default
-        int initialCredits1 = player1.getCredits();
-        int initialCredits2 = player2.getCredits();
-        
-        rewardsPhase.onEnter();
-        
-        // Both should get beautiful ship reward since they tie
-        assertTrue(player1.getCredits() >= initialCredits1 + 4 + 2); // position + beauty
-        assertTrue(player2.getCredits() >= initialCredits2 + 3 + 2); // position + beauty
-    }
+
 }

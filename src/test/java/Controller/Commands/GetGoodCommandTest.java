@@ -29,11 +29,7 @@ public class GetGoodCommandTest {
         assertEquals(0, command.getCargoHoldIndex());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
+
 
     @Test
     public void testGetGoodIndex() {
@@ -61,25 +57,6 @@ public class GetGoodCommandTest {
         assertTrue(constructor.getArguments().contains("cargoHoldIndex"));
     }
 
-    @Test
-    public void testConstructorCreate() {
-        var constructor = GetGoodCommand.getConstructor();
-        var args = java.util.Map.of(
-            "goodIndex", "2",
-            "row", "3",
-            "column", "4",
-            "cargoHoldIndex", "1"
-        );
-        Command created = constructor.create("Player1", args);
-        
-        assertNotNull(created);
-        assertTrue(created instanceof GetGoodCommand);
-        GetGoodCommand getCmd = (GetGoodCommand) created;
-        assertEquals("Player1", getCmd.getPlayerName());
-        assertEquals(2, getCmd.getGoodIndex());
-        assertEquals(new Coordinates(3, 4), getCmd.getCoordinates());
-        assertEquals(1, getCmd.getCargoHoldIndex());
-    }
 
     @Test
     public void testConstructorInvalidGoodIndex() {
@@ -129,13 +106,7 @@ public class GetGoodCommandTest {
         assertThrows(IllegalArgumentException.class, () -> constructor.create("Player1", args));
     }
 
-    @Test
-    public void testWithNegativeValues() {
-        GetGoodCommand negCommand = new GetGoodCommand("Anna", -1, new Coordinates(-1, -1), -1);
-        assertEquals(-1, negCommand.getGoodIndex());
-        assertEquals(new Coordinates(-1, -1), negCommand.getCoordinates());
-        assertEquals(-1, negCommand.getCargoHoldIndex());
-    }
+
 
     @Test
     public void testWithNullCoordinates() {

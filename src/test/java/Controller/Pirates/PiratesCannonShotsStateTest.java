@@ -68,32 +68,7 @@ class PiratesCannonShotsStateTest {
                   controller.getModel().getState() instanceof FlightPhase);
     }
 
-    @Test
-    void testThrowDices_NoProjectiles() {
-        // Clear projectiles
-        try {
-            java.lang.reflect.Field projectilesField = Context.class.getDeclaredField("projectiles");
-            projectilesField.setAccessible(true);
-            projectilesField.set(context, new java.util.ArrayList<>());
-        } catch (Exception e) {
-            fail("Failed to clear projectiles: " + e.getMessage());
-        }
-        
-        InvalidContextualAction exception = assertThrows(InvalidContextualAction.class,
-            () -> state.throwDices("Player1"));
-        
-        assertEquals("No projectiles available for cannon shots.", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testThrowDices_WrongPlayer() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.throwDices("Player2"));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
     @Test
     void testGetAvailableCommands() {

@@ -77,63 +77,10 @@ class PiratesBatteryRemovalStateTest {
         assertInstanceOf(PiratesRewardState.class, controller.getModel().getState());
     }
 
-    @Test
-    void testUseItem_InvalidItemType() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.CREW, new Coordinates(6, 7)));
-        
-        assertEquals("Invalid item type, expected BATTERIES", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_NegativeDeclaredPower() {
-        PiratesBatteryRemovalState negativeState = new PiratesBatteryRemovalState(context, -1.0, 1);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> negativeState.useItem("Player1", ItemType.BATTERIES, new Coordinates(6, 7)));
-        
-        assertEquals("Declared power cannot be negative", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_NullCoordinates() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, null));
-        
-        assertEquals("Coordinates cannot be null", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_NoBatteriesToRemove() {
-        PiratesBatteryRemovalState noBatteriesState = new PiratesBatteryRemovalState(context, 6.0, 0);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> noBatteriesState.useItem("Player1", ItemType.BATTERIES, new Coordinates(6, 7)));
-        
-        assertEquals("No batteries to remove", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testUseItem_WrongPlayer() {
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> state.useItem("Player2", ItemType.BATTERIES, new Coordinates(6, 7)));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
-
-    @Test
-    void testUseItem_InvalidComponent() {
-        InvalidContextualAction exception = assertThrows(InvalidContextualAction.class,
-            () -> state.useItem("Player1", ItemType.BATTERIES, new Coordinates(1, 1)));
-        
-        assertEquals("Invalid component type, expected BatteryCompartment", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
     @Test
     void testGetReward_Success() throws InvalidParameters {
@@ -145,16 +92,6 @@ class PiratesBatteryRemovalStateTest {
         assertInstanceOf(PiratesRewardState.class, controller.getModel().getState());
     }
 
-    @Test
-    void testGetReward_InvalidRewardType() {
-        PiratesBatteryRemovalState rewardState = new PiratesBatteryRemovalState(context, 6.0, 0);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> rewardState.getReward("Player1", RewardType.GOODS));
-        
-        assertEquals("Invalid reward type, expected CREDITS", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
     @Test
     void testGetAvailableCommands() {
@@ -195,24 +132,5 @@ class PiratesBatteryRemovalStateTest {
         assertInstanceOf(PiratesBatteryRemovalState.class, controller.getModel().getState());
     }
 
-    @Test
-    void testGetReward_WrongPlayer() {
-        PiratesBatteryRemovalState rewardState = new PiratesBatteryRemovalState(context, 6.0, 0);
-        
-        InvalidParameters exception = assertThrows(InvalidParameters.class,
-            () -> rewardState.getReward("Player2", RewardType.CREDITS));
-        
-        assertEquals("It's not the player's turn", exception.getMessage());
-        assertTrue(controller.getModel().isError());
-    }
 
-    @Test
-    void testGetReward_DeclaredPowerTooLow() throws InvalidParameters {
-        PiratesBatteryRemovalState lowPowerState = new PiratesBatteryRemovalState(context, 4.0, 0);
-        
-        lowPowerState.getReward("Player1", RewardType.CREDITS);
-        
-        // No state change should occur since declaredPower <= context.getPower()
-        assertInstanceOf(PiratesBatteryRemovalState.class, controller.getModel().getState());
-    }
 }

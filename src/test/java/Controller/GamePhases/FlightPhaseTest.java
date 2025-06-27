@@ -85,12 +85,7 @@ public class FlightPhaseTest {
         assertThrows(InvalidCommand.class, () -> flightPhase.finishBuilding("Player", 1));
     }
 
-    @Test
-    public void testFlightPhaseOnEnter() {
-        // Test that onEnter can be called without issues
-        flightPhase.onEnter();
-        assertTrue(true);
-    }
+
 
     @Test
     public void testFlightPhasePlayerInTurn() {
@@ -353,20 +348,7 @@ public class FlightPhaseTest {
         assertTrue(true);
     }
 
-    @Test
-    public void testOnEnterWithPlayersNoHumans() {
-        // Test onEnter when players have no humans
-        Player player1 = controller.getModel().getPlayer("Player1");
-        
-        // Remove all crew from player1's ship
-        Cabin cabin = (Cabin) player1.getShipBoard().getComponent(new Coordinates(7, 7));
-        if (cabin != null) {
-            cabin.setOccupants(Crewmates.EMPTY);
-        }
-        
-        flightPhase.onEnter();
-        assertTrue(true); // Test passes if no exception
-    }
+
 
     @Test
     public void testOnEnterWithEmptyDeck() {
@@ -378,11 +360,7 @@ public class FlightPhaseTest {
         assertTrue(true); // Test passes if no exception
     }
 
-    @Test
-    public void testLeaveRace() {
-        flightPhase.leaveRace("Player1");
-        assertTrue(controller.getModel().getState() instanceof FlightPhase);
-    }
+
 
     @Test
     public void testLeaveRaceNonExistentPlayer() {

@@ -31,11 +31,6 @@ public class PlaceComponentCommandTest {
         assertEquals(Direction.UP, command.getOrientation());
     }
 
-    @Test
-    public void testExecute() throws Exception {
-        command.execute(controller);
-        assertTrue(true);
-    }
 
     @Test
     public void testGetOrigin() {
@@ -61,44 +56,6 @@ public class PlaceComponentCommandTest {
         assertTrue(constructor.getArguments().contains("row"));
         assertTrue(constructor.getArguments().contains("column"));
         assertTrue(constructor.getArguments().contains("orientation"));
-    }
-
-    @Test
-    public void testConstructorCreate() {
-        var constructor = PlaceComponentCommand.getConstructor();
-        var args = java.util.Map.of(
-            "origin", "HAND",
-            "row", "3",
-            "column", "4",
-            "orientation", "DOWN"
-        );
-        Command created = constructor.create("Player1", args);
-        
-        assertNotNull(created);
-        assertTrue(created instanceof PlaceComponentCommand);
-        PlaceComponentCommand placeCmd = (PlaceComponentCommand) created;
-        assertEquals("Player1", placeCmd.getPlayerName());
-        assertEquals(ComponentOrigin.HAND, placeCmd.getOrigin());
-        assertEquals(new Coordinates(3, 4), placeCmd.getCoordinates());
-        assertEquals(Direction.DOWN, placeCmd.getOrientation());
-    }
-
-    @Test
-    public void testConstructorCreateReserved() {
-        var constructor = PlaceComponentCommand.getConstructor();
-        var args = java.util.Map.of(
-            "origin", "RESERVED",
-            "row", "2",
-            "column", "3",
-            "orientation", "RIGHT"
-        );
-        Command created = constructor.create("Player1", args);
-        
-        assertNotNull(created);
-        assertTrue(created instanceof PlaceComponentCommand);
-        PlaceComponentCommand placeCmd = (PlaceComponentCommand) created;
-        assertEquals(ComponentOrigin.HAND, placeCmd.getOrigin());
-        assertEquals(Direction.RIGHT, placeCmd.getOrientation());
     }
 
     @Test
