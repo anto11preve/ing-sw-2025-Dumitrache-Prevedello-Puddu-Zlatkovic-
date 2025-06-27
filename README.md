@@ -66,5 +66,7 @@ The current turn is displayed under the flight board.
 When resolving a card, an arrow highlights the active player for that turn.
 (Indexes are from 0)
 
+## UML
+For better clarity, the low level UML is divided into Model, View, Controller, Networking
 
 
