@@ -8,6 +8,7 @@ import Controller.Exceptions.InvalidParameters;
 import Controller.GamePhases.FlightPhase;
 import Controller.State;
 import Model.Board.AdventureCards.Projectiles.Meteor;
+import Model.Enums.ConnectorType;
 import Model.Enums.Direction;
 import Model.Enums.Side;
 import Model.Exceptions.InvalidMethodParameters;
@@ -130,6 +131,7 @@ public class ManageMeteorState extends State {
                             SpaceshipComponent component2 = player.getShipBoard().getComponent(new Coordinates(i, number));
                             if (component2 != null && player.getShipBoard().getCondensedShip().getCannons().contains(component2)) {  //se è un cannone...
                                 Cannon cannon = (Cannon) component2;
+                                //il cannone è singolo perchè non vuole usare batterie.
                                 if ((!cannon.isDouble() && cannon.getOrientation() == Direction.UP)) {
                                     break;
                                 }
@@ -204,31 +206,32 @@ public class ManageMeteorState extends State {
                 }
             }
         }
-                /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio
-                if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component != null && component.getConnectorAt(meteor.getSide()) ==null)))){
-                    player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
-                    player.addJunk();
-                    boolean brokenShip = player.getShipBoard().checkIntegrity();
-                    if (!brokenShip) {
-                        controller.getModel().setState(new MeteorsCheckShipState(context, number));
-                        controller.getModel().setError(false);
-                        return;
-                    }
-                }
-                context.removeSpecialPlayer(player);
-                if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
-                    context.removeProjectile(meteor);
-                    if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
-                        controller.getModel().setState(new FlightPhase(controller));
-                        controller.getModel().setError(false);
-                    } else {
-                        controller.getModel().setState(new MeteorsState(context));
-                        controller.getModel().setError(false);
-                    }
-                } else {
-                    controller.getModel().setState(new ManageMeteorState(context,number));
-                    controller.getModel().setError(false);
-                }
+        /// Se è grande e non si trova un cannone singolo, oppure se è piccolo e il lato non è liscio (c'era un bug mon ci entrava quando c'era meteorite piccolo con connettore esposto, e annessa rimozione del componente)
+        if(hit && ((meteor.isBig() && !cannonFound) || (!meteor.isBig() &&  (component != null && component.getConnectorAt(meteor.getSide()) != ConnectorType.NONE)))){
+            player.getShipBoard().removeComponent(player.getShipBoard().getIndex(component));
+            player.addJunk();
+            boolean validShip = player.getShipBoard().checkIntegrity();
+            if (!validShip) {
+                controller.getModel().setState(new MeteorsCheckShipState(context, number));
+                controller.getModel().setError(false);
+                return;
+            }
+        }
+
+        context.removeSpecialPlayer(player);
+        if (context.getSpecialPlayers().isEmpty()) {  //tutti i giocatori sono stati colpiti da questo shot
+            context.removeProjectile(meteor);
+            if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
+                controller.getModel().setState(new FlightPhase(controller));
+                controller.getModel().setError(false);
+            } else {
+                controller.getModel().setState(new MeteorsState(context));
+                controller.getModel().setError(false);
+            }
+        } else {
+            controller.getModel().setState(new ManageMeteorState(context,number));
+            controller.getModel().setError(false);
+        }
 
 
     }
