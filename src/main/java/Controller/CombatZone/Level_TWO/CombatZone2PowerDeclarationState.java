@@ -56,18 +56,18 @@ public class CombatZone2PowerDeclarationState extends State {
 
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Negative amount");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
@@ -77,13 +77,13 @@ public class CombatZone2PowerDeclarationState extends State {
         double maxPower = player.getShipBoard().getCondensedShip().getMaxPower();
 
         if (amount < minPower || amount > maxPower) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount is out of bounds");
         }
 
 
         if ((amount % 1) != (minPower % 1)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
         }
 
@@ -106,14 +106,14 @@ public class CombatZone2PowerDeclarationState extends State {
             if (delta <= otherCannons) {
                 batteries += delta;
             } else {
-                controller.getModel().setError(true);
+                
                 throw new InvalidParameters("Not enough double cannons to declare this amount");
             }
 
         }
 
         if(batteries > player.getShipBoard().getCondensedShip().getTotalBatteries()){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Not enough batteries to declare this amount");
         }
         if(worst < 0){
@@ -123,14 +123,14 @@ public class CombatZone2PowerDeclarationState extends State {
                 if(context.getPlayers().isEmpty()){
                     controller.getModel().getFlightBoard().deltaFlightDays(context.getSpecialPlayers().getFirst(), -context.getDaysLost());
                     controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone2PowerDeclarationState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             } else {
                 controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0));
-                controller.getModel().setError(false);
+                
             }
 
         } else {
@@ -146,14 +146,14 @@ public class CombatZone2PowerDeclarationState extends State {
                 if(context.getPlayers().isEmpty()){
                     controller.getModel().getFlightBoard().deltaFlightDays(context.getSpecialPlayers().getFirst(), -context.getDaysLost());
                     controller.getModel().setState(new CombatZone2EngineDeclarationState(context));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone2PowerDeclarationState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             } else {
                 controller.getModel().setState(new CombatZone2_P_BatteryRemovalState(context, amount, 0, worst));
-                controller.getModel().setError(false);
+                
             }
 
         }

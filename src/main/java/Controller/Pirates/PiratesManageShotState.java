@@ -60,12 +60,12 @@ public class PiratesManageShotState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (turn != context.getSpecialPlayers().indexOf(player)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
@@ -125,14 +125,14 @@ public class PiratesManageShotState extends State{
             context.removeProjectile(shot);
             if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
                 return;
             }
             controller.getModel().setState(new PiratesCannonShotsState(context));
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new PiratesManageShotState(context, number, turn));
-            controller.getModel().setError(false);
+            
         }
 
     }
@@ -152,22 +152,22 @@ public class PiratesManageShotState extends State{
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates ) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (itemType != ItemType.BATTERIES) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (turn != context.getSpecialPlayers().indexOf(player)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         CannonShot shot = (CannonShot) context.getProjectile(0);
         if (shot == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The shot is null");
         }
         SpaceshipComponent component = null;
         if(shot.isBig()){
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Cannot use batteries on a big shot");
         }
         boolean shieldFound = false;
@@ -197,7 +197,7 @@ public class PiratesManageShotState extends State{
         if(shieldFound) {
             SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates);
             if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2)) {   //non è un Battery
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
             }
             BatteryCompartment compartment = (BatteryCompartment) component2;
@@ -208,17 +208,17 @@ public class PiratesManageShotState extends State{
                 context.removeProjectile(shot);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                     controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new PiratesCannonShotsState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             } else {
                 controller.getModel().setState(new PiratesManageShotState(context, number, turn));
-                controller.getModel().setError(false);
+                
             }
         } else {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("No shield found to use");
         }
 

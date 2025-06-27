@@ -52,12 +52,12 @@ public class SlaversCrewRemovalState extends State {
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, expected CREW");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid coordinates");
         }
 
@@ -82,17 +82,17 @@ public class SlaversCrewRemovalState extends State {
                     //se non ho più crew (atterraggio anticipato a fine carta)
                     if (player.getShipBoard().getCondensedShip().getTotalCrew() > 0) {
                         controller.getModel().setState(new SlaversCrewRemovalState(context));
-                        controller.getModel().setError(false);
+                        
                     } else {
                         context.removeSpecialPlayer(player);
                         if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                             controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
-                            controller.getModel().setError(false);
+                            
                         }
                         else{   //manca qualcuno da gestire
                             context.setCrewmates(context.getDefaultAmount());
                             controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
-                            controller.getModel().setError(false);
+                            
                         }
                     }
                 } //se non devo più togliere gente
@@ -100,12 +100,12 @@ public class SlaversCrewRemovalState extends State {
                     context.removeSpecialPlayer(player);
                     if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                         controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     }
                     else{       //manca qualcuno da gestire
                         context.setCrewmates(context.getDefaultAmount());
                         controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
-                        controller.getModel().setError(false);
+                        
                     }
                 }
             }
@@ -113,12 +113,12 @@ public class SlaversCrewRemovalState extends State {
                 context.removeSpecialPlayer(player);
                 if(context.getSpecialPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
-                    controller.getModel().setError(false);
+                    
                 }
                 else{       //manca qualcuno da gestire
                     context.setCrewmates(context.getDefaultAmount());
                     controller.getModel().setState(new SlaversCrewRemovalState(context)); //manca qualcuno da gestire
-                    controller.getModel().setError(false);
+                    
                 }
             }
         }

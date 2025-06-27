@@ -48,23 +48,23 @@ public class SecondSmugglersBatteryRemovalState extends State{
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid coordinates");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Not a valid battery compartment");
         }
 
@@ -75,15 +75,15 @@ public class SecondSmugglersBatteryRemovalState extends State{
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             } else {
                 context.setRequiredGoods(context.getDefaultAmount());
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
-                controller.getModel().setError(false);
+                
             }
         } else {
             controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
-            controller.getModel().setError(false);
+            
         }
     }
     @Override

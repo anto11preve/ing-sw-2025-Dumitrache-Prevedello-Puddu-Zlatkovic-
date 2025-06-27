@@ -70,34 +70,34 @@ public class PiratesBatteryRemovalState extends State{
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(declaredPower < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Coordinates cannot be null");
         }
 
         if(batteries <= 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("No batteries to remove");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
         }
 
@@ -107,21 +107,21 @@ public class PiratesBatteryRemovalState extends State{
         if(batteries == 0){
             if(declaredPower > context.getPower()){
                 controller.getModel().setState(new PiratesRewardState(context));
-                controller.getModel().setError(false);
+                
             } else if(declaredPower == context.getPower()){
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     if (!context.getSpecialPlayers().isEmpty()) {
                         controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     } else {
                         controller.getModel().setState(new FlightPhase(controller));
-                        controller.getModel().setError(false);
+                        
                     }
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
-                    controller.getModel().setError(false);
+                    
                 }
             }
             else{
@@ -129,18 +129,18 @@ public class PiratesBatteryRemovalState extends State{
                 context.addSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
-                    controller.getModel().setError(false);
+                    
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
-                    controller.getModel().setError(false);
+                    
                 }
             }
 
         }
         else{       //rimuovi altra batteria
             controller.getModel().setState(new PiratesBatteryRemovalState(context, declaredPower, batteries));
-            controller.getModel().setError(false);
+            
         }
     }
 
@@ -154,23 +154,23 @@ public class PiratesBatteryRemovalState extends State{
     public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid reward type, expected CREDITS");
         }
         if(declaredPower < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared power cannot be negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
         if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new PiratesRewardState(context));
-            controller.getModel().setError(false);
+            
         }
 
     }

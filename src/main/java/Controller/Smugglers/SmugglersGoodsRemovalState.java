@@ -61,15 +61,15 @@ public class SmugglersGoodsRemovalState extends State{
         if(!availableGoods){
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){
                 controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
-                controller.getModel().setError(false);
+                
             } else {
                 context.removeSpecialPlayer(player);
                 if(context.getSpecialPlayers().isEmpty()){
                     controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new SmugglersGoodsRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             }
         }
@@ -96,17 +96,17 @@ public class SmugglersGoodsRemovalState extends State{
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         if(oldCoordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid coordinates");
         }
 
         if(oldIndex < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid index");
         }
 
@@ -114,15 +114,15 @@ public class SmugglersGoodsRemovalState extends State{
         if(goodCounter.getRed() + goodCounter.getBlue() + goodCounter.getGreen() + goodCounter.getYellow() == 0){       //non ha abbastanza goods da scartare
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){   //se almeno ha delle batterie
                 controller.getModel().setState(new SecondSmugglersBatteryRemovalState(context));
-                controller.getModel().setError(false);
+                
             } else {    //se no non gli succede niente
                 context.removeSpecialPlayer(player);
                 if(context.getSpecialPlayers().isEmpty()){
                     controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new SmugglersGoodsRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             }
             return;
@@ -131,18 +131,18 @@ public class SmugglersGoodsRemovalState extends State{
         SpaceshipComponent component = player.getShipBoard().getComponent(oldCoordinates);
 
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Not a valid cargo hold");
         }
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = cargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The selected good is not found");
         }
         boolean done = goodCounter.removeGood(selectedGood);
         if(!done) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Need to remove another type of good");
         }
         cargoHold.removeGood(oldIndex);
@@ -151,15 +151,15 @@ public class SmugglersGoodsRemovalState extends State{
             context.removeSpecialPlayer(player);
             if(context.getSpecialPlayers().isEmpty()){
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             } else {
                 context.setRequiredGoods(context.getDefaultAmount());
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
-                controller.getModel().setError(false);
+                
             }
         } else {
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));
-            controller.getModel().setError(false);
+            
         }
     }
     @Override

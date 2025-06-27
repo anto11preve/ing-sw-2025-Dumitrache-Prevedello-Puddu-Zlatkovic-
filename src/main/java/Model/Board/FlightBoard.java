@@ -308,7 +308,7 @@ public class FlightBoard implements Serializable, Cloneable {
             else if (position==3) {playerPositions.put(player, 1); playerTotalDistance.put(player, 1);}
             else if (position==2) {playerPositions.put(player, 2); playerTotalDistance.put(player, 2);}
             else if (position==1) {playerPositions.put(player, 4); playerTotalDistance.put(player, 4);}
-            else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and 4");}
+            else{throw new InvalidMethodParameters("Invalid position: " + position+"Should be between 1 and");}
 
 
         } else if (this.getCellNumber() == 24) {

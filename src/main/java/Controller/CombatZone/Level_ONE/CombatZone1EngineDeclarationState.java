@@ -45,7 +45,7 @@ public class CombatZone1EngineDeclarationState extends State {
         Controller controller = context.getController();
         if(controller.getModel().getFlightBoard().getTurnOrder().length == 1){
             controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            
         }
     }
 
@@ -65,18 +65,18 @@ public class CombatZone1EngineDeclarationState extends State {
     public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(doubleType != DoubleType.ENGINES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid double type, only ENGINES are allowed");
         }
 
         if(amount < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid amount of double, only non negative integers are allowed");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
@@ -86,20 +86,20 @@ public class CombatZone1EngineDeclarationState extends State {
         double maxPower = player.getShipBoard().getCondensedShip().getMaxThrust();
 
         if (amount < minPower || amount > maxPower) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount is out of bounds");
         }
 
 
         if ((amount % 1) != (minPower % 1)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
         }
 
         int delta = (int) (amount - minPower);
 
         if(delta % 2 != 0) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Cannot reach the declared amount with double engines");
         }
 
@@ -108,7 +108,7 @@ public class CombatZone1EngineDeclarationState extends State {
         if(player.getShipBoard().getCondensedShip().getEngines().getDoubleEngines()>=doubleRequired){
             batteries = doubleRequired;
         } else {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Not enough double engines to declare this amount");
         }
 
@@ -120,14 +120,14 @@ public class CombatZone1EngineDeclarationState extends State {
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){
                     controller.getModel().setState(new CombatZone1CrewRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone1EngineDeclarationState(context, worst));
-                    controller.getModel().setError(false);
+                    
                 }
             } else {
                 controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries));
-                controller.getModel().setError(false);
+                
             }
         } else {
             if (amount == player.getShipBoard().getCondensedShip().getBaseThrust()) {
@@ -139,14 +139,14 @@ public class CombatZone1EngineDeclarationState extends State {
                 context.removePlayer(player);
                 if(context.getPlayers().isEmpty()){
                     controller.getModel().setState(new CombatZone1CrewRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone1EngineDeclarationState(context, worst));
-                    controller.getModel().setError(false);
+                    
                 }
             } else {
                 controller.getModel().setState(new CombatZone1_E_BatteryRemovalState(context, amount, batteries, worst));
-                controller.getModel().setError(false);
+                
             }
 
         }

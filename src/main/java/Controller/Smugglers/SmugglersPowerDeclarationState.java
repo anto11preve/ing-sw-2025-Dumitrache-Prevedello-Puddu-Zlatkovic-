@@ -47,18 +47,18 @@ public class SmugglersPowerDeclarationState extends State {
     public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Negative amount");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
@@ -68,13 +68,13 @@ public class SmugglersPowerDeclarationState extends State {
         double maxPower = player.getShipBoard().getCondensedShip().getMaxPower();
 
         if (amount < minPower || amount > maxPower) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount is out of bounds");
         }
 
 
         if ((amount % 1) != (minPower % 1)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
         }
 
@@ -97,31 +97,31 @@ public class SmugglersPowerDeclarationState extends State {
             if (delta <= otherCannons) {
                 batteries += delta;
             } else {
-                controller.getModel().setError(true);
+                
                 throw new InvalidParameters("Not enough double cannons to declare this amount");
             }
 
         }
 
         if(batteries > player.getShipBoard().getCondensedShip().getTotalBatteries()){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Not enough batteries to declare this amount");
         }
 
 
         if(context.getPower() > (amount)){
             if(context.getSpecialPlayers().contains(player)){
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("Player already declared power");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){
                 controller.getModel().setState(new SmugglersGoodsRemovalState(context));  //tutti i giocatori gestiti
-                controller.getModel().setError(false);
+                
             }else{
                 controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
-                controller.getModel().setError(false);
+                
             }
         }else{
             //se non devi rimovere batterie
@@ -129,21 +129,21 @@ public class SmugglersPowerDeclarationState extends State {
                 //se vinci
                 if(amount > context.getPower()){
                     controller.getModel().setState(new SmugglersLandState(context));
-                    controller.getModel().setError(false);
+                    
                     //se pareggia:
                 } else if(amount == context.getPower()){
                     context.removePlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
                         if (!context.getSpecialPlayers().isEmpty()) {
                             controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
-                            controller.getModel().setError(false);
+                            
                         }else{
                             controller.getModel().setState(new FlightPhase(controller));
                         }
                     }
                     else{       //manca qualcuno da gestire
                         controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
-                        controller.getModel().setError(false);
+                        
                     }
                 }
                 //se perde:
@@ -152,16 +152,16 @@ public class SmugglersPowerDeclarationState extends State {
                     context.addSpecialPlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
                         controller.getModel().setState(new SmugglersGoodsRemovalState(context)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     }
                     else{       //manca qualcuno da gestire
                         controller.getModel().setState(new SmugglersPowerDeclarationState(context)); //manca qualcuno da gestire
-                        controller.getModel().setError(false);
+                        
                     }
                 }
             } else {
                 controller.getModel().setState(new SmugglersBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
-                controller.getModel().setError(false);
+                
             }
 
         }

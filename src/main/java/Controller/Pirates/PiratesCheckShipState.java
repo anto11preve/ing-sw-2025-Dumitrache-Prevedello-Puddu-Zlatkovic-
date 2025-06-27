@@ -53,16 +53,16 @@ public class PiratesCheckShipState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         if (coordinates == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Coordinates cannot be null");
         }
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if (component == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("No component found at the given coordinates");
         }
 
@@ -76,14 +76,14 @@ public class PiratesCheckShipState extends State {
                 context.removeProjectile(shot);
                 if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                     controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
+                    
                     return;
                 }
                 controller.getModel().setState(new PiratesCannonShotsState(context));
-                controller.getModel().setError(false);
+                
             } else {
                 controller.getModel().setState(new PiratesManageShotState(context, number, turn));
-                controller.getModel().setError(false);
+                
             }
         }
     }

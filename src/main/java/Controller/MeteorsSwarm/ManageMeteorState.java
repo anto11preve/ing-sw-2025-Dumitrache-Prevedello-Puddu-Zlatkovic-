@@ -60,13 +60,13 @@ public class ManageMeteorState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidMethodParameters("Player " + playerName + " is not in turn.");
         }
 
         Meteor meteor = (Meteor) context.getProjectile(0);
         if (meteor == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Meteors are empty");
         }
 
@@ -221,7 +221,7 @@ public class ManageMeteorState extends State {
             boolean validShip = player.getShipBoard().checkIntegrity();
             if (!validShip) {
                 controller.getModel().setState(new MeteorsCheckShipState(context, number));
-                controller.getModel().setError(false);
+                
                 return;
             }
         }
@@ -231,14 +231,14 @@ public class ManageMeteorState extends State {
             context.removeProjectile(meteor);
             if (context.getProjectiles().isEmpty()) {     //tutti i colpi sono stati sparati
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             } else {
                 controller.getModel().setState(new MeteorsState(context));
-                controller.getModel().setError(false);
+                
             }
         } else {
             controller.getModel().setState(new ManageMeteorState(context,number));
-            controller.getModel().setError(false);
+            
         }
 
 
@@ -351,7 +351,7 @@ public class ManageMeteorState extends State {
         if(cannonOrShieldFound) {
             SpaceshipComponent component2 = player.getShipBoard().getComponent(coordinates);
             if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component2)) {   //non è un Battery
-                controller.getModel().setError(true);
+                
                 throw new InvalidParameters("The component is not a BatteryCompartment");
             }
             BatteryCompartment compartment = (BatteryCompartment) component2;
@@ -369,7 +369,7 @@ public class ManageMeteorState extends State {
                 controller.getModel().setState(new ManageMeteorState(context, number));
             }
         } else {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("No shield or cannon found to use");
         }
     }

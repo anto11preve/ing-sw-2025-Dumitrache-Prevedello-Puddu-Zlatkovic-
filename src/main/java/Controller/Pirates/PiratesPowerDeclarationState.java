@@ -56,18 +56,18 @@ public class PiratesPowerDeclarationState extends State {
     public void declaresDouble(String playerName, DoubleType doubleType, double amount) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if (doubleType != DoubleType.CANNONS) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid double type, expected CANNONS");
         }
 
         if (amount < 0) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Negative amount");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
@@ -77,13 +77,13 @@ public class PiratesPowerDeclarationState extends State {
         double maxPower = player.getShipBoard().getCondensedShip().getMaxPower();
 
         if (amount < minPower || amount > maxPower) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount is out of bounds");
         }
 
 
         if ((amount % 1) != (minPower % 1)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared amount must match the ship's base power decimal part");
         }
 
@@ -106,51 +106,51 @@ public class PiratesPowerDeclarationState extends State {
             if (delta <= otherCannons) {
                 batteries += delta;
             } else {
-                controller.getModel().setError(true);
+                
                 throw new InvalidParameters("Not enough double cannons to declare this amount");
             }
 
         }
 
         if(batteries > player.getShipBoard().getCondensedShip().getTotalBatteries()){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Not enough batteries to declare this amount");
         }
 
 
         if (context.getPower() > (amount)) {    //se perdi
             if (context.getSpecialPlayers().contains(player)) {
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("Player is already marked");
             }
             context.addSpecialPlayer(player);
             context.removePlayer(player);
             if (context.getPlayers().isEmpty()) {
                 controller.getModel().setState(new PiratesCannonShotsState(context));  //tutti i giocatori gestiti
-                controller.getModel().setError(false);
+                
             } else {
                 controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
-                controller.getModel().setError(false);
+                
             }
         } else { //se non perdi
             if(amount == player.getShipBoard().getCondensedShip().getBaseThrust()){
                 if(amount > context.getPower()){
                     controller.getModel().setState(new PiratesRewardState(context));
-                    controller.getModel().setError(false);
+                    
                 } else if(amount == context.getPower()){
                     context.removePlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
                         if (!context.getSpecialPlayers().isEmpty()) {
                             controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
-                            controller.getModel().setError(false);
+                            
                         } else {
                             controller.getModel().setState(new FlightPhase(controller));
-                            controller.getModel().setError(false);
+                            
                         }
                     }
                     else{       //manca qualcuno da gestire
                         controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
-                        controller.getModel().setError(false);
+                        
                     }
                 }
                 else{
@@ -158,16 +158,16 @@ public class PiratesPowerDeclarationState extends State {
                     context.addSpecialPlayer(player);
                     if(context.getPlayers().isEmpty()){         //passati tutti
                         controller.getModel().setState(new PiratesCannonShotsState(context)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     }
                     else{       //manca qualcuno da gestire
                         controller.getModel().setState(new PiratesPowerDeclarationState(context)); //manca qualcuno da gestire
-                        controller.getModel().setError(false);
+                        
                     }
                 }
             } else {
                 controller.getModel().setState(new PiratesBatteryRemovalState(context, amount, batteries)); //rimuovi batteria
-                controller.getModel().setError(false);
+                
             }
 
         }

@@ -51,29 +51,29 @@ public class SecondCombatZone2BatteryRemovalState extends State {
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, expected BATTERIES");
         }
 
         if(amount < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Coordinates cannot be null");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Invalid component type, expected BatteryCompartment");
         }
 
@@ -91,11 +91,11 @@ public class SecondCombatZone2BatteryRemovalState extends State {
             }
             context.addSpecialPlayer(currentPlayer);
             controller.getModel().setState(new CombatZone2CannonShotsState(context));
-            controller.getModel().setError(false);
+            
         }
         else{       //rimuovi altra batteria
             controller.getModel().setState(new SecondCombatZone2BatteryRemovalState(context, amount));
-            controller.getModel().setError(false);
+            
         }
     }
 

@@ -58,9 +58,7 @@ public class Controller implements Agent {
             if(this.commandQueue.isEmpty()){
                 try{
                     this.commandQueue.wait();
-                } catch (InterruptedException e){
-                    /*TODO: decidere se si vuole gestire o ignorare*/
-                }
+                } catch (InterruptedException _){ }
             }
             return this.commandQueue.poll();
         }

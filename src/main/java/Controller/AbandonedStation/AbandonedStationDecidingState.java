@@ -49,18 +49,18 @@ public class AbandonedStationDecidingState extends State {
         Controller controller = context.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(!currentPlayer.equals(context.getPlayers().getFirst())){  //se è il suo turno
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to skip the reward.");
         }
 
         context.removePlayer(currentPlayer);
         if(context.getPlayers().isEmpty()){         //se skippano tutti....
             controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            
         }
         else{
             controller.getModel().setState(new AbandonedStationDecidingState(context));
-            controller.getModel().setError(false);
+            
         }
 
     }
@@ -82,13 +82,13 @@ public class AbandonedStationDecidingState extends State {
     public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.GOODS){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to skip the reward.");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to take the reward.");
         }
 
@@ -96,9 +96,9 @@ public class AbandonedStationDecidingState extends State {
             player.deltaCredits(context.getCredits());
             controller.getModel().getFlightBoard().deltaFlightDays(player, -context.getDaysLost());
             controller.getModel().setState(new AbandonedStationLandState(context));
-            controller.getModel().setError(false);
+            
         } else {
-            controller.getModel().setError(false);
+            
             throw new InvalidContextualAction("The player doesn't have enough crew to take the reward"); //handle the situation where the player doesn't have enough crew)
         }
     }

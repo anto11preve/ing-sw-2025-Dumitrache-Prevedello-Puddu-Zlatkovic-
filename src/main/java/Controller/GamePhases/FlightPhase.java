@@ -31,7 +31,6 @@ public class FlightPhase extends State {
             deck = this.getController().getModel().getFlightBoard().getUpcomingCardDeck();
             if(deck.peekCards().isEmpty() || this.getController().getModel().getFlightBoard().getTurnOrder().length == 0){
                 this.getController().getModel().setState(new RewardsPhase(this.getController()));
-                this.getController().getModel().setError(false);
             }
         }
     }
@@ -41,14 +40,14 @@ public class FlightPhase extends State {
         Controller controller = this.getController();
         Player currentPlayer = controller.getModel().getPlayer(playerName);
         if(!currentPlayer.equals(controller.getModel().getFlightBoard().getTurnOrder()[0])){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to pick the next card.");
         }
         CardDeck deck;
         deck = controller.getModel().getFlightBoard().getUpcomingCardDeck();
         AdventureCardFilip card = deck.popCard();
         card.accept(new CardResolverVisitor(), controller);
-        controller.getModel().setError(false);
+        
     }
 
     @Override

@@ -66,34 +66,34 @@ public class SlaversBatteryRemovalState extends State{
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidParameters, InvalidContextualAction {
         Controller controller = context.getController();
         if(itemType != ItemType.BATTERIES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Item type must be BATTERIES");
         }
 
         if(declaredPower < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Declared power cannot be negative");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Coordinates are null");
         }
 
         if(batteries <= 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("No batteries to remove");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(!player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Component is not a battery compartment");
         }
 
@@ -108,16 +108,16 @@ public class SlaversBatteryRemovalState extends State{
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     if (!context.getSpecialPlayers().isEmpty()) {
                         controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     }
                     else{
                         controller.getModel().setState(new FlightPhase(controller)); //tutti i giocatori gestiti
-                        controller.getModel().setError(false);
+                        
                     }
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
-                    controller.getModel().setError(false);
+                    
                 }
             }
             else{
@@ -125,18 +125,18 @@ public class SlaversBatteryRemovalState extends State{
                 context.addSpecialPlayer(player);
                 if(context.getPlayers().isEmpty()){         //passati tutti
                     controller.getModel().setState(new SlaversCrewRemovalState(context)); //tutti i giocatori gestiti
-                    controller.getModel().setError(false);
+                    
                 }
                 else{       //manca qualcuno da gestire
                     controller.getModel().setState(new SlaversPowerDeclarationState(context)); //manca qualcuno da gestire
-                    controller.getModel().setError(false);
+                    
                 }
             }
 
         }
         else{       //rimuovi altra batteria
             controller.getModel().setState(new SlaversBatteryRemovalState(context, declaredPower, batteries));
-            controller.getModel().setError(false);
+            
         }
     }
 
@@ -154,19 +154,19 @@ public class SlaversBatteryRemovalState extends State{
     public void getReward(String playerName, RewardType rewardType) throws InvalidParameters {
         Controller controller = context.getController();
         if(rewardType != RewardType.CREDITS){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Reward type must be CREDITS");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         if(declaredPower > context.getPower() && batteries == 0){
             controller.getModel().setState(new SlaversRewardsState(context));
-            controller.getModel().setError(false);
+            
         }
 
     }

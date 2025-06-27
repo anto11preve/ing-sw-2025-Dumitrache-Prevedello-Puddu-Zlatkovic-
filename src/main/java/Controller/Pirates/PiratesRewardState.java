@@ -50,12 +50,12 @@ public class PiratesRewardState extends State {
     public void getReward(String playerName, RewardType rewardType) throws InvalidMethodParameters, InvalidParameters {
         Controller controller = context.getController();
         if (rewardType != RewardType.CREDITS) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid reward type, expected CREDITS");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         player.deltaCredits(context.getCredits());
@@ -66,10 +66,10 @@ public class PiratesRewardState extends State {
 
         if(!context.getSpecialPlayers().isEmpty()){
             controller.getModel().setState(new PiratesCannonShotsState(context));
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            
         }
     }
 
@@ -86,17 +86,17 @@ public class PiratesRewardState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         context.removePlayer(player);
 
         if(!context.getSpecialPlayers().isEmpty()){
             controller.getModel().setState(new PiratesCannonShotsState(context));
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            
         }
     }
 

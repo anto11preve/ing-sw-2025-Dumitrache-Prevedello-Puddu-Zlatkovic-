@@ -69,35 +69,35 @@ public class OpenSpaceBatteryRemovalState extends State {
         Controller controller = context.getController();
 
         if(itemType != ItemType.BATTERIES){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type, only BATTERIES are allowed");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid coordinates type, coordinates is null");
         }
 
         if(declaredPower < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid declared power type, declared power is negative");
         }
 
         if(batteries < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid batteries type, batteries negative");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to throw the dice.");
         }
 
         if (batteries > 0) {
             SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
             if(component == null || !player.getShipBoard().getCondensedShip().getBatteryCompartments().contains(component)) {   //non è un Battery
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("Invalid component type, only BATTERY COMPARTMENT are allowed");
             }
 
@@ -112,16 +112,16 @@ public class OpenSpaceBatteryRemovalState extends State {
             context.removePlayer(player);
             if(context.getPlayers().isEmpty()){         //passati tutti
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             }
             else{       //manca qualcuno da gestire
                 controller.getModel().setState(new OpenSpaceEngineDeclarationState(context));
-                controller.getModel().setError(false);
+                
             }
         }
         else{       //rimuovi altra batteria
             controller.getModel().setState(new OpenSpaceBatteryRemovalState(context, declaredPower, batteries));
-            controller.getModel().setError(false);
+            
         }
     }
 

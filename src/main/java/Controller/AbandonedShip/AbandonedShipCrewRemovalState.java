@@ -54,18 +54,18 @@ public class AbandonedShipCrewRemovalState extends State {
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type for crew removal.");
         }
 
         if(coordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Coordinates cannot be null.");
         }
 
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to remove crew members.");
         }
 
@@ -73,7 +73,7 @@ public class AbandonedShipCrewRemovalState extends State {
         if(context.getCrewmates() > 0){
             SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
             if(component == null || !player.getShipBoard().getCondensedShip().getCabins().contains(component)) {   //non è un Battery
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("Invalid component type, expected Cabin");
             }
             Cabin cabin = (Cabin) component;
@@ -91,18 +91,18 @@ public class AbandonedShipCrewRemovalState extends State {
 
             if(context.getCrewmates() > 0){
                 controller.getModel().setState(new AbandonedShipCrewRemovalState(context));
-                controller.getModel().setError(false);
+                
             } else {
                 // No more crew members to remove, transition to flight phase
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             }
 
 
         }
         else{
             controller.getModel().setState(new FlightPhase(controller));
-            controller.getModel().setError(false);
+            
         }
     }
 

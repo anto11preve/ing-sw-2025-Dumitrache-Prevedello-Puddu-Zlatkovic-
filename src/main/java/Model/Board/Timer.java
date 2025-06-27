@@ -28,7 +28,7 @@ public class Timer implements Serializable, Cloneable {
         this.phase = Phase.values()[this.phase.ordinal() + 1];
 
         //TODO: change 30k to actual time it takes for timer to run out
-        targetTime = System.currentTimeMillis() + 30000;
+        targetTime = System.currentTimeMillis() + 90000;
 
         return true;
     }

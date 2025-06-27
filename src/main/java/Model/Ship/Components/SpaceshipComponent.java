@@ -147,21 +147,6 @@ public abstract class SpaceshipComponent implements Serializable, Cloneable {
     }
 
 
-// TODO: non serve più, ma lo lascio per ora per sicurezza
-//
-//    private Side getRotatedSide(Side side) {
-//        int rotations = orientation.ordinal() % 4;
-//        Side[] order = {Side.FRONT, Side.RIGHT, Side.REAR, Side.LEFT};
-//        int idx = -1;
-//        for (int i = 0; i < order.length; i++) {
-//            if (order[i] == side) {
-//                idx = i;
-//                break;
-//            }
-//        }
-//        if (idx == -1) return side;
-//        return order[(idx + rotations) % 4];
-//    }
 
     public ShipBoard getShipBoard() {
         return shipBoard;

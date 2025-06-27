@@ -465,10 +465,14 @@ public class BuildingState extends State {
                 throw new InvalidParameters("Position already occupied");
             }
 
+            if(position<1 || position>model.getPlayers().size()){
+                throw new InvalidParameters("Invalid position, must be between 1 and "+model.getPlayers().size());
+            }
+
             try {
                 model.getFlightBoard().setStartingPositions(currentPlayer, position);
             } catch (InvalidMethodParameters e) {
-                throw new InvalidParameters("Invalid starting position, must be btween 1 and 4");
+                throw new InvalidParameters("Invalid starting position, must be btween 1 and"+model.getPlayers().size());
             }
 
             SpaceshipComponent oldTile= currentPlayer.getShipBoard().getActiveComponent();
@@ -585,7 +589,6 @@ public class BuildingState extends State {
 
     @Override
     public List<String> getAvailableCommands(){
-        /*TODO: add all other commands*/
         return List.of("FinishBuilding", "GetComponent", "PlaceComponent", "ReserveComponent", "LookDeck", "FlipHourGlass", "DeleteComponent", "PreBuiltShip");
     }
 }

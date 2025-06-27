@@ -39,6 +39,12 @@ public class Context {
 
 
 
+    /**
+     * Constructs a Context with the given controller, unique for each card.
+     * Initializes the players list from the controller's flight board turn order.
+     *
+     * @param controller the controller managing the game
+     */
 
     public Context(Controller controller) {
         this.controller = controller;

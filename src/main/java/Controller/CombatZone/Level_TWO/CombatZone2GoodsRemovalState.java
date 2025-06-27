@@ -70,15 +70,15 @@ public class CombatZone2GoodsRemovalState extends State {
         if(!availableGoods){
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){
                 controller.getModel().setState(new SecondCombatZone2BatteryRemovalState(context, amount));
-                controller.getModel().setError(false);
+                
             } else {
                 context.removeSpecialPlayer(player);
                 if(context.getSpecialPlayers().isEmpty()){
                     controller.getModel().setState(new FlightPhase(controller));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone2GoodsRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             }
         }
@@ -105,17 +105,17 @@ public class CombatZone2GoodsRemovalState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         if(oldCoordinates == null){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid coordinates");
         }
 
         if(oldIndex < 0){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid index");
         }
 
@@ -123,7 +123,7 @@ public class CombatZone2GoodsRemovalState extends State {
         if(goodCounter.getRed() + goodCounter.getBlue() + goodCounter.getGreen() + goodCounter.getYellow() == 0){       //non ha abbastanza goods da scartare
             if(player.getShipBoard().getCondensedShip().getTotalBatteries() > 0){   //se almeno ha delle batterie
                 controller.getModel().setState(new SecondCombatZone2BatteryRemovalState(context, amount));
-                controller.getModel().setError(false);
+                
             } else {    //se no non gli succede niente
 
                 int numPlayers = controller.getModel().getFlightBoard().getTurnOrder().length;
@@ -136,7 +136,7 @@ public class CombatZone2GoodsRemovalState extends State {
                 }
                 context.addSpecialPlayer(currentPlayer);
                 controller.getModel().setState(new CombatZone2CannonShotsState(context));
-                controller.getModel().setError(false);
+                
 
 
             }
@@ -146,18 +146,18 @@ public class CombatZone2GoodsRemovalState extends State {
         SpaceshipComponent component = player.getShipBoard().getComponent(oldCoordinates);
 
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Not a valid cargo hold");
         }
         CargoHold cargoHold = (CargoHold) component;
         Good selectedGood = cargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The selected good is not found");
         }
         boolean done = goodCounter.removeGood(selectedGood);
         if(!done) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Need to remove another type of good");
         }
         cargoHold.removeGood(oldIndex);
@@ -166,10 +166,10 @@ public class CombatZone2GoodsRemovalState extends State {
             List<Player> allPlayers= new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
             context.setPlayers(allPlayers);
             controller.getModel().setState(new CombatZone2CannonShotsState(context));
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new CombatZone2GoodsRemovalState(context, amount));
-            controller.getModel().setError(false);
+            
         }
     }
 

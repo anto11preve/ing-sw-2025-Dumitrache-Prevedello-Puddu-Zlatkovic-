@@ -63,41 +63,40 @@ public class PlanetsLandState extends State {
         Player player = controller.getModel().getPlayer(playerName);
 
         if(context.getSpecialPlayers().getFirst() != player) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to collect goods");
         }
 
         SpaceshipComponent component = player.getShipBoard().getComponent(coordinates);
         if(component == null || !player.getShipBoard().getCondensedShip().getCargoHolds().contains(component)) {   //non è un CargoHold
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The selected component is not a cargo hold");
         }
 
         CargoHold cargoHold = (CargoHold) component;
         Planet planet = chosenPlanets.getFirst();
         if(planet == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The planet is nto found");
         }
         if(!planet.isOccupied()){
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("The planet is not occupied");
         }
 
 //        Goods rewards = planet.getLandingReward();
 //        if(!rewards.iterator().hasNext()){
-//            controller.getModel().setError(true);
+//            
 //            throw new InvalidContextualAction("There are no goods to collect from this planet");
 //        }
 
         if(CargoHoldIndex < 0 || CargoHoldIndex >= cargoHold.getCapacity()) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid cargo hold index");
         }
 
-        //TODO: sarebbe da controllare che non metti un index maggiore dei goods in un pianeta
         if(goodIndex < 0 ) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid good index");
         }
 
@@ -114,13 +113,13 @@ public class PlanetsLandState extends State {
 
 
         if(selectedGood == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The selected good is not found");
         }
 
         boolean done = cargoHold.addGoodAt(selectedGood, CargoHoldIndex);
         if (!done) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("The good cannot be added to the cargo hold");
         }
 
@@ -134,7 +133,7 @@ public class PlanetsLandState extends State {
         }
 
         controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-        controller.getModel().setError(false);
+        
 
     }
 
@@ -153,7 +152,7 @@ public class PlanetsLandState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(name);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
@@ -163,30 +162,30 @@ public class PlanetsLandState extends State {
         if(oldComponent == null || newComponent == null ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(oldComponent) ||
                 !player.getShipBoard().getCondensedShip().getCargoHolds().contains(newComponent)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid cargo hold coordinates.");
         }
 
         CargoHold oldCargoHold = (CargoHold) oldComponent;
         CargoHold newCargoHold = (CargoHold) newComponent;
         if(oldIndex < 0 || oldIndex >= oldCargoHold.getCapacity() || newIndex < 0 || newIndex >= newCargoHold.getCapacity()) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid cargo hold index.");
         }
 
         Good selectedGood = oldCargoHold.getGoods()[oldIndex];
         if(selectedGood == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("The selected good is not found");
         }
         boolean done = newCargoHold.addGoodAt(selectedGood, newIndex);
         if (!done) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("The good cannot be added to the cargo hold");
         }
         oldCargoHold.removeGood(oldIndex);
         controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-        controller.getModel().setError(false);
+        
     }
 
     /**
@@ -200,17 +199,17 @@ public class PlanetsLandState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
         context.removeSpecialPlayer(player);
         chosenPlanets.removeFirst();
         if(chosenPlanets.isEmpty() && context.getSpecialPlayers().isEmpty()) {      //dovrei controllare anche le non conformità delle due liste
             controller.getModel().setState(new FlightPhase(controller));     //finiti pianeti occupati
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-            controller.getModel().setError(false);
+            
         }
     }
 

@@ -45,12 +45,12 @@ public class CombatZone2CannonShotsState extends State {
     public void throwDices(String playerName) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(context.getProjectiles().isEmpty()) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("No projectiles available for cannon shots.");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if (!player.equals(context.getSpecialPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not the player's turn");
         }
         Random rand = new Random();
@@ -76,14 +76,14 @@ public class CombatZone2CannonShotsState extends State {
             context.removeProjectile(shot);
             if(context.getProjectiles().isEmpty()) {
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             } else {
                 controller.getModel().setState(new CombatZone2CannonShotsState(context));
-                controller.getModel().setError(false);
+                
             }
         } else {
             controller.getModel().setState(new CombatZone2ManageShotState(context, number));
-            controller.getModel().setError(false);
+            
         }
 
     }

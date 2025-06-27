@@ -49,13 +49,13 @@ public class CombatZone1CrewRemovalState extends State {
     public void useItem(String playerName, ItemType itemType, Coordinates coordinates) throws InvalidContextualAction, InvalidParameters {
         Controller controller = context.getController();
         if(itemType != ItemType.CREW){
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Invalid item type for crew removal.");
         }
         Player player = controller.getModel().getPlayer(playerName);
         if(player.equals(context.getSpecialPlayers().getFirst())){
             if(player.getShipBoard().getCondensedShip().getTotalCrew() < context.getCrewmates()){
-                controller.getModel().setError(true);
+                
                 throw new InvalidContextualAction("The player doesn't have enough crew"); //handle the situation where the player doesn't have enough crew
             }
             if(context.getCrewmates() > 0){
@@ -76,20 +76,20 @@ public class CombatZone1CrewRemovalState extends State {
                     List<Player> allPlayers= new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
                     context.setPlayers(allPlayers);
                     controller.getModel().setState(new CombatZone1PowerDeclarationState(context));
-                    controller.getModel().setError(false);
+                    
                 } else {
                     controller.getModel().setState(new CombatZone1CrewRemovalState(context));
-                    controller.getModel().setError(false);
+                    
                 }
             }
             else{
                 List<Player> allPlayers= new ArrayList<>(Arrays.asList(controller.getModel().getFlightBoard().getTurnOrder()));
                 context.setPlayers(allPlayers);
                 controller.getModel().setState(new CombatZone1PowerDeclarationState(context));
-                controller.getModel().setError(false);
+                
             }
         } else {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to remove crew members.");
         }
     }

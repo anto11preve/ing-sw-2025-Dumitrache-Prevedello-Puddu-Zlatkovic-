@@ -68,31 +68,31 @@ public class ChoosePlanetState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn to choose a planet");
         }
 
         Planet chosenPlanet = context.getPlanet(planetName);
         if(chosenPlanet == null) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("Planet not found");
         }
 
         if(chosenPlanet.isOccupied()) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Planet is already occupied");
         }
 
         chosenPlanet.setOccupied();
         if(chosenPlanets.contains(chosenPlanet)){
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Planet already chosen");
         } else {
             chosenPlanets.add(chosenPlanet);
         }
 
         if(context.getSpecialPlayers().contains(player)) {
-            controller.getModel().setError(true);
+            
             throw new InvalidContextualAction("Player already chosen a planet");
         }
 
@@ -101,10 +101,10 @@ public class ChoosePlanetState extends State {
 
         if(context.getPlayers().isEmpty() || new HashSet<>(chosenPlanets).containsAll(context.getPlanets())) { // Handle the case where all players have chosen a planet, or all the planets has been chosen
             controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-            controller.getModel().setError(false);
+            
         } else {
             controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
-            controller.getModel().setError(false);
+            
         }
     }
 
@@ -120,21 +120,21 @@ public class ChoosePlanetState extends State {
         Controller controller = context.getController();
         Player player = controller.getModel().getPlayer(playerName);
         if(!player.equals(context.getPlayers().getFirst())) {
-            controller.getModel().setError(true);
+            
             throw new InvalidParameters("It's not your turn");
         }
 
         context.removePlayer(player);
         if (!context.getPlayers().isEmpty()) {
             controller.getModel().setState(new ChoosePlanetState(context, chosenPlanets));
-            controller.getModel().setError(false);
+            
         } else {
             if (context.getSpecialPlayers().isEmpty()) {
                 controller.getModel().setState(new FlightPhase(controller));
-                controller.getModel().setError(false);
+                
             } else {
                 controller.getModel().setState(new PlanetsLandState(context, chosenPlanets));
-                controller.getModel().setError(false);
+                
             }
         }
     }
