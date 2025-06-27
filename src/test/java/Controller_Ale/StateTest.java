@@ -2,6 +2,7 @@ package Controller_Ale;
 
 import Controller.Controller;
 import Controller.Enums.*;
+import Controller.*;
 import Controller.Exceptions.*;
 import Model.Enums.Direction;
 import Model.Player;
