@@ -7,6 +7,7 @@ import java.util.Map;
 
 public final class TUI extends View {
     private final Console console = System.console();
+    private String log;
 
     @Override
     public void repaint() {
@@ -17,13 +18,16 @@ public final class TUI extends View {
         System.out.print(clear);
         this.getState().paint();
         System.out.println();
+        if(log != null) {
+            System.out.println("\u001B[31m" + log + "\u001B[0m");
+        }
         this.getMenuState().paint();
         System.out.print("> ");
     }
 
     @Override
     public void log(String message) {
-        System.err.println(message);
+        log = message;
     }
 
     @Override
