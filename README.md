@@ -1,6 +1,7 @@
 # Compile
 `mvn clean package`
 # Run
+Make sure you're in the main directory
 ## Server
 `java -jar target/GC06-1.0-Server.jar` will start the server making you choose the network interface and on default TCP and RMI ports
 ### Options
